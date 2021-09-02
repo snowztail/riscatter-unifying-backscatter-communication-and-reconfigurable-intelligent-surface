@@ -38,7 +38,7 @@
   \newcommand*\fsize{\dimexpr\f@size pt\relax}%
   \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{201.03914916bp}%
+    \setlength{\unitlength}{141.80073953bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -50,17 +50,16 @@
   \global\let\svgwidth\undefined%
   \global\let\svgscale\undefined%
   \makeatother%
-  \begin{picture}(1,0.5261713)%
+  \begin{picture}(1,0.36861607)%
     \lineheight{1}%
     \setlength\tabcolsep{0pt}%
+    \put(0.22110485,0.1242948){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}AP\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=1]{symbiotic_radio.pdf}}%
-    \put(0,0.2220165){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}AP\end{tabular}}}}%
+    \put(0.95888674,0.10910393){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}UE\end{tabular}}}}%
+    \put(0.72347183,0.00292658){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}TG\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=2]{symbiotic_radio.pdf}}%
-    \put(0.97558688,0.21133209){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}UE\end{tabular}}}}%
-    \put(0.66280197,0.03944517){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}TG\end{tabular}}}}%
-    \put(0.62575529,0.38723815){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$\boldsymbol{h}_{\mathrm{D}}^H$\end{tabular}}}}%
-    \put(0.43278804,0.23801344){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$\boldsymbol{h}_{\mathrm{F}}^H$\end{tabular}}}}%
-    \put(0.79953183,0.16923083){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{\mathrm{B}}$\end{tabular}}}}%
-    \put(0,0){\includegraphics[width=\unitlength,page=3]{symbiotic_radio.pdf}}%
+    \put(0.57997462,0.27155728){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{\mathrm{D}}$\end{tabular}}}}%
+    \put(0.41072305,0.13987955){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{\mathrm{F}}$\end{tabular}}}}%
+    \put(0.75980444,0.08698845){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{\mathrm{B}}$\end{tabular}}}}%
   \end{picture}%
 \endgroup%

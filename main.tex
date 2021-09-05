@@ -123,11 +123,11 @@
 							\draw (WI.north east) ++(0.25,0) node[font=\Large]{$\vec{E}_{\mathrm{I}}$};
 							\draw (WI.south east) ++(0.25,0) node[font=\Large]{$\vec{H}_{\mathrm{I}}$};
 							\draw (bareantenna.east) ++(0.875,0) node[waves](WR){};
-							\draw (WR.north east) ++(0.25,0) node[font=\Large]{$\vec{E}_i$};
-							\draw (WR.south east) ++(0.25,0) node[font=\Large]{$\vec{H}_i$};
+							\draw (WR.north east) ++(0.25,0) node[font=\Large]{$\vec{E}_m$};
+							\draw (WR.south east) ++(0.25,0) node[font=\Large]{$\vec{H}_m$};
 							\draw (bareantenna)
 								to [R=$Z_{\mathrm{A}}$,font=\Large,/tikz/circuitikz/bipoles/length=1cm] ++(0,-2)
-								to [R=$Z_i$,font=\Large,/tikz/circuitikz/bipoles/length=1cm] ++(2,0) node[ground]{};
+								to [R=$Z_m$,font=\Large,/tikz/circuitikz/bipoles/length=1cm] ++(2,0) node[ground]{};
 						\end{circuitikz}
 					}
 					\label{fi:one_port_network_model}
@@ -135,26 +135,26 @@
 				\caption{For a passive tag, the rectifier and demodulator rely on the incident electromagnetic wave for energy harvesting and downlink information decoding, while the load-switcher manipulate the reradiated signal for backscatter modulation.}
 				\label{fi:tag}
 			\end{figure}
-			Consider a bistatic backscatter system that consists of an excitation source, a dedicated reader, and a passive tag. The excitation source generates a carrier wave signal, the dedicated reader decodes the tag message, and the tag simultaneously harvests energy, backscatters its own message, and demodulates the downlink information if necessary. As shown in Fig.~\subref*{fi:block_diagram}, a typical passive tag consists of a scattering antenna, an energy harvester, a integrated receiver\footnote{For example, \cite{Kim2021a} prototyped a compact-size pulse position demodulator based on an envelope detector, which brings great potential to coordination, synchronization, and reflection pattern control.}, a load-switching modulator, and on-chip components (e.g., micro-controller, memory, and sensors). A portion of the impinging signal is absorbed by the tag while the remaining is backscattered to the space, as illustrated in Fig.~\subref*{fi:one_port_network_model}. According to Green's decomposition \cite{Hansen1989}, the backscattered signal can be decomposed into the \emph{structural mode} component and the \emph{antenna mode} component. The former is fixed and depends on the antenna geometry and material properties\footnote{We assume the structural mode reflection can be modeled as part of the environment multipath and covered by channel estimation \cite{Boyer2014}.}, while the latter is adjustable and depends on the mismatch of the antenna and load impedance. Hence, the equivalent reflection coefficient at tag state $i$ is defined as\footnote{We assume the linear backscatter model where $\Gamma_i$ is irrelevant to the incident electromagnetic field at the tag \cite{Dobkin2012}.}
+			Consider a bistatic backscatter system that consists of an excitation source, a dedicated reader, and a passive tag. The excitation source generates a carrier wave signal, the dedicated reader decodes the tag message, and the tag simultaneously harvests energy, backscatters its own message, and demodulates the downlink information if necessary. As shown in Fig.~\subref*{fi:block_diagram}, a typical passive tag consists of a scattering antenna, an energy harvester, a integrated receiver\footnote{For example, \cite{Kim2021a} prototyped a compact-size pulse position demodulator based on an envelope detector, which brings great potential to coordination, synchronization, and reflection pattern control.}, a load-switching modulator, and on-chip components (e.g., micro-controller, memory, and sensors). A portion of the impinging signal is absorbed by the tag while the remaining is backscattered to the space, as illustrated in Fig.~\subref*{fi:one_port_network_model}. According to Green's decomposition \cite{Hansen1989}, the backscattered signal can be decomposed into the \emph{structural mode} component and the \emph{antenna mode} component. The former is fixed and depends on the antenna geometry and material properties\footnote{We assume the structural mode reflection can be modeled as part of the environment multipath and covered by channel estimation \cite{Boyer2014}.}, while the latter is adjustable and depends on the mismatch of the antenna and load impedance. Hence, the equivalent reflection coefficient at tag state $m$ is defined as\footnote{We assume the linear backscatter model where $\Gamma_m$ is irrelevant to the incident electromagnetic field at the tag \cite{Dobkin2012}.}
 			\begin{equation}
-				\Gamma_i = \frac{Z_i - Z_{\mathrm{A}}^*}{Z_i + Z_{\mathrm{A}}},
+				\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
 				\label{eq:reflection_coefficient}
 			\end{equation}
-			where $Z_i$ is the load impedance at state $i$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
+			where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
 			\begin{remark}
-				The reflection coefficient plays an important role in various network designs. For example, $\Gamma_i = 0$ (perfect matching) achieves maximum power transfer that is optimal for Wireless Power Transfer (WPT), $\lvert \Gamma_i \rvert = 1$ (perfect mismatching) achieves fully signal reflection that is optimal for Intelligent Reflecting Surface (IRS), and $\Gamma_i \ne \Gamma_j$ (adjustable matching) enables backscatter modulation.
+				The reflection coefficient plays an important role in various network designs. For example, $\Gamma_m = 0$ (perfect matching) achieves maximum power transfer that is optimal for Wireless Power Transfer (WPT), $\lvert \Gamma_m \rvert = 1$ (perfect mismatching) achieves fully signal reflection that is optimal for Intelligent Reflecting Surface (IRS), and $\Gamma_m \ne \Gamma_{m'}$ (adjustable matching) enables backscatter modulation.
 			\end{remark}
 		\end{subsection}
 
 		\begin{subsection}{Backscatter Modulation}
-			Tags perform backscatter modulation by switching the load impedance between different states. For $M$-ary Phase Shift Keying (PSK), the reflection coefficient $\Gamma_i$ maps to the desired signal constellation point $c_i$ as \cite{Thomas2012a}
+			Tags perform backscatter modulation by switching the load impedance between different states. Consider an $M$-ary Phase Shift Keying (PSK). At tag state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$, the reflection coefficient $\Gamma_m$ maps to the desired signal constellation point $c_m$ as \cite{Thomas2012a}
 			\begin{equation}
-				\Gamma_i = \alpha c_i = \alpha e^{\jmath \left(\frac{2 \pi i}{M} + \phi\right)},
+				\Gamma_m = \alpha c_m = \alpha e^{\jmath \theta_m},
 				\label{eq:backscatter_modulation}
 			\end{equation}
-			where $\alpha \in [0,1]$ is the reflection efficiency at a given direction, and $\phi$ is a fixed phase offset.
+			where $\alpha \in [0,1]$ is the reflection efficiency at a given direction, and $\theta_m \triangleq 2 \pi m / M$ is the phase of the $m$-th constellation point of $M$-PSK.
 			\begin{remark}
-				For passive tags, the reflection efficiency $\alpha$ controls the tradeoff between the backscatter strength and harvestable power. Interestingly, when $\alpha = 1$, the reflection coefficient set $\{\Gamma_i\}$ of the $M$-PSK backscatter coincides with that of an ideal discrete $M$-state uniform IRS. The optimal strategy for the IRS is to choose one reflection state with probability \num{1} to boost the equivalent channel, while the optimal strategy for the modulator is to utilize all constellation points with equal probability. It inspires one to adaptively design the p.m.f. of tag symbols to jointly benefit the backscatter modulation and passive beamforming.
+				For passive tags, the reflection efficiency $\alpha$ controls the tradeoff between the backscatter strength and harvestable power. Interestingly, when $\alpha = 1$, the reflection coefficient set $\{\Gamma_m\}$ of the $M$-PSK backscatter coincides with that of an ideal discrete $M$-state uniform IRS. The optimal strategy for the IRS is to choose one reflection state with probability \num{1} to boost the equivalent channel, while the optimal strategy for the modulator is to utilize all constellation points with equal probability. It inspires one to adaptively design the probability mass function of tag symbols to jointly benefit the backscatter modulation and passive beamforming.
 			\end{remark}
 		\end{subsection}
 	\end{section}
@@ -167,11 +167,11 @@
 			\caption{A single-user single-tag symbiotic radio system.}
 			\label{fi:symbiotic_radio}
 		\end{figure}
-		As shown in Fig.~\ref{fi:symbiotic_radio}, we propose a single-user (UE) single-tag (TG) symbiotic radio network where the RF signal generated by the single-antenna Access Point (AP) is shared by two coexisting systems. In the primary AP-UE downlink system, the AP transmits to the single-antenna user. In the secondary AP-TG-UE backscatter system, the AP acts as the carrier emitter, the user serves as the backscatter reader, and the single-antenna tag modulates its information over the reradiated RF signal by varying the reflection coefficient. Denote the AP-UE direct channel as $h_{\mathrm{D}}$, the AP-TG forward channel as $h_{\mathrm{F}}$, and the TG-UE backward channel as $h_{\mathrm{B}}$. We consider the quasi-static block fading model and assume the CSI of the direct channel and the cascaded forward-backward channel $h_{\mathrm{C}} \triangleq h_{\mathrm{B}} h_{\mathrm{F}}$ are known at the AP.\footnote{Due to the lack of RF chains at the passive tag, accurate and efficient CSI acquisition at the AP can be challenging. One possible approach is that the AP sends known pilots, the tag responds in a pre-defined manner, and the user performs least-square estimation then feeds back to the AP \cite{Bharadia2015,Yang2015b,Guo2019e}.} It is assumed that the primary symbol $s$ follows standard CSCG distribution $\mathcal{CN}(0,1)$ and the secondary symbol $c$ employs $M$-PSK modulation by \eqref{eq:backscatter_modulation}. To provide a preliminary insight, we consider a parasitic symbiotic radio \cite{Long2020a} where the primary and secondary symbol periods are equal. \footnote{However, parasitic symbiotic radio requires fast tag-state switching and frequent synchronization, which can be challenging for passive tags.} The user simultaneously captures the signal from both primary and secondary links as\footnote{We assume the time difference of arrival from the AP-UE path and the AP-TG-UE path are negligible compared to the symbol period \cite{Guo2019b,Liang2020,Long2020a}.}
+		As shown in Fig.~\ref{fi:symbiotic_radio}, we propose a single-user (UE) single-tag (TG) symbiotic radio network where the RF signal generated by the single-antenna Access Point (AP) is shared by two coexisting systems. In the primary AP-UE downlink system, the AP transmits to the single-antenna user. In the secondary AP-TG-UE backscatter system, the AP acts as the carrier emitter, the user serves as the backscatter reader, and the single-antenna tag modulates its information over the reradiated RF signal by varying the reflection coefficient. Denote the AP-UE direct channel as $h_{\mathrm{D}}$, the AP-TG forward channel as $h_{\mathrm{F}}$, and the TG-UE backward channel as $h_{\mathrm{B}}$. We consider the quasi-static block fading model and assume the CSI of the direct channel and the cascaded forward-backward channel $h_{\mathrm{C}} \triangleq h_{\mathrm{B}} h_{\mathrm{F}}$ are known at the AP.\footnote{Due to the lack of RF chains at the passive tag, accurate and efficient CSI acquisition at the AP can be challenging. One possible approach is that the AP sends known pilots, the tag responds in a pre-defined manner, and the user performs least-square estimation then feeds back to the AP \cite{Bharadia2015,Yang2015b,Guo2019e}.} It is assumed that the primary symbol $s$ follows standard CSCG distribution $\mathcal{CN}(0,1)$ and the secondary symbol $c$ employs $M$-PSK modulation by \eqref{eq:backscatter_modulation}. Due to the practical constraints on switching speed and synchronization gap, the passive tag typically transmits at a much lower data rate than the AP. Hence, we assume the secondary symbol period is $N \gg 1 \in \mathbb{Z}_{++}$ times the primary symbol period and focus on the interval of one particular $c$. At symbol block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$, the user simultaneously captures the signal from both primary and secondary links as\footnote{We assume the time difference of arrival from the AP-UE path and the AP-TG-UE path are negligible compared to the symbol period \cite{Guo2019b,Liang2020,Long2020a}.}
 		\begin{equation}
-			y = \sqrt{p} h_{\mathrm{D}} s + \sqrt{\alpha p} h_{\mathrm{C}} s c + n,
+			y[n] = \sqrt{p} h_{\mathrm{D}} s[n] + \sqrt{\alpha p} h_{\mathrm{C}} c s[n] + w[n],
 		\end{equation}
-		where $p$ is the average transmit power at the AP and $n \sim \mathcal{CN}(0,1)$ is the additive white Gaussian noise.
+		where $p$ is the average transmit power at the AP and $w \sim \mathcal{CN}(0,\sigma^2)$ is the additive white Gaussian noise. We also define $\boldsymbol{y} \triangleq \bigl[y[1], \ldots, y[N]\bigr]^T$, $\boldsymbol{s} \triangleq \bigl[s[1], \ldots, s[N]\bigr]^T$, and $\boldsymbol{w} \triangleq \bigl[w[1], \ldots, w[N]\bigr]^T$.
 
 		\begin{remark}
 			The symbiotic radio network can be regarded as as a special case of Multiple Access Channel (MAC) because the AP and the tag simultaneously transmit to the user. It is known that Superposition Coding-Successive Interference Cancellation (SC-SIC) with different decoding orders can achieve different vertices of the MAC capacity region \cite{Goldsmith2005}. Therefore, most relevant papers proposed the user to first decode the primary message (by treating the tag interference as noise), cancel out its contribution from the received signal, then decode the secondary message. Since the direct channel is typically much stronger than the cascaded channel \cite{Ozdogan2020}, the primary decoding is expected to enjoy a high Signal-to-Interference-and-Noise Ratio (SINR) and the secondary decoding is ideally interference-free.
@@ -181,13 +181,24 @@
 			The main difference between symbiotic radio and conventional MAC is that the primary message also reaches the user from the backscatter link. This characteristic inspires one to first decode the tag message, then model its contribution within the equivalent channel during primary decoding (i.e., unify secondary decoding and backscatter channel training), instead of performing SIC. In such case, for each fading block, the primary transmission is able to achieve ergodic capacity with artificial channel variation created by the backscatter modulation.
 		\end{remark}
 
-		To investigate how backscatter modulation potentially benefits the primary transmission, we start the decoding process from the secondary link. Since $\mathbb{E}[\lvert s \rvert^2] = \mathbb{E}[\lvert c \rvert^2] = 1$, by treating the primary interference as noise, the SINR for the user to decode tag message $c$ is
+		To investigate how backscatter modulation potentially benefits the primary transmission, we first decode the tag symbol $c$ in presence of unknown AP symbol $\boldsymbol{s}$. Interestingly, the tag detection indeed aligns with the case of Ambient Backscatter Communications (AmBC) where the signal from the ambient source is unknown. The optimal Maximum-Likelihood (ML) detector is
 		\begin{equation}
-			\gamma_c = \frac{\alpha p \lvert h_{\mathrm{C}} \rvert^2}{p \lvert h_{\mathrm{D}} \rvert^2 + 1}.
+			\hat{m} = \arg \max_{m \in \mathcal{M}} p(\boldsymbol{y} \mid c_m),
 		\end{equation}
+		where $p(\boldsymbol{y} \mid c_m)$ denotes the probability density function of receiving $\boldsymbol{y}$ when the tag transmits $c_m$.
+
+		During the backscatter detection, the conditional probability density function of the channel output given the tag input for $M$-PSK is
+		\begin{equation}
+			f_{Y \mid C}(y \mid c_m) = ?
+		\end{equation}
+
+		% Since $\mathbb{E}[\lvert s \rvert^2] = \mathbb{E}[\lvert c \rvert^2] = 1$, by treating the primary interference as noise, the SINR for the user to decode tag message $c$ is
+		% \begin{equation}
+		% 	\gamma_c = \frac{\alpha p \lvert h_{\mathrm{C}} \rvert^2}{p \lvert h_{\mathrm{D}} \rvert^2 + 1}.
+		% \end{equation}
 		Once the tag message is successfully recovered, we combine the backscattered symbol with the cascaded channel to eliminate the uncertainty of the AP-TG-UE path, and the received signal is essentially
 		\begin{equation}
-			y = \sqrt{p} (h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c) s + n \triangleq \sqrt{p} h(c) s + n,
+			y[n] = \sqrt{p} (h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c) s[n] + w[n] \triangleq \sqrt{p} h(c) s + w[n],
 		\end{equation}
 		which is reminiscent of IRS-aided point-to-point transmission with the equivalent channel defined as
 		\begin{equation}
@@ -197,7 +208,7 @@
 		\begin{equation}
 			R_s = \mathbb{E}_c \bigl[ \log_2 ( 1 + \lvert h(c) \rvert^2 ) \bigr].
 		\end{equation}
-		We aims to optimize the input distribution of $c$ (i.e., the p.m.f. of $M$-PSK) to achieve a flexible balance between the primary and secondary links.
+		We aims to optimize the input distribution of $c$ (i.e., the probability mass function of $M$-PSK) to achieve a flexible balance between the primary and secondary links.
 
 		% channel training - backscatter decoding
 

@@ -207,14 +207,14 @@
 			\begin{equation}
 				\boldsymbol{P} =
 				\begin{bmatrix}
-					p_{1 \mid 1} & \ldots & p_{M \mid 1} \\
+					p_{1, 1} & \ldots & p_{1, M} \\
 					\vdots & \ddots & \vdots \\
-					p_{1 \mid M} & \ldots & p_{M \mid M}
+					p_{M, 1} & \ldots & p_{M, M}
 				\end{bmatrix},
 			\end{equation}
-			where $p_{j \mid i}$ denotes the transition probability from channel input state $i$ to output state $j$. It can be derived as
+			where $p_{i, j}$ denotes the transition probability from channel input state $i$ to output state $j$. It can be derived as
 			\begin{equation}
-				p_{j \mid i} = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z
+				p_{i, j} = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z
 				\label{eq:transition_probability}
 			\end{equation}
 			where $f(z \mid \mathcal{H}_i)$ is the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Since $z$ follows chi-squared distribution with $2N$ degrees of freedom, it holds that

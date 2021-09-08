@@ -155,7 +155,7 @@
 			\end{equation}
 			where $\alpha \in [0,1]$ is the reflection efficiency at a given direction, and $\theta_m \triangleq 2 \pi m / M$ is the phase of the $m$-th constellation point of $M$-PSK.
 			\begin{remark}
-				For passive tags, the reflection efficiency $\alpha$ controls the tradeoff between the backscatter strength and harvestable power. Interestingly, when $\alpha = 1$, the reflection coefficient set $\{\Gamma_m\}$ of the $M$-PSK backscatter coincides with that of an ideal discrete $M$-state uniform IRS. The optimal strategy for the IRS is to choose one reflection state with probability \num{1} to boost the equivalent channel, while the optimal strategy for the modulator is to utilize all constellation points with equal probability. It inspires one to adaptively design the probability mass function of tag symbols to jointly benefit the backscatter modulation and passive beamforming.
+				For passive tags, the reflection efficiency $\alpha$ controls the tradeoff between the backscatter strength and harvestable power. Interestingly, when $\alpha = 1$, the reflection coefficient set $\{\Gamma_m\}$ of the $M$-PSK backscatter coincides with that of an ideal discrete $M$-state uniform IRS. The optimal strategy for the IRS is to choose one reflection state with probability \num{1} to boost the equivalent channel, while the optimal strategy for the modulator is to utilize all constellation points with equal probability. It inspires one to optimize the tag input distribution to jointly benefit the backscatter modulation and passive beamforming.
 			\end{remark}
 		\end{subsection}
 	\end{section}
@@ -182,12 +182,13 @@
 			The main difference between symbiotic radio and conventional MAC is that the primary message also reaches the user from the backscatter link. This characteristic inspires one to first decode the tag message, then model its contribution within the equivalent channel during primary decoding (i.e., unify backscatter decoding and channel training), instead of performing SIC. In such case, the reflection pattern not only embeds the tag message but also adjusts the legacy channel in a controllable manner. Therefore, for a fixed fading block, the primary transmission is able to achieve the ergodic capacity with artificial channel variation created by the backscatter modulation. [Channel over channel, randomness over randomness]
 		\end{remark}
 
-		\begin{subsection}{Backscatter Detection}
+		\begin{subsection}{Backscatter Transmission}
 			To investigate how backscatter modulation potentially benefits the primary transmission, we first decode the tag symbol $c$ in presence of the interference from the primary message $\boldsymbol{s}$. In such case, the detection indeed coincides with that of Ambient Backscatter Communications (AmBC) where the signaling from the ambient source is unknown, and the received signal per symbol block follows the CSCG distribution of $y_m[n] \sim \mathcal{CN}(0,\sigma_m^2)$, where
 			\begin{equation}
 				\sigma_m^2 \triangleq \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_m \rvert^2 P + \sigma^2
+				\label{eq:typical_energy}
 			\end{equation}
-			can be estimated at the user. For the ease of exposition, we sort $\{\sigma_m^2\}$ in a descending order by bijective mapping $f \colon m \mapsto i$,\footnote{Note that the mapping is not unique and the detection fails when two different constellation points yield the same energy level.} and formulate a sequence $\langle \sigma_i^2 \rangle$ where $\sigma_i^2 \ge \sigma_j^2$ for $i > j$, $i,j \in \mathcal{M}$. Denote $\mathcal{H}_i$ as the hypothesis that the tag transmits $c_i$. Following \cite{Qian2019}, the optimal Maximum-Likelihood (ML) detector boils down to the energy detector, and the likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_j$ is
+			denotes the typical energy of the received signal when the tag is at state $m$, which can be estimated at the user. For the ease of exposition, we sort $\{\sigma_m^2\}$ in a descending order by bijective mapping $f \colon m \mapsto i$,\footnote{Note that the mapping is not unique and the detection fails when two different constellation points yield the same energy level.} and formulate a sequence $\langle \sigma_i^2 \rangle$ where $\sigma_i^2 \ge \sigma_j^2$ for $i > j$, $i,j \in \mathcal{M}$. Denote $\mathcal{H}_i$ as the hypothesis that the tag transmits $c_i$. Following \cite{Qian2019}, the optimal Maximum-Likelihood (ML) detector boils down to the energy detector, and the likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_j$ is
 			\begin{equation}
 				\Lambda_{i, j}(\boldsymbol{y}) = \frac{f(\boldsymbol{y} \mid \mathcal{H}_i)}{f(\boldsymbol{y} \mid \mathcal{H}_j)} = \left( \frac{\sigma_j^2}{\sigma_i^2} \right)^N \exp \left( \frac{(\sigma_i^2 - \sigma_j^2) z}{\sigma_i^2 \sigma_j^2} \right),
 			\end{equation}
@@ -197,15 +198,17 @@
 			\end{equation}
 			where the optimal detection threshold is
 			\begin{equation}
-				T_{i, j} \triangleq N \frac{\sigma_i^2 \sigma_j^2}{\sigma_i^2 - \sigma_j^2} \log \frac{\sigma_i^2}{\sigma_j^2}.
+				T_{i, j} \triangleq N \frac{\sigma_i^2 \sigma_j^2}{\sigma_i^2 - \sigma_j^2} \log \frac{\sigma_i^2}{\sigma_j^2},
+				\label{eq:detection_threshold}
 			\end{equation}
-			On top of this, the decision region of hypothesis $\mathcal{H}_i$ can be expressed as
+			and the decision region of hypothesis $\mathcal{H}_i$ can be expressed as
 			\begin{equation}
 				\mathcal{R}_i \triangleq [T_{i-1, i}, T_{i, i+1}),
+				\label{eq:decision_region}
 			\end{equation}
-			where we define $T_{0, 1} \triangleq 0$ and $T_{M, M+1} \triangleq \infty$. On the other hand, the transition probability matrix is
+			where $T_{0, 1} \triangleq 0$ and $T_{M, M+1} \triangleq \infty$. On top of this, we define the forward transition probability matrix as
 			\begin{equation}
-				\boldsymbol{P} =
+				\boldsymbol{P} \triangleq
 				\begin{bmatrix}
 					p_{1, 1} & \ldots & p_{1, M} \\
 					\vdots & \ddots & \vdots \\
@@ -214,15 +217,30 @@
 			\end{equation}
 			where $p_{i, j}$ denotes the transition probability from channel input state $i$ to output state $j$. It can be derived as
 			\begin{equation}
-				p_{i, j} = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z
+				p_{i, j} = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z,
 				\label{eq:transition_probability}
 			\end{equation}
 			where $f(z \mid \mathcal{H}_i)$ is the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Since $z$ follows chi-squared distribution with $2N$ degrees of freedom, it holds that
 			\begin{equation}
-				f(z \mid \mathcal{H}_i) = \frac{z^{N-1} e^{-z/\sigma_i^2}}{\sigma_i^{2N} \Gamma(N)}
+				f(z \mid \mathcal{H}_i) = \frac{z^{N-1} e^{-z/\sigma_i^2}}{\sigma_i^{2N} \Gamma(N)},
 				\label{eq:conditional_pdf}
 			\end{equation}
-			where $\Gamma(\cdot)$ is the gamma function. Therefore, the transition matrix $\boldsymbol{P}$ can be calculated by substituting \eqref{eq:conditional_pdf} into \eqref{eq:transition_probability}, and the optimal input distribution can be obtained by the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972}.
+			where $\Gamma(\cdot)$ is the gamma function. To summarize, once the CSI of the direct and cascaded links are obtained, the typical energy of the received signal can be estimated by \eqref{eq:typical_energy}, the energy detection threshold can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, and the forward transition matrix $\boldsymbol{P}$ can be calculated by substituting \eqref{eq:conditional_pdf} into \eqref{eq:transition_probability}.
+
+			We then investigate the achievable rate of the backscatter link. Denote the tag input probability mass function as $\boldsymbol{r} = [r_1,\ldots,r_M]^T \in \mathbb{R}_+^{M \times 1}$ where $r_m$ is the probability to transmit symbol $c_m$ [strictly positive?]. For a given input distribution $\boldsymbol{r}$ and forward transition matrix $\boldsymbol{P}$, the achievable backscatter rate can be expressed as
+			\begin{equation}
+				R_c = \max_{\boldsymbol{Q}} \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log \frac{q_{j, i}}{r_i},
+			\end{equation}
+			where $\boldsymbol{Q}$ is the backward transition probability matrix \cite{Blahut1972}
+			\begin{equation}
+				\boldsymbol{Q} \triangleq
+				\begin{bmatrix}
+					q_{1, 1} & \ldots & q_{1, M} \\
+					\vdots & \ddots & \vdots \\
+					q_{M, 1} & \ldots & q_{M, M}
+				\end{bmatrix},
+			\end{equation}
+			and $q_{j, i}$ denotes the transition probability from channel output state $j$ to input state $i$.
 		\end{subsection}
 
 		\begin{subsection}{Legacy Transmission}
@@ -235,21 +253,23 @@
 				h_{\mathrm{E}}(c) \triangleq h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c.
 			\end{equation}
 			For primary transmission, backscatter modulation creates an artificial fast fading within each fading block, and the equivalent CSI is known at the receiver once the backscattered symbol is successfully decoded. Therefore, the ergodic capacity of primary transmission within each symbol block is \cite{Tse2005}
-			\begin{equation}
-				R_s = \mathbb{E}_c \bigl[ \log_2 ( 1 + \lvert h_{\mathrm{E}}(c) \rvert^2 ) \bigr].
-			\end{equation}
-			It can be observed that the input distribution of $c$ determines the capacity of both primary and secondary links.
+			\begin{align}
+				R_s
+				& = \mathbb{E}_c \bigl[ \log_2 (1 + \gamma \lvert h_{\mathrm{E}}(c) \rvert^2) \bigr] \nonumber \\
+				& = \sum_{m \in \mathcal{M}} r_m \log_2 \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_m \rvert^2 \bigr),
+			\end{align}
+			where $\gamma \triangleq P / \sigma^2$ is the average transmit Signal-to-Noise Ratio (SNR). It can be observed that the input distribution of $c$ determines the achievable rate of both primary and secondary links.
 		\end{subsection}
 		\label{se:system_model}
 	\end{section}
 
 	\begin{section}{Tag Input Distribution}
-		To achieve a flexible tradeoff between the backscatter and legacy links, we aims to optimize the probability mass function of the tag input distribution under $M$-PSK modulation. Denote the probability that the tag symbol $c$ takes $c_m$ as $p_m$ and the corresponding probability mass function as $\boldsymbol{p} = [p_1,\ldots,p_M]^T \in \mathbb{R}_+^{M \times 1}$. One possible problem formulation is to maximize the weighted sum of the primary and secondary rates subject to the sum-probability constraint
+		To achieve a flexible tradeoff between the backscatter and legacy links, we aims to optimize the tag input probability mass function, under $M$-PSK modulation, to maximize the weighted sum of the primary and secondary rates subject to the sum-probability constraint
 		\begin{maxi!}
-			{\scriptstyle{\boldsymbol{p}}}{\rho R_s + (1 - \rho) R_c}{}{}
-			\addConstraint{\sum_{m \in \mathcal{M}} p_m}{=1,}{}
+			{\scriptstyle{\boldsymbol{r}}}{\rho R_s + (1 - \rho) R_c}{}{}
+			\addConstraint{\sum_{m \in \mathcal{M}} r_m}{=1,}{}
 		\end{maxi!}
-		where $\rho \in [0, 1]$ is the weight factor to control the backscatter-legacy tradeoff.
+		where $\rho \in [0, 1]$ is the weight factor.
 	\end{section}
 
 	\bibliographystyle{IEEEtran}

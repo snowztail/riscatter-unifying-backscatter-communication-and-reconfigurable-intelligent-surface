@@ -31,18 +31,24 @@
 \usepackage[short]{optidef}
 % \usepackage[subtle]{savetrees}
 
-
+\listfiles
 \interdisplaylinepenalty=2500
 \pgfplotsset{compat=newest}
 \usepgfplotslibrary{patchplots}
 \newtheorem{proposition}{Proposition}
 \newtheorem{remark}{Remark}
+\newtheorem{theorem}{Theorem}
 \DeclareSIUnit{\belm}{Bm}
 \DeclareSIUnit{\dBm}{\deci\belm}
 \DeclareSIUnit{\beli}{Bi}
 \DeclareSIUnit{\dBi}{\deci\beli}
 \ctikzset{american}
 \usetikzlibrary{arrows,calc,matrix,patterns,positioning}
+
+\DeclarePairedDelimiterX{\infdivx}[2]{(}{)}{%
+	#1\;\delimsize\|\;#2%
+}
+\newcommand{\infdiv}{D\infdivx}
 
 \makeatletter
 \tikzset{
@@ -188,7 +194,7 @@
 				\sigma_m^2 \triangleq \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_m \rvert^2 P + \sigma^2
 				\label{eq:typical_energy}
 			\end{equation}
-			denotes the typical energy of the received signal when the tag is at state $m$, which can be estimated at the user. For the ease of exposition, we sort $\{\sigma_m^2\}$ in a descending order by bijective mapping $f \colon m \mapsto i$,\footnote{Note that the mapping is not unique and the detection fails when two different constellation points yield the same energy level.} and formulate a sequence $\langle \sigma_i^2 \rangle$ where $\sigma_i^2 \ge \sigma_j^2$ for $i > j$, $i,j \in \mathcal{M}$. Denote $\mathcal{H}_i$ as the hypothesis that the tag transmits $c_i$. Following \cite{Qian2019}, the optimal Maximum-Likelihood (ML) detector boils down to the energy detector, and the likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_j$ is
+			denotes the typical received signal energy over $N$ symbol blocks when the tag is at state $m$, which can be estimated at the user. For the ease of exposition, we sort $\{\sigma_m^2\}$ in a descending order by bijective mapping $f \colon m \mapsto i$\footnote{Note that the mapping is not unique and the detection fails when two different constellation points yield the same energy level.} and let $\sigma_i^2 \ge \sigma_j^2$ for $i > j$, $i,j \in \mathcal{M}$. Denote $\mathcal{H}_i$ as the hypothesis that the tag transmits $c_i$. Following \cite{Qian2019}, the optimal Maximum-Likelihood (ML) detector boils down to the energy detector, and the likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_j$ is
 			\begin{equation}
 				\Lambda_{i, j}(\boldsymbol{y}) = \frac{f(\boldsymbol{y} \mid \mathcal{H}_i)}{f(\boldsymbol{y} \mid \mathcal{H}_j)} = \left( \frac{\sigma_j^2}{\sigma_i^2} \right)^N \exp \left( \frac{(\sigma_i^2 - \sigma_j^2) z}{\sigma_i^2 \sigma_j^2} \right),
 			\end{equation}
@@ -206,7 +212,7 @@
 				\mathcal{R}_i \triangleq [T_{i-1, i}, T_{i, i+1}),
 				\label{eq:decision_region}
 			\end{equation}
-			where $T_{0, 1} \triangleq 0$ and $T_{M, M+1} \triangleq \infty$. On top of this, we define the forward transition probability matrix as
+			with $T_{0, 1} \triangleq 0$ and $T_{M, M+1} \triangleq \infty$. On top of this, we define the forward transition probability matrix $\boldsymbol{P} \in \mathbb{R}_{+}^{M \times M}$ as
 			\begin{equation}
 				\boldsymbol{P} \triangleq
 				\begin{bmatrix}
@@ -225,13 +231,14 @@
 				f(z \mid \mathcal{H}_i) = \frac{z^{N-1} e^{-z/\sigma_i^2}}{\sigma_i^{2N} \Gamma(N)},
 				\label{eq:conditional_pdf}
 			\end{equation}
-			where $\Gamma(\cdot)$ is the gamma function. To summarize, once the CSI of the direct and cascaded links are obtained, the typical energy of the received signal can be estimated by \eqref{eq:typical_energy}, the energy detection threshold can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, and the forward transition matrix $\boldsymbol{P}$ can be calculated by substituting \eqref{eq:conditional_pdf} into \eqref{eq:transition_probability}.
+			where $\Gamma(\cdot)$ is the gamma function. To summarize, with the CSI of the direct and cascaded links, the typical energy of the received signal can be estimated by \eqref{eq:typical_energy}, the energy detection threshold can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, and the forward transition matrix $\boldsymbol{P}$ can be calculated by substituting \eqref{eq:conditional_pdf} into \eqref{eq:transition_probability}.
 
-			We then investigate the achievable rate of the backscatter link. Denote the tag input probability mass function as $\boldsymbol{r} = [r_1,\ldots,r_M]^T \in \mathbb{R}_+^{M \times 1}$ where $r_m$ is the probability to transmit symbol $c_m$ [strictly positive?]. For a given input distribution $\boldsymbol{r}$ and forward transition matrix $\boldsymbol{P}$, the achievable backscatter rate can be expressed as
+			We then investigate the achievable rate of the backscatter link. Denote the tag input probability mass function as $\boldsymbol{r} = [r_1,\ldots,r_M]^T \in \mathbb{R}_+^{M \times 1}$ where $r_m$ is the probability to transmit symbol $c_m$ [strictly positive?]. For a given input distribution $\boldsymbol{r}$ and forward transition matrix $\boldsymbol{P}$, the achievable backscatter rate can be written as
 			\begin{equation}
-				R_c = \max_{\boldsymbol{Q}} \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log \frac{q_{j, i}}{r_i},
+				R_c = \max_{\boldsymbol{Q} \ge 0} \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log_2 \frac{q_{j, i}}{r_i} \ [\si{bpcu}],
+				\label{eq:secondary_rate}
 			\end{equation}
-			where $\boldsymbol{Q}$ is the backward transition probability matrix \cite{Blahut1972}
+			where $\boldsymbol{Q} \in \mathbb{R}_{+}^{M \times M}$ is the backward transition probability matrix \cite{Yeung2008}
 			\begin{equation}
 				\boldsymbol{Q} \triangleq
 				\begin{bmatrix}
@@ -244,21 +251,22 @@
 		\end{subsection}
 
 		\begin{subsection}{Legacy Transmission}
-			Once the tag message is successfully recovered, the user combines the backscattered symbol with the cascaded channel to eliminate the uncertainty of the AP-TG-UE path and detects the legacy information. The received signal at symbol block $n$ is essentially
+			Once the backscattered symbol is successfully recovered, it is combined with the cascaded channel to eliminate the uncertainty of the AP-TG-UE path and assist the legacy transmission. Therefore, the received signal at symbol block $n$ is essentially
 			\begin{equation}
 				y[n] = \sqrt{P} (h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c) s[n] + w[n] \triangleq \sqrt{P} h_{\mathrm{E}}(c) s + w[n],
 			\end{equation}
-			which is reminiscent of IRS-aided point-to-point transmission with an equivalent channel of
+			which is reminiscent of an IRS-aided point-to-point transmission with an equivalent channel of
 			\begin{equation}
 				h_{\mathrm{E}}(c) \triangleq h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c.
 			\end{equation}
-			For primary transmission, backscatter modulation creates an artificial fast fading within each fading block, and the equivalent CSI is known at the receiver once the backscattered symbol is successfully decoded. Therefore, the ergodic capacity of primary transmission within each symbol block is \cite{Tse2005}
+			For primary transmission, backscatter modulation creates an artificial fast fading within each fading block, and AP can obtain the equivalent CSI distribution for any given tag input probability mass function $\boldsymbol{r}$. Therefore, the ergodic capacity of primary transmission within each symbol block is \cite{Tse2005}
 			\begin{align}
 				R_s
 				& = \mathbb{E}_c \bigl[ \log_2 (1 + \gamma \lvert h_{\mathrm{E}}(c) \rvert^2) \bigr] \nonumber \\
-				& = \sum_{m \in \mathcal{M}} r_m \log_2 \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_m \rvert^2 \bigr),
+				& = \sum_{i \in \mathcal{M}} r_i \log_2 \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr) \ [\si{bps/Hz}],
+				\label{eq:primary_rate}
 			\end{align}
-			where $\gamma \triangleq P / \sigma^2$ is the average transmit Signal-to-Noise Ratio (SNR). It can be observed that the input distribution of $c$ determines the achievable rate of both primary and secondary links.
+			where $\gamma \triangleq P / \sigma^2$ is the average transmit Signal-to-Noise Ratio (SNR). It can be concluded that the achievable rate of both primary and secondary links depend on the tag input distribution.
 		\end{subsection}
 		\label{se:system_model}
 	\end{section}
@@ -266,11 +274,83 @@
 	\begin{section}{Tag Input Distribution}
 		To achieve a flexible tradeoff between the backscatter and legacy links, we aims to optimize the tag input probability mass function, under $M$-PSK modulation, to maximize the weighted sum of the primary and secondary rates subject to the sum-probability constraint
 		\begin{maxi!}
-			{\scriptstyle{\boldsymbol{r}}}{\rho R_s + (1 - \rho) R_c}{}{}
-			\addConstraint{\sum_{m \in \mathcal{M}} r_m}{=1,}{}
+			{\scriptstyle{\boldsymbol{r} \ge 0}}{\rho R_s + (1 - \rho) R_c}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
+			\addConstraint{\sum_{i \in \mathcal{M}} r_i}{=1,}{\label{co:sum_probability}}
 		\end{maxi!}
-		where $\rho \in [0, 1]$ is the weight factor.
+		where $\rho \in [0, 1]$ is the weight factor. By substituting \eqref{eq:secondary_rate} and \eqref{eq:primary_rate} into \eqref{ob:weighted_sum_rate}, the problem expands to
+		\begin{maxi!}
+			% {\scriptstyle{\boldsymbol{r} \ge 0, \boldsymbol{Q} \ge 0}}{R(\boldsymbol{r}, \boldsymbol{Q}) \triangleq \rho \sum_{i \in \mathcal{M}} r_i \log_2 \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr) \nonumber}{}{}
+			% \breakObjective{\qquad \qquad \ + (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log_2 \frac{q_{j, i}}{r_i}}
+			{\scriptstyle{\boldsymbol{r} \ge 0, \boldsymbol{Q} \ge 0}}{\rho \sum_{i \in \mathcal{M}} r_i \log_2 \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr) \nonumber}{}{}
+			\breakObjective{+ (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log_2 \frac{q_{j, i}}{r_i}}{\label{ob:weighted_sum_rate_expanded}}
+			\addConstraint{\sum_{i \in \mathcal{M}} r_i}{=1.}{}
+		\end{maxi!}
+		Similar to the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972}, we optimize $\boldsymbol{r}$ and $\boldsymbol{Q}$ alternatively to obtain the local optimal tag input distribution and the corresponding weighted sum-rate.
+		\begin{theorem}
+			For any valid tag input probability mass function $\boldsymbol{r}$ [$\boldsymbol{r} > \boldsymbol{0}$?], the optimal backward transition probability from channel output state $j$ to input state $i$ is given by
+			\begin{equation}
+				q_{j, i}^{\star} = \frac{r_i p_{i, j}}{\sum_{i'} r_{i'} p_{i', j}}.
+				\label{eq:backward_transition}
+			\end{equation}
+			\label{th:backward_transition}
+		\end{theorem}
+		\begin{proof}
+			Please refer to Appendix~\ref{ap:backward_transition}.
+		\end{proof}
+		\begin{theorem}
+			For any valid backward transition probability $\boldsymbol{Q}$ [$\boldsymbol{Q} \ge \boldsymbol{0}$?], the optimal tag input probability mass function is given by
+			\begin{equation}
+				r_i = \frac{\bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr)^{\rho / (1 - \rho)} \prod_{j \in \mathcal{M}} q_{j, i}^{p_{i, j}}}{\sum_{i' \in \mathcal{M}} \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_{i'} \rvert^2 \bigr)^{\rho / (1 - \rho)} \prod_{j \in \mathcal{M}} q_{j, i'}^{p_{i', j}}}.
+				\label{eq:input_distribution}
+			\end{equation}
+			\label{th:input_distribution}
+		\end{theorem}
+		\begin{proof}
+			Please refer to Appendix~\ref{ap:input_distribution}.
+		\end{proof}
+
 	\end{section}
+
+
+	\begin{appendix}
+		\begin{subsection}{Proof of Theorem~\ref{th:backward_transition}}
+			Denote the objective function \eqref{ob:weighted_sum_rate_expanded} as $R(\boldsymbol{r}, \boldsymbol{Q})$. Let $w_j \triangleq \sum_{i'} r_{i'} p_{i', j}$ and rearrange \eqref{eq:backward_transition} as
+			\begin{equation}
+				w_j q_{j, i}^{\star} = r_i p_{i, j}.
+			\end{equation}
+			Therefore,
+			\begin{align}
+				R(\boldsymbol{r}, \boldsymbol{Q}^{\star}) - R(\boldsymbol{r}, \boldsymbol{Q})
+				& = (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log_2 \frac{q_{j, i}^{\star}}{q_{j, i}} \nonumber \\
+				& = (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} w_j q_{j, i}^{\star} \log_2 \frac{q_{j, i}^{\star}}{q_{j, i}} \nonumber \\
+				& = (1 - \rho) \sum_{j \in \mathcal{M}} w_j \sum_{i \in \mathcal{M}} q_{j, i}^{\star} \log_2 \frac{q_{j, i}^{\star}}{q_{j, i}} \nonumber \\
+				& = (1 - \rho) \sum_{j \in \mathcal{M}} w_j \infdiv{q_{j, i}^{\star}}{q_{j, i}} \nonumber \\
+				& \ge 0,
+			\end{align}
+			with equality iff $\boldsymbol{Q} = \boldsymbol{Q}^{\star}$.
+			\label{ap:backward_transition}
+		\end{subsection}
+		\begin{subsection}{Proof of Theorem~\ref{th:input_distribution}}
+			We employ the method of Lagrange multipliers, temporally ignore the constraint $\boldsymbol{r} \ge 0$, and assume all logarithms are of base $e$. Define the Lagrangian function as
+			\begin{align}
+				J
+				& = \rho \sum_{i \in \mathcal{M}} r_i \log \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr) \nonumber \\
+				& \quad + (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log \frac{q_{j, i}}{r_i} + \lambda \left( 1 - \sum_{i \in \mathcal{M}} r_i \right),
+			\end{align}
+			where $\lambda$ is the Lagrange multiplier associated with the sum-probability constraint. Differentiating $J$ with respect to $r_i$ gives
+			\begin{align}
+				\pdv{J}{r_i}
+				& = \rho \log \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr) \\
+				& \quad + (1 - \rho) \left( \sum_{j \in \mathcal{M}} p_{i, j} \log q_{j, i} - \log r_i - 1 \right),
+			\end{align}
+			and setting $\pdv*{J}{r_i} = 0$ suggests
+			\begin{equation}
+				r_i = e^{ -(\frac{\lambda}{1 - \rho} + 1)} \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr)^{\rho / (1 - \rho)} \prod_{j \in \mathcal{M}} q_{j, i}^{p_{i, j}}.
+			\end{equation}
+			By considering $\sum_{i \in \mathcal{M}} r_i = 1$, we can eliminate $\lambda$ and obtain the optimal tag input distribution as \eqref{eq:input_distribution}.
+			\label{ap:input_distribution}
+		\end{subsection}
+	\end{appendix}
 
 	\bibliographystyle{IEEEtran}
 	\bibliography{IEEEabrv,library.bib}

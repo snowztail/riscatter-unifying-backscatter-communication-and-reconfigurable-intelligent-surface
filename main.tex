@@ -194,13 +194,13 @@
 				\sigma_m^2 \triangleq \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_m \rvert^2 P + \sigma^2
 				\label{eq:typical_energy}
 			\end{equation}
-			denotes the typical received signal energy over $N$ symbol blocks when the tag is at state $m$, which can be estimated at the user. For the ease of exposition, we sort $\{\sigma_m^2\}$ in a descending order by bijective mapping $f \colon m \mapsto i$\footnote{Note that the mapping is not unique and the detection fails when two different constellation points yield the same energy level.} and let $\sigma_i^2 \ge \sigma_j^2$ for $i > j$, $i,j \in \mathcal{M}$. Denote $\mathcal{H}_i$ as the hypothesis that the tag transmits $c_i$. Following \cite{Qian2019}, the optimal Maximum-Likelihood (ML) detector boils down to the energy detector, and the likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_j$ is
+			denotes the typical received signal energy over $N$ symbol blocks when the tag is at state $m$, which can be estimated at the user. For the ease of exposition, we sort $\{\sigma_m^2\}$ in a ascending order by bijective mapping $f \colon m \mapsto i$\footnote{Note that the mapping is not unique and the detection fails when two different constellation points yield the same energy level.} and let $\sigma_i^2 \le \sigma_j^2$ for $i < j$, $i,j \in \mathcal{M}$. Denote $\mathcal{H}_i$ as the hypothesis that the tag transmits $c_i$. Following \cite{Qian2019}, the optimal Maximum-Likelihood (ML) detector boils down to the energy detector, and the likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_j$ is
 			\begin{equation}
 				\Lambda_{i, j}(\boldsymbol{y}) = \frac{f(\boldsymbol{y} \mid \mathcal{H}_i)}{f(\boldsymbol{y} \mid \mathcal{H}_j)} = \left( \frac{\sigma_j^2}{\sigma_i^2} \right)^N \exp \left( \frac{(\sigma_i^2 - \sigma_j^2) z}{\sigma_i^2 \sigma_j^2} \right),
 			\end{equation}
 			where $f(\boldsymbol{y} \mid \mathcal{H}_i)$, $f(\boldsymbol{y} \mid \mathcal{H}_j)$ denote respectively the conditional probability density function of receiving $\boldsymbol{y}$ under hypothesis $\mathcal{H}_i$ and $\mathcal{H}_j$, and $z \triangleq \lVert y \rVert^2$ is the received signal energy over $N$ symbol blocks. The corresponding decision rule is
 			\begin{equation}
-				\Lambda_{i, j}(\boldsymbol{y}) \underset{H_j}{\overset{H_i}{\gtrless}} 1 \iff z \underset{H_j}{\overset{H_i}{\gtrless}} T_{i, j},
+				\Lambda_{i, j}(\boldsymbol{y}) \underset{H_j}{\overset{H_i}{\lessgtr}} 1 \iff z \underset{H_j}{\overset{H_i}{\lessgtr}} T_{i, j},
 			\end{equation}
 			where the optimal detection threshold is
 			\begin{equation}
@@ -238,7 +238,7 @@
 				R_c = \max_{\boldsymbol{Q} \ge 0} \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log_2 \frac{q_{j, i}}{r_i} \ [\si{bpcu}],
 				\label{eq:secondary_rate}
 			\end{equation}
-			where $\boldsymbol{Q} \in \mathbb{R}_{+}^{M \times M}$ is the backward transition probability matrix \cite{Yeung2008}
+			where $\boldsymbol{Q} \in \mathbb{R}_{+}^{M \times M}$ is the backward transition probability matrix
 			\begin{equation}
 				\boldsymbol{Q} \triangleq
 				\begin{bmatrix}
@@ -287,7 +287,7 @@
 		\end{maxi!}
 		Similar to the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972}, we optimize $\boldsymbol{r}$ and $\boldsymbol{Q}$ alternatively to obtain the local optimal tag input distribution and the corresponding weighted sum-rate.
 		\begin{theorem}
-			For any valid tag input probability mass function $\boldsymbol{r}$ [$\boldsymbol{r} > \boldsymbol{0}$?], the optimal backward transition probability from channel output state $j$ to input state $i$ is given by
+			For any valid tag input probability mass function $\boldsymbol{r}$ [$\boldsymbol{r} > \boldsymbol{0}$?], the optimal backward transition probability from channel output state $j$ to input state $i$ follows Bayes' Theorem as
 			\begin{equation}
 				q_{j, i}^{\star} = \frac{r_i p_{i, j}}{\sum_{i'} r_{i'} p_{i', j}}.
 				\label{eq:backward_transition}
@@ -298,7 +298,7 @@
 			Please refer to Appendix~\ref{ap:backward_transition}.
 		\end{proof}
 		\begin{theorem}
-			For any valid backward transition probability $\boldsymbol{Q}$ [$\boldsymbol{Q} \ge \boldsymbol{0}$?], the optimal tag input probability mass function is given by
+			For any valid backward transition probability $\boldsymbol{Q}$ [$\boldsymbol{Q} \ge 0$?], the optimal tag input probability mass function is given by
 			\begin{equation}
 				r_i = \frac{\bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr)^{\rho / (1 - \rho)} \prod_{j \in \mathcal{M}} q_{j, i}^{p_{i, j}}}{\sum_{i' \in \mathcal{M}} \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_{i'} \rvert^2 \bigr)^{\rho / (1 - \rho)} \prod_{j \in \mathcal{M}} q_{j, i'}^{p_{i', j}}}.
 				\label{eq:input_distribution}
@@ -308,7 +308,12 @@
 		\begin{proof}
 			Please refer to Appendix~\ref{ap:input_distribution}.
 		\end{proof}
-
+		\begin{proposition}
+			For any feasible initial point [constellation subset], the Algorithm is guaranteed to converge to the global optimal of problem \eqref{op:weighted_sum_rate} and achieve the maximum weighted-sum rate.
+		\end{proposition}
+		\begin{proof}
+			The proof is similar to that in \cite[Chapter~9.3]{Yeung2008} and omitted here.
+		\end{proof}
 	\end{section}
 
 

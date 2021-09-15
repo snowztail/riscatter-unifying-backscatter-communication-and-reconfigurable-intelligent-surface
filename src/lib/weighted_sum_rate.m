@@ -5,7 +5,7 @@ function [primaryRate, secondaryRate, inputDistribution] = weighted_sum_rate(for
     % Input:
     %   - forwardTransition [nInputs * nOutputs]: the channel transition probability matrix
 	%	- snr: average transmit SNR
-	%	- sortedChannel [nStates * 1]: sorted equivalent channel in received energy ascending order
+	%	- sortedChannel [nStates * 1]: sorted equivalent channel candidates with ascending receive energy
 	%	- weight: the priority of the primary link
     %   - tolerance: minimum rate gain per iteration
     %
@@ -18,7 +18,6 @@ function [primaryRate, secondaryRate, inputDistribution] = weighted_sum_rate(for
     %   - backwardTransition: detecting transition probability matrix (Bayes' Theorem)
     %
     % Author & Date: Yang (i@snowztail.com), 21 Sep 10
-
 
 	% * Get data
 	nInputs = size(forwardTransition, 1);
@@ -41,8 +40,12 @@ function [primaryRate, secondaryRate, inputDistribution] = weighted_sum_rate(for
 		secondaryRate = secondary_rate(nInputs, nOutputs, forwardTransition, backwardTransition, inputDistribution);
 		weightedSumRate = weight * primaryRate + (1 - weight) * secondaryRate;
 
+		% * Remove unused constellation points
+		if any(inputDistribution <= eps)
+			%TODO
+		end
 		% * Test convergence
-		isConverged = abs(weightedSumRate - weightedSumCapacity) <= tolerance || any(inputDistribution <= eps);
+		isConverged = abs(weightedSumRate - weightedSumCapacity) <= tolerance;
 		weightedSumCapacity = weightedSumRate;
 	end
 end

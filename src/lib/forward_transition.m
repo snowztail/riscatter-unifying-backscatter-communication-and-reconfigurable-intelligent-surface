@@ -6,11 +6,11 @@ function [forwardTransition, sortedChannel, mapIndex] = forward_transition(symbo
 	%	- symbolRatio: the (integer) ratio of backscatter symbol period to legacy symbol period
     %   - transmitPower: average transmit power at the AP
 	%	- noisePower: average noise power at the user
-	%	- equivalentChannel [nStates * 1]: the equivalent channel for the primary transmission at each tag state
+	%	- equivalentChannel [nStates * 1]: the equivalent channel candidates corresponding to tag modulation states
     %
     % Output:
 	%	- forwardTransition [nInputs * nOutputs]: the channel transition probability matrix
-	%	- sortedChannel [nStates * 1]: sorted equivalent channel in received energy ascending order
+	%	- sortedChannel [nStates * 1]: sorted equivalent channel candidates with ascending receive energy
 	%	- mapIndex: the index of mapping from constellation counterclockwise order to energy ascending order
     %
     % Comment:
@@ -54,12 +54,16 @@ function [detectionThreshold] = detection_threshold(symbolRatio, nOutputs, energ
 end
 
 function [forwardTransition] = forward_transition_local(symbolRatio, nInputs, nOutputs, energyLevel, detectionThreshold)
-	conditionalEnergyDistribution = cell(nInputs, 1);
 	forwardTransition = zeros(nInputs, nOutputs);
 	for iInput = 1 : nInputs
-		conditionalEnergyDistribution{iInput} = @(z) (z .^ (symbolRatio - 1) .* exp(- z ./ energyLevel(iInput))) ./ (energyLevel(iInput) .^ symbolRatio .* gamma(symbolRatio));
+		conditionalEnergyDistribution = @(z) (z .^ (symbolRatio - 1) .* exp(-z ./ energyLevel(iInput))) ./ (energyLevel(iInput) .^ symbolRatio .* gamma(symbolRatio));
+		% conditionalEnergyDistribution = @(z) (z .^ (symbolRatio - 1) .* exp(-z ./ energyLevel(iInput))) ./ (hpf(energyLevel(iInput) .^ hpf(symbolRatio) .* hpf(gamma(symbolRatio))));
+		% conditionalEnergyDistribution = @(z) vpa(z .^ (symbolRatio - 1) .* exp(-z ./ energyLevel(iInput))) ./ (energyLevel(iInput) .^ symbolRatio .* gamma(symbolRatio));
+		% conditionalEnergyDistribution = @(z) (z .^ vpa(symbolRatio - 1) .* exp(-z ./ vpa(energyLevel(iInput)))) ./ (vpa(energyLevel(iInput)) .^ vpa(symbolRatio) .* vpa(gamma(symbolRatio)));
+		% conditionalEnergyDistribution = @(z) (z .^ (symbolRatio - 1) .* exp(-z ./ energyLevel(iInput))) ./ double(vpa(energyLevel(iInput)) .^ vpa(symbolRatio) .* vpa(gamma(symbolRatio)));
+		% fplot(conditionalEnergyDistribution{iInput});
 		for iOutput = 1 : nOutputs
-			forwardTransition(iInput, iOutput) = integral(conditionalEnergyDistribution{iInput}, detectionThreshold(iOutput), detectionThreshold(iOutput + 1));
+			forwardTransition(iInput, iOutput) = integral(conditionalEnergyDistribution, detectionThreshold(iOutput), detectionThreshold(iOutput + 1));
 		end
 	end
 end

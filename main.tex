@@ -316,6 +316,17 @@
 		\end{proof}
 	\end{section}
 
+	\begin{section}{OFDM}
+		Due to the constraint of energy detection, with single-antenna tags and reader, at most one AmBC tag can be decoded at a time and accurate detection requires repetition coding over multiple time/frequency blocks to mitigate the impact of primary symbols. Here we consider frequency-independent tag reflection and schedule one tag per OFDM symbol.
+
+		At OFDM symbol $r$, tag $l$ modulates its own information over all $N$ subcarriers while the remaining tags may operate in the cooperative (quantized IRS) mode. Channel frequency response at subband $n$ and block $r$
+		Received signal at OFDM symbol $r$ and subband $n$ is
+		\begin{equation}
+			y_n[r] = \sqrt{P} h_{\mathrm{E}}[r] s_n[r] + \sqrt{\alpha P} h_{\mathrm{C},l} c_l s_n[r] + w_n[r],
+		\end{equation}
+		where $h_{\mathrm{E}}[r] \triangleq \sum_{l' \ne l} h_{\mathrm{C},l'} c_{l'}^\star$ and $c_l$ is the symbol of tag $l$. Apparently $y_n[r] \sim \mathcal{CN}(0,\sigma_n^2[r])$ with $\sigma_n^2[r] \triangleq \lvert h_{\mathrm{E}}[r] + \sqrt{\alpha} h_{\mathrm{C},l} c_l \rvert^2 P + \sigma^2$. Define $\boldsymbol{y}[r] \triangleq [y_1[r],\ldots,y_N[r]]^T$ and we can do energy detection over $N$ subcarriers.
+	\end{section}
+
 
 	\begin{appendix}
 		\begin{subsection}{Proof of Theorem~\ref{th:backward_transition}}

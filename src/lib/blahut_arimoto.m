@@ -15,6 +15,12 @@ function [capacity, inputDistribution] = blahut_arimoto(forwardTransition, toler
     %
     % Author & Date: Yang (i@snowztail.com), 21 Sep 07
 
+	% * Set default tolerance
+	arguments
+		forwardTransition;
+		tolerance = eps;
+	end
+
 	% * Get data
 	nInputs = size(forwardTransition, 1);
 	nOutputs = size(forwardTransition, 2);

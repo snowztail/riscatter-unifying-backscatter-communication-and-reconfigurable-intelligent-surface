@@ -327,6 +327,24 @@
 		where $h_{\mathrm{E}}[r] \triangleq \sum_{l' \ne l} h_{\mathrm{C},l'} c_{l'}^\star$ and $c_l$ is the symbol of tag $l$. Apparently $y_n[r] \sim \mathcal{CN}(0,\sigma_n^2[r])$ with $\sigma_n^2[r] \triangleq \lvert h_{\mathrm{E}}[r] + \sqrt{\alpha} h_{\mathrm{C},l} c_l \rvert^2 P + \sigma^2$. Define $\boldsymbol{y}[r] \triangleq [y_1[r],\ldots,y_N[r]]^T$ and we can do energy detection over $N$ subcarriers.
 	\end{section}
 
+	\begin{section}{Multi-Tag Case}
+		In the $K$-tag scenario, the received signal at symbol block $n$ is
+		\begin{equation}
+			y[n] = \sqrt{P} h_{\mathrm{D}} s[n] + \sum_k \sqrt{\alpha_k} h_{\mathrm{C},k} c_k \sqrt{P} s[n] + w[n].
+		\end{equation}
+
+		On the one hand, we can compute the \emph{sum-rate} of the tags and characterize the (ergodic) primary-secondary capacity region by adjusting weight $\rho$. The weighted sum-rate can be expressed as
+		\begin{align}
+			J_1
+			& = \rho \mathbb{E}_{\boldsymbol{c}} \left[ \log_2 \left( 1 + \gamma \lvert h_{\mathrm{D}} + \sum_k \sqrt{\alpha_k} h_{\mathrm{C},k} c_k \rvert \right) \right] + (1 - \rho) R_c\\
+			& = \rho \sum_{i_1,\dots,i_K \in \mathcal{M}} \prod_{k \in \mathcal{K}} r_{k,i_k} \log_2 \left( 1 + \gamma \lvert h_{\mathrm{D}} + \sum_{k' \in \mathcal{K}} \sqrt{\alpha_{k'}} h_{\mathrm{C},k'} c_{k',i_{k'}} \rvert^2 \right)\\
+			& \quad + (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}^K} \sum_{k \in \mathcal{K}} r_{k,i} p_{i,j} \log \frac{q_{j,i}}{r_{k,i}}.
+		\end{align}
+		In this case, although we can independently maximize the primary/secondary rate in closed form (resp. quantized IRS and multi-user Blahut-Arimoto), the joint form can be tricky due to the $K$-product term. We may consider a 2-loop iterative algorithm, where the inner loop optimizes input distribution over letters while the outer loop over users. I am still working on the convergence and optimality proofs and they are very deep into information theory.
+
+		On the other hand, we can compute the rate region of the user and $K$ tags. However, the capacity region of discrete MAC remains unknown. We can obtain its outer bound by formulating a non-convex problem with a rank-1 constraint, then solve the relaxed problem. The difficulty is that the optimization is performed over $K$-dimensional array $\mathbb{R}^{\underbrace{M \times \ldots \times M}_{K}}$.
+	\end{section}
+
 
 	\begin{appendix}
 		\begin{subsection}{Proof of Theorem~\ref{th:backward_transition}}

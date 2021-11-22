@@ -38,7 +38,7 @@
   \newcommand*\fsize{\dimexpr\f@size pt\relax}%
   \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{173.54883979bp}%
+    \setlength{\unitlength}{162.54454273bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -50,16 +50,16 @@
   \global\let\svgwidth\undefined%
   \global\let\svgscale\undefined%
   \makeatother%
-  \begin{picture}(1,0.30419303)%
+  \begin{picture}(1,0.32478695)%
     \lineheight{1}%
     \setlength\tabcolsep{0pt}%
     \put(0,0){\includegraphics[width=\unitlength]{symbiotic_radio.eps}}%
-    \put(0.16272116,0.08476672){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}AP\end{tabular}}}}%
-    \put(0.76582205,0.07384436){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}UE\end{tabular}}}}%
-    \put(0.64648605,0.0195672){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$\dots$\end{tabular}}}}%
-    \put(0.45659097,0.19828249){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h^{\mathrm{D}}$\end{tabular}}}}%
-    \put(0.85392041,0.20340407){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}TG $k$ \end{tabular}}}}%
-    \put(0.46921258,0.28645668){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{k}^{\mathrm{F}}$\end{tabular}}}}%
-    \put(0.70432292,0.21695803){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{k}^{\mathrm{B}}$\end{tabular}}}}%
+    \put(0.17373734,0.0981951){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}AP\end{tabular}}}}%
+    \put(0.81766836,0.07884364){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}UE\end{tabular}}}}%
+    \put(0.69025328,0.0208919){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$\dots$\end{tabular}}}}%
+    \put(0.48750227,0.21541118){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$\boldsymbol{h}_{\mathrm{D}}^H$\end{tabular}}}}%
+    \put(0.91173099,0.21717456){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}TG $k$ \end{tabular}}}}%
+    \put(0.50097837,0.30584985){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$\boldsymbol{h}_{\mathrm{F},k}^H$\end{tabular}}}}%
+    \put(0.72613945,0.23164613){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{\mathrm{B},k}$\end{tabular}}}}%
   \end{picture}%
 \endgroup%

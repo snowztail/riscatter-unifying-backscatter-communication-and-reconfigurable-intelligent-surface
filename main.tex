@@ -195,12 +195,13 @@
 		\end{subsection}
 
 		\begin{subsection}{Signal Detection}
-			Based on a legacy downlink receiver, we propose a low-complexity multi-tag energy detection scheme in the presence of primary interference. It is achieved by extending the AmBC detection to the case of multiple sources.
+			To reveal the impact of backscatter modulation on the primary transmission, we extend the non-coherent AmBC detection scheme \cite{Qian2019} to the multi-tag case and propose a low-complexity energy detection that decodes the backscatter symbols under primary source uncertainty. It requires no dedicated receivers or non-coherent codes at the AP, and can be readily implemented over legacy downlink systems.
+
 			\begin{remark}
-				One key property of symbiotic radio is the primary message propagates to the user from a known channel and multiple multiplicative channels with uncertainty introduced by backscatter modulation. If the backscatter symbols can be successfully decoded first, they can be modeled within the equivalent channel \eqref{eq:equivalent_channel} as channel training, instead of being removed by SIC. As such, the reflection coefficient simultaneously encodes the tag message and influences the equivalent channel for legacy transmission.
+				One key property of symbiotic radio is the primary message propagates to the user from a known channel and multiple multiplicative channels with uncertainty introduced by backscatter modulation. If the backscatter symbols can be successfully decoded first, they can be modeled within the equivalent channel \eqref{eq:equivalent_channel} as channel training, instead of being removed by SIC. In other words, the reflection coefficient simultaneously encodes the tag message and influences the equivalent channel of primary link.
 			\end{remark}
 
-			To investigate how backscatter modulation potentially benefits the primary transmission, we first decode the tag symbol $c$ in presence of the interference from the primary message $\boldsymbol{s}$. In such case, the detection indeed coincides with that of Ambient Backscatter Communications (AmBC) where the signaling from the ambient source is unknown, and the received signal per symbol block follows the CSCG distribution of $y_m[n] \sim \mathcal{CN}(0,\sigma_m^2)$, where
+			how backscatter modulation potentially benefits the primary transmission, we first decode the tag symbol $c$ in presence of the interference from the primary message $\boldsymbol{s}$. In such case, the detection indeed coincides with that of Ambient Backscatter Communications (AmBC) where the signaling from the ambient source is unknown, and the received signal per symbol block follows the CSCG distribution of $y_m[n] \sim \mathcal{CN}(0,\sigma_m^2)$, where
 			\begin{equation}
 				\sigma_m^2 \triangleq \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_m \rvert^2 P + \sigma^2
 				\label{eq:typical_energy}

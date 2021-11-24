@@ -161,7 +161,6 @@
 				\bar{c}_m = \exp \left(j \frac{2 \pi m}{M}\right).
 				\label{eq:mpsk}
 			\end{equation}
-			% Also, define the $M$-PSK constellation set as $\mathcal{C} \triangleq \{\bar{c}_1,\ldots,\bar{c}_M\}$.
 
 			\begin{remark}
 				For passive tags, the reflection efficiency $\alpha$ controls the tradeoff between the harvestable power and backscatter strength: $\alpha = 0$ corresponds to maximum power transfer to the tag, while $\alpha = 1$ with $M$-PSK corresponds to ideal Intelligent Reflecting Surface (IRS) with $M$ discrete states.
@@ -196,7 +195,7 @@
 			\end{remark}
 		\end{subsection}
 
-		\begin{subsection}{Signal Detection}
+		\begin{subsection}{Backscatter Detection}
 			To reveal the impact of backscatter modulation on the primary transmission, we extend the non-coherent Ambient Backscatter Communications (AmBC) detection \cite{Qian2019} to the multi-tag case, and propose a low-complexity energy detection to decode the backscatter symbols under primary source uncertainty. It requires no dedicated receivers or non-coherent codes at the AP, and can be readily implemented over legacy downlink systems.
 
 			\begin{remark}
@@ -233,92 +232,12 @@
 				f(z \mid \mathcal{H}_i) = \frac{z^{N-1} e^{-z/\sigma_i^2}}{\sigma_i^{2N} \Gamma(N)},
 				\label{eq:energy_distribution}
 			\end{equation}
-			% where $\Gamma(\cdot)$ is the gamma function. As such, the equivalent discrete memoryless channel can be defined by a transition matrix from $\mathcal{M^K}$ to $\mathcal{M^K}$,\footnote{For simplicity, we assume all possible input combinations yield distinct energy levels.} where the probability of observing output state $j$ under input state $i$ is
-			where $\Gamma(\cdot)$ is the gamma function. As such, the equivalent discrete memoryless channel can be defined by a transition matrix where the probability of observing output state $j \in \mathcal{M^K}$ under input state $i \in \mathcal{M^K}$ is\footnote{For simplicity, we assume all possible input combinations yield distinct energy levels.}
+			where $\Gamma(\cdot)$ is the gamma function. As such, the equivalent discrete memoryless channel can be defined by a transition matrix where the probability of observing output $j \in \mathcal{M^K}$ under input $i \in \mathcal{M^K}$ is\footnote{For simplicity, we assume all possible input combinations yield distinct energy levels.}
 			\begin{equation}
 				p(z_j \mid \boldsymbol{c}_i) = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z.
 				\label{eq:transition_probability}
 			\end{equation}
-			In summary, for every candidate backscatter symbol vector, the expected power of the received signal per block can be evaluated by \eqref{eq:receive_variance}, the energy detection threshold to the nearby states can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, and the channel transition matrix can be obtained by \eqref{eq:energy_distribution} and \eqref{eq:transition_probability}.
-
-			% the expected power of the received signal per block under all backscatter combinations can be estimated by \eqref{eq:receive_variance}, the energy detection threshold between any backscatter symbol vectors with adjacent
-
-			% can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, and the forward transition matrix $\boldsymbol{P}$ can be calculated by substituting \eqref{eq:conditional_pdf} into \eqref{eq:transition_probability}.
-
-
-
-			% estimated at the user.
-
-			% To enable energy detection
-
-			% For the ease of notation, we label the backscatter symbol vector by a decimal number that uniquely maps to the modulation index set. As an example, when tag $k$ is at state $m_k$, the modulation index set is $\{m_1,\ldots,m_K\}$, and the backscatter symbol vector can be defined as $\boldsymbol{c}_l \triangleq [\bar{c}_{m_1},\ldots,\bar{c}_{m_K}]^T$, where $l \in \{1,\ldots,M^K\}$ in decimal equals $m_1 - 1 \ldots m_{K-1} - 1 \ m_K$ in base-$M$.
-
-			% $\forall k \in \mathcal{K}$, the backscatter symbol vector is $\boldsymbol{c}_l$, where $l$
-
-			% assign the backscatter symbol vector to the corresponding modulation index set, and further label it by the corresponding base-$M$ number.
-
-			% we label the modulation index set $\{m_1,\ldots,m_K\}$ by the corresponding base-$M$ number
-
-			% define the modulation index set as $\{m_1,\ldots,m_K\}$
-			% For any backscatter symbol vector $\boldsymbol{c}_l$, the received signal at block $n$ is only subject to the variation of the primary symbol $s[n]$ and AWGN $w[n]$, and thus follows CSCG distribution as
-
-			% Since the status of all tags remain unchanged over $N$ primary symbols, the received signal at block $n$ is only subject to the variation of the primary symbol $s[n]$ and AWGN $w[n]$, and thus follows CSCG distribution. When the backscatter symbol vector is $\boldsymbol{c}_l$,
-			% Since the status of all tags remain unchanged over $N$ primary symbols, the received signal is only subject to the variation of the primary source and AWGN. When the backscatter symbol vector is $\boldsymbol{c}_l$, the received signal at block $n$ follows CSCG distribution as
-			% \begin{equation}
-			% 	y_l[n] \sim \mathcal{CN}\biggl(0,\sigma_l^2 \triangleq \Bigl\lvert \bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H \bar{c}_{m_k}\bigr) \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2\biggr).
-			% \end{equation}
-
-			% , and thus follows CSCG distribution. When the backscatter symbol vector is $\boldsymbol{c}_l$,
-
-			% any backscatter symbol vector
-
-			% , and thus follows CSCG distribution as
-
-			% the received
-
-			how backscatter modulation potentially benefits the primary transmission, we first decode the tag symbol $c$ in presence of the interference from the primary message $\boldsymbol{s}$. In such case, the detection indeed coincides with that of Ambient Backscatter Communications (AmBC) where the signaling from the ambient source is unknown, and the received signal per symbol block follows the CSCG distribution of $y_m[n] \sim \mathcal{CN}(0,\sigma_m^2)$, where
-			\begin{equation}
-				\sigma_m^2 \triangleq \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_m \rvert^2 P + \sigma^2
-				\label{eq:typical_energy}
-			\end{equation}
-			denotes the typical received signal energy over $N$ symbol blocks when the tag is at state $m$, which can be estimated at the user. For the ease of exposition, we sort $\{\sigma_m^2\}$ in a ascending order by bijective mapping $f \colon m \mapsto i$\footnote{Note that the mapping is not unique and the detection fails when two different constellation points yield the same energy level.} and let $\sigma_i^2 \le \sigma_j^2$ for $i < j$, $i,j \in \mathcal{M}$. Denote $\mathcal{H}_i$ as the hypothesis that the tag transmits $c_i$. Following \cite{Qian2019}, the optimal Maximum-Likelihood (ML) detector boils down to the energy detector, and the likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_j$ is
-			\begin{equation}
-				\Lambda_{i,j}(\boldsymbol{y}) = \frac{f(\boldsymbol{y} \mid \mathcal{H}_i)}{f(\boldsymbol{y} \mid \mathcal{H}_j)} = \left( \frac{\sigma_j^2}{\sigma_i^2} \right)^N \exp \left( \frac{(\sigma_i^2 - \sigma_j^2) z}{\sigma_i^2 \sigma_j^2} \right),
-			\end{equation}
-			where $f(\boldsymbol{y} \mid \mathcal{H}_i)$, $f(\boldsymbol{y} \mid \mathcal{H}_j)$ denote respectively the conditional probability density function of receiving $\boldsymbol{y}$ under hypothesis $\mathcal{H}_i$ and $\mathcal{H}_j$, and $z \triangleq \lVert y \rVert^2$ is the received signal energy over $N$ symbol blocks. The corresponding decision rule is
-			\begin{equation}
-				\Lambda_{i,j}(\boldsymbol{y}) \underset{H_j}{\overset{H_i}{\lessgtr}} 1 \iff z \underset{H_j}{\overset{H_i}{\lessgtr}} T_{i,j},
-			\end{equation}
-			where the optimal detection threshold is
-			\begin{equation}
-				T_{i,j} \triangleq N \frac{\sigma_i^2 \sigma_j^2}{\sigma_i^2 - \sigma_j^2} \log \frac{\sigma_i^2}{\sigma_j^2},
-				\label{eq:detection_threshold}
-			\end{equation}
-			and the decision region of hypothesis $\mathcal{H}_i$ can be expressed as
-			\begin{equation}
-				\mathcal{R}_i \triangleq [T_{i-1, i}, T_{i, i+1}),
-				\label{eq:decision_region}
-			\end{equation}
-			with $T_{0, 1} \triangleq 0$ and $T_{M, M+1} \triangleq \infty$. On top of this, we define the forward transition probability matrix $\boldsymbol{P} \in \mathbb{R}_{+}^{M \times M}$ as
-			\begin{equation}
-				\boldsymbol{P} \triangleq
-				\begin{bmatrix}
-					p_{1, 1} & \ldots & p_{1, M} \\
-					\vdots & \ddots & \vdots \\
-					p_{M, 1} & \ldots & p_{M, M}
-				\end{bmatrix},
-			\end{equation}
-			where $p_{i,j}$ denotes the transition probability from channel input state $i$ to output state $j$. It can be derived as
-			\begin{equation}
-				p_{i,j} = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z,
-				\label{eq:transition_probability}
-			\end{equation}
-			where $f(z \mid \mathcal{H}_i)$ is the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Since $z$ follows chi-squared distribution with $2N$ degrees of freedom, it holds that
-			\begin{equation}
-				f(z \mid \mathcal{H}_i) = \frac{z^{N-1} e^{-z/\sigma_i^2}}{\sigma_i^{2N} \Gamma(N)},
-				\label{eq:conditional_pdf}
-			\end{equation}
-			where $\Gamma(\cdot)$ is the gamma function. To summarize, with the CSI of the direct and cascaded links, the typical energy of the received signal can be estimated by \eqref{eq:typical_energy}, the energy detection threshold can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, and the forward transition matrix $\boldsymbol{P}$ can be calculated by substituting \eqref{eq:conditional_pdf} into \eqref{eq:transition_probability}.
+			In summary, for every candidate backscatter symbol vector, the expected power of the received signal per block can be evaluated by \eqref{eq:receive_variance}, the energy detection threshold to nearby states can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, and the channel transition matrix can be obtained by \eqref{eq:energy_distribution} and \eqref{eq:transition_probability}.
 
 			We then investigate the achievable rate of the backscatter link. Denote the tag input probability mass function as $\boldsymbol{r} = [r_1,\ldots,r_M]^T \in \mathbb{R}_+^{M \times 1}$ where $r_m$ is the probability to transmit symbol $c_m$ [strictly positive?]. For a given input distribution $\boldsymbol{r}$ and forward transition matrix $\boldsymbol{P}$, the achievable backscatter rate can be written as
 			\begin{equation}

@@ -185,7 +185,7 @@
 				y[n] = \left(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H c_k\right) \boldsymbol{w} s[n] + w[n],
 				\label{eq:received_signal}
 			\end{equation}
-			where $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the active precoder satisfying $\lVert \boldsymbol{w} \rVert^2 \le P$, $P$ is the average transmit power constraint at the AP, and $w[n] \sim \mathcal{CN}(0,\sigma_w^2)$ is the equivalent Additive White Gaussian Noise (AWGN) at block $n$. Besides, we stack the backscatter symbol of $K$ tags as $\boldsymbol{c} \triangleq [c_1,\ldots,c_K]^T \in \mathcal{C}^{K \times 1}$, the received signal over $N$ blocks as $\boldsymbol{y} \triangleq [y[1],\ldots,y[N]]^T \in \mathbb{C}^{N \times 1}$, and define the equivalent channel for primary transmission as
+			where $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the active precoder satisfying $\lVert \boldsymbol{w} \rVert^2 \le P$, $P$ is the average transmit power constraint at the AP, and $w[n] \sim \mathcal{CN}(0,\sigma_w^2)$ is the equivalent Additive White Gaussian Noise (AWGN) at block $n$. Besides, we stack the backscatter symbol of $K$ tags as $\boldsymbol{c} \triangleq [c_1,\ldots,c_K]^T \in \mathcal{C}^{K \times 1}$, the received signal over $N$ blocks as $\boldsymbol{y} \triangleq \left[y[1],\ldots,y[N]\right]^T \in \mathbb{C}^{N \times 1}$, and define the equivalent channel for primary transmission as
 			\begin{equation}
 				h_{\mathrm{E}}^H(\boldsymbol{c}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H c_k.
 				\label{eq:equivalent_channel}
@@ -203,7 +203,55 @@
 				One key property of symbiotic radio is the primary message propagates to the user from a known channel and multiple multiplicative channels with uncertainty introduced by backscatter modulation. As such, each reflection coefficient simultaneously encodes the tag message and influences the equivalent channel of the primary link. If the backscatter symbols can be successfully decoded first, they can be modeled within the equivalent channel \eqref{eq:equivalent_channel} as in channel training, instead of being removed by SIC.
 			\end{remark}
 
-			For the ease of notation, we label the backscatter symbol vector by a decimal number that uniquely maps to the modulation index set. As an example, when tag $k$ is at state $m_k$, the modulation index set is $\{m_1,\ldots,m_K\}$, and the backscatter symbol vector can be defined as $\boldsymbol{c}_l \triangleq [\bar{c}_{m_1},\ldots,\bar{c}_{m_K}]^T$, where $l \in \{1,\ldots,M^K\}$ in decimal equals $m_1 - 1 \ldots m_{K-1} - 1 \ m_K$ in base-$M$.
+			To explicitly specify the content of backscatter symbol vector, we label it by the corresponding modulation index set. For example, when tag $k$ is at state $m_k$, $\forall k \in \mathcal{K}$, the backscatter symbol vector is defined as $\boldsymbol{c}_{\{m_k\}} \triangleq [\bar{c}_{m_1},\ldots,\bar{c}_{m_K}]^T \in \mathcal{C}^{K \times 1}$. Since any $\boldsymbol{c}_{\{m_k\}}$ remains constant over $N$ primary symbols, the received signal at block $n$ is only subject to the variation of the primary source $s[n]$ and AWGN $w[n]$, and thus follows CSCG distribution $y_{\{m_k\}}[n] \sim \mathcal{CN}\left(0,\sigma_{\{m_k\}}^2\right)$ with variance
+			\begin{equation}
+				\sigma_{\{m_k\}}^2 \triangleq \Bigl\lvert \bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H \bar{c}_{m_k}\bigr) \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2.
+				\label{eq:receive_variance}
+			\end{equation}
+			Note that $\sigma_{\{m_k\}}^2$ denotes the expectation of the received power per primary block when tag $k$ is at state $m_k$, $\forall k \in \mathcal{K}$, which can be numerically evaluated based on the precoder, tag, channel, and noise knowledge. For the ease of exposition, we sort all possible $\sigma_{\{m_k\}}^2$ in ascending order by a one-to-one mapping $\{m_k\} \mapsto i$, denote the hypothesis that the backscatter symbol vector in status $i$ as $\mathcal{H}_i$, and define $\sigma_i^2 \le \sigma_j^2$ for $i < j$, $i,j \in \mathcal{M^K} \triangleq \{1,\ldots,M^K\}$.\footnote{When more than one modulation index sets yield the same energy level, the mapping is not unique and the detection fails to separate them. This blind spot issue can be mitigated by multi-antenna techniques.} For the optimal Maximum-Likelihood (ML) detector, the likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_j$ is \cite{Qian2019}
+			\begin{equation}
+				\Lambda_{i,j}(\boldsymbol{y}) = \frac{f(\boldsymbol{y} \mid \mathcal{H}_i)}{f(\boldsymbol{y} \mid \mathcal{H}_j)} = \left( \frac{\sigma_j^2}{\sigma_i^2} \right)^N \exp \left( \frac{\sigma_i^2 - \sigma_j^2}{\sigma_i^2 \sigma_j^2} z \right),
+				\label{eq:likelihood_ratio}
+			\end{equation}
+			where $f(\boldsymbol{y} \mid \mathcal{H}_i)$ and $f(\boldsymbol{y} \mid \mathcal{H}_j)$ are respectively the conditional probability density function of receiving $\boldsymbol{y}$ under hypothesis $\mathcal{H}_i$ and $\mathcal{H}_j$, and $z \triangleq \lVert \boldsymbol{y} \rVert^2$ is the received signal energy over $N$ primary blocks. Obviously, the likelihood ratio only depends on $z$ and the energy detection is thus optimal. The corresponding decision rule is
+			\begin{equation}
+				\Lambda_{i,j}(z) \underset{\mathcal{H}_j}{\overset{\mathcal{H}_i}{\lessgtr}} 1 \iff z \underset{\mathcal{H}_j}{\overset{\mathcal{H}_i}{\lessgtr}} T_{i,j},
+				\label{eq:decision_rule}
+			\end{equation}
+			where the detection threshold between $\mathcal{H}_i$ and $\mathcal{H}_j$ is
+			\begin{equation}
+				T_{i,j} \triangleq N \frac{\sigma_i^2 \sigma_j^2}{\sigma_i^2 - \sigma_j^2} \log \frac{\sigma_i^2}{\sigma_j^2}.
+				\label{eq:detection_threshold}
+			\end{equation}
+			On top of this, the decision region of hypothesis $\mathcal{H}_i$ is
+			\begin{equation}
+				\mathcal{R}_i \triangleq [T_{i-1, i}, T_{i, i+1}),
+				\label{eq:decision_region}
+			\end{equation}
+			and we manually define $T_{0,1} \triangleq 0$ and $T_{M^K,M^K+1} \triangleq \infty$. Let $f(z \mid \mathcal{H}_i)$ be the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Since $z$ follows chi-squared distribution with $2N$ degrees of freedom, it holds that
+			\begin{equation}
+				f(z \mid \mathcal{H}_i) = \frac{z^{N-1} e^{-z/\sigma_i^2}}{\sigma_i^{2N} \Gamma(N)},
+				\label{eq:energy_distribution}
+			\end{equation}
+			% where $\Gamma(\cdot)$ is the gamma function. As such, the equivalent discrete memoryless channel can be defined by a transition matrix from $\mathcal{M^K}$ to $\mathcal{M^K}$,\footnote{For simplicity, we assume all possible input combinations yield distinct energy levels.} where the probability of observing output state $j$ under input state $i$ is
+			where $\Gamma(\cdot)$ is the gamma function. As such, the equivalent discrete memoryless channel can be defined by a transition matrix where the probability of observing output state $j \in \mathcal{M^K}$ under input state $i \in \mathcal{M^K}$ is\footnote{For simplicity, we assume all possible input combinations yield distinct energy levels.}
+			\begin{equation}
+				p(z_j \mid \boldsymbol{c}_i) = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z.
+				\label{eq:transition_probability}
+			\end{equation}
+			In summary, for every candidate backscatter symbol vector, the expected power of the received signal per block can be evaluated by \eqref{eq:receive_variance}, the energy detection threshold to the nearby states can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, and the channel transition matrix can be obtained by \eqref{eq:energy_distribution} and \eqref{eq:transition_probability}.
+
+			% the expected power of the received signal per block under all backscatter combinations can be estimated by \eqref{eq:receive_variance}, the energy detection threshold between any backscatter symbol vectors with adjacent
+
+			% can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, and the forward transition matrix $\boldsymbol{P}$ can be calculated by substituting \eqref{eq:conditional_pdf} into \eqref{eq:transition_probability}.
+
+
+
+			% estimated at the user.
+
+			% To enable energy detection
+
+			% For the ease of notation, we label the backscatter symbol vector by a decimal number that uniquely maps to the modulation index set. As an example, when tag $k$ is at state $m_k$, the modulation index set is $\{m_1,\ldots,m_K\}$, and the backscatter symbol vector can be defined as $\boldsymbol{c}_l \triangleq [\bar{c}_{m_1},\ldots,\bar{c}_{m_K}]^T$, where $l \in \{1,\ldots,M^K\}$ in decimal equals $m_1 - 1 \ldots m_{K-1} - 1 \ m_K$ in base-$M$.
 
 			% $\forall k \in \mathcal{K}$, the backscatter symbol vector is $\boldsymbol{c}_l$, where $l$
 
@@ -215,10 +263,10 @@
 			% For any backscatter symbol vector $\boldsymbol{c}_l$, the received signal at block $n$ is only subject to the variation of the primary symbol $s[n]$ and AWGN $w[n]$, and thus follows CSCG distribution as
 
 			% Since the status of all tags remain unchanged over $N$ primary symbols, the received signal at block $n$ is only subject to the variation of the primary symbol $s[n]$ and AWGN $w[n]$, and thus follows CSCG distribution. When the backscatter symbol vector is $\boldsymbol{c}_l$,
-			Since the status of all tags remain unchanged over $N$ primary symbols, the received signal is only subject to the variation of the primary source and AWGN. When the backscatter symbol vector is $\boldsymbol{c}_l$, the received signal at block $n$ follows CSCG distribution as
-			\begin{equation}
-				y_l[n] \sim \mathcal{CN}\biggl(0,\sigma_l^2 \triangleq \Bigl\lvert \bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H \bar{c}_{m_k}\bigr) \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2\biggr).
-			\end{equation}
+			% Since the status of all tags remain unchanged over $N$ primary symbols, the received signal is only subject to the variation of the primary source and AWGN. When the backscatter symbol vector is $\boldsymbol{c}_l$, the received signal at block $n$ follows CSCG distribution as
+			% \begin{equation}
+			% 	y_l[n] \sim \mathcal{CN}\biggl(0,\sigma_l^2 \triangleq \Bigl\lvert \bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H \bar{c}_{m_k}\bigr) \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2\biggr).
+			% \end{equation}
 
 			% , and thus follows CSCG distribution. When the backscatter symbol vector is $\boldsymbol{c}_l$,
 
@@ -235,15 +283,15 @@
 			\end{equation}
 			denotes the typical received signal energy over $N$ symbol blocks when the tag is at state $m$, which can be estimated at the user. For the ease of exposition, we sort $\{\sigma_m^2\}$ in a ascending order by bijective mapping $f \colon m \mapsto i$\footnote{Note that the mapping is not unique and the detection fails when two different constellation points yield the same energy level.} and let $\sigma_i^2 \le \sigma_j^2$ for $i < j$, $i,j \in \mathcal{M}$. Denote $\mathcal{H}_i$ as the hypothesis that the tag transmits $c_i$. Following \cite{Qian2019}, the optimal Maximum-Likelihood (ML) detector boils down to the energy detector, and the likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_j$ is
 			\begin{equation}
-				\Lambda_{i, j}(\boldsymbol{y}) = \frac{f(\boldsymbol{y} \mid \mathcal{H}_i)}{f(\boldsymbol{y} \mid \mathcal{H}_j)} = \left( \frac{\sigma_j^2}{\sigma_i^2} \right)^N \exp \left( \frac{(\sigma_i^2 - \sigma_j^2) z}{\sigma_i^2 \sigma_j^2} \right),
+				\Lambda_{i,j}(\boldsymbol{y}) = \frac{f(\boldsymbol{y} \mid \mathcal{H}_i)}{f(\boldsymbol{y} \mid \mathcal{H}_j)} = \left( \frac{\sigma_j^2}{\sigma_i^2} \right)^N \exp \left( \frac{(\sigma_i^2 - \sigma_j^2) z}{\sigma_i^2 \sigma_j^2} \right),
 			\end{equation}
 			where $f(\boldsymbol{y} \mid \mathcal{H}_i)$, $f(\boldsymbol{y} \mid \mathcal{H}_j)$ denote respectively the conditional probability density function of receiving $\boldsymbol{y}$ under hypothesis $\mathcal{H}_i$ and $\mathcal{H}_j$, and $z \triangleq \lVert y \rVert^2$ is the received signal energy over $N$ symbol blocks. The corresponding decision rule is
 			\begin{equation}
-				\Lambda_{i, j}(\boldsymbol{y}) \underset{H_j}{\overset{H_i}{\lessgtr}} 1 \iff z \underset{H_j}{\overset{H_i}{\lessgtr}} T_{i, j},
+				\Lambda_{i,j}(\boldsymbol{y}) \underset{H_j}{\overset{H_i}{\lessgtr}} 1 \iff z \underset{H_j}{\overset{H_i}{\lessgtr}} T_{i,j},
 			\end{equation}
 			where the optimal detection threshold is
 			\begin{equation}
-				T_{i, j} \triangleq N \frac{\sigma_i^2 \sigma_j^2}{\sigma_i^2 - \sigma_j^2} \log \frac{\sigma_i^2}{\sigma_j^2},
+				T_{i,j} \triangleq N \frac{\sigma_i^2 \sigma_j^2}{\sigma_i^2 - \sigma_j^2} \log \frac{\sigma_i^2}{\sigma_j^2},
 				\label{eq:detection_threshold}
 			\end{equation}
 			and the decision region of hypothesis $\mathcal{H}_i$ can be expressed as
@@ -260,9 +308,9 @@
 					p_{M, 1} & \ldots & p_{M, M}
 				\end{bmatrix},
 			\end{equation}
-			where $p_{i, j}$ denotes the transition probability from channel input state $i$ to output state $j$. It can be derived as
+			where $p_{i,j}$ denotes the transition probability from channel input state $i$ to output state $j$. It can be derived as
 			\begin{equation}
-				p_{i, j} = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z,
+				p_{i,j} = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z,
 				\label{eq:transition_probability}
 			\end{equation}
 			where $f(z \mid \mathcal{H}_i)$ is the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Since $z$ follows chi-squared distribution with $2N$ degrees of freedom, it holds that
@@ -274,7 +322,7 @@
 
 			We then investigate the achievable rate of the backscatter link. Denote the tag input probability mass function as $\boldsymbol{r} = [r_1,\ldots,r_M]^T \in \mathbb{R}_+^{M \times 1}$ where $r_m$ is the probability to transmit symbol $c_m$ [strictly positive?]. For a given input distribution $\boldsymbol{r}$ and forward transition matrix $\boldsymbol{P}$, the achievable backscatter rate can be written as
 			\begin{equation}
-				R_c = \max_{\boldsymbol{Q} \ge 0} \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log_2 \frac{q_{j, i}}{r_i} \ [\si{bpcu}],
+				R_c = \max_{\boldsymbol{Q} \ge 0} \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i,j} \log_2 \frac{q_{j, i}}{r_i} \ [\si{bpcu}],
 				\label{eq:secondary_rate}
 			\end{equation}
 			where $\boldsymbol{Q} \in \mathbb{R}_{+}^{M \times M}$ is the backward transition probability matrix
@@ -320,15 +368,15 @@
 			\end{equation}
 			denotes the typical received signal energy over $N$ symbol blocks when the tag is at state $m$, which can be estimated at the user. For the ease of exposition, we sort $\{\sigma_m^2\}$ in a ascending order by bijective mapping $f \colon m \mapsto i$\footnote{Note that the mapping is not unique and the detection fails when two different constellation points yield the same energy level.} and let $\sigma_i^2 \le \sigma_j^2$ for $i < j$, $i,j \in \mathcal{M}$. Denote $\mathcal{H}_i$ as the hypothesis that the tag transmits $c_i$. Following \cite{Qian2019}, the optimal Maximum-Likelihood (ML) detector boils down to the energy detector, and the likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_j$ is
 			\begin{equation}
-				\Lambda_{i, j}(\boldsymbol{y}) = \frac{f(\boldsymbol{y} \mid \mathcal{H}_i)}{f(\boldsymbol{y} \mid \mathcal{H}_j)} = \left( \frac{\sigma_j^2}{\sigma_i^2} \right)^N \exp \left( \frac{(\sigma_i^2 - \sigma_j^2) z}{\sigma_i^2 \sigma_j^2} \right),
+				\Lambda_{i,j}(\boldsymbol{y}) = \frac{f(\boldsymbol{y} \mid \mathcal{H}_i)}{f(\boldsymbol{y} \mid \mathcal{H}_j)} = \left( \frac{\sigma_j^2}{\sigma_i^2} \right)^N \exp \left( \frac{(\sigma_i^2 - \sigma_j^2) z}{\sigma_i^2 \sigma_j^2} \right),
 			\end{equation}
 			where $f(\boldsymbol{y} \mid \mathcal{H}_i)$, $f(\boldsymbol{y} \mid \mathcal{H}_j)$ denote respectively the conditional probability density function of receiving $\boldsymbol{y}$ under hypothesis $\mathcal{H}_i$ and $\mathcal{H}_j$, and $z \triangleq \lVert y \rVert^2$ is the received signal energy over $N$ symbol blocks. The corresponding decision rule is
 			\begin{equation}
-				\Lambda_{i, j}(\boldsymbol{y}) \underset{H_j}{\overset{H_i}{\lessgtr}} 1 \iff z \underset{H_j}{\overset{H_i}{\lessgtr}} T_{i, j},
+				\Lambda_{i,j}(\boldsymbol{y}) \underset{H_j}{\overset{H_i}{\lessgtr}} 1 \iff z \underset{H_j}{\overset{H_i}{\lessgtr}} T_{i,j},
 			\end{equation}
 			where the optimal detection threshold is
 			\begin{equation}
-				T_{i, j} \triangleq N \frac{\sigma_i^2 \sigma_j^2}{\sigma_i^2 - \sigma_j^2} \log \frac{\sigma_i^2}{\sigma_j^2},
+				T_{i,j} \triangleq N \frac{\sigma_i^2 \sigma_j^2}{\sigma_i^2 - \sigma_j^2} \log \frac{\sigma_i^2}{\sigma_j^2},
 				\label{eq:detection_threshold}
 			\end{equation}
 			and the decision region of hypothesis $\mathcal{H}_i$ can be expressed as
@@ -345,9 +393,9 @@
 					p_{M, 1} & \ldots & p_{M, M}
 				\end{bmatrix},
 			\end{equation}
-			where $p_{i, j}$ denotes the transition probability from channel input state $i$ to output state $j$. It can be derived as
+			where $p_{i,j}$ denotes the transition probability from channel input state $i$ to output state $j$. It can be derived as
 			\begin{equation}
-				p_{i, j} = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z,
+				p_{i,j} = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z,
 				\label{eq:transition_probability}
 			\end{equation}
 			where $f(z \mid \mathcal{H}_i)$ is the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Since $z$ follows chi-squared distribution with $2N$ degrees of freedom, it holds that
@@ -359,7 +407,7 @@
 
 			We then investigate the achievable rate of the backscatter link. Denote the tag input probability mass function as $\boldsymbol{r} = [r_1,\ldots,r_M]^T \in \mathbb{R}_+^{M \times 1}$ where $r_m$ is the probability to transmit symbol $c_m$ [strictly positive?]. For a given input distribution $\boldsymbol{r}$ and forward transition matrix $\boldsymbol{P}$, the achievable backscatter rate can be written as
 			\begin{equation}
-				R_c = \max_{\boldsymbol{Q} \ge 0} \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log_2 \frac{q_{j, i}}{r_i} \ [\si{bpcu}],
+				R_c = \max_{\boldsymbol{Q} \ge 0} \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i,j} \log_2 \frac{q_{j, i}}{r_i} \ [\si{bpcu}],
 				\label{eq:secondary_rate}
 			\end{equation}
 			where $\boldsymbol{Q} \in \mathbb{R}_{+}^{M \times M}$ is the backward transition probability matrix
@@ -403,14 +451,14 @@
 			where $\rho \in [0, 1]$ is the weight factor. By substituting \eqref{eq:secondary_rate} and \eqref{eq:primary_rate} into \eqref{ob:weighted_sum_rate}, the problem expands to
 			\begin{maxi!}
 				{\scriptstyle{\boldsymbol{r} \ge 0, \boldsymbol{Q} \ge 0}}{\rho \sum_{i \in \mathcal{M}} r_i \log_2 \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr) \nonumber}{}{}
-				\breakObjective{+ (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log_2 \frac{q_{j, i}}{r_i}}{\label{ob:weighted_sum_rate_expanded}}
+				\breakObjective{+ (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i,j} \log_2 \frac{q_{j, i}}{r_i}}{\label{ob:weighted_sum_rate_expanded}}
 				\addConstraint{\sum_{i \in \mathcal{M}} r_i}{=1.}{}
 			\end{maxi!}
 			Similar to the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972}, we optimize $\boldsymbol{r}$ and $\boldsymbol{Q}$ alternatively to obtain the local optimal tag input distribution and the corresponding weighted sum-rate.
 			\begin{theorem}
 				For any valid tag input probability mass function $\boldsymbol{r}$ [$\boldsymbol{r} > \boldsymbol{0}$?], the optimal backward transition probability from channel output state $j$ to input state $i$ follows Bayes' Theorem as
 				\begin{equation}
-					q_{j, i}^{\star} = \frac{r_i p_{i, j}}{\sum_{i'} r_{i'} p_{i', j}}.
+					q_{j, i}^{\star} = \frac{r_i p_{i,j}}{\sum_{i'} r_{i'} p_{i', j}}.
 					\label{eq:backward_transition}
 				\end{equation}
 				\label{th:backward_transition}
@@ -421,7 +469,7 @@
 			\begin{theorem}
 				For any valid backward transition probability $\boldsymbol{Q}$ [$\boldsymbol{Q} \ge 0$?], the optimal tag input probability mass function is given by
 				\begin{equation}
-					r_i = \frac{\bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr)^{\rho / (1 - \rho)} \prod_{j \in \mathcal{M}} q_{j, i}^{p_{i, j}}}{\sum_{i' \in \mathcal{M}} \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_{i'} \rvert^2 \bigr)^{\rho / (1 - \rho)} \prod_{j \in \mathcal{M}} q_{j, i'}^{p_{i', j}}}.
+					r_i = \frac{\bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr)^{\rho / (1 - \rho)} \prod_{j \in \mathcal{M}} q_{j, i}^{p_{i,j}}}{\sum_{i' \in \mathcal{M}} \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_{i'} \rvert^2 \bigr)^{\rho / (1 - \rho)} \prod_{j \in \mathcal{M}} q_{j, i'}^{p_{i', j}}}.
 					\label{eq:input_distribution}
 				\end{equation}
 				\label{th:input_distribution}
@@ -472,12 +520,12 @@
 		\begin{subsection}{Proof of Theorem~\ref{th:backward_transition}}
 			Denote the objective function \eqref{ob:weighted_sum_rate_expanded} as $R(\boldsymbol{r}, \boldsymbol{Q})$. Let $w_j \triangleq \sum_{i'} r_{i'} p_{i', j}$ and rearrange \eqref{eq:backward_transition} as
 			\begin{equation}
-				w_j q_{j, i}^{\star} = r_i p_{i, j}.
+				w_j q_{j, i}^{\star} = r_i p_{i,j}.
 			\end{equation}
 			Therefore,
 			\begin{align}
 				R(\boldsymbol{r}, \boldsymbol{Q}^{\star}) - R(\boldsymbol{r}, \boldsymbol{Q})
-				& = (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log_2 \frac{q_{j, i}^{\star}}{q_{j, i}} \nonumber \\
+				& = (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i,j} \log_2 \frac{q_{j, i}^{\star}}{q_{j, i}} \nonumber \\
 				& = (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} w_j q_{j, i}^{\star} \log_2 \frac{q_{j, i}^{\star}}{q_{j, i}} \nonumber \\
 				& = (1 - \rho) \sum_{j \in \mathcal{M}} w_j \sum_{i \in \mathcal{M}} q_{j, i}^{\star} \log_2 \frac{q_{j, i}^{\star}}{q_{j, i}} \nonumber \\
 				& = (1 - \rho) \sum_{j \in \mathcal{M}} w_j \infdiv{q_{j, i}^{\star}}{q_{j, i}} \nonumber \\
@@ -491,17 +539,17 @@
 			\begin{align}
 				J
 				& = \rho \sum_{i \in \mathcal{M}} r_i \log \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr) \nonumber \\
-				& \quad + (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i, j} \log \frac{q_{j, i}}{r_i} + \lambda \left( 1 - \sum_{i \in \mathcal{M}} r_i \right),
+				& \quad + (1 - \rho) \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i,j} \log \frac{q_{j, i}}{r_i} + \lambda \left( 1 - \sum_{i \in \mathcal{M}} r_i \right),
 			\end{align}
 			where $\lambda$ is the Lagrange multiplier associated with the sum-probability constraint. Differentiating $J$ with respect to $r_i$ gives
 			\begin{align}
 				\pdv{J}{r_i}
 				& = \rho \log \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr) \\
-				& \quad + (1 - \rho) \left( \sum_{j \in \mathcal{M}} p_{i, j} \log q_{j, i} - \log r_i - 1 \right),
+				& \quad + (1 - \rho) \left( \sum_{j \in \mathcal{M}} p_{i,j} \log q_{j, i} - \log r_i - 1 \right),
 			\end{align}
 			and setting $\pdv*{J}{r_i} = 0$ suggests
 			\begin{equation}
-				r_i = e^{ -(\frac{\lambda}{1 - \rho} + 1)} \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr)^{\rho / (1 - \rho)} \prod_{j \in \mathcal{M}} q_{j, i}^{p_{i, j}}.
+				r_i = e^{ -(\frac{\lambda}{1 - \rho} + 1)} \bigl( 1 + \gamma \lvert h_{\mathrm{D}} + \sqrt{\alpha} h_{\mathrm{C}} c_i \rvert^2 \bigr)^{\rho / (1 - \rho)} \prod_{j \in \mathcal{M}} q_{j, i}^{p_{i,j}}.
 			\end{equation}
 			By considering $\sum_{i \in \mathcal{M}} r_i = 1$, we can eliminate $\lambda$ and obtain the optimal tag input distribution as \eqref{eq:input_distribution}.
 			\label{ap:input_distribution}

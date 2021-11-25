@@ -222,7 +222,7 @@
 				T_{i,j} \triangleq N \frac{\sigma_i^2 \sigma_j^2}{\sigma_i^2 - \sigma_j^2} \log \frac{\sigma_i^2}{\sigma_j^2}.
 				\label{eq:detection_threshold}
 			\end{equation}
-			On top of this, the decision region of hypothesis $\mathcal{H}_i$ is
+			Accordingly, the decision region of hypothesis $\mathcal{H}_i$ is
 			\begin{equation}
 				\mathcal{R}_i \triangleq [T_{i-1, i}, T_{i, i+1}),
 				\label{eq:decision_region}
@@ -232,11 +232,18 @@
 				f(z \mid \mathcal{H}_i) = \frac{z^{N-1} e^{-z/\sigma_i^2}}{\sigma_i^{2N} \Gamma(N)},
 				\label{eq:energy_distribution}
 			\end{equation}
-			where $\Gamma(\cdot)$ is the gamma function. As such, the equivalent discrete memoryless channel can be defined by a transition matrix where the probability of observing output $j \in \mathcal{M^K}$ under input $i \in \mathcal{M^K}$ is\footnote{For simplicity, we assume all possible input combinations yield distinct energy levels.}
+			where $\Gamma(\cdot)$ is the gamma function. Hence, the equivalent point-to-point discrete memoryless channel from tag input combination alphabet $\mathcal{M^K}$ to received energy level alphabet $\mathcal{M^K}$ can be defined by a transition matrix, where the probability of observing energy level $j$ under tag input combination $i$ is\footnote{For simplicity, we assume there exists at least one feasible precoder that produces distinct received energy levels for all tag input combinations. [TODO] Is this necessary? Maybe we can keep those same energy levels and avoid them by input distribution design.}
 			\begin{equation}
 				p(z_j \mid \boldsymbol{c}_i) = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z.
-				\label{eq:transition_probability}
+				\label{eq:equivalent_channel}
 			\end{equation}
+			Based on the equivalent point-to-point channel \eqref{eq:equivalent_channel}, we can compute the marginal on all tags and obtain $K$ transition matrices from $\mathcal{M}$ to $\mathcal{M^K}$ that compose a discrete memoryless MAC. [ADD EQUATION HERE]
+
+			Mathematically speaking,
+			\begin{equation}
+				p(z_j \mid c_{m_k}) = \sum_{i_1,\ldots,i_{k-1},i_{k+1},\ldots,i_K} p(z_j \mid \boldsymbol{c}_{i \setminus k}, c_{m_k}) / \sum_{i_1,\ldots,i_K} p(z_j \mid \boldsymbol{c}_i)
+			\end{equation}
+
 			In summary, for every candidate backscatter symbol vector, the expected power of the received signal per block can be evaluated by \eqref{eq:receive_variance}, the energy detection threshold to nearby states can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, and the channel transition matrix can be obtained by \eqref{eq:energy_distribution} and \eqref{eq:transition_probability}.
 
 			We then investigate the achievable rate of the backscatter link. Denote the tag input probability mass function as $\boldsymbol{r} = [r_1,\ldots,r_M]^T \in \mathbb{R}_+^{M \times 1}$ where $r_m$ is the probability to transmit symbol $c_m$ [strictly positive?]. For a given input distribution $\boldsymbol{r}$ and forward transition matrix $\boldsymbol{P}$, the achievable backscatter rate can be written as

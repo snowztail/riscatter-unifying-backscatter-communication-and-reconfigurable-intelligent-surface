@@ -202,12 +202,12 @@
 				One key property of symbiotic radio is the primary message propagates to the user from a known channel and multiple multiplicative channels with uncertainty introduced by backscatter modulation. As such, each reflection coefficient simultaneously encodes the tag message and influences the equivalent channel of the primary link. If the backscatter symbols can be successfully decoded first, they can be modeled within the equivalent channel \eqref{eq:equivalent_channel} as in channel training, instead of being removed by SIC.
 			\end{remark}
 
-			To explicitly specify the content of backscatter symbol vector, we label it by the corresponding modulation index set. For example, when tag $k$ is at state $m_k$, $\forall k \in \mathcal{K}$, the backscatter symbol vector is defined as $\boldsymbol{c}_{\{m_k\}} \triangleq [\bar{c}_{m_1},\ldots,\bar{c}_{m_K}]^T \in \mathcal{C}^{K \times 1}$. Since any $\boldsymbol{c}_{\{m_k\}}$ remains constant over $N$ primary symbols, the received signal at block $n$ is only subject to the variation of the primary source $s[n]$ and AWGN $w[n]$, and thus follows CSCG distribution $y_{\{m_k\}}[n] \sim \mathcal{CN}\left(0,\sigma_{\{m_k\}}^2\right)$ with variance
+			To explicitly specify the content of backscatter symbol vector, we label it by the corresponding modulation index set. For tag $k$ at state $m_k$, $\forall k \in \mathcal{K}$, we define the modulation index set as $m_{\mathcal{K}} \triangleq \{m_k \colon k \in \mathcal{K}\}$ and the backscatter symbol vector as $\bar{\boldsymbol{c}}_{m_{\mathcal{K}}} \triangleq [\bar{c}_{m_1},\ldots,\bar{c}_{m_K}]^T \in \mathcal{C}^{K \times 1}$. Since any $\bar{\boldsymbol{c}}_{m_{\mathcal{K}}}$ remains constant per $N$ primary symbols, the received signal at block $n$ is only subject to the variation of the primary source $s[n]$ and AWGN $w[n]$, and thus follows CSCG distribution $y_{m_{\mathcal{K}}}[n] \sim \mathcal{CN}\left(0,\sigma_{m_{\mathcal{K}}}^2\right)$ with variance
 			\begin{equation}
-				\sigma_{\{m_k\}}^2 \triangleq \Bigl\lvert \bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H \bar{c}_{m_k}\bigr) \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2.
+				\sigma_{m_{\mathcal{K}}}^2 \triangleq \Bigl\lvert \bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H \bar{c}_{m_k}\bigr) \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2,
 				\label{eq:receive_variance}
 			\end{equation}
-			Note that $\sigma_{\{m_k\}}^2$ denotes the expectation of the received power per primary block when tag $k$ is at state $m_k$, $\forall k \in \mathcal{K}$, which can be numerically evaluated based on the precoder, tag, channel, and noise knowledge. For the ease of exposition, we sort all possible $\sigma_{\{m_k\}}^2$ in ascending order by a one-to-one mapping $\{m_k\} \mapsto i$, denote the hypothesis that the backscatter symbol vector in status $i$ as $\mathcal{H}_i$, and define $\sigma_i^2 \le \sigma_j^2$ for $i < j$, $i,j \in \mathcal{M^K} \triangleq \{1,\ldots,M^K\}$.\footnote{When more than one modulation index sets yield the same energy level, the mapping is not unique and the detection fails to separate them. This blind spot issue can be mitigated by multi-antenna techniques.} For the optimal Maximum-Likelihood (ML) detector, the likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_j$ is \cite{Qian2019}
+			which denotes the expectation of the received power per primary block under tag modulation index set $\boldsymbol{m}$, and can be numerically evaluated based on the precoder, tag, channel, and noise knowledge. For the ease of exposition, we sort all possible $\sigma_{m_{\mathcal{K}}}^2$ in ascending order by a one-to-one mapping $\boldsymbol{m} \mapsto i$, denote the hypothesis that the backscatter symbol vector in status $i$ as $\mathcal{H}_i$, and define $\sigma_i^2 \le \sigma_j^2$ for $i < j$, $i,j \in \mathcal{M^K} \triangleq \{1,\ldots,M^K\}$.\footnote{When more than one modulation index sets yield the same energy level, the mapping is not unique and the detection fails to separate them. This blind spot issue can be mitigated by multi-antenna techniques.} For the optimal Maximum-Likelihood (ML) detector, the likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_j$ is \cite{Qian2019}
 			\begin{equation}
 				\Lambda_{i,j}(\boldsymbol{y}) = \frac{f(\boldsymbol{y} \mid \mathcal{H}_i)}{f(\boldsymbol{y} \mid \mathcal{H}_j)} = \left( \frac{\sigma_j^2}{\sigma_i^2} \right)^N \exp \left( \frac{\sigma_i^2 - \sigma_j^2}{\sigma_i^2 \sigma_j^2} z \right),
 				\label{eq:likelihood_ratio}
@@ -222,6 +222,7 @@
 				T_{i,j} \triangleq N \frac{\sigma_i^2 \sigma_j^2}{\sigma_i^2 - \sigma_j^2} \log \frac{\sigma_i^2}{\sigma_j^2}.
 				\label{eq:detection_threshold}
 			\end{equation}
+
 			Accordingly, the decision region of hypothesis $\mathcal{H}_i$ is
 			\begin{equation}
 				\mathcal{R}_i \triangleq [T_{i-1, i}, T_{i, i+1}),
@@ -232,36 +233,24 @@
 				f(z \mid \mathcal{H}_i) = \frac{z^{N-1} e^{-z/\sigma_i^2}}{\sigma_i^{2N} \Gamma(N)},
 				\label{eq:energy_distribution}
 			\end{equation}
-			where $\Gamma(\cdot)$ is the gamma function. Hence, the equivalent point-to-point discrete memoryless channel from tag input combination alphabet $\mathcal{M^K}$ to received energy level alphabet $\mathcal{M^K}$ can be defined by a transition matrix, where the probability of observing energy level $j$ under tag input combination $i$ is\footnote{For simplicity, we assume there exists at least one feasible precoder that produces distinct received energy levels for all tag input combinations. [TODO] Is this necessary? Maybe we can keep those same energy levels and avoid them by input distribution design.}
+			where $\Gamma(\cdot)$ is the gamma function. As such, we can formulate an equivalent point-to-point discrete memoryless channel from tag input combination alphabet $\mathcal{M^K}$ to received energy level alphabet $\mathcal{M^K}$ as a transition matrix, where the probability of observing energy level $j$ under tag input combination $i$ is\footnote{For simplicity, we assume there exists at least one feasible precoder that produces distinct received energy levels for all tag input combinations. [TODO] Is this necessary? Maybe we can keep those same energy levels and avoid them by input distribution design.}
 			\begin{equation}
-				p(z_j \mid \boldsymbol{c}_i) = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z.
+				p(z_j \mid \bar{\boldsymbol{c}}_i) = p(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z.
 				\label{eq:equivalent_channel}
 			\end{equation}
-			Based on the equivalent point-to-point channel \eqref{eq:equivalent_channel}, we can compute the marginal on all tags and obtain $K$ transition matrices from $\mathcal{M}$ to $\mathcal{M^K}$ that compose a discrete memoryless MAC. [ADD EQUATION HERE]
 
-			Mathematically speaking,
+			Based on the equivalent point-to-point channel \eqref{eq:equivalent_channel}, we can compute the marginal probability on all tags and obtain $K$ transition matrices from $\mathcal{M}$ to $\mathcal{M^K}$ that compose a discrete memoryless MAC. Mathematically speaking, the probability of observing energy level $j$ when tag $k$ at status $m_k$ is
 			\begin{equation}
-				p(z_j \mid c_{m_k}) = \sum_{i_1,\ldots,i_{k-1},i_{k+1},\ldots,i_K} p(z_j \mid \boldsymbol{c}_{i \setminus k}, c_{m_k}) / \sum_{i_1,\ldots,i_K} p(z_j \mid \boldsymbol{c}_i)
+				p(z_j \mid c_k = \bar{c}_{m_k}) = \frac{\sum_{m_{\mathcal{K} \setminus k}} p(z_j \mid \bar{\boldsymbol{c}}_{m_{\mathcal{K}}})}{\sum_{m_{\mathcal{K}}} p(z_j \mid \bar{\boldsymbol{c}}_{m_{\mathcal{K}}})}.
+				\label{eq:mac}
 			\end{equation}
 
-			In summary, for every candidate backscatter symbol vector, the expected power of the received signal per block can be evaluated by \eqref{eq:receive_variance}, the energy detection threshold to nearby states can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, and the channel transition matrix can be obtained by \eqref{eq:energy_distribution} and \eqref{eq:transition_probability}.
-
-			We then investigate the achievable rate of the backscatter link. Denote the tag input probability mass function as $\boldsymbol{r} = [r_1,\ldots,r_M]^T \in \mathbb{R}_+^{M \times 1}$ where $r_m$ is the probability to transmit symbol $c_m$ [strictly positive?]. For a given input distribution $\boldsymbol{r}$ and forward transition matrix $\boldsymbol{P}$, the achievable backscatter rate can be written as
-			\begin{equation}
-				R_c = \max_{\boldsymbol{Q} \ge 0} \sum_{i \in \mathcal{M}} \sum_{j \in \mathcal{M}} r_i p_{i,j} \log_2 \frac{q_{j, i}}{r_i} \ [\si{bpcu}],
-				\label{eq:secondary_rate}
-			\end{equation}
-			where $\boldsymbol{Q} \in \mathbb{R}_{+}^{M \times M}$ is the backward transition probability matrix
-			\begin{equation}
-				\boldsymbol{Q} \triangleq
-				\begin{bmatrix}
-					q_{1, 1} & \ldots & q_{1, M} \\
-					\vdots & \ddots & \vdots \\
-					q_{M, 1} & \ldots & q_{M, M}
-				\end{bmatrix},
-			\end{equation}
-			and $q_{j, i}$ denotes the transition probability from channel output state $j$ to input state $i$.
+			In summary, for every possible tag input combination, the expected power of the received signal per block can be evaluated by \eqref{eq:receive_variance}, the energy detection threshold to nearby states can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, the equivalent point-to-point channel can be obtained by \eqref{eq:energy_distribution} and \eqref{eq:equivalent_channel}, and the discrete memoryless MAC can be extracted by \eqref{eq:mac}.
 		\end{subsection}
+	\end{section}
+
+	\begin{section}{Precoder and Tag Input Design}
+		TODO
 	\end{section}
 
 	\begin{section}{The Single-tag Case}

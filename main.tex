@@ -249,8 +249,8 @@
 			In summary, for every possible tag input combination, the expected power of the received signal per block can be evaluated by \eqref{eq:receive_variance}, the energy detection threshold to nearby states can be computed by \eqref{eq:detection_threshold}, the decision region can be retrieved by \eqref{eq:decision_region}, the equivalent point-to-point channel can be obtained by \eqref{eq:energy_distribution} and \eqref{eq:point_to_point_channel}, and the discrete memoryless MAC can be extracted by \eqref{eq:mac}.
 		\end{subsection}
 
-		\begin{subsection}{Backscatter sum-capacity}
-			Before investigating the sum-capacity of the tags, we introduce some prerequisites in information theory. Define the input probability distribution of tag $k$ at status $m_k$ as $P_k(\bar{c}_{m_k})$, and assume the input distribution of all tags are mutually independent, such that $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Following \cite{Rezaeian2004}, the information function associated with specific tag input combination $\bar{c}_{m_{\mathcal{K}}}$ is defined as
+		\begin{subsection}{Backscatter sum-rate}
+			Before investigating the sum-rate of the tags, we introduce some prerequisites in information theory. Define the input probability distribution of tag $k$ at status $m_k$ as $P_k(\bar{c}_{m_k})$, and assume the input distribution of all tags are mutually independent, such that $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Following \cite{Rezaeian2004}, the information function associated with specific tag input combination $\bar{c}_{m_{\mathcal{K}}}$ is defined as
 			\begin{equation}
 				I(\bar{c}_{m_{\mathcal{K}}} ; z) \triangleq \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{P(\bar{z}_j)},
 				\label{eq:information_function}
@@ -263,21 +263,23 @@
 			and the mutual information of the tags and the received signal can be expressed as\footnote{Please be aware that $c_{\mathcal{K}}$, $c_{\mathcal{S}}$, $z$ are random variables, while $\bar{c}_{m_{\mathcal{K}}}$ (and $\bar{c}_i$), $\bar{c}_{m_{\mathcal{S}}}$, $\bar{z}_j$ represent the corresponding instances.}
 			\begin{equation}
 				I(c_{\mathcal{K}} ; z) = \mathbb{E}_{c_{\mathcal{K}}} \left[I(\bar{c}_{m_{\mathcal{K}}} ; z)\right] = \mathbb{E}_{c_{\mathcal{S}}} \left[I_{\mathcal{S}}(\bar{c}_{m_{\mathcal{S}}} ; z)\right].
+				\label{eq:mutual_information}
 			\end{equation}
 
-			Evidently, for a given discrete memoryless MAC with transition probability $P(z \mid c_{\mathcal{K}})$, the information function $I(\bar{c}_{m_{\mathcal{K}}} ; z)$ and mutual information $I(c_{\mathcal{K}} ; z)$ only depend on the tag input distribution $P_k(\bar{c}_{m_k})$, $\forall m_k \in \mathcal{M}$, $\forall k \in \mathcal{K}$. Therefore, we can obtain the backscatter sum-capacity by maximizing the mutual information over the tag input distributions as
+			Evidently, for a given discrete memoryless MAC with transition probability $P(z \mid c_{\mathcal{K}})$, the information function $I(\bar{c}_{m_{\mathcal{K}}} ; z)$ and mutual information $I(c_{\mathcal{K}} ; z)$ only depend on the tag input distribution $P_k(\bar{c}_{m_k})$, $\forall m_k \in \mathcal{M}$, $\forall k \in \mathcal{K}$. Therefore, we can obtain the backscatter sum-rate by maximizing the mutual information over the tag input distributions as
 			\begin{equation}
 				R_c = \max_{P(c_{\mathcal{K}})} I(c_{\mathcal{K}} ; z) \ [\si{bpcu}].
+				\label{eq:backscatter_sum_rate}
 			\end{equation}
 		\end{subsection}
 
-		\begin{subsection}{Primary ergodic capacity}
-			Once the tag symbol set $\bar{c}_{m_{\mathcal{K}}}$ is successfully decoded, the user can eliminate the backscatter uncertainty and model it within the equivalent primary channel by \eqref{eq:equivalent_primary_channel}. From the perspective of primary transmission, the tags adjust the propagation environment in a potentially beneficial manner, and create artificial channel variation within each fading block. As such, the ergodic primary capacity can be expressed as
+		\begin{subsection}{Primary ergodic rate}
+			Once the tag symbol set $\bar{c}_{m_{\mathcal{K}}}$ is successfully decoded, the user can eliminate the backscatter uncertainty and model it within the equivalent primary channel by \eqref{eq:equivalent_primary_channel}. From the perspective of primary transmission, the tags adjust the propagation environment in a potentially beneficial manner, and create artificial channel variation within each fading block. As such, the ergodic primary rate can be expressed as
 			\begin{align}
 				R_s
 				& = \mathbb{E}_{c_{\mathcal{K}}} \left[\log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(c_{\mathcal{K}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right)\right]\nonumber\\
 				& = \sum_{m_{\mathcal{K}}} \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k}) \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right) \ [\si{bps/Hz}].
-				\label{eq:primary_rate}
+				\label{eq:primary_ergodic_rate}
 			\end{align}
 			which is also a function of the tag input distribution $P(c_{\mathcal{K}})$.
 		\end{subsection}
@@ -285,18 +287,35 @@
 
 	\begin{section}{Tag Input and Precoder Design}
 		\begin{subsection}{Primary ergodic-secondary sum rate region}
-			To achieve a flexible tradeoff between the primary and backscatter links, we aim to optimize the precoder and tag input distribution to maximize the weighted sum of the ergodic primary rate and the total backscatter rate, under the average transmit power and probability constraints
+			To achieve a flexible tradeoff between the primary and backscatter links, we aim to optimize the tag input distribution, decision regions, and precoder to maximize the weighted sum of the ergodic primary rate and the total backscatter rate, under the average transmit power and probability constraints
 			\begin{maxi!}
-				{\scriptstyle{{P(c_{\mathcal{K}})},{\boldsymbol{w}}}}{\rho R_s + (1 - \rho) R_c}{\label{op:rate_region}}{\label{ob:weighted_sum_rate}}
+				{\scriptstyle{P(c_{\mathcal{K}}),\mathcal{T},\boldsymbol{w}}}{\rho R_s + (1 - \rho) R_c}{\label{op:rate_region}}{\label{ob:weighted_sum_rate}}
 				\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P\label{co:average_transmit_power}}
 				\addConstraint{\sum_{m_k} P_k(\bar{c}_{m_k})}{=1,\quad\label{co:sum_probability}}{\forall k \in \mathcal{K}}
 				\addConstraint{P_k(\bar{c}_{m_k})}{\ge 0,\quad\label{co:nonnegative_probability}}{\forall m_k \in \mathcal{M}, \ \forall k \in \mathcal{K}}
 			\end{maxi!}
-			where $\rho \in [0,1]$ denotes the priority of the primary link. As problem \eqref{op:rate_region} is not jointly convex over $\boldsymbol{w}$ and $P(c_{\mathcal{K}})$, we propose an alternating optimization (AO)-based algorithm that iteratively retrieve the global optimal precoder and capacity-achieving input distribution in closed forms.
+			where $\rho \in [0,1]$ denotes the priority of the primary link. As problem \eqref{op:rate_region} is not jointly convex over $\boldsymbol{w}$ and $P(c_{\mathcal{K}})$, we propose an Block Coordinate Descent (BCD)-based algorithm that iteratively updates the input distribution, decision region, and precoder, until convergence.
+		\end{subsection}
+
+		\begin{subsection}{Input distribution}
+			Once the decision region boundaries $\mathcal{T}$ and the precoder $\boldsymbol{w}$ are determined, we can obtain the equivalent discrete memoryless MAC by \eqref{eq:mac}. [The optimal solution is obtained in closed form; to add here]
+		\end{subsection}
+
+		\begin{subsection}{Decision region}
+			As indicated by \cite{Qian2019b}, the optimal ML decision regions are very close to the optimal decision regions to problem \eqref{op:weighted_sum_rate}. We can either use \eqref{eq:decision_region} as suboptimal, or take derivative of \eqref{eq:mutual_information} w.r.t. $T_{i-1,i}$ and $T_{i,i+1}$ (however, closed-form solutions are unavailable and two-dimensional search is needed).
 		\end{subsection}
 
 		\begin{subsection}{Precoder}
-			TODO
+			Interestingly, we can design precoder to adjust the expectation of the received power \eqref{eq:receive_variance} at each tag input combination, which can avoid the detection blind spots in \cite{Qian2019} and further boost the weighted sum-rate. However, the problem is highly non-convex -- the information function associated with input combination status $i$ is
+			\begin{align}
+				I(\bar{c}_i ; z)
+				& = \sum_{j \in \mathcal{M^K}} \int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z\nonumber\\
+				& \quad \times \log \frac{\int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z}{\sum_{i' \in \mathcal{M^K}} \int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2\right)^N (N-1)!} \dd z},
+				\label{eq:information_function_precoder}
+			\end{align}
+			and the mutual information can be expressed as a function of $W$ by combining \eqref{eq:mutual_information} and \eqref{eq:information_function_precoder}.
+
+			So far I have no idea how to solve this issue, and found no reference regarding precoder design for AmBC/SR with discrete channels (although some naive combiner designs are available for BIBO). Personally, I believe the precoder design is the key to (i) boost the rate region and avoid blind spots in conventional AmBC; (ii) build our proposal over existing infrastructures. Ideally, assuming the number of transmit antennas $Q$ is larger than the number of tags $K$, the optimal energy levels should be almost uniformly spaced (as $z$ follows Erlang distribution) to concentrate the channel transitional probability on diagonal as possible.
 		\end{subsection}
 	\end{section}
 

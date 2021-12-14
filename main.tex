@@ -251,7 +251,7 @@
 				\mathcal{R}_i \triangleq [T_{i-1,i}, T_{i,i+1}),
 				\label{eq:decision_region}
 			\end{equation}
-			where $T_{i-1,i}$ is the decision threshold between $\mathcal{H}_{i-1}$ and $\mathcal{H}_i$, and $T_{i,i+1}$ is the decision threshold between $\mathcal{H}_i$ and $\mathcal{H}_{i+1}$. We also define $T_{0,1} \triangleq 0$, $T_{M^K,M^K+1} \triangleq \infty$, and $\mathcal{T} \triangleq \{T_{0,1},\ldots,T_{M^K,M^K+1}\}$.
+			where $T_{i-1,i}$ is the decision threshold between $\mathcal{H}_{i-1}$ and $\mathcal{H}_i$, and $T_{i,i+1}$ is the decision threshold between $\mathcal{H}_i$ and $\mathcal{H}_{i+1}$. We also define $T_{0,1} \triangleq 0$, $T_{M^K,M^K+1} \triangleq \infty$, and $\boldsymbol{t} \triangleq [T_{0,1},\ldots,T_{M^K,M^K+1}]^T \in \mathbb{R}^{(M^K + 1) \times 1}$.
 
 			Consider the (\gls{ml}) detector for example. The likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_{i'}$ is \cite{Qian2019}
 			\begin{equation}
@@ -279,7 +279,7 @@
 				\label{eq:point_to_point_channel}
 			\end{equation}
 
-			On top of this, we can compute the marginal probability on all tags and obtain $K$ transition matrices from $\mathcal{M}$ to $\mathcal{M^K}$ that compose a discrete memoryless \gls{mac}. The probability of observing energy level $j$ when tag $k$ at status $m_k$ is
+			On top of this, we can compute the marginal probability of each tag and obtain $K$ transition matrices from $\mathcal{M}$ to $\mathcal{M^K}$ that compose a discrete memoryless \gls{mac}. The probability of observing energy level $j$ when tag $k$ at status $m_k$ is
 			\begin{equation}
 				P(\bar{z}_j \mid \bar{c}_{m_k}) = \frac{\sum_{m_{\mathcal{K} \setminus \{k\}}} P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{\sum_{m_{\mathcal{K}}} P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}.
 				\label{eq:mac}
@@ -289,73 +289,161 @@
 		\end{subsection}
 
 		\begin{subsection}{Sum backscatter rate}
-			We first introduce some prerequisites of information theory. Define the input probability distribution of tag $k$ at status $m_k$ as $P_k(\bar{c}_{m_k})$, collect the input probability distribution of all tags at all states into $\mathcal{P} \triangleq \{P_k(\bar{c}_{m_k}) : m_k \in \mathcal{M}, k \in \mathcal{K}\}$, and assume the input distribution of all tags are mutually independent, such that $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Following \cite{Rezaeian2004}, the backscatter information function associated with tag input combination $\bar{c}_{m_{\mathcal{K}}}$ is defined as
+			We first introduce some prerequisites of information theory. Define the input probability distribution of tag $k$ at status $m_k$ as $P_k(\bar{c}_{m_k})$, and let $\boldsymbol{p}_k \triangleq [P_k(\bar{c}_1),\ldots,P_k(\bar{c}_M)]^T \in \mathbb{R}^{M \times 1}$, $\boldsymbol{P} \triangleq [\boldsymbol{p}_1^T,\ldots,\boldsymbol{p}_K^T]^T \in \mathbb{R}^{M \times K}$. Assume the input distribution of all tags are mutually independent such that $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Following \cite{Rezaeian2004}, the backscatter information function associated with tag input combination $\bar{c}_{m_{\mathcal{K}}}$ is defined as
 			\begin{equation}
 				I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}} ; z) \triangleq \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{P(\bar{z}_j)},
-				\label{eq:information_function}
+				\label{eq:backscatter_information_function}
 			\end{equation}
-			the marginal information function on $\mathcal{S} \subset \mathcal{K}$ is defined as
+			% \begin{align}
+			% 	I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}} ; z)
+			% 	& \triangleq \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{P(\bar{z}_j)}\\
+			% 	& = \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{\sum_{m_{\mathcal{K}}} \prod_{k \in \mathcal{K}} P(\bar{c}_{m_{\mathcal{K}}}) P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}
+			% 	\label{eq:backscatter_information_function}
+			% \end{align}
+			the backscatter marginal information function of tag $k$ associated with $\bar{c}_{m_{k}}$ is defined as
 			\begin{equation}
-				I_{\mathrm{B},\mathcal{S}}(\bar{c}_{m_{\mathcal{S}}} ; z) = \sum_{m_{\mathcal{K} \setminus \mathcal{S}}} P_{\mathcal{K} \setminus \mathcal{S}}(\bar{c}_{m_{\mathcal{K} \setminus \mathcal{S}}}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}} ; z),
-				\label{eq:marginal_information_function}
+				I_{\mathrm{B},k}(\bar{c}_{m_{k}} ; z) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} \prod_{k' \in \mathcal{K} \setminus \{k\}} P_{k'}(\bar{c}_{m_{k'}}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}} ; z),
+				\label{eq:backscatter_marginal_information_function}
 			\end{equation}
-			and the mutual information can be expressed as\footnote{Please be aware that $c_{\mathcal{K}}$, $c_{\mathcal{S}}$, $z$ are random variables, while $\bar{c}_{m_{\mathcal{K}}}$ and $\bar{c}_i$, $\bar{c}_{m_{\mathcal{S}}}$, $\bar{z}_j$ represent the corresponding instances.}
+			% \begin{align}
+			% 	I_{\mathrm{B},k}(\bar{c}_{m_{k}} ; z)
+			% 	& \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}} ; z)\\
+			% 	& = \sum_{m_{\mathcal{K} \setminus \{k\}}} \prod_{k' \in \mathcal{K} \setminus \{k\}} P_{k'}(\bar{c}_{m_{k'}}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}} ; z),
+			% 	\label{eq:backscatter_marginal_information_function}
+			% \end{align}
+			% the backscatter marginal information function of $\mathcal{S} \subset \mathcal{K}$ is defined as
+			% \begin{equation}
+			% 	I_{\mathrm{B},\mathcal{S}}(\bar{c}_{m_{\mathcal{S}}} ; z) \triangleq \sum_{m_{\mathcal{K} \setminus \mathcal{S}}} P_{\mathcal{K} \setminus \mathcal{S}}(\bar{c}_{m_{\mathcal{K} \setminus \mathcal{S}}}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}} ; z),
+			% 	\label{eq:backscatter_marginal_information_function}
+			% \end{equation}
+			and the backscatter mutual information can be expressed as\footnote{Please be aware that $c_{\mathcal{K}}$, $c_{\mathcal{S}}$, $z$ are random variables, while $\bar{c}_{m_{\mathcal{K}}}$ and $\bar{c}_i$, $\bar{c}_{m_{\mathcal{S}}}$, $\bar{z}_j$ represent the corresponding instances.}
 			\begin{align}
 				I_{\mathrm{B}}(c_{\mathcal{K}} ; z)
-				& = \mathbb{E}_{c_{\mathcal{K}}} \left[I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}} ; z)\right] = \mathbb{E}_{c_{\mathcal{S}}} \left[I_{\mathrm{B},\mathcal{S}}(\bar{c}_{m_{\mathcal{S}}} ; z)\right]\label{eq:mutual_information}\\
+				& = \mathbb{E}_{c_{\mathcal{K}}} \left[I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}} ; z)\right] = \mathbb{E}_{c_{k}} \left[I_{\mathrm{B},k}(\bar{c}_{m_{k}} ; z)\right]\\
 				& = \sum_{m_{\mathcal{K}}} \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{P(\bar{z}_j)}.\label{eq:backscatter_sum_rate}
 			\end{align}
+			% \begin{align}
+			% 	I_{\mathrm{B}}(c_{\mathcal{K}} ; z)
+			% 	& = \mathbb{E}_{c_{\mathcal{K}}} \left[I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}} ; z)\right] = \mathbb{E}_{c_{\mathcal{S}}} \left[I_{\mathrm{B},\mathcal{S}}(\bar{c}_{m_{\mathcal{S}}} ; z)\right]\\
+			% 	& = \sum_{m_{\mathcal{K}}} \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{P(\bar{z}_j)}.\label{eq:backscatter_sum_rate}
+			% \end{align}
 
-			Evidently, for a given discrete memoryless \gls{mac} with transition probability $P(z \mid c_{\mathcal{K}})$, the information function $I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}} ; z)$ and mutual information $I_{\mathrm{B}}(c_{\mathcal{K}} ; z)$ only depend on the tag input distribution $\mathcal{P}$.\footnote{Note that the contribution of the precoder and detection threshold are modelled within the discrete memoryless \gls{mac}.}
+			Evidently, \eqref{eq:backscatter_information_function}--\eqref{eq:backscatter_sum_rate} are functions of the tag input distribution $\boldsymbol{P}$ as well as the discrete memoryless \gls{mac} $P(z \mid c_{\mathcal{K}})$, and thus depend on the transmit precoder $\boldsymbol{w}$ and the detection threshold $\boldsymbol{t}$.
 		\end{subsection}
 
 		\begin{subsection}{Ergodic primary rate}
-			Once the tag input combination is successfully decoded, the user can eliminate backscatter uncertainty and model its contribution within the equivalent primary channel \eqref{eq:equivalent_primary_channel}. As such, the tags can adjust the propagation environment in a potentially beneficial manner, and create artificial channel variation within each fading block. Hence, the ergodic primary rate can be expressed as \footnote{The unit of \eqref{eq:backscatter_sum_rate} is \gls{bpcu} while the unit of \eqref{eq:primary_ergodic_rate} is \gls{bpsphz}.}
+			Once the tag input combination is successfully decoded, the user can eliminate backscatter uncertainty and model its contribution within the equivalent primary channel \eqref{eq:equivalent_primary_channel}. As such, the tags can adjust the propagation environment in a potentially beneficial manner, and create artificial channel variation within each fading block. Similarly, we define the primary information function associated with tag input combination $\bar{c}_{m_{\mathcal{K}}}$ and the primary marginal information function of tag $k$ associated with symbol $\bar{c}_{m_{k}}$ respectively as
+			\begin{equation}
+				I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K}}} ; \boldsymbol{y}) \triangleq N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right),
+				\label{eq:primary_information_function}
+			\end{equation}
+			\begin{equation}
+				I_{\mathrm{P},k}(\bar{c}_{m_{k}} ; \boldsymbol{y}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} \prod_{k' \in \mathcal{K} \setminus \{k\}} P_{k'}(\bar{c}_{m_{k'}}) I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K}}} ; \boldsymbol{y}),
+				\label{eq:primary_marginal_information_function}
+			\end{equation}
+			% \begin{equation}
+			% 	I_{\mathrm{P},k}(\bar{c}_{m_{k}}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K}}}),
+			% 	\label{eq:primary_marginal_information_function}
+			% \end{equation}
+			% \begin{equation}
+			% 	I_{\mathrm{P},\mathcal{S}}(\bar{c}_{m_{\mathcal{S}}}) \triangleq \sum_{m_{\mathcal{K} \setminus \mathcal{S}}} P_{\mathcal{K} \setminus \mathcal{S}}(\bar{c}_{m_{\mathcal{K} \setminus \mathcal{S}}}) I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K}}}),
+			% 	\label{eq:primary_marginal_information_function}
+			% \end{equation}
+			and the ergodic primary rate can be expressed as \footnote{The unit of \eqref{eq:backscatter_information_function}, \eqref{eq:backscatter_marginal_information_function} and \eqref{eq:backscatter_sum_rate} are \gls{bpcu}, while the unit of \eqref{eq:primary_information_function}, \eqref{eq:primary_marginal_information_function} and \eqref{eq:primary_ergodic_rate} are \gls{bpsphz}.}
 			\begin{align}
-				I_{\mathrm{P}}
-				& = \mathbb{E}_{c_{\mathcal{K}}} \left[\log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(c_{\mathcal{K}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right)\right]\nonumber\\
-				& = \sum_{m_{\mathcal{K}}} \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k}) \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right).
+				I_{\mathrm{P}}(c_{\mathcal{K}} ; \boldsymbol{y})
+				& = \mathbb{E}_{c_{\mathcal{K}}} \left[I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K}}} ; \boldsymbol{y})\right] = \mathbb{E}_{c_{k}} \left[I_{\mathrm{P},k}(\bar{c}_{m_{k}} ; \boldsymbol{y})\right]\\
+				& = \sum_{m_{\mathcal{K}}} \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right).
 				\label{eq:primary_ergodic_rate}
 			\end{align}
-			which is also a function of the tag input distribution $\mathcal{P}$.
-			% $P(c_{\mathcal{K}})$.
+			% \begin{align}
+			% 	I_{\mathrm{P}}(c_{\mathcal{K}})
+			% 	& = \mathbb{E}_{c_{\mathcal{K}}} \left[I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K}}})\right] = \mathbb{E}_{c_{\mathcal{S}}} \left[I_{\mathrm{P},\mathcal{S}}(\bar{c}_{m_{\mathcal{S}}})\right]\\
+			% 	& = \sum_{m_{\mathcal{K}}} \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k}) \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right).
+			% 	\label{eq:primary_ergodic_rate}
+			% \end{align}
+
+			In contrast to the backscatter case, \eqref{eq:primary_information_function}--\eqref{eq:primary_ergodic_rate} are irrelevant to the detection threshold $\boldsymbol{t}$, but depend on the tag input probability distribution $\boldsymbol{P}$ and the transmit precoder $\boldsymbol{w}$.
 		\end{subsection}
 	\end{section}
 
 	\begin{section}{Input Distribution, Decision Region, and Precoder Design}
 		\begin{subsection}{Primary-backscatter rate region}
-			Define the weighted sum primary-backscatter rate as
-			\begin{equation}
-				I \triangleq \rho I_{\mathrm{B}}(c_{\mathcal{K}} ; z) + (1 - \rho) I_{\mathrm{P}},
-			\end{equation}
+			First, we define the weighted sum marginal information of tag $k$ associated with symbol $\bar{c}_{m_{k}}$ and the weighted sum primary-backscatter rate respectively as
+			\begin{align}
+				I_{q}(\bar{c}_{m_{k}} ; \boldsymbol{y},z)
+				& \triangleq \rho I_{\mathrm{P},q}(\bar{c}_{m_{k}} ; \boldsymbol{y}) + (1 - \rho) I_{\mathrm{B},q}(\bar{c}_{m_{k}} ; z),\\
+				I(c_{\mathcal{K}} ; \boldsymbol{y}, z)
+				& \triangleq \rho I_{\mathrm{P}}(c_{\mathcal{K}} ; \boldsymbol{y}) + (1 - \rho) I_{\mathrm{B}}(c_{\mathcal{K}} ; z)
+			\end{align}
 			where $\rho \in [0,1]$ denotes the priority of the primary link. To investigate how the primary and backscatter links influence each other, we optimize the input probability distribution, decision region, and transmit precoder to maximize the weighted sum rate subject to the average transmit power and input probability constraints
 
 			\begin{maxi!}
-				{\scriptstyle{\mathcal{P},\mathcal{T},\boldsymbol{w}}}{I}{\label{op:rate_region}}{\label{ob:weighted_sum_rate}}
+				{\scriptstyle{\boldsymbol{P},\boldsymbol{t},\boldsymbol{w}}}{I}{\label{op:rate_region}}{\label{ob:weighted_sum_rate}}
 				\addConstraint{\sum \nolimits_{m_k} P_k(\bar{c}_{m_k})}{=1,\quad\label{co:sum_probability}}{\forall k \in \mathcal{K}}
 				\addConstraint{P_k(\bar{c}_{m_k})}{\ge 0,\quad\label{co:nonnegative_probability}}{\forall m_k \in \mathcal{M}, \ \forall k \in \mathcal{K}}
 				\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.\label{co:average_transmit_power}}
 			\end{maxi!}
 
-			As problem \eqref{op:rate_region} is not jointly convex over $\mathcal{P}$, $\mathcal{T}$ and $\boldsymbol{w}$, we propose a \gls{bcd} method that iteratively updates the input distribution, decision region, and transmit precoder, until convergence is achieved.
+			As problem \eqref{op:rate_region} is not jointly convex over $\boldsymbol{P}$, $\boldsymbol{t}$ and $\boldsymbol{w}$, we propose a \gls{bcd} method that iteratively updates the input distribution, decision region, and transmit precoder, until convergence is achieved.
 		\end{subsection}
 
 		\begin{subsection}{Input probability distribution}
-			For any fixed decision boundary $\mathcal{T}$ and transmit precoder $\boldsymbol{w}$, the equivalent discrete memoryless \gls{mac} can be determined by \eqref{eq:mac}, and problem~\eqref{op:rate_region} boils down to
+			For any fixed decision boundary $\boldsymbol{t}$ and transmit precoder $\boldsymbol{w}$, the equivalent discrete memoryless \gls{mac} can be determined by \eqref{eq:mac} and problem~\eqref{op:rate_region} boils down to
 			\begin{maxi!}
-				{\scriptstyle{\mathcal{P}}}{I}{\label{op:input_probability_distribution}}{}
+				{\scriptstyle{\boldsymbol{P}}}{I}{\label{op:input_probability_distribution}}{}
 				\addConstraint{\eqref{co:sum_probability},\eqref{co:nonnegative_probability},}
 			\end{maxi!}
-			which is non-convex for $K > 1$ due to the product term $\prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Fortunately, the \gls{kkt} conditions are sufficient and necessary for this type of problem, and the proof follows straightforwardly from \cite{Watanabe2009}.\footnote{For any elementary discrete memoryless \gls{mac} (sizes of input alphabets are no greater than that of output alphabet), the sufficiency can be proved by combining the local maximum and connectedness of \gls{kkt} solutions. For any general discrete memoryless \gls{mac}, the capacity can be achieved by an elementary discrete memoryless \gls{mac} included within. Thus, we restrict the discussion of this paper to elementary discrete memoryless \gls{mac}s.}
+			which is non-convex for $K > 1$ due to the product term $\prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Fortunately, the \gls{kkt} conditions are sufficient and necessary for this type of problem, and the proof follows straightforwardly from \cite{Watanabe2009}.\footnote{For any elementary discrete memoryless \gls{mac} (sizes of input alphabets are no greater than that of output alphabet), the sufficiency can be proved by combining the local maximum and connectedness of \gls{kkt} solutions. For any general discrete memoryless \gls{mac}, the capacity can be achieved by an elementary discrete memoryless \gls{mac} included within. Thus, we restrict the discussion of this paper to elementary discrete memoryless \gls{mac}s.} Denote the Lagrange multiplier associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_K]^T \in \mathbb{R}^{K \times 1}$ and $\boldsymbol{\Lambda} \triangleq [\boldsymbol{\lambda}_1^T,\ldots,\boldsymbol{\lambda}_K^T]^T \in \mathbb{R}^{M \times K}$ with $\boldsymbol{\lambda}_k \triangleq [\lambda_{k,1},\ldots,\lambda_{k,M}]^T \in \mathbb{R}^{M \times 1}$, respectively. The Lagrangian function of problem~\eqref{op:input_probability_distribution} is
+			\begin{align}
+				J
+				& = - I + \sum_{k \in \mathcal{K}} \mu_k \left( \sum_{m_k \in \mathcal{M}} P_k(\bar{c}_{m_k}) - 1 \right)\nonumber\\
+				& \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(\bar{c}_{m_k}),
+			\end{align}
+			and the corresponding \gls{kkt} conditions on the primal and dual solutions are, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$,
+			\begin{subequations}
+				\begin{equation}
+					- \pdv{I}{P_q^{\star}(\bar{c}_{i_q})} + \mu_q^{\star} - \lambda_{q,i_q}^{\star} = 0,
+				\end{equation}
+				\begin{equation}
+					\lambda_{q,i_q}^{\star} = 0, \quad P_q^{\star}(\bar{c}_{i_q}) > 0,
+				\end{equation}
+				\begin{equation}
+					\lambda_{q,i_q}^{\star} \ge 0, \quad P_q^{\star}(\bar{c}_{i_q}) = 0,
+				\end{equation}
+			\end{subequations}
+			and the partial derivative can be explicitly expressed as
+			% \begin{equation}
+			% 	\pdv{I}{P_q^{\star}(\bar{c}_{i_q})} = \rho I_{\mathrm{P},q}(\bar{c}_{i_q} ; \boldsymbol{y}) + (1 - \rho) \left( I_{\mathrm{B},q}(\bar{c}_{i_q} ; z) - 1 \right).
+			% \end{equation}
+			\begin{align}
+				\pdv{I}{P_q^{\star}(\bar{c}_{i_q})}
+				& = \rho I_{\mathrm{P},q}(\bar{c}_{i_q} ; \boldsymbol{y}) + (1 - \rho) \left( I_{\mathrm{B},q}(\bar{c}_{i_q} ; z) - 1 \right)\\
+				& = I_{q}(\bar{c}_{i_q} ; \boldsymbol{y},z) - (1 - \rho).
+			\end{align}
+			which suggests $\mu_q^{\star}$ must satisfy
+			\begin{subequations}
+				\begin{equation}
+					\mu_q^{\star} = I_{q}(\bar{c}_{i_q} ; \boldsymbol{y},z) - (1 - \rho), \quad P_q^{\star}(\bar{c}_{i_q}) > 0,
+				\end{equation}
+				\begin{equation}
+					\mu_q^{\star} \ge I_{q}(\bar{c}_{i_q} ; \boldsymbol{y},z) - (1 - \rho), \quad P_q^{\star}(\bar{c}_{i_q}) = 0.
+				\end{equation}
+			\end{subequations}
 
-			% Although the domain is non-convex for $K>1$, the \gls{kkt} conditions are sufficient and necessary for an input distribution to achieve the weighted sum-capacity. The proof follows straightforwardly from \cite{Watanabe2009} and details are omitted here.\footnote{For any elementary \gls{mac} (the sizes of input alphabets are no greater than that of the output alphabet), the sufficiency can be proved by local maximum and connectedness of \gls{kkt} solutions. Also, the capacity of an arbitrary \gls{mac} is achieved by an elementary \gls{mac} included within.}
-			% We restrict the discussion of this paper to elementary \gls{mac}s.
-
-
+			Due to the sufficiency and necessity of the \gls{kkt} conditions, we can conclude that any input probability distribution $\boldsymbol{P}^{\star}$ maximizes the weighted sum primary-backscatter rate if and only if, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$,
+			\begin{subequations}
+				\begin{equation}
+					I_{q}(\bar{c}_{i_q} ; \boldsymbol{y},z) = C_q, \quad P_q^{\star}(\bar{c}_{i_q}) > 0,
+				\end{equation}
+				\begin{equation}
+					I_{q}(\bar{c}_{i_q} ; \boldsymbol{y},z) \le C_q, \quad P_q^{\star}(\bar{c}_{i_q}) = 0,
+				\end{equation}
+			\end{subequations}
 		\end{subsection}
 
 		\begin{subsection}{Decision region}
-			As indicated by \cite{Qian2019b}, the optimal \gls{ml} decision regions are very close to the optimal decision regions to problem \eqref{op:rate_region}. We can either use \eqref{eq:decision_region} as suboptimal, or take derivative of \eqref{eq:mutual_information} w.r.t. $T_{i-1,i}$ and $T_{i,i+1}$ (however, closed-form solutions are unavailable and two-dimensional search is needed).
+			As indicated by \cite{Qian2019b}, the optimal \gls{ml} decision regions are very close to the optimal decision regions to problem \eqref{op:rate_region}. We can either use \eqref{eq:decision_region} as suboptimal, or take derivative of \eqref{eq:backscatter_sum_rate} w.r.t. $T_{i-1,i}$ and $T_{i,i+1}$ (however, closed-form solutions are unavailable and two-dimensional search is needed).
 		\end{subsection}
 
 		\begin{subsection}{Precoder}
@@ -364,9 +452,9 @@
 				I(\bar{c}_i ; z)
 				& = \sum_{j \in \mathcal{M^K}} \int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z\nonumber\\
 				& \quad \times \log \frac{\int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z}{\sum_{i' \in \mathcal{M^K}} \int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2\right)^N (N-1)!} \dd z},
-				\label{eq:information_function_precoder}
+				\label{eq:foo}
 			\end{align}
-			and the mutual information can be expressed as a function of $W$ by combining \eqref{eq:mutual_information} and \eqref{eq:information_function_precoder}.
+			and the mutual information can be expressed as a function of $W$ by combining \eqref{eq:backscatter_sum_rate} and \eqref{eq:foo}.
 
 			So far I have no idea how to solve this issue, and found no reference regarding precoder design for \gls{ambc}/\gls{sr} with discrete channels (although some naive combiner designs are available for \gls{bibo}). Personally, I believe the precoder design is the key to (i) boost the rate region and avoid blind spots in conventional \gls{ambc}; (ii) build our proposal over existing infrastructures. Ideally, assuming the number of transmit antennas $Q$ is larger than the number of tags $K$, the optimal energy levels should be almost uniformly spaced (as $z$ follows Erlang distribution) to concentrate the channel transitional probability on diagonal as possible.
 		\end{subsection}

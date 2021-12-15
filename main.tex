@@ -409,74 +409,166 @@
 				{\scriptstyle{\boldsymbol{P}}}{I}{\label{op:input_probability_distribution}}{}
 				\addConstraint{\eqref{co:sum_probability},\eqref{co:nonnegative_probability},}
 			\end{maxi!}
-			which is non-convex for $K > 1$ due to the product term $\prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Fortunately, the \gls{kkt} conditions are sufficient and necessary for this type of problem, and the proof follows straightforwardly from \cite{Watanabe2009}.\footnote{For any elementary discrete memoryless \gls{mac} (sizes of input alphabets are no greater than that of output alphabet), the sufficiency can be proved by combining the local maximum and connectedness of \gls{kkt} solutions. For any general discrete memoryless \gls{mac}, the capacity can be achieved by an elementary discrete memoryless \gls{mac} included within. Thus, we restrict the discussion of this paper to elementary discrete memoryless \gls{mac}s.} Denote the Lagrange multiplier associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_K]^T \in \mathbb{R}^{K \times 1}$ and $\boldsymbol{\Lambda} \triangleq [\boldsymbol{\lambda}_1^T,\ldots,\boldsymbol{\lambda}_K^T]^T \in \mathbb{R}^{M \times K}$ with $\boldsymbol{\lambda}_k \triangleq [\lambda_{k,1},\ldots,\lambda_{k,M}]^T \in \mathbb{R}^{M \times 1}$, respectively. The Lagrangian function of problem~\eqref{op:input_probability_distribution} is
-			\begin{align}
-				J
-				& = - I + \sum_{k \in \mathcal{K}} \mu_k \left( \sum_{m_k \in \mathcal{M}} P_k(\bar{c}_{m_k}) - 1 \right)\nonumber\\
-				& \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(\bar{c}_{m_k}),
-			\end{align}
-			and the corresponding \gls{kkt} conditions on the primal and dual solutions are, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$,
-			\begin{subequations}
-				\begin{equation}
-					- \pdv{I}{P_q^{\star}(\bar{c}_{i_q})} + \mu_q^{\star} - \lambda_{q,i_q}^{\star} = 0,
-				\end{equation}
-				\begin{equation}
-					\lambda_{q,i_q}^{\star} = 0, \quad P_q^{\star}(\bar{c}_{i_q}) > 0,
-				\end{equation}
-				\begin{equation}
-					\lambda_{q,i_q}^{\star} \ge 0, \quad P_q^{\star}(\bar{c}_{i_q}) = 0.
-				\end{equation}
-			\end{subequations}
+			which is non-convex for $K > 1$ due to the product term $\prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Fortunately, the \gls{kkt} conditions are necessary and sufficient for this type of problem, and the proof follows straightforwardly from \cite{Watanabe2009}.\footnote{For any elementary discrete memoryless \gls{mac} (sizes of input alphabets are no greater than that of output alphabet), the sufficiency can be proved by combining the local maximum and connectedness of \gls{kkt} solutions. For any general discrete memoryless \gls{mac}, the capacity can be achieved by an elementary discrete memoryless \gls{mac} included within. Thus, we restrict the discussion of this paper to elementary discrete memoryless \gls{mac}s.}
+			\begin{proposition}
+				The necessary and sufficient conditions for an input probability distribution $\boldsymbol{P}^{\star}$ to maximize the weighted sum primary-backscatter rate are that, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$,
+				\begin{subequations}
+					\begin{alignat}{2}
+						I_q(\bar{c}_{i_q};\boldsymbol{y},z) & = I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_q^{\star}(\bar{c}_{i_q}) > 0,\label{co:probable_states}\\
+						I_q(\bar{c}_{i_q};\boldsymbol{y},z) & \le I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_q^{\star}(\bar{c}_{i_q}) = 0.\label{co:dropped_states}
+					\end{alignat}
+				\end{subequations}
 
-			The partial derivative can be explicitly expressed as
-			\begin{subequations}
+				% \eqref{co:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{co:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
+				An interpretation is that each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while any state of any tag with potentially less marginal information than above should not be used.
+				% \begin{itemize}
+				% 	\item each probable state of each tag produces the same marginal information (averaged over all states of other tags)
+				% 	\item all states of all tags with potentially less marginal information should be dropped
+				% \end{itemize}
+				% An input probability distribution maximizes the weighted sum primary-backscatter rate if and only if each probable state of each tag produces the same mutual information. Specifically, the optimal $\boldsymbol{P}^{\star}$ to problem~\eqref{op:input_probability_distribution}
+
+				% the input probability distribution that achieves the weighted sum primary-backscatter capacity, at state $i_q \in \mathcal{M}$ of tag $q \in \mathcal{K}$,
+				% \begin{subequations}
+				% 	\begin{alignat}{2}
+				% 		I_q(\bar{c}_{i_q};\boldsymbol{y},z) & = I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_q^{\star}(\bar{c}_{i_q}) > 0,\\
+				% 		I_q(\bar{c}_{i_q};\boldsymbol{y},z) & \le I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_q^{\star}(\bar{c}_{i_q}) = 0.
+				% 	\end{alignat}
+				% \end{subequations}
+				\label{pr:optimal_conditions}
+			\end{proposition}
+			\begin{proof}
+				Denote the Lagrange multiplier associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_K]^T \in \mathbb{R}^{K \times 1}$ and $\boldsymbol{\Lambda} \triangleq [\boldsymbol{\lambda}_1^T,\ldots,\boldsymbol{\lambda}_K^T]^T \in \mathbb{R}^{M \times K}$ with $\boldsymbol{\lambda}_k \triangleq [\lambda_{k,1},\ldots,\lambda_{k,M}]^T \in \mathbb{R}^{M \times 1}$, respectively. The Lagrangian function of problem~\eqref{op:input_probability_distribution} is
 				\begin{align}
-					\pdv{I}{P_q^{\star}(\bar{c}_{i_q})}
-					& = \rho I_{\mathrm{P},q}(\bar{c}_{i_q};\boldsymbol{y}) + (1 - \rho) \left( I_{\mathrm{B},q}(\bar{c}_{i_q};z) - 1 \right)\\
-					& = I_q(\bar{c}_{i_q};\boldsymbol{y},z) - (1 - \rho),
+					J
+					& = - I + \sum_{k \in \mathcal{K}} \mu_k \left( \sum_{m_k \in \mathcal{M}} P_k(\bar{c}_{m_k}) - 1 \right)\nonumber\\
+					& \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(\bar{c}_{m_k}),
 				\end{align}
-			\end{subequations}
-			which suggests $\mu_q^{\star}$ must satisfy
-			\begin{subequations}
-				\begin{alignat}{2}
-					\mu_q^{\star} & = I_q(\bar{c}_{i_q};\boldsymbol{y},z) - (1 - \rho), \quad && P_q^{\star}(\bar{c}_{i_q}) > 0,\\
-					\mu_q^{\star} & \ge I_q(\bar{c}_{i_q};\boldsymbol{y},z) - (1 - \rho), \quad && P_q^{\star}(\bar{c}_{i_q}) = 0.
-				\end{alignat}
-			\end{subequations}
+				and the corresponding \gls{kkt} conditions on the primal and dual solutions are, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$,
+				\begin{subequations}
+					\begin{equation}
+						- \pdv{I}{P_q^{\star}(\bar{c}_{i_q})} + \mu_q^{\star} - \lambda_{q,i_q}^{\star} = 0,
+					\end{equation}
+					\begin{equation}
+						\lambda_{q,i_q}^{\star} = 0, \quad P_q^{\star}(\bar{c}_{i_q}) > 0,
+					\end{equation}
+					\begin{equation}
+						\lambda_{q,i_q}^{\star} \ge 0, \quad P_q^{\star}(\bar{c}_{i_q}) = 0,
+					\end{equation}
+				\end{subequations}
+				where the partial derivative can be explicitly expressed as
+				\begin{subequations}
+					\begin{align}
+						\pdv{I}{P_q^{\star}(\bar{c}_{i_q})}
+						& = \rho I_{\mathrm{P},q}(\bar{c}_{i_q};\boldsymbol{y}) + (1 - \rho) \left( I_{\mathrm{B},q}(\bar{c}_{i_q};z) - 1 \right)\\
+						& = I_q(\bar{c}_{i_q};\boldsymbol{y},z) - (1 - \rho),
+					\end{align}
+				\end{subequations}
+				such that $\mu_q^{\star}$ must satisfy
+				\begin{subequations}
+					\begin{alignat}{2}
+						\mu_q^{\star} & = I_q(\bar{c}_{i_q};\boldsymbol{y},z) - (1 - \rho), \quad && P_q^{\star}(\bar{c}_{i_q}) > 0,\\
+						\mu_q^{\star} & \ge I_q(\bar{c}_{i_q};\boldsymbol{y},z) - (1 - \rho), \quad && P_q^{\star}(\bar{c}_{i_q}) = 0.
+					\end{alignat}
+				\end{subequations}
 
-			Due to the sufficiency and necessity of the \gls{kkt} conditions, we can conclude that any input probability distribution $\boldsymbol{P}^{\star}$ maximizes the weighted sum primary-backscatter rate if and only if, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$,
-			\begin{subequations}
-				\begin{alignat}{2}
-					I_q(\bar{c}_{i_q};\boldsymbol{y},z) & = C_q, \quad && P_q^{\star}(\bar{c}_{i_q}) > 0,\\
-					I_q(\bar{c}_{i_q};\boldsymbol{y},z) & \le C_q, \quad && P_q^{\star}(\bar{c}_{i_q}) = 0,
-				\end{alignat}
-			\end{subequations}
-			where $C_q \triangleq \mu_q^{\star} + (1 - \rho)$. Apparently, it holds that
-			\begin{equation}
-				\sum_{i_q} P_q^{\star}(\bar{c}_{i_q}) I_q(\bar{c}_{i_q};\boldsymbol{y},z) = C_q.
-			\end{equation}
+				Due to the necessity and sufficiency of the \gls{kkt} conditions, we can conclude that any input probability distribution $\boldsymbol{P}^{\star}$ maximizes the weighted sum primary-backscatter rate if and only if, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$,
+				\begin{subequations}
+					\begin{alignat}{2}
+						I_q(\bar{c}_{i_q};\boldsymbol{y},z) & = C_q, \quad && P_q^{\star}(\bar{c}_{i_q}) > 0,\\
+						I_q(\bar{c}_{i_q};\boldsymbol{y},z) & \le C_q, \quad && P_q^{\star}(\bar{c}_{i_q}) = 0,
+					\end{alignat}
+				\end{subequations}
+				where $C_q \triangleq \mu_q^{\star} + (1 - \rho)$. Apparently, it holds that
+				\begin{equation}
+					\sum_{i_q} P_q^{\star}(\bar{c}_{i_q}) I_q(\bar{c}_{i_q};\boldsymbol{y},z) = C_q.
+				\end{equation}
 
-			On the other hand, by the definition of marginations \eqref{eq:backscatter_sum_rate_expectation}, \eqref{eq:primary_ergodic_rate_expectation} and weighted summations \eqref{eq:weighted_sum_marginal_information}, \eqref{eq:weighted_sum_rate}, we have
-			\begin{equation}
-				\sum_{i_q} P_q^{\star}(\bar{c}_{i_q}) I_q(\bar{c}_{i_q};\boldsymbol{y},z) = I(c_{\mathcal{K}};\boldsymbol{y},z),
-			\end{equation}
-			which is irrelevant to $q$. Hence, $C_q = I(c_{\mathcal{K}};\boldsymbol{y},z)$, $\forall q \in \mathcal{K}$ and
-			\begin{subequations}
-				\begin{alignat}{2}
-					I_q(\bar{c}_{i_q};\boldsymbol{y},z) & = I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_q^{\star}(\bar{c}_{i_q}) > 0,\\
-					I_q(\bar{c}_{i_q};\boldsymbol{y},z) & \le I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_q^{\star}(\bar{c}_{i_q}) = 0.
-				\end{alignat}
-			\end{subequations}
+				On the other hand, by the definition of marginations \eqref{eq:backscatter_sum_rate_expectation}, \eqref{eq:primary_ergodic_rate_expectation} and weighted summations \eqref{eq:weighted_sum_marginal_information}, \eqref{eq:weighted_sum_rate}, we have
+				\begin{equation}
+					\sum_{i_q} P_q^{\star}(\bar{c}_{i_q}) I_q(\bar{c}_{i_q};\boldsymbol{y},z) = I(c_{\mathcal{K}};\boldsymbol{y},z),
+				\end{equation}
+				which is irrelevant to $q$. It implies that $\forall q \in \mathcal{K}$, $C_q = I(c_{\mathcal{K}};\boldsymbol{y},z)$, and thus Proposition~\eqref{pr:optimal_conditions} holds.
+			\end{proof}
 
-			It suggests that an input probability distribution maximizes the weighted sum primary-backscatter rate if and only if each probable state of each tag produces the same mutual information. On top of this, we extend the Blahut-Arimoto algorithm and obtain the optimal input probability distribution in closed form as follows.
+			Next, we extend the Blahut-Arimoto algorithm to the proposed case and obtain the optimal input probability distribution as follows.
 
 			\begin{theorem}
-				The input probability distribution that achieves the weighted sum primary-backscatter capacity is given by the limit of the following sequence, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$,
+				The input probability distribution that achieves the weighted sum primary-backscatter capacity, at state $i_q \in \mathcal{M}$ of tag $q \in \mathcal{K}$, is given by the limit of the following sequence\footnote{Note that the probability distribution of tag $q$ is based on the updated probability distribution of tags $1,\ldots,q-1$.}
 				\begin{equation}
 					P_q^{(r+1)}(\bar{c}_{i_q}) = P_q^{(r)}(\bar{c}_{i_q}) \frac{\exp \left( I_q(\bar{c}_{i_q};\boldsymbol{y},z) \right)}{\sum_{m_q} P_q^{(r)}(\bar{c}_{m_q}) \exp \left( I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)},
 				\end{equation}
-				where $r \in \mathbb{Z}_+$ is the iteration index and $P_q^{(0)}(\bar{c}_{i_q}) > 0$. [TODO] The probability distribution of tag $q$ is based on the updated probability distribution of tags $1,\ldots,q-1$.
+				where $r \in \mathbb{Z}_+$ is the iteration index and $P_q^{(0)}(\bar{c}_{i_q}) > 0$, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$.
 			\end{theorem}
+
+
+			% Denote the Lagrange multiplier associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_K]^T \in \mathbb{R}^{K \times 1}$ and $\boldsymbol{\Lambda} \triangleq [\boldsymbol{\lambda}_1^T,\ldots,\boldsymbol{\lambda}_K^T]^T \in \mathbb{R}^{M \times K}$ with $\boldsymbol{\lambda}_k \triangleq [\lambda_{k,1},\ldots,\lambda_{k,M}]^T \in \mathbb{R}^{M \times 1}$, respectively. The Lagrangian function of problem~\eqref{op:input_probability_distribution} is
+			% \begin{align}
+			% 	J
+			% 	& = - I + \sum_{k \in \mathcal{K}} \mu_k \left( \sum_{m_k \in \mathcal{M}} P_k(\bar{c}_{m_k}) - 1 \right)\nonumber\\
+			% 	& \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(\bar{c}_{m_k}),
+			% \end{align}
+			% and the corresponding \gls{kkt} conditions on the primal and dual solutions are, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$,
+			% \begin{subequations}
+			% 	\begin{equation}
+			% 		- \pdv{I}{P_q^{\star}(\bar{c}_{i_q})} + \mu_q^{\star} - \lambda_{q,i_q}^{\star} = 0,
+			% 	\end{equation}
+			% 	\begin{equation}
+			% 		\lambda_{q,i_q}^{\star} = 0, \quad P_q^{\star}(\bar{c}_{i_q}) > 0,
+			% 	\end{equation}
+			% 	\begin{equation}
+			% 		\lambda_{q,i_q}^{\star} \ge 0, \quad P_q^{\star}(\bar{c}_{i_q}) = 0.
+			% 	\end{equation}
+			% \end{subequations}
+
+			% The partial derivative can be explicitly expressed as
+			% \begin{subequations}
+			% 	\begin{align}
+			% 		\pdv{I}{P_q^{\star}(\bar{c}_{i_q})}
+			% 		& = \rho I_{\mathrm{P},q}(\bar{c}_{i_q};\boldsymbol{y}) + (1 - \rho) \left( I_{\mathrm{B},q}(\bar{c}_{i_q};z) - 1 \right)\\
+			% 		& = I_q(\bar{c}_{i_q};\boldsymbol{y},z) - (1 - \rho),
+			% 	\end{align}
+			% \end{subequations}
+			% which suggests $\mu_q^{\star}$ must satisfy
+			% \begin{subequations}
+			% 	\begin{alignat}{2}
+			% 		\mu_q^{\star} & = I_q(\bar{c}_{i_q};\boldsymbol{y},z) - (1 - \rho), \quad && P_q^{\star}(\bar{c}_{i_q}) > 0,\\
+			% 		\mu_q^{\star} & \ge I_q(\bar{c}_{i_q};\boldsymbol{y},z) - (1 - \rho), \quad && P_q^{\star}(\bar{c}_{i_q}) = 0.
+			% 	\end{alignat}
+			% \end{subequations}
+
+			% Due to the necessity and sufficiency of the \gls{kkt} conditions, we can conclude that any input probability distribution $\boldsymbol{P}^{\star}$ maximizes the weighted sum primary-backscatter rate if and only if, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$,
+			% \begin{subequations}
+			% 	\begin{alignat}{2}
+			% 		I_q(\bar{c}_{i_q};\boldsymbol{y},z) & = C_q, \quad && P_q^{\star}(\bar{c}_{i_q}) > 0,\\
+			% 		I_q(\bar{c}_{i_q};\boldsymbol{y},z) & \le C_q, \quad && P_q^{\star}(\bar{c}_{i_q}) = 0,
+			% 	\end{alignat}
+			% \end{subequations}
+			% where $C_q \triangleq \mu_q^{\star} + (1 - \rho)$. Apparently, it holds that
+			% \begin{equation}
+			% 	\sum_{i_q} P_q^{\star}(\bar{c}_{i_q}) I_q(\bar{c}_{i_q};\boldsymbol{y},z) = C_q.
+			% \end{equation}
+
+			% On the other hand, by the definition of marginations \eqref{eq:backscatter_sum_rate_expectation}, \eqref{eq:primary_ergodic_rate_expectation} and weighted summations \eqref{eq:weighted_sum_marginal_information}, \eqref{eq:weighted_sum_rate}, we have
+			% \begin{equation}
+			% 	\sum_{i_q} P_q^{\star}(\bar{c}_{i_q}) I_q(\bar{c}_{i_q};\boldsymbol{y},z) = I(c_{\mathcal{K}};\boldsymbol{y},z),
+			% \end{equation}
+			% which is irrelevant to $q$. Hence, $C_q = I(c_{\mathcal{K}};\boldsymbol{y},z)$, $\forall q \in \mathcal{K}$ and
+			% \begin{subequations}
+			% 	\begin{alignat}{2}
+			% 		I_q(\bar{c}_{i_q};\boldsymbol{y},z) & = I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_q^{\star}(\bar{c}_{i_q}) > 0,\\
+			% 		I_q(\bar{c}_{i_q};\boldsymbol{y},z) & \le I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_q^{\star}(\bar{c}_{i_q}) = 0.
+			% 	\end{alignat}
+			% \end{subequations}
+
+			% It suggests that an input probability distribution maximizes the weighted sum primary-backscatter rate if and only if each probable state of each tag produces the same mutual information. On top of this, we extend the Blahut-Arimoto algorithm to our case and obtain the optimal input probability distribution as follows.
+
+			% \begin{theorem}
+			% 	The input probability distribution that achieves the weighted sum primary-backscatter capacity, at state $i_q \in \mathcal{M}$ of tag $q \in \mathcal{K}$, is given by the limit of the following sequence\footnote{Note that the probability distribution of tag $q$ is based on the updated probability distribution of tags $1,\ldots,q-1$.}
+			% 	\begin{equation}
+			% 		P_q^{(r+1)}(\bar{c}_{i_q}) = P_q^{(r)}(\bar{c}_{i_q}) \frac{\exp \left( I_q(\bar{c}_{i_q};\boldsymbol{y},z) \right)}{\sum_{m_q} P_q^{(r)}(\bar{c}_{m_q}) \exp \left( I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)},
+			% 	\end{equation}
+			% 	where $r \in \mathbb{Z}_+$ is the iteration index and $P_q^{(0)}(\bar{c}_{i_q}) > 0$, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$.
+			% \end{theorem}
 		\end{subsection}
 
 

@@ -393,7 +393,7 @@
 				I(c_{\mathcal{K}};\boldsymbol{y},z)
 				& \triangleq \rho I_{\mathrm{P}}(c_{\mathcal{K}};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B}}(c_{\mathcal{K}};z),\label{eq:weighted_sum_rate}
 			\end{align}
-			where $\rho \in [0,1]$ denotes the priority of the primary link. To investigate how backscatter modulation and detection may influence the primary transmission, we optimize the input probability distribution, decision region, and transmit precoder to maximize the weighted primary-backscatter sum rate
+			where $\rho \in [0,1]$ denotes the priority of the primary link. To investigate how backscatter modulation and detection may influence the primary transmission, we optimize the input probability distribution, decision region, and transmit precoder to maximize the weighted sum primary-backscatter rate
 			\begin{maxi!}
 				{\scriptstyle{\boldsymbol{P},\boldsymbol{t},\boldsymbol{w}}}{I}{\label{op:rate_region}}{\label{ob:weighted_sum_rate}}
 				\addConstraint{\sum \nolimits_{m_k} P_k(\bar{c}_{m_k})}{=1,\quad\label{co:sum_probability}}{\forall k \in \mathcal{K}}
@@ -468,7 +468,15 @@
 				\end{alignat}
 			\end{subequations}
 
-			It suggests that an input probability distribution maximizes the weighted primary-backscatter sum rate if and only if each probable state of each tag produces the same mutual information.
+			It suggests that an input probability distribution maximizes the weighted sum primary-backscatter rate if and only if each probable state of each tag produces the same mutual information. On top of this, we extend the Blahut-Arimoto algorithm and obtain the optimal input probability distribution in closed form as follows.
+
+			\begin{theorem}
+				The input probability distribution that achieves the weighted sum primary-backscatter capacity is given by the limit of the following sequence, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$,
+				\begin{equation}
+					P_q^{(r+1)}(\bar{c}_{i_q}) = P_q^{(r)}(\bar{c}_{i_q}) \frac{\exp \left( I_q(\bar{c}_{i_q};\boldsymbol{y},z) \right)}{\sum_{m_q} P_q^{(r)}(\bar{c}_{m_q}) \exp \left( I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)},
+				\end{equation}
+				where $r \in \mathbb{Z}_+$ is the iteration index and $P_q^{(0)}(\bar{c}_{i_q}) > 0$. [TODO] The probability distribution of tag $q$ is based on the updated probability distribution of tags $1,\ldots,q-1$.
+			\end{theorem}
 		\end{subsection}
 
 

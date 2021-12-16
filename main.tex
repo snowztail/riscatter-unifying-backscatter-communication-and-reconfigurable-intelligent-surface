@@ -236,7 +236,7 @@
 				\sigma_{m_{\mathcal{K}}}^2 = \Bigl\lvert \underbrace{\bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H \bar{c}_{m_k}\bigr)}_{\boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}})} \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2,
 				\label{eq:receive_variance}
 			\end{equation}
-			denotes the expectation of the received power per primary block under tag modulation index set $m_{\mathcal{K}}$. For the ease of exposition, we denote the hypothesis that the tag input combination at status $i \in \mathcal{M^K} \triangleq \{1,\ldots,M^K\}$ as $\mathcal{H}_i$, sort $\{\sigma_{m_{\mathcal{K}}}^2\}$ in ascending order by a one-to-one mapping $m_{\mathcal{K}} \mapsto i$,\footnote{When more than one modulation index sets yield the same energy level, the mapping is not unique and the detection fails to separate them. This blind spot issue can be mitigated by multi-antenna techniques.} define the received signal energy over $N$ primary blocks as $z \triangleq \lVert \boldsymbol{y} \rVert^2$, and let $f(z \mid \mathcal{H}_i)$ be the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Correspondingly, $z$ is the sum of $N$ i.i.d. exponential variables each with mean $\sigma_i^2$, and the conditional probability density function follows Erlang distribution with shape $N$ and scale $\sigma_i^2$ as
+			denotes the expectation of the received power per primary block under tag modulation index set $m_{\mathcal{K}}$. For the ease of exposition, we denote the hypothesis that the tag input combination at state $i \in \mathcal{M^K} \triangleq \{1,\ldots,M^K\}$ as $\mathcal{H}_i$, sort $\{\sigma_{m_{\mathcal{K}}}^2\}$ in ascending order by a one-to-one mapping $m_{\mathcal{K}} \mapsto i$,\footnote{When more than one modulation index sets yield the same energy level, the mapping is not unique and the detection fails to separate them. This blind spot issue can be mitigated by multi-antenna techniques.} define the received signal energy over $N$ primary blocks as $z \triangleq \lVert \boldsymbol{y} \rVert^2$, and let $f(z \mid \mathcal{H}_i)$ be the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Correspondingly, $z$ is the sum of $N$ i.i.d. exponential variables each with mean $\sigma_i^2$, and the conditional probability density function follows Erlang distribution with shape $N$ and scale $\sigma_i^2$ as
 			\begin{equation}
 				f(z \mid \mathcal{H}_i) = \frac{z^{N-1} e^{-z/\sigma_i^2}}{\sigma_i^{2N} (N-1)!}.
 				\label{eq:energy_distribution}
@@ -279,7 +279,7 @@
 				\label{eq:point_to_point_channel}
 			\end{equation}
 
-			On top of this, we can compute the marginal probability of each tag and obtain $K$ transition matrices from $\mathcal{M}$ to $\mathcal{M^K}$ that compose a discrete memoryless \gls{mac}. The probability of observing energy level $j$ when tag $k$ at status $m_k$ is
+			On top of this, we can compute the marginal probability of each tag and obtain $K$ transition matrices from $\mathcal{M}$ to $\mathcal{M^K}$ that compose a discrete memoryless \gls{mac}. The probability of observing energy level $j$ when tag $k$ at state $m_k$ is
 			\begin{equation}
 				P(\bar{z}_j \mid \bar{c}_{m_k}) = \frac{\sum_{m_{\mathcal{K} \setminus \{k\}}} P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{\sum_{m_{\mathcal{K}}} P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}.
 				\label{eq:mac}
@@ -289,7 +289,7 @@
 		\end{subsection}
 
 		\begin{subsection}{Sum backscatter rate}
-			We first introduce some prerequisites of information theory. Define the input probability distribution of tag $k$ at status $m_k$ as $P_k(\bar{c}_{m_k})$, and let $\boldsymbol{p}_k \triangleq [P_k(\bar{c}_1),\ldots,P_k(\bar{c}_M)]^T \in \mathbb{R}^{M \times 1}$, $\boldsymbol{P} \triangleq [\boldsymbol{p}_1^T,\ldots,\boldsymbol{p}_K^T]^T \in \mathbb{R}^{M \times K}$. Assume the input distribution of all tags are mutually independent such that $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Following \cite{Rezaeian2004}, the backscatter information function associated with tag input combination $\bar{c}_{m_{\mathcal{K}}}$ is defined as
+			We first introduce some prerequisites of information theory. Define the input probability distribution of tag $k$ at state $m_k$ as $P_k(\bar{c}_{m_k})$, and let $\boldsymbol{p}_k \triangleq [P_k(\bar{c}_1),\ldots,P_k(\bar{c}_M)]^T \in \mathbb{R}^{M \times 1}$, $\boldsymbol{P} \triangleq [\boldsymbol{p}_1^T,\ldots,\boldsymbol{p}_K^T]^T \in \mathbb{R}^{M \times K}$. Assume the input distribution of all tags are mutually independent such that the probability associated with input combination $\bar{c}_{m_{\mathcal{K}}}$ satisfies $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Following \cite{Rezaeian2004}, the corresponding backscatter information function is defined as
 			\begin{equation}
 				I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}};z) \triangleq \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{P(\bar{z}_j)},
 				\label{eq:backscatter_information_function}
@@ -303,9 +303,13 @@
 			% \end{align}
 			The backscatter marginal information function of tag $q \in \mathcal{K}$ associated with $\bar{c}_{i_q}$, $i_q \in \mathcal{M}$ is defined as
 			\begin{equation}
-				I_{\mathrm{B},q}(\bar{c}_{i_q};z) \triangleq \sum_{m_{\mathcal{K} \setminus \{q\}}} \prod_{k \in \mathcal{K} \setminus \{q\}} P_k(\bar{c}_{m_k}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K} \setminus \{q\}}},\bar{c}_{i_q};z),
+				I_{\mathrm{B},q}(\bar{c}_{i_q};z) \triangleq \sum_{m_{\mathcal{K} \setminus \{q\}}} P_{\mathcal{K} \setminus \{q\}}(\bar{c}_{m_{\mathcal{K} \setminus \{q\}}}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K} \setminus \{q\}}},\bar{c}_{i_q};z),
 				\label{eq:backscatter_marginal_information_function}
 			\end{equation}
+			% \begin{equation}
+			% 	I_{\mathrm{B},q}(\bar{c}_{i_q};z) \triangleq \sum_{m_{\mathcal{K} \setminus \{q\}}} \prod_{k \in \mathcal{K} \setminus \{q\}} P_k(\bar{c}_{m_k}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K} \setminus \{q\}}},\bar{c}_{i_q};z),
+			% 	\label{eq:backscatter_marginal_information_function}
+			% \end{equation}
 			% the backscatter marginal information function of tag $k$ associated with $\bar{c}_{m_k}$ is defined as
 			% \begin{equation}
 			% 	I_{\mathrm{B},k}(\bar{c}_{m_k};z) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} \prod_{k' \in \mathcal{K} \setminus \{k\}} P_{k'}(\bar{c}_{m_{k'}}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}}, \bar{c}_{m_k};z),
@@ -326,12 +330,12 @@
 			% 	I_{\mathrm{B},\mathcal{S}}(\bar{c}_{m_{\mathcal{S}}};z) \triangleq \sum_{m_{\mathcal{K} \setminus \mathcal{S}}} P_{\mathcal{K} \setminus \mathcal{S}}(\bar{c}_{m_{\mathcal{K} \setminus \mathcal{S}}}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}};z),
 			% 	\label{eq:backscatter_marginal_information_function}
 			% \end{equation}
-			and the backscatter mutual information can be expressed as\footnote{Please be aware that $c_{\mathcal{K}}$, $c_k$, $z$ are random variables, while $\bar{c}_{m_{\mathcal{K}}}$ and $\bar{c}_i$, $\bar{c}_{m_k}$, $\bar{z}_j$ represent the corresponding instances.}
+			where $P_{\mathcal{K} \setminus \{q\}}(\bar{c}_{m_{\mathcal{K} \setminus \{q\}}}) = \prod_{k \in \mathcal{K} \setminus \{q\}} P_k(\bar{c}_{m_k})$. The backscatter mutual information can be expressed as\footnote{Please be aware that $c_{\mathcal{K}}$, $c_k$, $z$ are random variables, while $\bar{c}_{m_{\mathcal{K}}}$ and $\bar{c}_i$, $\bar{c}_{m_k}$, $\bar{z}_j$ represent the corresponding instances.}
 			\begin{subequations}
 				\begin{align}
 					I_{\mathrm{B}}(c_{\mathcal{K}};z)
 					& = \mathbb{E}_{c_{\mathcal{K}}} \left[I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}};z)\right] = \mathbb{E}_{c_k} \left[I_{\mathrm{B},k}(\bar{c}_{m_k};z)\right]\label{eq:backscatter_sum_rate_expectation}\\
-					& = \sum_{m_{\mathcal{K}}} \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{P(\bar{z}_j)}.\label{eq:backscatter_sum_rate_expansion}
+					& = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{P(\bar{z}_j)}.\label{eq:backscatter_sum_rate_expansion}
 				\end{align}
 				\label{eq:backscatter_sum_rate}
 			\end{subequations}
@@ -350,7 +354,7 @@
 				I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K}}};\boldsymbol{y})
 				& \triangleq N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right),\label{eq:primary_information_function}\\
 				I_{\mathrm{P},q}(\bar{c}_{i_q};\boldsymbol{y})
-				& \triangleq \sum_{m_{\mathcal{K} \setminus \{q\}}} \prod_{k \in \mathcal{K} \setminus \{q\}} P_{k}(\bar{c}_{m_{k}}) I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K} \setminus \{q\}}},\bar{c}_{i_q};\boldsymbol{y}),\label{eq:primary_marginal_information_function}
+				& \triangleq \sum_{m_{\mathcal{K} \setminus \{q\}}} P_{\mathcal{K} \setminus \{q\}}(\bar{c}_{m_{\mathcal{K} \setminus \{q\}}}) I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K} \setminus \{q\}}},\bar{c}_{i_q};\boldsymbol{y}),\label{eq:primary_marginal_information_function}
 			\end{align}
 			% \begin{equation}
 			% 	I_{\mathrm{P},k}(\bar{c}_{m_k};\boldsymbol{y}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} \prod_{k' \in \mathcal{K} \setminus \{k\}} P_{k'}(\bar{c}_{m_{k'}}) I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K}}};\boldsymbol{y}),
@@ -369,7 +373,7 @@
 				\begin{align}
 					I_{\mathrm{P}}(c_{\mathcal{K}};\boldsymbol{y})
 					& = \mathbb{E}_{c_{\mathcal{K}}} \left[I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K}}};\boldsymbol{y})\right] = \mathbb{E}_{c_k} \left[I_{\mathrm{P},k}(\bar{c}_{m_k};\boldsymbol{y})\right]\label{eq:primary_ergodic_rate_expectation}\\
-					& = \sum_{m_{\mathcal{K}}} \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right).
+					& = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right).
 					\label{eq:primary_ergodic_rate_expansion}
 				\end{align}
 				\label{eq:primary_ergodic_rate}
@@ -396,7 +400,7 @@
 			\end{align}
 			where $\rho \in [0,1]$ denotes the priority of the primary link. To investigate how backscatter modulation and detection may influence the primary transmission, we optimize the input probability distribution, decision region, and transmit precoder to maximize the weighted sum primary-backscatter rate
 			\begin{maxi!}
-				{\scriptstyle{\boldsymbol{P},\boldsymbol{t},\boldsymbol{w}}}{I}{\label{op:rate_region}}{\label{ob:weighted_sum_rate}}
+				{\scriptstyle{\boldsymbol{P},\boldsymbol{t},\boldsymbol{w}}}{I(c_{\mathcal{K}};\boldsymbol{y},z)}{\label{op:rate_region}}{\label{ob:weighted_sum_rate}}
 				\addConstraint{\sum \nolimits_{m_k} P_k(\bar{c}_{m_k})}{=1,\quad\label{co:sum_probability}}{\forall k \in \mathcal{K}}
 				\addConstraint{P_k(\bar{c}_{m_k})}{\ge 0,\quad\label{co:nonnegative_probability}}{\forall m_k \in \mathcal{M}, \ \forall k \in \mathcal{K}}
 				\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.\label{co:average_transmit_power}}
@@ -407,7 +411,7 @@
 		\begin{subsection}{Input probability distribution}
 			For any fixed decision boundary $\boldsymbol{t}$ and transmit precoder $\boldsymbol{w}$, the equivalent discrete memoryless \gls{mac} can be determined by \eqref{eq:mac} and problem~\eqref{op:rate_region} boils down to
 			\begin{maxi!}
-				{\scriptstyle{\boldsymbol{P}}}{I}{\label{op:input_probability_distribution}}{}
+				{\scriptstyle{\boldsymbol{P}}}{I(c_{\mathcal{K}};\boldsymbol{y},z)}{\label{op:input_probability_distribution}}{}
 				\addConstraint{\eqref{co:sum_probability},\eqref{co:nonnegative_probability},}
 			\end{maxi!}
 			which is non-convex for $K > 1$ due to the product term $\prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Fortunately, the \gls{kkt} conditions are necessary and sufficient for this type of problem, and the proof follows straightforwardly from \cite{Watanabe2009}.\footnote{For any elementary discrete memoryless \gls{mac} (sizes of input alphabets are no greater than that of output alphabet), the sufficiency can be proved by combining the local maximum and connectedness of \gls{kkt} solutions. For any general discrete memoryless \gls{mac}, the capacity can be achieved by an elementary discrete memoryless \gls{mac} included within. Thus, we restrict the discussion of this paper to elementary discrete memoryless \gls{mac}s.}
@@ -440,14 +444,14 @@
 			\begin{proof}
 				Denote the Lagrange multiplier associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_K]^T \in \mathbb{R}^{K \times 1}$ and $\boldsymbol{\Lambda} \triangleq [\boldsymbol{\lambda}_1^T,\ldots,\boldsymbol{\lambda}_K^T]^T \in \mathbb{R}^{M \times K}$ with $\boldsymbol{\lambda}_k \triangleq [\lambda_{k,1},\ldots,\lambda_{k,M}]^T \in \mathbb{R}^{M \times 1}$, respectively. The Lagrangian function of problem~\eqref{op:input_probability_distribution} is
 				\begin{align}
-					L
-					& = - I + \sum_{k \in \mathcal{K}} \mu_k \left( \sum_{m_k \in \mathcal{M}} P_k(\bar{c}_{m_k}) - 1 \right)\nonumber\\
+					L(\boldsymbol{P},\boldsymbol{\mu},\boldsymbol{\Lambda})
+					& = - I(c_{\mathcal{K}};\boldsymbol{y},z) + \sum_{k \in \mathcal{K}} \mu_k \left( \sum_{m_k \in \mathcal{M}} P_k(\bar{c}_{m_k}) - 1 \right)\nonumber\\
 					& \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(\bar{c}_{m_k}),
 				\end{align}
 				and the corresponding \gls{kkt} conditions on the primal and dual solutions are, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$,
 				\begin{subequations}
 					\begin{equation}
-						- \pdv{I}{P_q^{\star}(\bar{c}_{i_q})} + \mu_q^{\star} - \lambda_{q,i_q}^{\star} = 0,
+						- \nabla_{P_q^{\star}(\bar{c}_{i_q})} I(c_{\mathcal{K}};\boldsymbol{y},z) + \mu_q^{\star} - \lambda_{q,i_q}^{\star} = 0,
 					\end{equation}
 					\begin{equation}
 						\lambda_{q,i_q}^{\star} = 0, \quad P_q^{\star}(\bar{c}_{i_q}) > 0,
@@ -456,10 +460,10 @@
 						\lambda_{q,i_q}^{\star} \ge 0, \quad P_q^{\star}(\bar{c}_{i_q}) = 0,
 					\end{equation}
 				\end{subequations}
-				where the partial derivative can be explicitly expressed as
+				where the directional derivative can be explicitly expressed as
 				\begin{subequations}
 					\begin{align}
-						\pdv{I}{P_q^{\star}(\bar{c}_{i_q})}
+						\nabla_{P_q^{\star}(\bar{c}_{i_q})} I(c_{\mathcal{K}};\boldsymbol{y},z)
 						& = \rho I_{\mathrm{P},q}(\bar{c}_{i_q};\boldsymbol{y}) + (1 - \rho) \left( I_{\mathrm{B},q}(\bar{c}_{i_q};z) - 1 \right)\\
 						& = I_q(\bar{c}_{i_q};\boldsymbol{y},z) - (1 - \rho),
 					\end{align}
@@ -494,9 +498,9 @@
 			Next, we extend the Blahut-Arimoto algorithm to the proposed case and obtain the optimal input probability distribution as follows.
 
 			\begin{theorem}
-				The input probability distribution that achieves the weighted sum primary-backscatter capacity, at state $i_q \in \mathcal{M}$ of tag $q \in \mathcal{K}$, is given by the limit of the following sequence\footnote{Note that the probability distribution of tag $q$ is based on the updated probability distribution of tags $1,\ldots,q-1$.}
+				The input probability distribution that achieves the weighted sum primary-backscatter capacity at state $i_q \in \mathcal{M}$ of tag $q \in \mathcal{K}$ is given by the limit of the following sequence\footnote{Note that the probability distribution of tag $q$ is based on the updated probability distribution of tags $1,\ldots,q-1$.}
 				\begin{equation}
-					P_q^{(r+1)}(\bar{c}_{i_q}) = P_q^{(r)}(\bar{c}_{i_q}) \frac{\exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{i_q};\boldsymbol{y},z) \right)}{\sum_{m_q} P_q^{(r)}(\bar{c}_{m_q}) \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)},
+					P_q^{(r+1)}(\bar{c}_{i_q}) = \frac{P_q^{(r)}(\bar{c}_{i_q}) \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{i_q};\boldsymbol{y},z) \right)}{\sum_{m_q} P_q^{(r)}(\bar{c}_{m_q}) \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)},
 					\label{eq:optimal_distribution}
 				\end{equation}
 				where $r \in \mathbb{Z}_+$ is the iteration index and $P_q^{(0)}(\bar{c}_{i_q}) > 0$, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$.
@@ -504,19 +508,53 @@
 			\end{theorem}
 			\begin{proof}
 				We first prove that for tag $q \in \mathcal{K}$, updating the probability of state $i_q \in \mathcal{M}$ by sequence~\eqref{eq:optimal_distribution} does not decrease the mutual information.
-				For a certain input combination $\bar{c}_{m_{\mathcal{K}}}$, let $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$ and $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) = P_q'(\bar{c}_{m_q}) \prod_{k \in \mathcal{K} \setminus \{q\}} P_k(\bar{c}_{m_k})$ be two probability distributions with potentially different marginal for tag $q$. Correspondingly, $P'(\bar{z}_j) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})$. We also define $J$ in \eqref{eq:intermediate_information_function} as an intermediate information function between two probability distributions. It can be verified that for a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ is a concave function of $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}})$. As such, $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ is maximized by the solution to $\pdv*{J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)}{P_k(\bar{c}_{m_k})} = 0$.
-				\begin{figure*}
+				For a certain input combination $\bar{c}_{m_{\mathcal{K}}}$, let $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$ and $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) = P_q'(\bar{c}_{m_q}) \prod_{k \in \mathcal{K} \setminus \{q\}} P_k(\bar{c}_{m_k})$ be two probability distributions with potentially different marginal for tag $q$, and define $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ as the intermediate information function by \eqref{eq:intermediate_information_function}.
+				\begin{figure*}[!b]
+					\hrule
 					\begin{align}
 						J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)
 						& \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right)\nonumber\\
-						& \quad + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})}{P'(\bar{z}_j) P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}})}
+						& \quad + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})}{P'(\bar{z}_j) P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}})}.
 						\label{eq:intermediate_information_function}
 					\end{align}
 				\end{figure*}
+				It can be verified that for a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ is a concave function of $P_q(\bar{c}_{m_q})$ and is maximized by $\nabla_{P_q^{\star}(\bar{c}_{m_q})} J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right) = 0$, which can be explicitly written as
+				\begin{equation}
+					S_q'(\bar{c}_{m_q}) - S_q'(\bar{c}_{i_q}) + (1 - \rho) \log \frac{P_q(\bar{c}_{i_q})}{P_q^{\star}(\bar{c}_{m_q})} = 0,
+					\label{eq:optimal_intermediate_information_condition}
+				\end{equation}
+				where $i_q \ne m_q$ is the reference state and
+				% , and we define $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$
+				\begin{align}
+					S_k'(\bar{c}_{m_q})
+					& \triangleq I_k(\bar{c}_{m_q};\boldsymbol{y},z) + (1 - \rho) \sum_{m_{\mathcal{K} \setminus \{q\}}} P_{\mathcal{K} \setminus \{q\}}(\bar{c}_{m_{\mathcal{K} \setminus \{q\}}})\nonumber\\
+					& \quad \times \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K} \setminus \{q\}}},\bar{c}_{m_q}) \log P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}).
+				\end{align}
+
+				Evidently, $\forall m_q \ne i_q$, \eqref{eq:optimal_intermediate_information_condition} can be recast as
+				\begin{subequations}
+					\begin{align}
+						P_q^{\star}(\bar{c}_{m_q})
+						& = \frac{\exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_q}) \right)}{\sum_{m_q} \exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_q}) \right)}\\
+						& = \frac{P_q^{(r)}(\bar{c}_{m_q}) \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)}{\sum_{m_q} P_q^{(r)}(\bar{c}_{m_q}) \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)}.
+						\label{eq:optimal_relative_distribution}
+					\end{align}
+				\end{subequations}
+
+				Also, we notice that $P_q(\bar{c}_{i_q}) = 1 - \sum_{m_q \ne i_q} P_q^{\star}(\bar{c}_{m_q})$ has exactly the same form. It suggests that the solution of choosing $i_q$ as reference would coincide with that of choosing any $m_q \ne i_q$ as reference, such that \eqref{eq:optimal_relative_distribution} is also optimal for $i_q$. Therefore, for a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, choosing $P_q(\bar{c}_{m_q})$ by \eqref{eq:optimal_relative_distribution} guarantees
+				\begin{equation}
+					J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right) \ge J \left( P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right) = I \left(P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right).
+				\end{equation}
+
+				TODO
+				% \begin{equation}
+				% 	P_q^{\star}(\bar{c}_{i_q}) = \frac{P_q^{(r)}(\bar{c}_{i_q}) \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{i_q};\boldsymbol{y},z) \right)}{\sum_{i_q} P_q^{(r)}(\bar{c}_{i_q}) \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{i_q};\boldsymbol{y},z) \right)}.
+				% 	\label{eq:optimal_reference_distribution}
+				% \end{equation}
 
 
-
-				% Let $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$ and $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) = P_q'(\bar{c}_{m_q}) \prod_{k \in \mathcal{K} \setminus \{q\}} P_k(\bar{c}_{m_k})$ be two probability distributions associated with input combination $\bar{c}_{m_{\mathcal{K}}}$
+				% of choosing any $i_q$ coincide
+				% Regularization on \eqref{eq:optimal_intermediate_information_condition}
 			\end{proof}
 
 
@@ -596,7 +634,7 @@
 		\end{subsection}
 
 		\begin{subsection}{Precoder}
-			Interestingly, we can design precoder to adjust the expectation of the received power \eqref{eq:receive_variance} at each tag input combination, which can avoid the detection blind spots in \cite{Qian2019} and further boost the weighted sum-rate. However, the problem is highly non-convex -- the information function associated with input combination status $i$ is
+			Interestingly, we can design precoder to adjust the expectation of the received power \eqref{eq:receive_variance} at each tag input combination, which can avoid the detection blind spots in \cite{Qian2019} and further boost the weighted sum-rate. However, the problem is highly non-convex -- the information function associated with input combination state $i$ is
 			\begin{align}
 				I(\bar{c}_i;z)
 				& = \sum_{j \in \mathcal{M^K}} \int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z\nonumber\\

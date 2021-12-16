@@ -294,13 +294,14 @@
 				I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}};z) \triangleq \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{P(\bar{z}_j)},
 				\label{eq:backscatter_information_function}
 			\end{equation}
+			where $P(\bar{z}_j) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})$.
 			% \begin{align}
 			% 	I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}};z)
 			% 	& \triangleq \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{P(\bar{z}_j)}\\
 			% 	& = \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{\sum_{m_{\mathcal{K}}} \prod_{k \in \mathcal{K}} P(\bar{c}_{m_{\mathcal{K}}}) P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}
 			% 	\label{eq:backscatter_information_function}
 			% \end{align}
-			the backscatter marginal information function of tag $q \in \mathcal{K}$ associated with $\bar{c}_{i_q}$, $i_q \in \mathcal{M}$ is defined as
+			The backscatter marginal information function of tag $q \in \mathcal{K}$ associated with $\bar{c}_{i_q}$, $i_q \in \mathcal{M}$ is defined as
 			\begin{equation}
 				I_{\mathrm{B},q}(\bar{c}_{i_q};z) \triangleq \sum_{m_{\mathcal{K} \setminus \{q\}}} \prod_{k \in \mathcal{K} \setminus \{q\}} P_k(\bar{c}_{m_k}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K} \setminus \{q\}}},\bar{c}_{i_q};z),
 				\label{eq:backscatter_marginal_information_function}
@@ -419,8 +420,8 @@
 					\end{alignat}
 				\end{subequations}
 
-				% \eqref{co:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{co:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
-				An interpretation is that each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while any state of any tag with potentially less marginal information than above should not be used.
+				\eqref{co:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{co:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
+				% An interpretation is that each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while any state of any tag with potentially less marginal information than above should not be used.
 				% \begin{itemize}
 				% 	\item each probable state of each tag produces the same marginal information (averaged over all states of other tags)
 				% 	\item all states of all tags with potentially less marginal information should be dropped
@@ -439,7 +440,7 @@
 			\begin{proof}
 				Denote the Lagrange multiplier associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_K]^T \in \mathbb{R}^{K \times 1}$ and $\boldsymbol{\Lambda} \triangleq [\boldsymbol{\lambda}_1^T,\ldots,\boldsymbol{\lambda}_K^T]^T \in \mathbb{R}^{M \times K}$ with $\boldsymbol{\lambda}_k \triangleq [\lambda_{k,1},\ldots,\lambda_{k,M}]^T \in \mathbb{R}^{M \times 1}$, respectively. The Lagrangian function of problem~\eqref{op:input_probability_distribution} is
 				\begin{align}
-					J
+					L
 					& = - I + \sum_{k \in \mathcal{K}} \mu_k \left( \sum_{m_k \in \mathcal{M}} P_k(\bar{c}_{m_k}) - 1 \right)\nonumber\\
 					& \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(\bar{c}_{m_k}),
 				\end{align}
@@ -495,10 +496,28 @@
 			\begin{theorem}
 				The input probability distribution that achieves the weighted sum primary-backscatter capacity, at state $i_q \in \mathcal{M}$ of tag $q \in \mathcal{K}$, is given by the limit of the following sequence\footnote{Note that the probability distribution of tag $q$ is based on the updated probability distribution of tags $1,\ldots,q-1$.}
 				\begin{equation}
-					P_q^{(r+1)}(\bar{c}_{i_q}) = P_q^{(r)}(\bar{c}_{i_q}) \frac{\exp \left( I_q(\bar{c}_{i_q};\boldsymbol{y},z) \right)}{\sum_{m_q} P_q^{(r)}(\bar{c}_{m_q}) \exp \left( I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)},
+					P_q^{(r+1)}(\bar{c}_{i_q}) = P_q^{(r)}(\bar{c}_{i_q}) \frac{\exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{i_q};\boldsymbol{y},z) \right)}{\sum_{m_q} P_q^{(r)}(\bar{c}_{m_q}) \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)},
+					\label{eq:optimal_distribution}
 				\end{equation}
 				where $r \in \mathbb{Z}_+$ is the iteration index and $P_q^{(0)}(\bar{c}_{i_q}) > 0$, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$.
+				\label{th:optimal_distribution}
 			\end{theorem}
+			\begin{proof}
+				We first prove that for tag $q \in \mathcal{K}$, updating the probability of state $i_q \in \mathcal{M}$ by sequence~\eqref{eq:optimal_distribution} does not decrease the mutual information.
+				For a certain input combination $\bar{c}_{m_{\mathcal{K}}}$, let $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$ and $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) = P_q'(\bar{c}_{m_q}) \prod_{k \in \mathcal{K} \setminus \{q\}} P_k(\bar{c}_{m_k})$ be two probability distributions with potentially different marginal for tag $q$. Correspondingly, $P'(\bar{z}_j) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})$. We also define $J$ in \eqref{eq:intermediate_information_function} as an intermediate information function between two probability distributions. It can be verified that for a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ is a concave function of $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}})$. As such, $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ is maximized by the solution to $\pdv*{J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)}{P_k(\bar{c}_{m_k})} = 0$.
+				\begin{figure*}
+					\begin{align}
+						J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)
+						& \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right)\nonumber\\
+						& \quad + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})}{P'(\bar{z}_j) P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}})}
+						\label{eq:intermediate_information_function}
+					\end{align}
+				\end{figure*}
+
+
+
+				% Let $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$ and $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) = P_q'(\bar{c}_{m_q}) \prod_{k \in \mathcal{K} \setminus \{q\}} P_k(\bar{c}_{m_k})$ be two probability distributions associated with input combination $\bar{c}_{m_{\mathcal{K}}}$
+			\end{proof}
 
 
 			% Denote the Lagrange multiplier associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_K]^T \in \mathbb{R}^{K \times 1}$ and $\boldsymbol{\Lambda} \triangleq [\boldsymbol{\lambda}_1^T,\ldots,\boldsymbol{\lambda}_K^T]^T \in \mathbb{R}^{M \times K}$ with $\boldsymbol{\lambda}_k \triangleq [\lambda_{k,1},\ldots,\lambda_{k,M}]^T \in \mathbb{R}^{M \times 1}$, respectively. The Lagrangian function of problem~\eqref{op:input_probability_distribution} is

@@ -374,13 +374,13 @@
 			\begin{proposition}
 				The necessary and sufficient conditions for an input probability distribution $\boldsymbol{P}^{\star}$ to maximize the weighted sum primary-backscatter rate are that, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
 				\begin{subequations}
+					\label{eq:optimal_conditions}
 					\begin{alignat}{2}
-						I_k(\bar{c}_{m_k};\boldsymbol{y},z) & = I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^{\star}(\bar{c}_{m_k}) > 0,\label{co:probable_states}\\
-						I_k(\bar{c}_{m_k};\boldsymbol{y},z) & \le I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^{\star}(\bar{c}_{m_k}) = 0.\label{co:dropped_states}
+						I_k(\bar{c}_{m_k};\boldsymbol{y},z) & = I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^{\star}(\bar{c}_{m_k}) > 0,\label{eq:probable_states}\\
+						I_k(\bar{c}_{m_k};\boldsymbol{y},z) & \le I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^{\star}(\bar{c}_{m_k}) = 0.\label{eq:dropped_states}
 					\end{alignat}
 				\end{subequations}
-
-				\eqref{co:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{co:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
+				\eqref{eq:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{eq:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
 				\label{pr:optimal_conditions}
 			\end{proposition}
 			\begin{proof}
@@ -410,8 +410,8 @@
 				Due to the necessity and sufficiency of the \gls{kkt} conditions, we conclude that any input probability distribution $\boldsymbol{P}^{\star}$ maximizes the weighted sum primary-backscatter rate if and only if, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
 				\begin{subequations}
 					\begin{alignat}{2}
-						I_k(\bar{c}_{m_k};\boldsymbol{y},z) & = \mu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) > 0,\\
-						I_k(\bar{c}_{m_k};\boldsymbol{y},z) & \le \mu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) = 0,
+						I_k(\bar{c}_{m_k};\boldsymbol{y},z) & = \mu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) > 0,\label{eq:probable_states_marginal}\\
+						I_k(\bar{c}_{m_k};\boldsymbol{y},z) & \le \mu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) = 0,\label{eq:dropped_states_marginal}
 					\end{alignat}
 				\end{subequations}
 				which implies
@@ -434,7 +434,8 @@
 					P_k^{(r+1)}(\bar{c}_{m_k}) = \frac{P_k^{(r)}(\bar{c}_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k};\boldsymbol{y},z) \right)}{\sum_{m_k'} P_k^{(r)}(\bar{c}_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k'};\boldsymbol{y},z) \right)},
 					\label{eq:optimal_distribution}
 				\end{equation}
-				where $r \in \mathbb{Z}_+$ is the iteration index and $P_k^{(0)}(\bar{c}_{m_k}) > 0$, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$.
+				where $r \in \mathbb{Z}_+$ is the iteration index and $P_k^{(0)}(\bar{c}_{m_k}) > 0$.
+				% , $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$.
 				\label{th:optimal_distribution}
 			\end{theorem}
 			\begin{proof}
@@ -490,7 +491,29 @@
 						& = 0,
 					\end{align}
 				\end{subequations}
-				where $u_k(\bar{c}_{m_k}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k};\boldsymbol{y},z) \right)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges. Combining \eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper} suggests $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) \ge I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$. Since mutual information is bounded above, we conclude sequence \eqref{eq:optimal_distribution} is convergent and non-decreasing in mutual information.
+				where $u_k(\bar{c}_{m_k}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k};\boldsymbol{y},z) \right)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges. Combining \eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper} suggests $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) \ge I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$. Since mutual information is bounded above, we conclude sequence \eqref{eq:optimal_distribution} is non-decreasing and convergent in mutual information.
+
+				We then prove any converging point of sequence \eqref{eq:optimal_distribution}, denoted as $P_k^{\star}(\bar{c}_{m_k})$, fulfills the optimal conditions \eqref{eq:optimal_conditions} and achieves the weighted primary-backscatter sum capacity. To see this, define
+				\begin{equation}
+					D_k^{(r)}(\bar{c}_{m_k}) \triangleq \frac{P_k^{(r+1)}(\bar{c}_{m_k})}{P_k^{(r)}(\bar{c}_{m_k})} = \frac{u_k(\bar{c}_{m_k})}{\sum_{m_k'} P_k^{(r)}(\bar{c}_{m_k'}) u_k(\bar{c}_{m_k'})},
+				\end{equation}
+				where $P_k^{(0)}(\bar{c}_{m_k}) > 0$. As sequence \eqref{eq:optimal_distribution} is convergent, any state with $P_k^{\star}(\bar{c}_{m_k}) > 0$ need to satisfy $D_k^{\star}(\bar{c}_{m_k}) \triangleq \lim_{r \to \infty} D_k^{(r)}(\bar{c}_{m_k}) = 1$, namely
+				\begin{equation}
+					I_k(\bar{c}_{m_k};\boldsymbol{y},z) = \frac{1 - \rho}{\rho} \log \sum_{m_k'} P_k^{(r)}(\bar{c}_{m_k'}) u_k(\bar{c}_{m_k'}),
+				\end{equation}
+				which coincides with \eqref{eq:probable_states_marginal} and implies \eqref{eq:probable_states}. That is, given $P_k^{(0)}(\bar{c}_{m_k}) > 0$, any converging point with $P_k^{\star}(\bar{c}_{m_k}) > 0$ must satisfy \eqref{eq:probable_states}.
+				On the other hand, we assume $P_k^{\star}(\bar{c}_{m_k})$ does not satisfy \eqref{eq:dropped_states}, such that for any state with $P_k^{\star}(\bar{c}_{m_k}) = 0$,
+				% On the other hand, we show if $P_k^{\star}(\bar{c}_{m_k})$ does not satisfy \eqref{eq:dropped_states}, then it is not a converging point of sequence \eqref{eq:optimal_distribution}. By this assumption, for any state with $P_k^{\star}(\bar{c}_{m_k}) = 0$,
+				\begin{equation}
+					I_k(\bar{c}_{m_k};\boldsymbol{y},z) > I(c_{\mathcal{K}};\boldsymbol{y},z) = \sum_{m_k'} P_k^{\star}(\bar{c}_{m_k'}) I_k(\bar{c}_{m_k'};\boldsymbol{y},z),
+				\end{equation}
+				where the equality origins from \eqref{eq:backscatter_sum_rate_expectation} and \eqref{eq:primary_ergodic_rate_expectation}. Since the exponential function is monotonically increasing, we have $u_k(\bar{c}_{m_k}) > \sum_{m_k'} P_k^{\star}(\bar{c}_{m_k'}) u_k(\bar{c}_{m_k'})$ and $D_k^{\star}(\bar{c}_{m_k}) > 1$. Considering $P_k^{(0)}(\bar{c}_{m_k}) > 0$ and $P_k^{\star}(\bar{c}_{m_k}) = 0$, it contradicts with
+				\begin{equation}
+					P_k^{(r)}(\bar{c}_{m_k}) = P_k^{(0)}(\bar{c}_{m_k}) \prod_{n=1}^r D_k^{(n)}(\bar{c}_{m_k}).
+				\end{equation}
+				Therefore, given $P_k^{(0)}(\bar{c}_{m_k}) > 0$, any converging point with $P_k^{\star}(\bar{c}_{m_k}) = 0$ must satisfy \eqref{eq:dropped_states}.
+
+				In conclusion, sequence \eqref{eq:optimal_distribution} always converges to a weighted sum capacity-achieving distribution for state $m_k$ of tag $k$.
 			\end{proof}
 		\end{subsection}
 

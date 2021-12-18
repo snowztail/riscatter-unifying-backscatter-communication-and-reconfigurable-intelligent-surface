@@ -300,7 +300,7 @@
 				I_{\mathrm{B},k}(\bar{c}_{m_k};z) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}},\bar{c}_{m_k};z),
 				\label{eq:backscatter_marginal_information_function}
 			\end{equation}
-			where $P_{\mathcal{K} \setminus \{k\}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}}) = \prod_{k' \in \mathcal{K} \setminus \{k\}} P_{k'}(\bar{c}_{m_{k'}})$. The backscatter mutual information can be expressed as\footnote{Please be aware that $c_{\mathcal{K}}$, $c_k$, $z$ are random variables, while $\bar{c}_{m_{\mathcal{K}}}$ and $\bar{c}_i$, $\bar{c}_{m_k}$, $\bar{z}_j$ represent the corresponding instances.}
+			where $P_{\mathcal{K} \setminus \{k\}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}}) = \prod_{q \in \mathcal{K} \setminus \{k\}} P_{q}(\bar{c}_{m_{q}})$. The backscatter mutual information can be expressed as\footnote{Please be aware that $c_{\mathcal{K}}$, $c_k$, $z$ are random variables, while $\bar{c}_{m_{\mathcal{K}}}$ and $\bar{c}_i$, $\bar{c}_{m_k}$, $\bar{z}_j$ represent the corresponding instances.}
 			\begin{subequations}
 				\begin{align}
 					I_{\mathrm{B}}(c_{\mathcal{K}};z)
@@ -429,16 +429,16 @@
 			Next, we extend the Blahut-Arimoto algorithm to the proposed case and obtain the optimal input probability distribution as follows.
 
 			\begin{theorem}
-				The input probability distribution that achieves the weighted sum primary-backscatter capacity at state $i_k \in \mathcal{M}$ of tag $q \in \mathcal{K}$ is given by the limit of the following sequence\footnote{Note that the probability distribution of tag $q$ is based on the updated probability distribution of tags $1,\ldots,k-1$.}
+				The input probability distribution that achieves the weighted sum primary-backscatter capacity, at state $m_k \in \mathcal{M}$ of tag $k \in \mathcal{K}$, is given by the converging point of sequence\footnote{Note that the probability distribution of tag $k$ is based on the updated probability distribution of tags $1,\ldots,k-1$.}
 				\begin{equation}
-					P_q^{(r+1)}(\bar{c}_{i_q}) = \frac{P_q^{(r)}(\bar{c}_{i_q}) \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{i_q};\boldsymbol{y},z) \right)}{\sum_{m_q} P_q^{(r)}(\bar{c}_{m_q}) \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)},
+					P_k^{(r+1)}(\bar{c}_{m_k}) = \frac{P_k^{(r)}(\bar{c}_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k};\boldsymbol{y},z) \right)}{\sum_{m_k'} P_k^{(r)}(\bar{c}_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k'};\boldsymbol{y},z) \right)},
 					\label{eq:optimal_distribution}
 				\end{equation}
-				where $r \in \mathbb{Z}_+$ is the iteration index and $P_q^{(0)}(\bar{c}_{i_q}) > 0$, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$.
+				where $r \in \mathbb{Z}_+$ is the iteration index and $P_k^{(0)}(\bar{c}_{m_k}) > 0$, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$.
 				\label{th:optimal_distribution}
 			\end{theorem}
 			\begin{proof}
-				We first prove that for tag $q \in \mathcal{K}$, updating the probability of state $i_q \in \mathcal{M}$ by sequence~\eqref{eq:optimal_distribution} does not decrease mutual information. For any input combination $\bar{c}_{m_{\mathcal{K}}}$, let $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$ and $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) = P_q'(\bar{c}_{m_q}) \prod_{k \in \mathcal{K} \setminus \{q\}} P_k(\bar{c}_{m_k})$ be two probability distributions with potentially different marginal for tag $q$, and denote the corresponding mutual information and received energy distribution as $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$, $I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$ and $P(\bar{z}_j)$, $P'(\bar{z}_j)$, respectively. Also, define an intermediate function $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ by \eqref{eq:intermediate_information_function}, and apparently $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) = J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \right)$.
+				We first prove sequence~\eqref{eq:optimal_distribution} is non-decreasing in mutual information. For state $m_k \in \mathcal{M}$ of tag $k \in \mathcal{K}$, let $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(\bar{c}_{m_q})$ and $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) = P_k'(\bar{c}_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(\bar{c}_{m_q})$ be two probability distributions with potentially different marginal for tag $k$, and denote the corresponding mutual information and received energy distribution as $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$, $I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$ and $P(\bar{z}_j)$, $P'(\bar{z}_j)$, respectively. Also, define an intermediate function $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ by \eqref{eq:intermediate_information_function}. Apparently, $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) = J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \right)$.
 				\begin{figure*}[!b]
 					\hrule
 					\begin{align}
@@ -448,52 +448,49 @@
 						\label{eq:intermediate_information_function}
 					\end{align}
 				\end{figure*}
-				For a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ is a concave function of $P_q(\bar{c}_{m_q})$ and can be maximized at $\nabla_{P_q^{\star}(\bar{c}_{m_q})} J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right) = 0$, which reduces to
+				For a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ is a concave function of $P_k(\bar{c}_{m_k})$ and is maximized at $\nabla_{P_k^{\star}(\bar{c}_{m_k})} J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right) = 0$, namely
 				\begin{equation}
-					S_q'(\bar{c}_{m_q}) - S_q'(\bar{c}_{i_q}) + (1 - \rho) \log \frac{P_q(\bar{c}_{i_q})}{P_q^{\star}(\bar{c}_{m_q})} = 0,
+					S_k'(\bar{c}_{m_k}) - S_k'(\bar{c}_{i_k}) + (1 - \rho) \log \frac{P_k(\bar{c}_{i_k})}{P_k^{\star}(\bar{c}_{m_k})} = 0,
 					\label{eq:optimal_intermediate_information_condition}
 				\end{equation}
-				where $i_q \ne m_q$ is the reference state and
+				where $i_k \ne m_k$ is the reference state and
 				\begin{align}
-					S_k'(\bar{c}_{m_q})
-					& \triangleq I_k(\bar{c}_{m_q};\boldsymbol{y},z) + (1 - \rho) \sum_{m_{\mathcal{K} \setminus \{q\}}} P_{\mathcal{K} \setminus \{q\}}(\bar{c}_{m_{\mathcal{K} \setminus \{q\}}})\nonumber\\
-					& \quad \times \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K} \setminus \{q\}}},\bar{c}_{m_q}) \log P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}).
+					S_k'(\bar{c}_{m_k})
+					& \triangleq I_k(\bar{c}_{m_k};\boldsymbol{y},z) + (1 - \rho) \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}})\nonumber\\
+					& \quad \times \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K} \setminus \{k\}}},\bar{c}_{m_k}) \log P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}},\bar{c}_{m_k}).
 				\end{align}
 
-				Evidently, $\forall m_q \ne i_q$, \eqref{eq:optimal_intermediate_information_condition} can be recast as
+				Evidently, $\forall m_k \ne i_k$, \eqref{eq:optimal_intermediate_information_condition} boils down to
 				\begin{subequations}
 					\begin{align}
-						P_q^{\star}(\bar{c}_{m_q})
-						& = \frac{\exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_q}) \right)}{\sum_{m_q} \exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_q}) \right)}\\
-						& = \frac{P_q'(\bar{c}_{m_q}) \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)}{\sum_{m_q} P_q'(\bar{c}_{m_q}) \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)}.
+						P_k^{\star}(\bar{c}_{m_k})
+						& = \frac{\exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k}) \right)}{\sum_{m_k'} \exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k'}) \right)}\\
+						& = \frac{P_k'(\bar{c}_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k};\boldsymbol{y},z) \right)}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k'};\boldsymbol{y},z) \right)}.
 						\label{eq:optimal_relative_distribution}
 					\end{align}
 				\end{subequations}
 
-				Although optimality is not guaranteed for state $i_q$, we notice that $P_q(\bar{c}_{i_q}) = 1 - \sum_{m_q \ne i_q} P_q^{\star}(\bar{c}_{m_q})$ has exactly the same form as \eqref{eq:optimal_relative_distribution}. It suggests that the solution of choosing $i_q$ as reference would coincide with that of choosing any $m_q \ne i_q$ as reference, while optimality is guaranteed for $i_q$ in the latter case. Therefore, for a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $\forall i_q \in \mathcal{M}$ and $\forall q \in \mathcal{K}$, \eqref{eq:optimal_relative_distribution} ensures
+				Although $P_k(\bar{c}_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^{\star}(\bar{c}_{m_k})$ is not guaranteed to be optimal, it has exactly the same form as \eqref{eq:optimal_relative_distribution}. In such case, the solution of choosing $i_k$ as reference would coincide with that of choosing any $m_k \ne i_k$ as reference, while optimality for $i_k$ is guaranteed in the latter case. Therefore, for a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $\forall i_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$, \eqref{eq:optimal_relative_distribution} ensures
 				\begin{equation}
 					J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right) \ge I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z).
 					\label{eq:information_difference_lower}
 				\end{equation}
 
-				On the other hand, choosing $P_q(\bar{c}_{m_q})$ by \eqref{eq:optimal_relative_distribution} also satisfies
+				On the other hand, choosing $P_k(\bar{c}_{m_k})$ by \eqref{eq:optimal_relative_distribution} also satisfies
 				\begin{subequations}
 					\label{eq:information_difference_upper}
 					\begin{align}
 						\Delta
 						& \triangleq I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) - J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)\\
-						& = (1 - \rho)
-						\sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P'(\bar{z}_j) P_q(\bar{c}_{m_q})}{P(\bar{z}_j) P_q'(\bar{c}_{m_q})}\\
-						& = (1 - \rho) \sum_{m_q} \frac{P_q'(\bar{c}_{m_q}) u_q(\bar{c}_{m_q})}{\sum_{i_q} P_q'(\bar{c}_{i_q}) u_q(\bar{c}_{i_q})} \sum_j P(\bar{z}_j \mid \bar{c}_{m_q})\nonumber\\
-						& \quad \times \log \frac{\sum_{m_q'} P_q'(\bar{c}_{m_q'}) P(\bar{z}_j \mid \bar{c}_{m_q'}) u_q(\bar{c}_{m_q})}{\sum_{i_q'} P_q'(\bar{c}_{i_q'}) P(\bar{z}_j \mid \bar{c}_{i_q'}) u_q(\bar{c}_{i_q'})}\\
-						& \ge (1 - \rho) \sum_{m_q} \frac{P_q'(\bar{c}_{m_q}) u_q(\bar{c}_{m_q})}{\sum_{i_q} P_q'(\bar{c}_{i_q}) u_q(\bar{c}_{i_q})} \sum_j P(\bar{z}_j \mid \bar{c}_{m_q})\nonumber\\
-						& \quad \times \left( 1 - \frac{\sum_{i_q'} P_q'(\bar{c}_{i_q'}) P(\bar{z}_j \mid \bar{c}_{i_q'}) u_q(\bar{c}_{i_q'})}{\sum_{m_q'} P_q'(\bar{c}_{m_q'}) P(\bar{z}_j \mid \bar{c}_{m_q'}) u_q(\bar{c}_{m_q})} \right)\\
+						& = (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P'(\bar{z}_j) P_k(\bar{c}_{m_k})}{P(\bar{z}_j) P_k'(\bar{c}_{m_k})}\\
+						& = (1 - \rho) \sum_{m_k} \frac{P_k'(\bar{c}_{m_k}) u_k(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) u_k(\bar{c}_{m_k'})} \sum_j P(\bar{z}_j \mid \bar{c}_{m_k})\nonumber\\
+						& \quad \times \log \frac{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k(\bar{c}_{m_k'})}\\
+						& \ge (1 - \rho) \sum_{m_k} \frac{P_k'(\bar{c}_{m_k}) u_k(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) u_k(\bar{c}_{m_k'})} \sum_j P(\bar{z}_j \mid \bar{c}_{m_k})\nonumber\\
+						& \quad \times \left( 1 - \frac{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k(\bar{c}_{m_k'})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k(\bar{c}_{m_k})} \right)\\
 						& = 0,
 					\end{align}
 				\end{subequations}
-				where $u_q(\bar{c}_{m_q}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_q(\bar{c}_{m_q};\boldsymbol{y},z) \right)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges. Combining \eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper}, we conclude that update the input probability distribution of tag $q \in \mathcal{K}$ by \eqref{eq:optimal_distribution} does not decrease mutual information.
-
-				TODO
+				where $u_k(\bar{c}_{m_k}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k};\boldsymbol{y},z) \right)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges. Combining \eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper} suggests $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) \ge I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$. Since mutual information is bounded above, we conclude sequence \eqref{eq:optimal_distribution} is convergent and non-decreasing in mutual information.
 			\end{proof}
 		\end{subsection}
 

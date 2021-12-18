@@ -309,7 +309,6 @@
 				\end{align}
 				\label{eq:backscatter_sum_rate}
 			\end{subequations}
-
 			Evidently, \eqref{eq:backscatter_information_function}--\eqref{eq:backscatter_sum_rate} are functions of the tag input distribution $\boldsymbol{P}$ as well as the discrete memoryless \gls{mac} $P(z \mid c_{\mathcal{K}})$, and thus depend on the transmit precoder $\boldsymbol{w}$ and the detection threshold $\boldsymbol{t}$.
 		\end{subsection}
 
@@ -376,8 +375,8 @@
 				\begin{subequations}
 					\label{eq:optimal_conditions}
 					\begin{alignat}{2}
-						I_k(\bar{c}_{m_k};\boldsymbol{y},z) & = I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^{\star}(\bar{c}_{m_k}) > 0,\label{eq:probable_states}\\
-						I_k(\bar{c}_{m_k};\boldsymbol{y},z) & \le I(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^{\star}(\bar{c}_{m_k}) = 0.\label{eq:dropped_states}
+						I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) & = I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^{\star}(\bar{c}_{m_k}) > 0,\label{eq:probable_states}\\
+						I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) & \le I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^{\star}(\bar{c}_{m_k}) = 0.\label{eq:dropped_states}
 					\end{alignat}
 				\end{subequations}
 				\eqref{eq:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{eq:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
@@ -393,7 +392,7 @@
 				and the corresponding \gls{kkt} conditions on the primal and dual solutions are, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
 				\begin{subequations}
 					\begin{equation}
-						- \nabla_{P_k^{\star}(\bar{c}_{m_k})} I(c_{\mathcal{K}};\boldsymbol{y},z) + \mu_k^{\star} - \lambda_{k,m_k}^{\star} = 0,
+						- \nabla_{P_k^{\star}(\bar{c}_{m_k})} I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z) + \mu_k^{\star} - \lambda_{k,m_k}^{\star} = 0,
 					\end{equation}
 					\begin{equation}
 						\lambda_{k,m_k}^{\star} = 0, \quad P_k^{\star}(\bar{c}_{m_k}) > 0,
@@ -404,26 +403,26 @@
 				\end{subequations}
 				where the directional derivative can be explicitly expressed as
 				\begin{equation}
-					\nabla_{P_k^{\star}(\bar{c}_{m_k})} I(c_{\mathcal{K}};\boldsymbol{y},z) = I_k(\bar{c}_{m_k};\boldsymbol{y},z) - (1 - \rho).
+					\nabla_{P_k^{\star}(\bar{c}_{m_k})} I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z) = I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) - (1 - \rho).
 				\end{equation}
 
 				Due to the necessity and sufficiency of the \gls{kkt} conditions, we conclude that any input probability distribution $\boldsymbol{P}^{\star}$ maximizes the weighted sum primary-backscatter rate if and only if, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
 				\begin{subequations}
 					\begin{alignat}{2}
-						I_k(\bar{c}_{m_k};\boldsymbol{y},z) & = \mu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) > 0,\label{eq:probable_states_marginal}\\
-						I_k(\bar{c}_{m_k};\boldsymbol{y},z) & \le \mu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) = 0,\label{eq:dropped_states_marginal}
+						I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) & = \mu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) > 0,\label{eq:probable_states_marginal}\\
+						I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) & \le \mu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) = 0,\label{eq:dropped_states_marginal}
 					\end{alignat}
 				\end{subequations}
 				which implies
 				\begin{equation}
-					\sum_{m_k} P_k^{\star}(\bar{c}_{m_k}) I_k(\bar{c}_{m_k};\boldsymbol{y},z) = \mu_k^{\star} + (1 - \rho).
+					\sum_{m_k} P_k^{\star}(\bar{c}_{m_k}) I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) = \mu_k^{\star} + (1 - \rho).
 				\end{equation}
 
 				On the other hand, by definition of marginations \eqref{eq:backscatter_sum_rate_expectation}, \eqref{eq:primary_ergodic_rate_expectation} and weighted summations \eqref{eq:weighted_sum_marginal_information}, \eqref{eq:weighted_sum_rate}, we have
 				\begin{equation}
-					\sum_{m_k} P_k^{\star}(\bar{c}_{m_k}) I_k(\bar{c}_{m_k};\boldsymbol{y},z) = I(c_{\mathcal{K}};\boldsymbol{y},z),
+					\sum_{m_k} P_k^{\star}(\bar{c}_{m_k}) I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) = I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z),
 				\end{equation}
-				which is irrelevant to $k$. It suggests $I(c_{\mathcal{K}};\boldsymbol{y},z) = \mu_k^{\star} + (1 - \rho)$, $\forall k \in \mathcal{K}$, and completes the proof.
+				which is irrelevant to $k$. It suggests $I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z) = \mu_k^{\star} + (1 - \rho)$, $\forall k \in \mathcal{K}$, and completes the proof.
 			\end{proof}
 
 			Next, we extend the Blahut-Arimoto algorithm to the proposed case and obtain the optimal input probability distribution as follows.
@@ -431,7 +430,7 @@
 			\begin{theorem}
 				The input probability distribution that achieves the weighted sum primary-backscatter capacity, at state $m_k \in \mathcal{M}$ of tag $k \in \mathcal{K}$, is given by the converging point of sequence\footnote{Note that the probability distribution of tag $k$ is based on the updated probability distribution of tags $1,\ldots,k-1$.}
 				\begin{equation}
-					P_k^{(r+1)}(\bar{c}_{m_k}) = \frac{P_k^{(r)}(\bar{c}_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k};\boldsymbol{y},z) \right)}{\sum_{m_k'} P_k^{(r)}(\bar{c}_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k'};\boldsymbol{y},z) \right)},
+					P_k^{(r+1)}(\bar{c}_{m_k}) = \frac{P_k^{(r)}(\bar{c}_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k^{(r)}(\bar{c}_{m_k};\boldsymbol{y},z) \right)}{\sum_{m_k'} P_k^{(r)}(\bar{c}_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k^{(r)}(\bar{c}_{m_k'};\boldsymbol{y},z) \right)},
 					\label{eq:optimal_distribution}
 				\end{equation}
 				where $r \in \mathbb{Z}_+$ is the iteration index and $P_k^{(0)}(\bar{c}_{m_k}) > 0$.
@@ -439,7 +438,7 @@
 				\label{th:optimal_distribution}
 			\end{theorem}
 			\begin{proof}
-				We first prove sequence~\eqref{eq:optimal_distribution} is non-decreasing in mutual information. For state $m_k \in \mathcal{M}$ of tag $k \in \mathcal{K}$, let $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(\bar{c}_{m_q})$ and $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) = P_k'(\bar{c}_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(\bar{c}_{m_q})$ be two probability distributions with potentially different marginal for tag $k$, and denote the corresponding mutual information and received energy distribution as $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$, $I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$ and $P(\bar{z}_j)$, $P'(\bar{z}_j)$, respectively. Also, define an intermediate function $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ by \eqref{eq:intermediate_information_function}. Apparently, $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) = J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \right)$.
+				We first prove sequence~\eqref{eq:optimal_distribution} is non-decreasing in mutual information. For state $m_k \in \mathcal{M}$ of tag $k \in \mathcal{K}$, let $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(\bar{c}_{m_q})$ and $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) = P_k'(\bar{c}_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(\bar{c}_{m_q})$ be two probability distributions with potentially different marginal for tag $k$, and define an intermediate function $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ by \eqref{eq:intermediate_information_function}. Apparently, $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) = J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \right)$.
 				\begin{figure*}[!b]
 					\hrule
 					\begin{align}
@@ -457,21 +456,27 @@
 				where $i_k \ne m_k$ is the reference state and
 				\begin{align}
 					S_k'(\bar{c}_{m_k})
-					& \triangleq I_k(\bar{c}_{m_k};\boldsymbol{y},z) + (1 - \rho) \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}})\nonumber\\
+					& \triangleq I_k'(\bar{c}_{m_k};\boldsymbol{y},z) + (1 - \rho) \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}})\nonumber\\
 					& \quad \times \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K} \setminus \{k\}}},\bar{c}_{m_k}) \log P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}},\bar{c}_{m_k}).
 				\end{align}
-
 				Evidently, $\forall m_k \ne i_k$, \eqref{eq:optimal_intermediate_information_condition} boils down to
+				% \begin{subequations}
+				% 	\begin{align}
+				% 		P_k^{\star}(\bar{c}_{m_k})
+				% 		& = \frac{\exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k}) \right)}{\sum_{m_k'} \exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k'}) \right)}\\
+				% 		& = \frac{P_k'(\bar{c}_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k'(\bar{c}_{m_k};\boldsymbol{y},z) \right)}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k'(\bar{c}_{m_k'};\boldsymbol{y},z) \right)}.
+				% 		\label{eq:optimal_relative_distribution}
+				% 	\end{align}
+				% \end{subequations}
 				\begin{subequations}
 					\begin{align}
 						P_k^{\star}(\bar{c}_{m_k})
 						& = \frac{\exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k}) \right)}{\sum_{m_k'} \exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k'}) \right)}\\
-						& = \frac{P_k'(\bar{c}_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k};\boldsymbol{y},z) \right)}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k'};\boldsymbol{y},z) \right)}.
+						& = \frac{P_k'(\bar{c}_{m_k}) u_k'(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) u_k'(\bar{c}_{m_k'})},
 						\label{eq:optimal_relative_distribution}
 					\end{align}
 				\end{subequations}
-
-				Although $P_k(\bar{c}_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^{\star}(\bar{c}_{m_k})$ is not guaranteed to be optimal, it has exactly the same form as \eqref{eq:optimal_relative_distribution}. In such case, the solution of choosing $i_k$ as reference would coincide with that of choosing any $m_k \ne i_k$ as reference, while optimality for $i_k$ is guaranteed in the latter case. Therefore, for a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $\forall i_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$, \eqref{eq:optimal_relative_distribution} ensures
+				where we define $u_k'(\bar{c}_{m_k}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k'(\bar{c}_{m_k};\boldsymbol{y},z) \right)$. Although $P_k(\bar{c}_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^{\star}(\bar{c}_{m_k})$ is not guaranteed to be optimal, it has exactly the same form as \eqref{eq:optimal_relative_distribution}. In such case, the solution of choosing $i_k$ as reference would coincide with that of choosing any $m_k \ne i_k$ as reference, while optimality for $i_k$ is guaranteed in the latter case. Therefore, for a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $\forall i_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$, \eqref{eq:optimal_relative_distribution} ensures
 				\begin{equation}
 					J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right) \ge I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z).
 					\label{eq:information_difference_lower}
@@ -484,30 +489,30 @@
 						\Delta
 						& \triangleq I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) - J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)\\
 						& = (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P'(\bar{z}_j) P_k(\bar{c}_{m_k})}{P(\bar{z}_j) P_k'(\bar{c}_{m_k})}\\
-						& = (1 - \rho) \sum_{m_k} \frac{P_k'(\bar{c}_{m_k}) u_k(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) u_k(\bar{c}_{m_k'})} \sum_j P(\bar{z}_j \mid \bar{c}_{m_k})\nonumber\\
-						& \quad \times \log \frac{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k(\bar{c}_{m_k'})}\\
-						& \ge (1 - \rho) \sum_{m_k} \frac{P_k'(\bar{c}_{m_k}) u_k(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) u_k(\bar{c}_{m_k'})} \sum_j P(\bar{z}_j \mid \bar{c}_{m_k})\nonumber\\
-						& \quad \times \left( 1 - \frac{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k(\bar{c}_{m_k'})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k(\bar{c}_{m_k})} \right)\\
+						& = (1 - \rho) \sum_{m_k} \frac{P_k'(\bar{c}_{m_k}) u_k'(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) u_k'(\bar{c}_{m_k'})} \sum_j P(\bar{z}_j \mid \bar{c}_{m_k})\nonumber\\
+						& \quad \times \log \frac{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k'(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k'(\bar{c}_{m_k'})}\\
+						& \ge (1 - \rho) \sum_{m_k} \frac{P_k'(\bar{c}_{m_k}) u_k'(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) u_k'(\bar{c}_{m_k'})} \sum_j P(\bar{z}_j \mid \bar{c}_{m_k})\nonumber\\
+						& \quad \times \left( 1 - \frac{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k'(\bar{c}_{m_k'})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k'(\bar{c}_{m_k})} \right)\\
 						& = 0,
 					\end{align}
 				\end{subequations}
-				where $u_k(\bar{c}_{m_k}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k(\bar{c}_{m_k};\boldsymbol{y},z) \right)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges. Combining \eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper} suggests $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) \ge I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$. Since mutual information is bounded above, we conclude sequence \eqref{eq:optimal_distribution} is non-decreasing and convergent in mutual information.
+				where the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges. Combining \eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper} suggests $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) \ge I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$. Since mutual information is bounded above, we conclude sequence \eqref{eq:optimal_distribution} is non-decreasing and convergent in mutual information.
 
 				We then prove any converging point of sequence \eqref{eq:optimal_distribution}, denoted as $P_k^{\star}(\bar{c}_{m_k})$, fulfills the optimal conditions \eqref{eq:optimal_conditions} and achieves the weighted primary-backscatter sum capacity. To see this, define
 				\begin{equation}
-					D_k^{(r)}(\bar{c}_{m_k}) \triangleq \frac{P_k^{(r+1)}(\bar{c}_{m_k})}{P_k^{(r)}(\bar{c}_{m_k})} = \frac{u_k(\bar{c}_{m_k})}{\sum_{m_k'} P_k^{(r)}(\bar{c}_{m_k'}) u_k(\bar{c}_{m_k'})},
+					D_k^{(r)}(\bar{c}_{m_k}) \triangleq \frac{P_k^{(r+1)}(\bar{c}_{m_k})}{P_k^{(r)}(\bar{c}_{m_k})} = \frac{u_k^{(r)}(\bar{c}_{m_k})}{\sum_{m_k'} P_k^{(r)}(\bar{c}_{m_k'}) u_k^{(r)}(\bar{c}_{m_k'})},
 				\end{equation}
 				where $P_k^{(0)}(\bar{c}_{m_k}) > 0$. As sequence \eqref{eq:optimal_distribution} is convergent, any state with $P_k^{\star}(\bar{c}_{m_k}) > 0$ need to satisfy $D_k^{\star}(\bar{c}_{m_k}) \triangleq \lim_{r \to \infty} D_k^{(r)}(\bar{c}_{m_k}) = 1$, namely
 				\begin{equation}
-					I_k(\bar{c}_{m_k};\boldsymbol{y},z) = \frac{1 - \rho}{\rho} \log \sum_{m_k'} P_k^{(r)}(\bar{c}_{m_k'}) u_k(\bar{c}_{m_k'}),
+					I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) = \frac{1 - \rho}{\rho} \log \sum_{m_k'} P_k^{\star}(\bar{c}_{m_k'}) u_k^{\star}(\bar{c}_{m_k'}),
 				\end{equation}
 				which coincides with \eqref{eq:probable_states_marginal} and implies \eqref{eq:probable_states}. That is, given $P_k^{(0)}(\bar{c}_{m_k}) > 0$, any converging point with $P_k^{\star}(\bar{c}_{m_k}) > 0$ must satisfy \eqref{eq:probable_states}.
 				On the other hand, we assume $P_k^{\star}(\bar{c}_{m_k})$ does not satisfy \eqref{eq:dropped_states}, such that for any state with $P_k^{\star}(\bar{c}_{m_k}) = 0$,
 				% On the other hand, we show if $P_k^{\star}(\bar{c}_{m_k})$ does not satisfy \eqref{eq:dropped_states}, then it is not a converging point of sequence \eqref{eq:optimal_distribution}. By this assumption, for any state with $P_k^{\star}(\bar{c}_{m_k}) = 0$,
 				\begin{equation}
-					I_k(\bar{c}_{m_k};\boldsymbol{y},z) > I(c_{\mathcal{K}};\boldsymbol{y},z) = \sum_{m_k'} P_k^{\star}(\bar{c}_{m_k'}) I_k(\bar{c}_{m_k'};\boldsymbol{y},z),
+					I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) > I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z) = \sum_{m_k'} P_k^{\star}(\bar{c}_{m_k'}) I_k^{\star}(\bar{c}_{m_k'};\boldsymbol{y},z),
 				\end{equation}
-				where the equality origins from \eqref{eq:backscatter_sum_rate_expectation} and \eqref{eq:primary_ergodic_rate_expectation}. Since the exponential function is monotonically increasing, we have $u_k(\bar{c}_{m_k}) > \sum_{m_k'} P_k^{\star}(\bar{c}_{m_k'}) u_k(\bar{c}_{m_k'})$ and $D_k^{\star}(\bar{c}_{m_k}) > 1$. Considering $P_k^{(0)}(\bar{c}_{m_k}) > 0$ and $P_k^{\star}(\bar{c}_{m_k}) = 0$, it contradicts with
+				where the equality origins from \eqref{eq:backscatter_sum_rate_expectation} and \eqref{eq:primary_ergodic_rate_expectation}. Since the exponential function is monotonically increasing, we have $u_k^{\star}(\bar{c}_{m_k}) > \sum_{m_k'} P_k^{\star}(\bar{c}_{m_k'}) u_k^{\star}(\bar{c}_{m_k'})$ and $D_k^{\star}(\bar{c}_{m_k}) > 1$. Considering $P_k^{(0)}(\bar{c}_{m_k}) > 0$ and $P_k^{\star}(\bar{c}_{m_k}) = 0$, it contradicts with
 				\begin{equation}
 					P_k^{(r)}(\bar{c}_{m_k}) = P_k^{(0)}(\bar{c}_{m_k}) \prod_{n=1}^r D_k^{(n)}(\bar{c}_{m_k}).
 				\end{equation}

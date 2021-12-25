@@ -31,7 +31,7 @@
 \usepackage[caption=false,font=footnotesize,subrefformat=parens,labelformat=parens]{subfig}
 \usepackage[short]{optidef}
 % \usepackage[subtle]{savetrees}
-\usepackage{stmaryrd}
+% \usepackage{stmaryrd}
 
 \listfiles
 \interdisplaylinepenalty=2500
@@ -237,7 +237,7 @@
 				\sigma_{m_{\mathcal{K}}}^2 = \Bigl\lvert \underbrace{\bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H \bar{c}_{m_k}\bigr)}_{\boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}})} \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2,
 				\label{eq:receive_variance}
 			\end{equation}
-			denotes the expectation of the received power per primary block under tag modulation index set $m_{\mathcal{K}}$. For the ease of exposition, we denote the hypothesis that the tag input combination at state $i \in \mathcal{M^K} \triangleq \{1,\ldots,M^K\}$ as $\mathcal{H}_i$, sort $\{\sigma_{m_{\mathcal{K}}}^2\}$ in ascending order by a one-to-one mapping $m_{\mathcal{K}} \mapsto i$,\footnote{When more than one modulation index sets yield the same energy level, the mapping is not unique and the detection fails to separate them. This blind spot issue can be mitigated by multi-antenna techniques.} define the received signal energy over $N$ primary blocks as $z \triangleq \lVert \boldsymbol{y} \rVert^2$, and let $f(z \mid \mathcal{H}_i)$ be the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Correspondingly, $z$ is the sum of $N$ i.i.d. exponential variables each with mean $\sigma_i^2$, and the conditional probability density function follows Erlang distribution with shape $N$ and scale $\sigma_i^2$ as
+			denotes the expectation of the received power per primary block under tag modulation index set $m_{\mathcal{K}}$. For the ease of exposition, we denote the hypothesis that the tag input combination at state $i \in \mathcal{I} \triangleq \{1,\ldots,M^K\}$ as $\mathcal{H}_i$, sort $\{\sigma_{m_{\mathcal{K}}}^2\}$ in ascending order by a one-to-one mapping $m_{\mathcal{K}} \mapsto i$,\footnote{When more than one modulation index sets yield the same energy level, the mapping is not unique and the detection fails to separate them. This blind spot issue can be mitigated by multi-antenna techniques.} define the received signal energy over $N$ primary blocks as $z \triangleq \lVert \boldsymbol{y} \rVert^2$, and let $f(z \mid \mathcal{H}_i)$ be the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Correspondingly, $z$ is the sum of $N$ i.i.d. exponential variables each with mean $\sigma_i^2$, and the conditional probability density function follows Erlang distribution with shape $N$ and scale $\sigma_i^2$ as
 			\begin{equation}
 				f(z \mid \mathcal{H}_i) = \frac{z^{N-1} e^{-z/\sigma_i^2}}{\sigma_i^{2N} (N-1)!}.
 				\label{eq:energy_distribution}
@@ -274,12 +274,12 @@
 				Although the \gls{ml} decision threshold is optimal in terms of the likelihood function, it is not necessarily capacity-achieving, although the performance gap can be negligible in the single-tag \gls{bibo} case.
 			\end{remark}
 
-			Once the decision region is determined, the discrete memoryless \gls{mac} can be recast as an equivalent point-to-point \gls{dmc} from tag input combination alphabet $\mathcal{M^K}$ to output energy level alphabet $\mathcal{M^K}$. The the probability of receiving energy level $j$ under tag input combination $i$ is\footnote{For simplicity, we assume there exists at least one feasible precoder that produces distinct received energy levels for all tag input combinations. [TODO] Merge with precoder design.}
+			Once the decision region is determined, the discrete memoryless \gls{mac} can be recast as an equivalent point-to-point \gls{dmc} from tag input combination alphabet $\mathcal{I}$ to output energy level alphabet $\mathcal{I}$. The the probability of receiving energy level $j$ under tag input combination $i$ is\footnote{For simplicity, we assume there exists at least one feasible precoder that produces distinct received energy levels for all tag input combinations. [TODO] Merge with precoder design.}
 			\begin{equation}
 				P(\bar{z}_j \mid \bar{c}_i) = P(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z,
 				\label{eq:point_to_point_channel}
 			\end{equation}
-			which corresponds to $P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})$ by reverse mapping $m_k \mapsfrom i$. In summary, with the \gls{csi} knowledge and for any given precoder and detection threshold set, we can obtain the expected power of the received signal per block by \eqref{eq:receive_variance}, the conditional probability density function of the accumulated energy by \eqref{eq:energy_distribution}, the corresponding decision region by \eqref{eq:decision_region}, and the equivalent point-to-point channel by \eqref{eq:point_to_point_channel}.
+			which corresponds to $P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})$ by reverse mapping $m_k \mapsto i$. In summary, with the \gls{csi} knowledge and for any given precoder and detection threshold set, we can obtain the expected power of the received signal per block by \eqref{eq:receive_variance}, the conditional probability density function of the accumulated energy by \eqref{eq:energy_distribution}, the corresponding decision region by \eqref{eq:decision_region}, and the equivalent point-to-point channel by \eqref{eq:point_to_point_channel}.
 		\end{subsection}
 
 		\begin{subsection}{Sum backscatter rate}
@@ -525,8 +525,8 @@
 			Interestingly, we can design precoder to adjust the expectation of the received power \eqref{eq:receive_variance} at each tag input combination, which can avoid the detection blind spots in \cite{Qian2019} and further boost the weighted sum-rate. However, the problem is highly non-convex -- the information function associated with input combination state $i$ is
 			\begin{align}
 				I(\bar{c}_i;z)
-				& = \sum_{j \in \mathcal{M^K}} \int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z\nonumber\\
-				& \quad \times \log \frac{\int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z}{\sum_{i' \in \mathcal{M^K}} \int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2\right)^N (N-1)!} \dd z},
+				& = \sum_{j \in \mathcal{I}} \int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z\nonumber\\
+				& \quad \times \log \frac{\int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z}{\sum_{i' \in \mathcal{I}} \int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2\right)^N (N-1)!} \dd z},
 				\label{eq:foo}
 			\end{align}
 			and the mutual information can be expressed as a function of $W$ by combining \eqref{eq:backscatter_sum_rate} and \eqref{eq:foo}.

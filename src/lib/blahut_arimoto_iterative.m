@@ -41,8 +41,8 @@ function [capacity, inputDistribution] = blahut_arimoto_iterative(forwardTransit
 		mutualInformation = mutual_information(nInputs, nOutputs, inputDistribution, forwardTransition);
 
 		% * Test convergence
-		isConverged = abs(mutualInformation - capacity) <= tolerance;
-		capacity = mutualInformation;
+		isConverged = abs(max(mutualInformation) - capacity) <= tolerance || sum(isnan(inputDistribution));
+		capacity = max(mutualInformation);
 	end
 end
 

@@ -11,6 +11,12 @@ function [constellation] = phase_shift_keying(nStates, offset)
     %
     % Author & Date: Yang (i@snowztail.com), 21 Sep 14
 
+	% * Set default offset
+	arguments
+		nStates;
+		offset = 0;
+	end
+
 	% * Simulate the constellation diagram
 	constellation = exp(1i * (2 * pi * transpose((1 : nStates)) / nStates + offset));
 end

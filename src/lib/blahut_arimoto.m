@@ -1,74 +1,71 @@
-function [capacity, inputDistribution] = blahut_arimoto(forwardTransition, tolerance)
+function [capacity, inputDistribution] = blahut_arimoto(dmc, tolerance)
 	% Function:
     %   - compute the capacity and optimal input distribution of discrete memoryless channels
     %
     % Input:
-    %   - forwardTransition [nInputs * nOutputs]: the channel transition probability matrix
+    %   - dmc [nInputs * nOutputs]: the transition probability matrix of discrete memoryless channel
     %   - tolerance: minimum rate gain per iteration
     %
     % Output:
-    %   - capacity: maximum reliable rate for the input discrete memoryless channel
-	%	- inputDistribution: optimal probability mass function of input distribution (Lagrange multiplier)
+    %   - capacity: maximum achievable rate of DMC
+	%	- inputDistribution: optimal input probability distribution corresponding to the alphabet
     %
     % Comment:
-    %   - backwardTransition: detecting transition probability matrix (Bayes' Theorem)
+    %   - iteratively update the input distribution and capacity
+	%	- the optimal information function associated with codeword x satisfies:
+	%		- I(x; Y) = C for P(x) > 0
+	%		- I(x; Y) <= C for P(x) = 0
     %
-    % Author & Date: Yang (i@snowztail.com), 21 Sep 07
+    % Author & Date: Yang (i@snowztail.com), 21 Oct 29
 
 	% * Set default tolerance
 	arguments
-		forwardTransition;
+		dmc;
 		tolerance = eps;
 	end
 
+	% * Ensure non-zero transitional probability as required
+	dmc(dmc < eps) = eps;
+
 	% * Get data
-	nInputs = size(forwardTransition, 1);
-	nOutputs = size(forwardTransition, 2);
+	nInputs = size(dmc, 1);
+	nOutputs = size(dmc, 2);
 
-	% * Initialize input distribution and backward transition matrix
-	inputDistribution = ones(nInputs, 1) / nInputs;
-	backwardTransition = backward_transition(nInputs, nOutputs, inputDistribution, forwardTransition);
+	% * Initialize
+	inputDistribution = normr(sqrt(rand(1, nInputs))) .^ 2;
+	informationFunction = information_function(nInputs, nOutputs, inputDistribution, dmc);
+	mutualInformation = inputDistribution * informationFunction;
 
-	% * Alternatively update input distribution and backward transition matrix
-	capacity = 0;
+	% * Iteratively update input distribution, information function associated with each codeword, and mutual information
+	capacity = mutualInformation;
 	isConverged = false;
 	while ~isConverged
-		inputDistribution = input_distribution(nInputs, forwardTransition, backwardTransition);
-		backwardTransition = backward_transition(nInputs, nOutputs, inputDistribution, forwardTransition);
-
-		% * Update mutual information
-		mutualInformation = mutual_information(nInputs, nOutputs, forwardTransition, backwardTransition, inputDistribution);
-
-		% * Test convergence
+		inputDistribution = input_distribution(nInputs, inputDistribution, informationFunction);
+		informationFunction = information_function(nInputs, nOutputs, inputDistribution, dmc);
+		mutualInformation = inputDistribution * informationFunction;
 		isConverged = abs(mutualInformation - capacity) <= tolerance;
 		capacity = mutualInformation;
 	end
+
+	% * Discard codewords with negligible probability
+	inputDistribution(inputDistribution < eps) = 0;
 end
 
 
-function [backwardTransition] = backward_transition(nInputs, nOutputs, inputDistribution, forwardTransition)
-	backwardTransition = zeros(nOutputs, nInputs);
-	for iOutput = 1 : nOutputs
-		for iInput = 1 : nInputs
-			backwardTransition(iOutput, iInput) = inputDistribution(iInput) * forwardTransition(iInput, iOutput) / (transpose(inputDistribution) * forwardTransition(:, iOutput));
-		end
-	end
-end
-
-function [inputDistribution] = input_distribution(nInputs, forwardTransition, backwardTransition)
-	inputDistribution = zeros(nInputs, 1);
+function [inputDistribution] = input_distribution(nInputs, inputDistribution, informationFunction)
+	inputDistribution_ = zeros(size(inputDistribution));
 	for iInput = 1 : nInputs
-		inputDistribution(iInput) = prod(backwardTransition(:, iInput) .^ transpose(forwardTransition(iInput, :)));
+		inputDistribution_(iInput) = inputDistribution(iInput) * exp(informationFunction(iInput)) / (inputDistribution * exp(informationFunction));
 	end
-	inputDistribution = inputDistribution / sum(inputDistribution);
+	inputDistribution = inputDistribution_;
 end
 
-function [mutualInformation] = mutual_information(nInputs, nOutputs, forwardTransition, backwardTransition, inputDistribution)
-	mutualInformation = zeros(nInputs, nOutputs);
+function [informationFunction] = information_function(nInputs, nOutputs, inputDistribution, dmc)
+	informationFunction = zeros(nInputs, nOutputs);
 	for iInput = 1 : nInputs
 		for iOutput = 1 : nOutputs
-			mutualInformation(iInput, iOutput) = inputDistribution(iInput) * forwardTransition(iInput, iOutput) * log2(backwardTransition(iOutput, iInput) / inputDistribution(iInput));
+			informationFunction(iInput, iOutput) = dmc(iInput, iOutput) * log2(dmc(iInput, iOutput) / (inputDistribution * dmc(:, iOutput)));
 		end
 	end
-	mutualInformation = sum(mutualInformation, 'all');
+	informationFunction = sum(informationFunction, 2);
 end

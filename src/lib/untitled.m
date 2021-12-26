@@ -1,5 +1,5 @@
 nTxs = 3;
-nTags = 2;
+nTags = 3;
 nStates = 4;
 [nInputs, nOutputs] = deal(nStates ^ nTags);
 reflectRatio = 0.5;
@@ -7,9 +7,7 @@ nRatio = 10;
 constellation = phase_shift_keying(nStates);
 noiseVariance = 0;
 
-precoder = randn(nTxs, 1);
-precoder = precoder / norm(precoder);
-
+precoder = normc(randn(nTxs, 1));
 directChannel = sqrt(0.5) * (randn(1, nTxs) + 1i * randn(1, nTxs));
 cascadedChannel = zeros(nTags, nTxs);
 for iTag = 1 : nTags
@@ -33,3 +31,6 @@ for iInput = 1 : nInputs
 		dmtc(iInput, iOutput) = integral(conditionalEnergy, threshold(iOutput), threshold(iOutput + 1));
 	end
 end
+
+% [capacity, inputDistribution] = blahut_arimoto(dmtc);
+[capacity, inputDistribution] = multiuser_blahut_arimoto(dmtc, nTags);

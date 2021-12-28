@@ -31,31 +31,28 @@ function [capacity, inputDistribution] = multiuser_blahut_arimoto(dmc, nUsers, t
 	dmc(dmc < eps) = eps;
 
 	% * Get data
-	nInputs = size(dmc, 1);
-	nOutputs = size(dmc, 2);
-	nStates = nthroot(nInputs, nUsers);
+	nStates = nthroot(size(dmc, 1), nUsers);
 
 	% * Initialize
 	inputDistribution = normr(sqrt(rand(nUsers, nStates))) .^ 2;
-	combinationDistribution = combination_distribution(nUsers, nStates, inputDistribution);
-	informationFunction = information_function(nInputs, nOutputs, prod(combinationDistribution), dmc);
-	marginalInformation = marginal_information(nUsers, nStates, combinationDistribution, informationFunction);
-	mutualInformation = prod(combinationDistribution) * informationFunction;
+	combinationDistribution = combination_distribution(inputDistribution);
+	jointDistribution = prod(combinationDistribution, 1);
+	informationFunction = information_function(jointDistribution, dmc);
+	marginalInformation = marginal_information(combinationDistribution, informationFunction);
+	mutualInformation = jointDistribution * informationFunction;
 
-	% * Iteratively update input distribution, information function associated with each codeword, marginal information of each codeword of each user, and mutual information
+	% * Iteratively update input distribution for all users
 	capacity = mutualInformation;
 	isConverged = false;
 	while ~isConverged
+		% * Update input distribution, information function associated with each codeword, marginal information of each codeword, and mutual information for a single user
 		for iUser = 1 : nUsers
-			inputDistribution_ = zeros(1, nStates);
-			for iState = 1 : nStates
-				inputDistribution_(iState) = inputDistribution(iUser, iState) * exp(marginalInformation(iState, iUser)) / (inputDistribution(iUser, :) * exp(marginalInformation(:, iUser)));
-			end
-			inputDistribution(iUser, :) = inputDistribution_;
-			combinationDistribution = combination_distribution(nUsers, nStates, inputDistribution);
-			informationFunction = information_function(nInputs, nOutputs, prod(combinationDistribution), dmc);
-			marginalInformation = marginal_information(nUsers, nStates, combinationDistribution, informationFunction);
-			mutualInformation = prod(combinationDistribution) * informationFunction;
+			inputDistribution(iUser, :) = input_distribution(inputDistribution(iUser, :), marginalInformation(:, iUser));
+			combinationDistribution = combination_distribution(inputDistribution);
+			jointDistribution = prod(combinationDistribution, 1);
+			informationFunction = information_function(jointDistribution, dmc);
+			marginalInformation = marginal_information(combinationDistribution, informationFunction);
+			mutualInformation = jointDistribution * informationFunction;
 		end
 		isConverged = abs(mutualInformation - capacity) <= tolerance;
 		capacity = mutualInformation;
@@ -66,13 +63,17 @@ function [capacity, inputDistribution] = multiuser_blahut_arimoto(dmc, nUsers, t
 end
 
 
-function [inputDistribution] = input_distribution(nInputs, inputDistribution, informationFunction)
-	for iInput = 1 : nInputs
-		inputDistribution(iInput) = inputDistribution(iInput) * exp(informationFunction(iInput)) / (inputDistribution * exp(informationFunction));
+function [inputDistribution] = input_distribution(inputDistribution, marginalInformation)
+	nStates = size(inputDistribution, 2);
+	inputDistribution_ = inputDistribution;
+	for iState = 1 : nStates
+		inputDistribution_(iState) = inputDistribution(iState) * exp(marginalInformation(iState)) / (inputDistribution * exp(marginalInformation));
 	end
+	inputDistribution = inputDistribution_;
 end
 
-function [combinationDistribution] = combination_distribution(nUsers, nStates, inputDistribution)
+function [combinationDistribution] = combination_distribution(inputDistribution)
+	[nUsers, nStates] = size(inputDistribution);
 	nInputs = nStates ^ nUsers;
 	userSet = transpose(1 : nUsers);
 	indexCombination = nested_combvec(1 : nStates, nUsers);
@@ -82,25 +83,29 @@ function [combinationDistribution] = combination_distribution(nUsers, nStates, i
 	end
 end
 
-function [informationFunction] = information_function(nInputs, nOutputs, inputDistribution, dmc)
+function [informationFunction] = information_function(jointDistribution, dmc)
+	[nInputs, nOutputs] = size(dmc);
 	informationFunction = zeros(nInputs, nOutputs);
 	for iInput = 1 : nInputs
 		for iOutput = 1 : nOutputs
-			informationFunction(iInput, iOutput) = dmc(iInput, iOutput) * log2(dmc(iInput, iOutput) / (inputDistribution * dmc(:, iOutput)));
+			informationFunction(iInput, iOutput) = dmc(iInput, iOutput) * log2(dmc(iInput, iOutput) / (jointDistribution * dmc(:, iOutput)));
 		end
 	end
 	informationFunction = sum(informationFunction, 2);
 end
 
-function [marginalInformation] = marginal_information(nUsers, nStates, combinationDistribution, informationFunction)
-	nMarginals = nStates ^ (nUsers - 1);
+function [marginalInformation] = marginal_information(combinationDistribution, informationFunction)
+	[nUsers, nInputs] = size(combinationDistribution);
+	nStates = nthroot(nInputs, nUsers);
 	userSet = transpose(1 : nUsers);
-	marginalInformation = zeros(nUsers, nStates, nMarginals);
+	indexCombination = nested_combvec(1 : nStates, nUsers);
+	marginalInformation = zeros(nUsers, nStates, nInputs);
 	for iUser = 1 : nUsers
 		for iState = 1 : nStates
-			for iMarginal = 1 : nMarginals
-				iInput = (iState - 1) * nMarginals + iMarginal;
-				marginalInformation(iUser, iState, iMarginal) = prod(combinationDistribution(setdiff(userSet, iUser), iInput)) * informationFunction(iInput);
+			marginalSet = find(indexCombination(iUser, :) == iState);
+			% marginalSet = transpose(vec((0 : nStates ^ (iUser - 1) - 1) * nStates ^ (nUsers - iUser + 1) + transpose((iState - 1) * nStates ^ (nUsers - iUser) + 1 : iState * nStates ^ (nUsers - iUser))));
+			for iInput = marginalSet
+				marginalInformation(iUser, iState, iInput) = prod(combinationDistribution(setdiff(userSet, iUser), iInput), 1) * informationFunction(iInput);
 			end
 		end
 	end

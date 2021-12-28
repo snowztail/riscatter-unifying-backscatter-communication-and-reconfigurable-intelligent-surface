@@ -18,5 +18,5 @@ function [constellation] = phase_shift_keying(nStates, offset)
 	end
 
 	% * Simulate the constellation diagram
-	constellation = exp(1i * (2 * pi * transpose((1 : nStates)) / nStates + offset));
+	constellation = exp(1i * (2 * pi * (1 : nStates)) / nStates + offset);
 end

@@ -1,5 +1,6 @@
-nTxs = 3;
-nTags = 3;
+clear; clc;
+nTxs = 1;
+nTags = 2;
 nStates = 4;
 [nInputs, nOutputs] = deal(nStates ^ nTags);
 reflectRatio = 0.5;
@@ -15,15 +16,15 @@ for iTag = 1 : nTags
 end
 
 indexCombination = nested_combvec(1 : nStates, nTags);
-inputCombination = constellation(indexCombination);
-equivalentChannel = cell(nInputs, 1);
+inputCombination = transpose(constellation(indexCombination));
+equivalentChannel = zeros(nInputs, nTxs);
 for iInput = 1 : nInputs
-	equivalentChannel{iInput} = directChannel + sqrt(reflectRatio) * transpose(inputCombination(:, iInput)) * cascadedChannel;
+	equivalentChannel(iInput, :) = directChannel + sqrt(reflectRatio) * inputCombination(iInput, :) * cascadedChannel;
 end
-[powerLevel, index] = sort(abs(cell2mat(equivalentChannel) * precoder) .^ 2);
 
+% * Sorted DMTC
+[powerLevel, mapIndex] = sort(abs(equivalentChannel * precoder) .^ 2);
 threshold = [0; nRatio * movmean(powerLevel, 2, 'Endpoints', 'discard'); Inf];
-
 dmtc = zeros(nInputs, nOutputs);
 for iInput = 1 : nInputs
 	conditionalEnergy = @(z) (z .^ (nRatio - 1) .* exp(-z ./ powerLevel(iInput))) ./ (powerLevel(iInput) .^ nRatio .* gamma(nRatio));
@@ -31,6 +32,9 @@ for iInput = 1 : nInputs
 		dmtc(iInput, iOutput) = integral(conditionalEnergy, threshold(iOutput), threshold(iOutput + 1));
 	end
 end
+
+% * Desorted DMTC
+dmtc(mapIndex, mapIndex) = dmtc;
 
 % [capacity, inputDistribution] = blahut_arimoto(dmtc);
 [capacity, inputDistribution] = multiuser_blahut_arimoto(dmtc, nTags);

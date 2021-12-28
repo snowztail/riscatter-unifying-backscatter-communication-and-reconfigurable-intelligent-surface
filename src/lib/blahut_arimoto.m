@@ -29,19 +29,18 @@ function [capacity, inputDistribution] = blahut_arimoto(dmc, tolerance)
 
 	% * Get data
 	nInputs = size(dmc, 1);
-	nOutputs = size(dmc, 2);
 
 	% * Initialize
 	inputDistribution = normr(sqrt(rand(1, nInputs))) .^ 2;
-	informationFunction = information_function(nInputs, nOutputs, inputDistribution, dmc);
+	informationFunction = information_function(inputDistribution, dmc);
 	mutualInformation = inputDistribution * informationFunction;
 
 	% * Iteratively update input distribution, information function associated with each codeword, and mutual information
 	capacity = mutualInformation;
 	isConverged = false;
 	while ~isConverged
-		inputDistribution = input_distribution(nInputs, inputDistribution, informationFunction);
-		informationFunction = information_function(nInputs, nOutputs, inputDistribution, dmc);
+		inputDistribution = input_distribution(inputDistribution, informationFunction);
+		informationFunction = information_function(inputDistribution, dmc);
 		mutualInformation = inputDistribution * informationFunction;
 		isConverged = abs(mutualInformation - capacity) <= tolerance;
 		capacity = mutualInformation;
@@ -52,15 +51,17 @@ function [capacity, inputDistribution] = blahut_arimoto(dmc, tolerance)
 end
 
 
-function [inputDistribution] = input_distribution(nInputs, inputDistribution, informationFunction)
-	inputDistribution_ = zeros(size(inputDistribution));
+function [inputDistribution] = input_distribution(inputDistribution, informationFunction)
+	nInputs = size(inputDistribution, 2);
+	inputDistribution_ = inputDistribution;
 	for iInput = 1 : nInputs
 		inputDistribution_(iInput) = inputDistribution(iInput) * exp(informationFunction(iInput)) / (inputDistribution * exp(informationFunction));
 	end
 	inputDistribution = inputDistribution_;
 end
 
-function [informationFunction] = information_function(nInputs, nOutputs, inputDistribution, dmc)
+function [informationFunction] = information_function(inputDistribution, dmc)
+	[nInputs, nOutputs] = size(dmc);
 	informationFunction = zeros(nInputs, nOutputs);
 	for iInput = 1 : nInputs
 		for iOutput = 1 : nOutputs

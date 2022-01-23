@@ -237,7 +237,7 @@
 				\sigma_{m_{\mathcal{K}}}^2 = \Bigl\lvert \underbrace{\bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H \bar{c}_{m_k}\bigr)}_{\boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}})} \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2,
 				\label{eq:receive_variance}
 			\end{equation}
-			denotes the expectation of the received power per primary block under tag modulation index set $m_{\mathcal{K}}$. For the ease of exposition, we denote the hypothesis that the tag input combination at state $i \in \mathcal{I} \triangleq \{1,\ldots,M^K\}$ as $\mathcal{H}_i$, sort $\{\sigma_{m_{\mathcal{K}}}^2\}$ in ascending order by a one-to-one mapping $m_{\mathcal{K}} \mapsto i$,\footnote{When more than one modulation index sets yield the same energy level, the mapping is not unique and the detection fails to separate them. This blind spot issue can be mitigated by multi-antenna techniques.} define the received signal energy over $N$ primary blocks as $z \triangleq \lVert \boldsymbol{y} \rVert^2$, and let $f(z \mid \mathcal{H}_i)$ be the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Correspondingly, $z$ is the sum of $N$ i.i.d. exponential variables each with mean $\sigma_i^2$, and the conditional probability density function follows Erlang distribution with shape $N$ and scale $\sigma_i^2$ as
+			denotes the expectation of the received power per primary block under tag modulation index set $m_{\mathcal{K}}$. For the ease of exposition, we denote the hypothesis that the tag input combination at state $i \in \mathcal{I} \triangleq \{1,\ldots,M^K\}$ as $\mathcal{H}_i$, sort $\{\sigma_{m_{\mathcal{K}}}^2\}$ in ascending order by a one-to-one mapping $m_{\mathcal{K}} \mapsto i$,\footnote{When more than one modulation index sets yield the same energy level, the mapping is not unique and the detection fails to separate them. This blind spot issue can be potentially mitigated by multi-antenna techniques and is beyond the scope of this paper.} define the received signal energy over $N$ primary blocks as $z \triangleq \lVert \boldsymbol{y} \rVert^2$, and let $f(z \mid \mathcal{H}_i)$ be the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Correspondingly, $z$ is the sum of $N$ i.i.d. exponential variables each with mean $\sigma_i^2$, and the conditional probability density function follows Erlang distribution with shape $N$ and scale $\sigma_i^2$ as\footnote{In some papers, it may also be referred to as Gamma distribution.}
 			\begin{equation}
 				f(z \mid \mathcal{H}_i) = \frac{z^{N-1} e^{-z/\sigma_i^2}}{\sigma_i^{2N} (N-1)!}.
 				\label{eq:energy_distribution}
@@ -247,32 +247,77 @@
 				The backscatter links essentially form a discrete-input continuous-output memoryless channel. To further reduce decoding complexity, we apply hard-decision detection and construct a \gls{dmtc}, whose capacity is a function of both input distribution and decision thresholds \cite{Nguyen2018}.
 			\end{remark}
 
-			Denote the decision region of hypothesis $\mathcal{H}_i$ as
-			\begin{equation}
-				\mathcal{R}_i \triangleq [T_{i-1,i}, T_{i,i+1}),
-				\label{eq:decision_region}
-			\end{equation}
-			where $T_{i-1,i}$ is the decision threshold between $\mathcal{H}_{i-1}$ and $\mathcal{H}_i$, and $T_{i,i+1}$ is the decision threshold between $\mathcal{H}_i$ and $\mathcal{H}_{i+1}$. We also define $T_{0,1} \triangleq 0$, $T_{M^K,M^K+1} \triangleq \infty$, and $\boldsymbol{t} \triangleq [T_{0,1},\ldots,T_{M^K,M^K+1}]^T \in \mathbb{R}^{(M^K + 1) \times 1}$.
+			To maximize the mutual information for a general non-binary-input continuous-output channel, not only the decision region design remains an open problem, but also the optimal number of decision thresholds is still unknown. The reason is that the optimal decision region $\mathcal{R}_j$ of hypothesis $\mathcal{H}_j$ may be non-convex (i.e., consist of more than one disjoint partitions). The authors of \cite{Nguyen2021} showed that any optimal quantizer with arbitrary cost function must separate the backward channel  (i.e., posterior distribution) into convex decision regions, and provided an upper bound on the number of thresholds.
 
-			Consider the (\gls{ml}) detector for example. The likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_{i'}$ is \cite{Qian2019}
-			\begin{equation}
-				\Lambda_{i,{i'}}^{\mathrm{\gls{ml}}}(z) = \frac{f(z \mid \mathcal{H}_i)}{f(z \mid \mathcal{H}_{i'})} = \left( \frac{\sigma_{i'}^2}{\sigma_i^2} \right)^N \exp \left( \frac{\sigma_i^2 - \sigma_{i'}^2}{\sigma_i^2 \sigma_{i'}^2} z \right),
-				\label{eq:likelihood_ratio}
-			\end{equation}
-			the corresponding decision rule is
-			\begin{equation}
-				\Lambda_{i,{i'}}^{\mathrm{\gls{ml}}}(z) \underset{\mathcal{H}_{i'}}{\overset{\mathcal{H}_i}{\lessgtr}} 1 \iff z \underset{\mathcal{H}_{i'}}{\overset{\mathcal{H}_i}{\lessgtr}} T_{i,{i'}}^{\mathrm{\gls{ml}}},
-				\label{eq:decision_rule}
-			\end{equation}
-			and the detection threshold is
-			\begin{equation}
-				T_{i,{i'}}^{\mathrm{\gls{ml}}} \triangleq N \frac{\sigma_i^2 \sigma_{i'}^2}{\sigma_i^2 - \sigma_{i'}^2} \log \frac{\sigma_i^2}{\sigma_{i'}^2}.
-				\label{eq:detection_threshold}
-			\end{equation}
+			\begin{theorem}
+				If any $L$-input ($L \in \mathbb{Z}_{++}$) continuous-output channel follows Erlang distribution~\eqref{eq:energy_distribution}, then the optimal number of thresholds is $L+1$ and the capacity-achieving decision region $j$ has convex structure $\mathcal{R}_j^{\star} = [t_{j-1}^{\star}, t_j^{\star})$.
+			\end{theorem}
 
-			\begin{remark}
-				Although the \gls{ml} decision threshold is optimal in terms of the likelihood function, it is not necessarily capacity-achieving, although the performance gap can be negligible in the single-tag \gls{bibo} case.
-			\end{remark}
+			\begin{proof}
+				For any finite number of thresholds $S \in \mathbb{Z}_{++}$, let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{S \times 1}$ be the thresholding vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.\footnote{We consider strict inequality in definition, since otherwise $S$ and $\boldsymbol{t}$ could be non-unique for a given thresholding scheme.} Denote the decision partition $s$ as $R_s \triangleq [t_{s-1},t_s)$. Without loss of generality, we assume
+				% $L \mid S$ and
+				$\mathcal{R}_j = \bigcup_{s \equiv j \pmod L} R_s$.\footnote{Note that the proof holds for general mapping and we focus on this case for the ease of notation.} The thresholding design problem can be expressed as
+				\begin{maxi!}
+					{\scriptstyle{\boldsymbol{t}}}{I_{\mathrm{B}}(c_{\mathcal{K}};z)}{\label{op:thresholding}}{\label{ob:backscatter_mutual_information}}
+					\addConstraint{t_{s-1}}{< t_s,}{\quad \forall s \in \mathcal{S}.}{\label{co:strict_inequality}}
+				\end{maxi!}
+
+				Problem~\eqref{op:thresholding} is intricate due to the strict inequality constraint~\eqref{co:strict_inequality}. Following \cite{Nguyen2020}, we first relax it to the convex counterpart, then discard the solutions that violate the original constraints. The Lagrangian function for the relaxed problem is
+				\begin{equation}
+					L(\boldsymbol{t},\boldsymbol{\mu}) = - I_{\mathrm{B}}(c_{\mathcal{K}};z) + \sum_{s \in \mathcal{S}} \mu_s (t_{s-1} - t_s),
+					% = \sum_{j \in \mathcal{L}} P(\bar{z}_j) \log P(\bar{z}_j) - \sum_{i \in \mathcal{L}} \sum_{j \in \mathcal{L}}
+				\end{equation}
+				where $\mu_s$ is the Lagrange multiplier associated with the non-strict counterpart of \eqref{co:strict_inequality} and $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_S]^T \in \mathbb{R}^{S \times 1}$. The corresponding \gls{kkt} conditions on the optimal primal and dual solutions are, $\forall s \in \mathcal{S}$,
+				\begin{subequations}
+					\begin{equation}
+						- \nabla_{t_s^{\star}} I^{\star}_{\mathrm{B}}(c_{\mathcal{K}};z) + \mu_{s-1}^{\star} - \mu_s^{\star} = 0,
+						\label{eq:stationarity}
+					\end{equation}
+					\begin{equation}
+						\mu_s^{\star} \ge 0,
+						\label{eq:dual_feasibility}
+					\end{equation}
+					\begin{equation}
+						\mu_s^{\star} (t_{s-1}^{\star} - t_s^{\star}) = 0.
+						\label{eq:complementary_slackness}
+					\end{equation}
+				\end{subequations}
+				Since we require $t_{s-1} < t_s$ by definition, \eqref{eq:dual_feasibility} and \eqref{eq:complementary_slackness} imply $\mu_s^{\star} = 0$, $\forall s \in \mathcal{S}$. Therefore, \eqref{eq:stationarity} reduces to
+				\begin{equation}
+					\nabla_{t_s^{\star}} I^{\star}_{\mathrm{B}}(c_{\mathcal{K}};z) = 0.
+				\end{equation}
+			\end{proof}
+
+			% It was proved in \cite{Nguyen2021} that the optimal quantizer producing maximizing mutual information with arbitrary cost function separates the backward channel (i.e., posterior distribution) in a convex manner
+
+			% not only the capacity-achieving thresholding design remains an open problem, but also the optimal number of thresholds for general non-binary-input channels remains unknown. I am now trying to prove that, for our channel in Gamma distribution, the optimal decision region for each codeword cannot be disjoint
+
+			% Denote the decision region of hypothesis $\mathcal{H}_i$ as
+			% \begin{equation}
+			% 	\mathcal{R}_i \triangleq [t_{i-1,i}, t_{i,i+1}),
+			% 	\label{eq:decision_region}
+			% \end{equation}
+			% where $t_{i-1,i}$ is the decision threshold between $\mathcal{H}_{i-1}$ and $\mathcal{H}_i$, and $t_{i,i+1}$ is the decision threshold between $\mathcal{H}_i$ and $\mathcal{H}_{i+1}$. We also define $t_{0,1} \triangleq 0$, $t_{M^K,M^K+1} \triangleq \infty$, and $\boldsymbol{t} \triangleq [t_{0,1},\ldots,t_{M^K,M^K+1}]^T \in \mathbb{R}^{(M^K + 1) \times 1}$.
+
+			% Consider the (\gls{ml}) detector for example. The likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_{i'}$ is \cite{Qian2019}
+			% \begin{equation}
+			% 	\Lambda_{i,{i'}}^{\mathrm{\gls{ml}}}(z) = \frac{f(z \mid \mathcal{H}_i)}{f(z \mid \mathcal{H}_{i'})} = \left( \frac{\sigma_{i'}^2}{\sigma_i^2} \right)^N \exp \left( \frac{\sigma_i^2 - \sigma_{i'}^2}{\sigma_i^2 \sigma_{i'}^2} z \right),
+			% 	\label{eq:likelihood_ratio}
+			% \end{equation}
+			% the corresponding decision rule is
+			% \begin{equation}
+			% 	\Lambda_{i,{i'}}^{\mathrm{\gls{ml}}}(z) \underset{\mathcal{H}_{i'}}{\overset{\mathcal{H}_i}{\lessgtr}} 1 \iff z \underset{\mathcal{H}_{i'}}{\overset{\mathcal{H}_i}{\lessgtr}} t_{i,{i'}}^{\mathrm{\gls{ml}}},
+			% 	\label{eq:decision_rule}
+			% \end{equation}
+			% and the detection threshold is
+			% \begin{equation}
+			% 	t_{i,{i'}}^{\mathrm{\gls{ml}}} \triangleq N \frac{\sigma_i^2 \sigma_{i'}^2}{\sigma_i^2 - \sigma_{i'}^2} \log \frac{\sigma_i^2}{\sigma_{i'}^2}.
+			% 	\label{eq:detection_threshold}
+			% \end{equation}
+
+			% \begin{remark}
+			% 	Although the \gls{ml} decision threshold is optimal in terms of the likelihood function, it is not necessarily capacity-achieving, although the performance gap can be negligible in the single-tag \gls{bibo} case.
+			% \end{remark}
 
 			Once the decision region is determined, the discrete memoryless \gls{mac} can be recast as an equivalent point-to-point \gls{dmc} from tag input combination alphabet $\mathcal{I}$ to output energy level alphabet $\mathcal{I}$. The the probability of receiving energy level $j$ under tag input combination $i$ is\footnote{For simplicity, we assume there exists at least one feasible precoder that produces distinct received energy levels for all tag input combinations. [TODO] Merge with precoder design.}
 			\begin{equation}
@@ -350,9 +395,9 @@
 			where $\rho \in [0,1]$ denotes the priority of the primary link. To investigate how backscatter modulation and detection may influence the primary transmission, we optimize the input probability distribution, decision region, and transmit precoder to maximize the weighted sum primary-backscatter rate
 			\begin{maxi!}
 				{\scriptstyle{\boldsymbol{P},\boldsymbol{t},\boldsymbol{w}}}{I(c_{\mathcal{K}};\boldsymbol{y},z)}{\label{op:rate_region}}{\label{ob:weighted_sum_rate}}
-				\addConstraint{\sum \nolimits_{m_k} P_k(\bar{c}_{m_k})}{=1,\quad\label{co:sum_probability}}{\forall k \in \mathcal{K}}
-				\addConstraint{P_k(\bar{c}_{m_k})}{\ge 0,\quad\label{co:nonnegative_probability}}{\forall m_k \in \mathcal{M}, \ \forall k \in \mathcal{K}}
-				\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.\label{co:average_transmit_power}}
+				\addConstraint{\sum \nolimits_{m_k} P_k(\bar{c}_{m_k})}{=1,}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
+				\addConstraint{P_k(\bar{c}_{m_k})}{\ge 0,}{\quad \forall m_k \in \mathcal{M}, \ \forall k \in \mathcal{K}}{\label{co:nonnegative_probability}}
+				\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.}{\label{co:average_transmit_power}}
 			\end{maxi!}
 			where \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} are input probability constraints and \eqref{co:average_transmit_power} is the average transmit power budget. As problem \eqref{op:rate_region} is not jointly convex over $\boldsymbol{P}$, $\boldsymbol{t}$ and $\boldsymbol{w}$, we propose a \gls{bcd} method that iteratively updates the input distribution, decision region, and transmit precoder, until convergence is achieved.
 		\end{subsection}
@@ -377,16 +422,16 @@
 				\label{pr:optimal_conditions}
 			\end{proposition}
 			\begin{proof}
-				Denote the Lagrange multiplier associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_K]^T \in \mathbb{R}^{K \times 1}$ and $\boldsymbol{\Lambda} \triangleq [\boldsymbol{\lambda}_1^T,\ldots,\boldsymbol{\lambda}_K^T]^T \in \mathbb{R}^{M \times K}$ with $\boldsymbol{\lambda}_k \triangleq [\lambda_{k,1},\ldots,\lambda_{k,M}]^T \in \mathbb{R}^{M \times 1}$, respectively. The Lagrangian function of problem~\eqref{op:input_probability_distribution} is
+				Denote the Lagrange multiplier associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\boldsymbol{\nu} \triangleq [\nu_1,\ldots,\nu_K]^T \in \mathbb{R}^{K \times 1}$ and $\boldsymbol{\Lambda} \triangleq [\boldsymbol{\lambda}_1^T,\ldots,\boldsymbol{\lambda}_K^T]^T \in \mathbb{R}^{M \times K}$ with $\boldsymbol{\lambda}_k \triangleq [\lambda_{k,1},\ldots,\lambda_{k,M}]^T \in \mathbb{R}^{M \times 1}$, respectively. The Lagrangian function of problem~\eqref{op:input_probability_distribution} is
 				\begin{align}
-					L(\boldsymbol{P},\boldsymbol{\mu},\boldsymbol{\Lambda})
-					& = - I(c_{\mathcal{K}};\boldsymbol{y},z) + \sum_{k \in \mathcal{K}} \mu_k \left( \sum_{m_k \in \mathcal{M}} P_k(\bar{c}_{m_k}) - 1 \right)\nonumber\\
+					L(\boldsymbol{P},\boldsymbol{\nu},\boldsymbol{\Lambda})
+					& = - I(c_{\mathcal{K}};\boldsymbol{y},z) + \sum_{k \in \mathcal{K}} \nu_k \left( \sum_{m_k \in \mathcal{M}} P_k(\bar{c}_{m_k}) - 1 \right)\nonumber\\
 					& \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(\bar{c}_{m_k}),
 				\end{align}
-				and the corresponding \gls{kkt} conditions on the primal and dual solutions are, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
+				and the corresponding \gls{kkt} conditions are, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
 				\begin{subequations}
 					\begin{equation}
-						- \nabla_{P_k^{\star}(\bar{c}_{m_k})} I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z) + \mu_k^{\star} - \lambda_{k,m_k}^{\star} = 0,
+						- \nabla_{P_k^{\star}(\bar{c}_{m_k})} I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z) + \nu_k^{\star} - \lambda_{k,m_k}^{\star} = 0,
 					\end{equation}
 					\begin{equation}
 						\lambda_{k,m_k}^{\star} = 0, \quad P_k^{\star}(\bar{c}_{m_k}) > 0,
@@ -403,20 +448,20 @@
 				Due to the necessity and sufficiency of the \gls{kkt} conditions, we conclude that any input probability distribution $\boldsymbol{P}^{\star}$ maximizes the weighted sum primary-backscatter rate if and only if, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
 				\begin{subequations}
 					\begin{alignat}{2}
-						I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) & = \mu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) > 0,\label{eq:probable_states_marginal}\\
-						I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) & \le \mu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) = 0,\label{eq:dropped_states_marginal}
+						I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) & = \nu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) > 0,\label{eq:probable_states_marginal}\\
+						I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) & \le \nu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) = 0,\label{eq:dropped_states_marginal}
 					\end{alignat}
 				\end{subequations}
 				which implies
 				\begin{equation}
-					\sum_{m_k} P_k^{\star}(\bar{c}_{m_k}) I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) = \mu_k^{\star} + (1 - \rho).
+					\sum_{m_k} P_k^{\star}(\bar{c}_{m_k}) I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) = \nu_k^{\star} + (1 - \rho).
 				\end{equation}
 
 				On the other hand, by definition of marginations \eqref{eq:backscatter_sum_rate_expectation}, \eqref{eq:primary_ergodic_rate_expectation} and weighted summations \eqref{eq:weighted_sum_marginal_information}, \eqref{eq:weighted_sum_rate}, we have
 				\begin{equation}
 					\sum_{m_k} P_k^{\star}(\bar{c}_{m_k}) I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) = I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z),
 				\end{equation}
-				which is irrelevant to $k$. It suggests $I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z) = \mu_k^{\star} + (1 - \rho)$, $\forall k \in \mathcal{K}$, and completes the proof.
+				which is irrelevant to $k$. It suggests $I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z) = \nu_k^{\star} + (1 - \rho)$, $\forall k \in \mathcal{K}$, and completes the proof.
 			\end{proof}
 
 			Next, we extend the Blahut-Arimoto algorithm to the proposed case and obtain the optimal input probability distribution as follows.
@@ -518,15 +563,15 @@
 
 
 		\begin{subsection}{Decision region}
-			As indicated by \cite{Qian2019b}, the optimal \gls{ml} decision regions are very close to the optimal decision regions to problem \eqref{op:rate_region}. We can either use \eqref{eq:decision_region} as suboptimal, or take derivative of \eqref{eq:backscatter_sum_rate} w.r.t. $T_{i-1,i}$ and $T_{i,i+1}$ (however, closed-form solutions are unavailable and two-dimensional search is needed).
+			As indicated by \cite{Qian2019b}, the optimal \gls{ml} decision regions are very close to the optimal decision regions to problem \eqref{op:rate_region}. We can either use \eqref{eq:decision_region} as suboptimal, or take derivative of \eqref{eq:backscatter_sum_rate} w.r.t. $t_{i-1,i}$ and $t_{i,i+1}$ (however, closed-form solutions are unavailable and two-dimensional search is needed).
 		\end{subsection}
 
 		\begin{subsection}{Precoder}
 			Interestingly, we can design precoder to adjust the expectation of the received power \eqref{eq:receive_variance} at each tag input combination, which can avoid the detection blind spots in \cite{Qian2019} and further boost the weighted sum-rate. However, the problem is highly non-convex -- the information function associated with input combination state $i$ is
 			\begin{align}
 				I(\bar{c}_i;z)
-				& = \sum_{j \in \mathcal{I}} \int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z\nonumber\\
-				& \quad \times \log \frac{\int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z}{\sum_{i' \in \mathcal{I}} \int_{T_{j-1,j}}^{T_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2\right)^N (N-1)!} \dd z},
+				& = \sum_{j \in \mathcal{I}} \int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z\nonumber\\
+				& \quad \times \log \frac{\int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z}{\sum_{i' \in \mathcal{I}} \int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2\right)^N (N-1)!} \dd z},
 				\label{eq:foo}
 			\end{align}
 			and the mutual information can be expressed as a function of $W$ by combining \eqref{eq:backscatter_sum_rate} and \eqref{eq:foo}.

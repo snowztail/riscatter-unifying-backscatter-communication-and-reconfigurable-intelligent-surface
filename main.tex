@@ -254,9 +254,9 @@
 			\end{theorem}
 
 			\begin{proof}
-				For any finite number of thresholds $S \in \mathbb{Z}_{++}$, let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{S \times 1}$ be the thresholding vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.\footnote{We consider strict inequality in definition, since otherwise $S$ and $\boldsymbol{t}$ could be non-unique for a given thresholding scheme.} Denote the decision partition $s$ as $R_s \triangleq [t_{s-1},t_s)$. Without loss of generality, we assume
+				For any finite number of thresholds $S \in \mathbb{Z}_{++}$, let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{S \times 1}$ be the thresholding vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.\footnote{We consider strict inequality in the definition, as otherwise $S$ and $\boldsymbol{t}$ could be non-unique for a given thresholding scheme.} Denote the decision partition $s$ as $R_s \triangleq [t_{s-1},t_s)$. Without loss of generality, we assume
 				% $L \mid S$ and
-				$\mathcal{R}_j = \bigcup_{s \equiv j \pmod L} R_s$.\footnote{Note that the proof holds for general mapping and we focus on this case for the ease of notation.} The thresholding design problem can be expressed as
+				$\mathcal{R}_j = \bigcup_{s \equiv j \pmod L} R_s$.\footnote{The proof holds for general mapping $R_s \mapsto \mathcal{R}_j$, and we focus on this specific case for the ease of notation.} The thresholding design problem can be expressed as
 				\begin{maxi!}
 					{\scriptstyle{\boldsymbol{t}}}{I_{\mathrm{B}}(c_{\mathcal{K}};z)}{\label{op:thresholding}}{\label{ob:backscatter_mutual_information}}
 					\addConstraint{t_{s-1}}{< t_s,}{\quad \forall s \in \mathcal{S}.}{\label{co:strict_inequality}}
@@ -267,7 +267,7 @@
 					L(\boldsymbol{t},\boldsymbol{\mu}) = - I_{\mathrm{B}}(c_{\mathcal{K}};z) + \sum_{s \in \mathcal{S}} \mu_s (t_{s-1} - t_s),
 					% = \sum_{j \in \mathcal{L}} P(\bar{z}_j) \log P(\bar{z}_j) - \sum_{i \in \mathcal{L}} \sum_{j \in \mathcal{L}}
 				\end{equation}
-				where $\mu_s$ is the Lagrange multiplier associated with the non-strict counterpart of \eqref{co:strict_inequality} and $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_S]^T \in \mathbb{R}^{S \times 1}$. The corresponding \gls{kkt} conditions on the optimal primal and dual solutions are, $\forall s \in \mathcal{S}$,
+				where $\mu_s$ is the Lagrange multiplier associated with the non-strict version of \eqref{co:strict_inequality} and $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_S]^T \in \mathbb{R}^{S \times 1}$. The corresponding \gls{kkt} conditions on the optimal primal and dual solutions are, $\forall s \in \mathcal{S}$,
 				\begin{subequations}
 					\begin{equation}
 						- \nabla_{t_s^{\star}} I^{\star}_{\mathrm{B}}(c_{\mathcal{K}};z) + \mu_{s-1}^{\star} - \mu_s^{\star} = 0,
@@ -281,11 +281,31 @@
 						\mu_s^{\star} (t_{s-1}^{\star} - t_s^{\star}) = 0.
 						\label{eq:complementary_slackness}
 					\end{equation}
+					\label{eq:kkt_thresholding}
 				\end{subequations}
-				Since we require $t_{s-1} < t_s$ by definition, \eqref{eq:dual_feasibility} and \eqref{eq:complementary_slackness} imply $\mu_s^{\star} = 0$, $\forall s \in \mathcal{S}$. Therefore, \eqref{eq:stationarity} reduces to
+				For \gls{dmtc} based on energy detection~\eqref{eq:energy_distribution}, it is trivial to conclude $t_0^{\star} = 0$ and $t_S^{\star} = \infty$. Besides, since $t_{s-1} < t_s$ by definition, \eqref{eq:dual_feasibility} and \eqref{eq:complementary_slackness} imply $\mu_s^{\star} = 0$, $\forall s \in \mathcal{S}$. As such, $\forall s' \in \mathcal{S} \setminus \{S\}$, \eqref{eq:kkt_thresholding} reduces to
 				\begin{equation}
-					\nabla_{t_s^{\star}} I^{\star}_{\mathrm{B}}(c_{\mathcal{K}};z) = 0.
+					\nabla_{t_{s'}^{\star}} I^{\star}_{\mathrm{B}}(c_{\mathcal{K}};z) = 0,
 				\end{equation}
+				which can be explicitly written as
+				\begin{equation}
+					\sum_l P(x_l) \log \frac{P(z_j)}{P(z_{j+1})} \frac{P(z_{j+1} \mid x_l)}{P(z_j \mid x_l)} f(h_s \mid x_l) = 0,
+					\label{eq:kkt_thresholding_explicit}
+				\end{equation}
+				where $j \equiv s \pmod L$. We notice that for a given $j$, $a_l \triangleq P(x_l) \log \frac{P(z_j)}{P(z_{j+1})} \frac{P(z_{j+1} \mid x_l)}{P(z_j \mid x_l)}$ is a constant for all $s \equiv j \pmod L$. Plugging~\eqref{eq:energy_distribution} into \eqref{eq:kkt_thresholding_explicit}, we have
+				\begin{equation}
+					\sum_l a_l e^{-{h_s}/{\sigma_l^2}} = 0,
+					\label{eq:optimal_thresholding_condition}
+				\end{equation}
+				which by Rolle's theorem has at most $L-1$ distinct real roots if $\sigma_i^2 \ne \sigma_j^2$, $i,j \in \mathcal{L}$.
+				% where the directional derivative can be explicitly written as
+				% \begin{subequations}
+				% 	\begin{align}
+				% 		\nabla_{t_{s'}^{\star}} I^{\star}_{\mathrm{B}}(c_{\mathcal{K}};z)
+				% 		& = \sum_l P(x_l) \log \frac{P(z_j)}{P(z_{j+1})} \frac{P(z_{j+1} \mid x_l)}{P(z_j \mid x_l)} f(h_s \mid x_l)\\
+				% 		& = 1
+				% 	\end{align}
+				% \end{subequations}
 			\end{proof}
 
 			% It was proved in \cite{Nguyen2021} that the optimal quantizer producing maximizing mutual information with arbitrary cost function separates the backward channel (i.e., posterior distribution) in a convex manner

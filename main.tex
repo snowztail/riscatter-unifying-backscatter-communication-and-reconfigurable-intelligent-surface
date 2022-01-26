@@ -250,11 +250,11 @@
 			To maximize the mutual information for a general non-binary-input continuous-output channel, not only the decision region design remains an open problem, but also the optimal number of decision thresholds is still unknown. The reason is that the optimal decision region $\mathcal{R}_j$ of hypothesis $\mathcal{H}_j$ may be non-convex (i.e., consist of more than one disjoint partitions). The authors of \cite{Nguyen2021} showed that any optimal quantizer with arbitrary cost function must separate the backward channel  (i.e., posterior distribution) into convex decision regions, and provided an upper bound on the number of thresholds.
 
 			\begin{theorem}
-				If any $L$-input ($L \in \mathbb{Z}_{++}$) continuous-output channel follows Erlang distribution~\eqref{eq:energy_distribution}, then the optimal number of thresholds is $L+1$ and the capacity-achieving decision region $j$ has convex structure $\mathcal{R}_j^{\star} = [t_{j-1}^{\star}, t_j^{\star})$.
+				If any $L$-input continuous-output channel follows Erlang distribution~\eqref{eq:energy_distribution}, then the optimal number of thresholds is $L+1$ and the capacity-achieving decision region $j$ has convex structure $\mathcal{R}_j^\star = [t_{j-1}^\star, t_j^\star)$.
 			\end{theorem}
 
 			\begin{proof}
-				For any finite number of thresholds $S \in \mathbb{Z}_{++}$, let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{S \times 1}$ be the thresholding vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.\footnote{We consider strict inequality in the definition, as otherwise $S$ and $\boldsymbol{t}$ could be non-unique for a given thresholding scheme.} Denote the decision partition $s$ as $R_s \triangleq [t_{s-1},t_s)$. Without loss of generality, we assume
+				For any finite number of thresholds $S \ge L+1$, let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{S \times 1}$ be the thresholding vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.\footnote{We consider strict inequality in the definition, as otherwise $S$ and $\boldsymbol{t}$ could be non-unique for a given thresholding scheme.} Denote the decision partition $s$ as $R_s \triangleq [t_{s-1},t_s)$. Without loss of generality, we assume
 				% $L \mid S$ and
 				$\mathcal{R}_j = \bigcup_{s \equiv j \pmod L} R_s$.\footnote{The proof holds for general mapping $R_s \mapsto \mathcal{R}_j$, and we focus on this specific case for the ease of notation.} The thresholding design problem can be expressed as
 				\begin{maxi!}
@@ -269,43 +269,77 @@
 				\end{equation}
 				where $\mu_s$ is the Lagrange multiplier associated with the non-strict version of \eqref{co:strict_inequality} and $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_S]^T \in \mathbb{R}^{S \times 1}$. The corresponding \gls{kkt} conditions on the optimal primal and dual solutions are, $\forall s \in \mathcal{S}$,
 				\begin{subequations}
+					\label{eq:kkt_thresholding}
 					\begin{equation}
-						- \nabla_{t_s^{\star}} I^{\star}_{\mathrm{B}}(c_{\mathcal{K}};z) + \mu_{s-1}^{\star} - \mu_s^{\star} = 0,
+						- \nabla_{t_s^\star} I^\star_{\mathrm{B}}(c_{\mathcal{K}};z) + \mu_{s-1}^\star - \mu_s^\star = 0,
 						\label{eq:stationarity}
 					\end{equation}
 					\begin{equation}
-						\mu_s^{\star} \ge 0,
+						\mu_s^\star \ge 0,
 						\label{eq:dual_feasibility}
 					\end{equation}
 					\begin{equation}
-						\mu_s^{\star} (t_{s-1}^{\star} - t_s^{\star}) = 0.
+						\mu_s^\star (t_{s-1}^\star - t_s^\star) = 0.
 						\label{eq:complementary_slackness}
 					\end{equation}
-					\label{eq:kkt_thresholding}
+
 				\end{subequations}
-				For \gls{dmtc} based on energy detection~\eqref{eq:energy_distribution}, it is trivial to conclude $t_0^{\star} = 0$ and $t_S^{\star} = \infty$. Besides, since $t_{s-1} < t_s$ by definition, \eqref{eq:dual_feasibility} and \eqref{eq:complementary_slackness} imply $\mu_s^{\star} = 0$, $\forall s \in \mathcal{S}$. As such, $\forall s' \in \mathcal{S} \setminus \{S\}$, \eqref{eq:kkt_thresholding} reduces to
+				Due to the strict inequality constraint~\eqref{co:strict_inequality}, conditions \eqref{eq:dual_feasibility} and \eqref{eq:complementary_slackness} together imply $\mu_s^\star = 0$, $\forall s \in \mathcal{S}$. For \gls{dmtc} based on energy detection~\eqref{eq:energy_distribution}, it is trivial to conclude $t_0^\star = 0$ and $t_S^\star = \infty$. Hence, we focus on $s' \in \mathcal{S} \setminus \{S\}$ and \eqref{eq:kkt_thresholding} reduces to
 				\begin{equation}
-					\nabla_{t_{s'}^{\star}} I^{\star}_{\mathrm{B}}(c_{\mathcal{K}};z) = 0,
+					\nabla_{t_{s'}^\star} I^\star_{\mathrm{B}}(c_{\mathcal{K}};z) = 0,
 				\end{equation}
-				which can be explicitly written as
+				that is, for $j \in \mathcal{L}$ and $j \equiv s' \pmod L$,
 				\begin{equation}
-					\sum_l P(x_l) \log \frac{P(z_j)}{P(z_{j+1})} \frac{P(z_{j+1} \mid x_l)}{P(z_j \mid x_l)} f(h_s \mid x_l) = 0,
+					\sum_l a_{l,j} f(t_{s'}^\star \mid x_l) = 0,
 					\label{eq:kkt_thresholding_explicit}
 				\end{equation}
-				where $j \equiv s \pmod L$. We notice that for a given $j$, $a_l \triangleq P(x_l) \log \frac{P(z_j)}{P(z_{j+1})} \frac{P(z_{j+1} \mid x_l)}{P(z_j \mid x_l)}$ is a constant for all $s \equiv j \pmod L$. Plugging~\eqref{eq:energy_distribution} into \eqref{eq:kkt_thresholding_explicit}, we have
+				where
 				\begin{equation}
-					\sum_l a_l e^{-{h_s}/{\sigma_l^2}} = 0,
-					\label{eq:optimal_thresholding_condition}
+					a_{l,j} =
+					\begin{cases}
+						P(x_l) \log \frac{P(x_l \mid z_{j+1}^\star)}{P(x_l \mid z_j^\star)}, & j \in \mathcal{L} \setminus \{L\},\\
+						P(x_l) \log \frac{P(x_l \mid z_{1}^\star)}{P(x_l \mid z_j^\star)}, & j = L.
+					\end{cases}
 				\end{equation}
-				which by Rolle's theorem has at most $L-1$ distinct real roots if $\sigma_i^2 \ne \sigma_j^2$, $i,j \in \mathcal{L}$.
-				% where the directional derivative can be explicitly written as
-				% \begin{subequations}
-				% 	\begin{align}
-				% 		\nabla_{t_{s'}^{\star}} I^{\star}_{\mathrm{B}}(c_{\mathcal{K}};z)
-				% 		& = \sum_l P(x_l) \log \frac{P(z_j)}{P(z_{j+1})} \frac{P(z_{j+1} \mid x_l)}{P(z_j \mid x_l)} f(h_s \mid x_l)\\
-				% 		& = 1
-				% 	\end{align}
-				% \end{subequations}
+
+				Since the optimal backward channel quantizer is convex and separates each pair of posterior distribution by a hyperplane~\cite{Nguyen2020a}, the sequence $(a_{l,j})_{l=1}^{L}$ only change sign once for a given $j$. Besides, we notice the LHS of~\eqref{eq:kkt_thresholding_explicit} is a generalized Dirichlet polynomial, as $f(t_{s'}^\star \mid x_l)$ follows Erlang distribution~\eqref{eq:energy_distribution}. By Descartes' rule of signs~\cite{Jameson2006}, for each $j \in \mathcal{L}$, $t_s^\star$ has at most 1 real solution if $\sigma_l^2 \ne \sigma_{l'}^2$, $l,l' \in \mathcal{L}$.
+
+				% if $\sigma_l^2 \ne \sigma_{l'}^2$, $l,l' \in \mathcal{L}$, then $t_s^\star$ has at most 1 real solution.
+
+				% for a given $j$, $t_s^\star$ has at most 1 real solution if $\sigma_l^2 \ne \sigma_{l'}^2$, $l,l' \in \mathcal{L}$.
+
+				% Therefore,
+
+				% it can be concluded that for a given $j$, the sequence $(a_{l,j})_{l=1}^{L}$ only change sign once. Plugging~\eqref{eq:energy_distribution} into~\eqref{eq:kkt_thresholding_explicit}, we have
+				% \begin{equation}
+				% 	\sum_l a_{l,j} e^{-{t_s^\star}/{\sigma_l^2}} = 0,
+				% 	\label{eq:optimal_thresholding_condition}
+				% \end{equation}
+				% where the LHS is a generalized Dirichlet polynomial. By Descartes' rule of signs~\cite{Jameson2006}, for a given $j$, $t_s^\star$ has at most 1 real solution if $\sigma_l^2 \ne \sigma_{l'}^2$, $l,l' \in \mathcal{L}$.
+
+				% he number of positive roots is at most the number of sign changes in the sequence of polynomial's coefficients
+				% and by Descartes' rule of signs has at most $L-1$ distinct real roots if $\sigma_i^2 \ne \sigma_j^2$, $i,j \in \mathcal{L}$.
+
+
+				% % As proved by~\cite{Nguyen2020a}, the optimal backward channel quantizer
+				% % \begin{equation}
+				% % 	\sum_l P(x_l) \log \frac{P(z_j)}{P(z_{j+1})} \frac{P(z_{j+1} \mid x_l)}{P(z_j \mid x_l)} f(t_s^\star \mid x_l) = 0,
+				% % \end{equation}
+				% where $j \equiv s \pmod L$. Since the
+				% % We notice that for a given $j$, $a_l \triangleq P(x_l) \log \frac{P(z_j)}{P(z_{j+1})} \frac{P(z_{j+1} \mid x_l)}{P(z_j \mid x_l)}$ is a constant for all $s \equiv j \pmod L$. Plugging~\eqref{eq:energy_distribution} into \eqref{eq:kkt_thresholding_explicit}, we have
+				% \begin{equation}
+				% 	\sum_l a_{l,j} e^{-{h_s}/{\sigma_l^2}} = 0,
+				% 	\label{eq:optimal_thresholding_condition}
+				% \end{equation}
+				% where the LHS is a Dirichlet polynomial and by Descartes' rule of signs has at most $L-1$ distinct real roots if $\sigma_i^2 \ne \sigma_j^2$, $i,j \in \mathcal{L}$.
+				% % where the directional derivative can be explicitly written as
+				% % \begin{subequations}
+				% % 	\begin{align}
+				% % 		\nabla_{t_{s'}^\star} I^\star_{\mathrm{B}}(c_{\mathcal{K}};z)
+				% % 		& = \sum_l P(x_l) \log \frac{P(z_j)}{P(z_{j+1})} \frac{P(z_{j+1} \mid x_l)}{P(z_j \mid x_l)} f(h_s \mid x_l)\\
+				% % 		& = 1
+				% % 	\end{align}
+				% % \end{subequations}
 			\end{proof}
 
 			% It was proved in \cite{Nguyen2021} that the optimal quantizer producing maximizing mutual information with arbitrary cost function separates the backward channel (i.e., posterior distribution) in a convex manner
@@ -430,12 +464,12 @@
 			\end{maxi!}
 			which is non-convex for $K > 1$ due to the product term $\prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Fortunately, the \gls{kkt} conditions are necessary and sufficient for this type of problem, and the proof follows straightforwardly from \cite{Watanabe2009}.\footnote{For any elementary discrete memoryless \gls{mac} (sizes of input alphabets are no greater than that of output alphabet), the sufficiency can be proved by combining the local maximum and connectedness of \gls{kkt} solutions. For any general discrete memoryless \gls{mac}, the capacity can be achieved by an elementary discrete memoryless \gls{mac} included within. Thus, we restrict the discussion of this paper to elementary discrete memoryless \gls{mac}s.}
 			\begin{proposition}
-				The necessary and sufficient conditions for an input probability distribution $\boldsymbol{P}^{\star}$ to maximize the weighted sum primary-backscatter rate are that, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
+				The necessary and sufficient conditions for an input probability distribution $\boldsymbol{P}^\star$ to maximize the weighted sum primary-backscatter rate are that, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
 				\begin{subequations}
 					\label{eq:optimal_conditions}
 					\begin{alignat}{2}
-						I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) & = I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^{\star}(\bar{c}_{m_k}) > 0,\label{eq:probable_states}\\
-						I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) & \le I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^{\star}(\bar{c}_{m_k}) = 0.\label{eq:dropped_states}
+						I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) & = I^\star(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^\star(\bar{c}_{m_k}) > 0,\label{eq:probable_states}\\
+						I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) & \le I^\star(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^\star(\bar{c}_{m_k}) = 0.\label{eq:dropped_states}
 					\end{alignat}
 				\end{subequations}
 				\eqref{eq:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{eq:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
@@ -451,37 +485,37 @@
 				and the corresponding \gls{kkt} conditions are, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
 				\begin{subequations}
 					\begin{equation}
-						- \nabla_{P_k^{\star}(\bar{c}_{m_k})} I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z) + \nu_k^{\star} - \lambda_{k,m_k}^{\star} = 0,
+						- \nabla_{P_k^\star(\bar{c}_{m_k})} I^\star(c_{\mathcal{K}};\boldsymbol{y},z) + \nu_k^\star - \lambda_{k,m_k}^\star = 0,
 					\end{equation}
 					\begin{equation}
-						\lambda_{k,m_k}^{\star} = 0, \quad P_k^{\star}(\bar{c}_{m_k}) > 0,
+						\lambda_{k,m_k}^\star = 0, \quad P_k^\star(\bar{c}_{m_k}) > 0,
 					\end{equation}
 					\begin{equation}
-						\lambda_{k,m_k}^{\star} \ge 0, \quad P_k^{\star}(\bar{c}_{m_k}) = 0,
+						\lambda_{k,m_k}^\star \ge 0, \quad P_k^\star(\bar{c}_{m_k}) = 0,
 					\end{equation}
 				\end{subequations}
 				where the directional derivative can be explicitly expressed as
 				\begin{equation}
-					\nabla_{P_k^{\star}(\bar{c}_{m_k})} I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z) = I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) - (1 - \rho).
+					\nabla_{P_k^\star(\bar{c}_{m_k})} I^\star(c_{\mathcal{K}};\boldsymbol{y},z) = I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) - (1 - \rho).
 				\end{equation}
 
-				Due to the necessity and sufficiency of the \gls{kkt} conditions, we conclude that any input probability distribution $\boldsymbol{P}^{\star}$ maximizes the weighted sum primary-backscatter rate if and only if, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
+				Due to the necessity and sufficiency of the \gls{kkt} conditions, we conclude that any input probability distribution $\boldsymbol{P}^\star$ maximizes the weighted sum primary-backscatter rate if and only if, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
 				\begin{subequations}
 					\begin{alignat}{2}
-						I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) & = \nu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) > 0,\label{eq:probable_states_marginal}\\
-						I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) & \le \nu_k^{\star} + (1 - \rho), \quad && P_k^{\star}(\bar{c}_{m_k}) = 0,\label{eq:dropped_states_marginal}
+						I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) & = \nu_k^\star + (1 - \rho), \quad && P_k^\star(\bar{c}_{m_k}) > 0,\label{eq:probable_states_marginal}\\
+						I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) & \le \nu_k^\star + (1 - \rho), \quad && P_k^\star(\bar{c}_{m_k}) = 0,\label{eq:dropped_states_marginal}
 					\end{alignat}
 				\end{subequations}
 				which implies
 				\begin{equation}
-					\sum_{m_k} P_k^{\star}(\bar{c}_{m_k}) I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) = \nu_k^{\star} + (1 - \rho).
+					\sum_{m_k} P_k^\star(\bar{c}_{m_k}) I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) = \nu_k^\star + (1 - \rho).
 				\end{equation}
 
 				On the other hand, by definition of marginations \eqref{eq:backscatter_sum_rate_expectation}, \eqref{eq:primary_ergodic_rate_expectation} and weighted summations \eqref{eq:weighted_sum_marginal_information}, \eqref{eq:weighted_sum_rate}, we have
 				\begin{equation}
-					\sum_{m_k} P_k^{\star}(\bar{c}_{m_k}) I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) = I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z),
+					\sum_{m_k} P_k^\star(\bar{c}_{m_k}) I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) = I^\star(c_{\mathcal{K}};\boldsymbol{y},z),
 				\end{equation}
-				which is irrelevant to $k$. It suggests $I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z) = \nu_k^{\star} + (1 - \rho)$, $\forall k \in \mathcal{K}$, and completes the proof.
+				which is irrelevant to $k$. It suggests $I^\star(c_{\mathcal{K}};\boldsymbol{y},z) = \nu_k^\star + (1 - \rho)$, $\forall k \in \mathcal{K}$, and completes the proof.
 			\end{proof}
 
 			Next, we extend the Blahut-Arimoto algorithm to the proposed case and obtain the optimal input probability distribution as follows.
@@ -507,9 +541,9 @@
 						\label{eq:intermediate_information_function}
 					\end{align}
 				\end{figure*}
-				For a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ is a concave function of $P_k(\bar{c}_{m_k})$ and is maximized at $\nabla_{P_k^{\star}(\bar{c}_{m_k})} J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right) = 0$, namely
+				For a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ is a concave function of $P_k(\bar{c}_{m_k})$ and is maximized at $\nabla_{P_k^\star(\bar{c}_{m_k})} J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right) = 0$, namely
 				\begin{equation}
-					S_k'(\bar{c}_{m_k}) - S_k'(\bar{c}_{i_k}) + (1 - \rho) \log \frac{P_k(\bar{c}_{i_k})}{P_k^{\star}(\bar{c}_{m_k})} = 0,
+					S_k'(\bar{c}_{m_k}) - S_k'(\bar{c}_{i_k}) + (1 - \rho) \log \frac{P_k(\bar{c}_{i_k})}{P_k^\star(\bar{c}_{m_k})} = 0,
 					\label{eq:optimal_intermediate_information_condition}
 				\end{equation}
 				where $i_k \ne m_k$ is the reference state and
@@ -521,7 +555,7 @@
 				Evidently, $\forall m_k \ne i_k$, \eqref{eq:optimal_intermediate_information_condition} boils down to
 				% \begin{subequations}
 				% 	\begin{align}
-				% 		P_k^{\star}(\bar{c}_{m_k})
+				% 		P_k^\star(\bar{c}_{m_k})
 				% 		& = \frac{\exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k}) \right)}{\sum_{m_k'} \exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k'}) \right)}\\
 				% 		& = \frac{P_k'(\bar{c}_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k'(\bar{c}_{m_k};\boldsymbol{y},z) \right)}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k'(\bar{c}_{m_k'};\boldsymbol{y},z) \right)}.
 				% 		\label{eq:optimal_relative_distribution}
@@ -529,13 +563,13 @@
 				% \end{subequations}
 				\begin{subequations}
 					\begin{align}
-						P_k^{\star}(\bar{c}_{m_k})
+						P_k^\star(\bar{c}_{m_k})
 						& = \frac{\exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k}) \right)}{\sum_{m_k'} \exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k'}) \right)}\\
 						& = \frac{P_k'(\bar{c}_{m_k}) u_k'(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) u_k'(\bar{c}_{m_k'})},
 						\label{eq:optimal_relative_distribution}
 					\end{align}
 				\end{subequations}
-				where we define $u_k'(\bar{c}_{m_k}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k'(\bar{c}_{m_k};\boldsymbol{y},z) \right)$. Although $P_k(\bar{c}_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^{\star}(\bar{c}_{m_k})$ is not guaranteed to be optimal, it has exactly the same form as \eqref{eq:optimal_relative_distribution}. In such case, the solution of choosing $i_k$ as reference would coincide with that of choosing any $m_k \ne i_k$ as reference, while optimality for $i_k$ is guaranteed in the latter case. Therefore, for a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $\forall i_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$, \eqref{eq:optimal_relative_distribution} ensures
+				where we define $u_k'(\bar{c}_{m_k}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k'(\bar{c}_{m_k};\boldsymbol{y},z) \right)$. Although $P_k(\bar{c}_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^\star(\bar{c}_{m_k})$ is not guaranteed to be optimal, it has exactly the same form as \eqref{eq:optimal_relative_distribution}. In such case, the solution of choosing $i_k$ as reference would coincide with that of choosing any $m_k \ne i_k$ as reference, while optimality for $i_k$ is guaranteed in the latter case. Therefore, for a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $\forall i_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$, \eqref{eq:optimal_relative_distribution} ensures
 				\begin{equation}
 					J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right) \ge I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z).
 					\label{eq:information_difference_lower}
@@ -557,25 +591,25 @@
 				\end{subequations}
 				where the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges. Combining \eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper} suggests $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) \ge I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$. Since mutual information is bounded above, we conclude sequence \eqref{eq:optimal_distribution} is non-decreasing and convergent in mutual information.
 
-				We then prove any converging point of sequence \eqref{eq:optimal_distribution}, denoted as $P_k^{\star}(\bar{c}_{m_k})$, fulfills the optimal conditions \eqref{eq:optimal_conditions} and achieves the weighted primary-backscatter sum capacity. To see this, define
+				We then prove any converging point of sequence \eqref{eq:optimal_distribution}, denoted as $P_k^\star(\bar{c}_{m_k})$, fulfills the optimal conditions \eqref{eq:optimal_conditions} and achieves the weighted primary-backscatter sum capacity. To see this, define
 				\begin{equation}
 					D_k^{(r)}(\bar{c}_{m_k}) \triangleq \frac{P_k^{(r+1)}(\bar{c}_{m_k})}{P_k^{(r)}(\bar{c}_{m_k})} = \frac{u_k^{(r)}(\bar{c}_{m_k})}{\sum_{m_k'} P_k^{(r)}(\bar{c}_{m_k'}) u_k^{(r)}(\bar{c}_{m_k'})},
 				\end{equation}
-				where $P_k^{(0)}(\bar{c}_{m_k}) > 0$. As sequence \eqref{eq:optimal_distribution} is convergent, any state with $P_k^{\star}(\bar{c}_{m_k}) > 0$ need to satisfy $D_k^{\star}(\bar{c}_{m_k}) \triangleq \lim_{r \to \infty} D_k^{(r)}(\bar{c}_{m_k}) = 1$, namely
+				where $P_k^{(0)}(\bar{c}_{m_k}) > 0$. As sequence \eqref{eq:optimal_distribution} is convergent, any state with $P_k^\star(\bar{c}_{m_k}) > 0$ need to satisfy $D_k^\star(\bar{c}_{m_k}) \triangleq \lim_{r \to \infty} D_k^{(r)}(\bar{c}_{m_k}) = 1$, namely
 				\begin{equation}
-					I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) = \frac{1 - \rho}{\rho} \log \sum_{m_k'} P_k^{\star}(\bar{c}_{m_k'}) u_k^{\star}(\bar{c}_{m_k'}),
+					I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) = \frac{1 - \rho}{\rho} \log \sum_{m_k'} P_k^\star(\bar{c}_{m_k'}) u_k^\star(\bar{c}_{m_k'}),
 				\end{equation}
-				which coincides with \eqref{eq:probable_states_marginal} and implies \eqref{eq:probable_states}. That is, given $P_k^{(0)}(\bar{c}_{m_k}) > 0$, any converging point with $P_k^{\star}(\bar{c}_{m_k}) > 0$ must satisfy \eqref{eq:probable_states}.
-				On the other hand, we assume $P_k^{\star}(\bar{c}_{m_k})$ does not satisfy \eqref{eq:dropped_states}, such that for any state with $P_k^{\star}(\bar{c}_{m_k}) = 0$,
-				% On the other hand, we show if $P_k^{\star}(\bar{c}_{m_k})$ does not satisfy \eqref{eq:dropped_states}, then it is not a converging point of sequence \eqref{eq:optimal_distribution}. By this assumption, for any state with $P_k^{\star}(\bar{c}_{m_k}) = 0$,
+				which coincides with \eqref{eq:probable_states_marginal} and implies \eqref{eq:probable_states}. That is, given $P_k^{(0)}(\bar{c}_{m_k}) > 0$, any converging point with $P_k^\star(\bar{c}_{m_k}) > 0$ must satisfy \eqref{eq:probable_states}.
+				On the other hand, we assume $P_k^\star(\bar{c}_{m_k})$ does not satisfy \eqref{eq:dropped_states}, such that for any state with $P_k^\star(\bar{c}_{m_k}) = 0$,
+				% On the other hand, we show if $P_k^\star(\bar{c}_{m_k})$ does not satisfy \eqref{eq:dropped_states}, then it is not a converging point of sequence \eqref{eq:optimal_distribution}. By this assumption, for any state with $P_k^\star(\bar{c}_{m_k}) = 0$,
 				\begin{equation}
-					I_k^{\star}(\bar{c}_{m_k};\boldsymbol{y},z) > I^{\star}(c_{\mathcal{K}};\boldsymbol{y},z) = \sum_{m_k'} P_k^{\star}(\bar{c}_{m_k'}) I_k^{\star}(\bar{c}_{m_k'};\boldsymbol{y},z),
+					I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) > I^\star(c_{\mathcal{K}};\boldsymbol{y},z) = \sum_{m_k'} P_k^\star(\bar{c}_{m_k'}) I_k^\star(\bar{c}_{m_k'};\boldsymbol{y},z),
 				\end{equation}
-				where the equality origins from \eqref{eq:backscatter_sum_rate_expectation} and \eqref{eq:primary_ergodic_rate_expectation}. Since the exponential function is monotonically increasing, we have $u_k^{\star}(\bar{c}_{m_k}) > \sum_{m_k'} P_k^{\star}(\bar{c}_{m_k'}) u_k^{\star}(\bar{c}_{m_k'})$ and $D_k^{\star}(\bar{c}_{m_k}) > 1$. Considering $P_k^{(0)}(\bar{c}_{m_k}) > 0$ and $P_k^{\star}(\bar{c}_{m_k}) = 0$, it contradicts with
+				where the equality origins from \eqref{eq:backscatter_sum_rate_expectation} and \eqref{eq:primary_ergodic_rate_expectation}. Since the exponential function is monotonically increasing, we have $u_k^\star(\bar{c}_{m_k}) > \sum_{m_k'} P_k^\star(\bar{c}_{m_k'}) u_k^\star(\bar{c}_{m_k'})$ and $D_k^\star(\bar{c}_{m_k}) > 1$. Considering $P_k^{(0)}(\bar{c}_{m_k}) > 0$ and $P_k^\star(\bar{c}_{m_k}) = 0$, it contradicts with
 				\begin{equation}
 					P_k^{(r)}(\bar{c}_{m_k}) = P_k^{(0)}(\bar{c}_{m_k}) \prod_{n=1}^r D_k^{(n)}(\bar{c}_{m_k}).
 				\end{equation}
-				Therefore, given $P_k^{(0)}(\bar{c}_{m_k}) > 0$, any converging point with $P_k^{\star}(\bar{c}_{m_k}) = 0$ must satisfy \eqref{eq:dropped_states}.
+				Therefore, given $P_k^{(0)}(\bar{c}_{m_k}) > 0$, any converging point with $P_k^\star(\bar{c}_{m_k}) = 0$ must satisfy \eqref{eq:dropped_states}.
 
 				In conclusion, sequence \eqref{eq:optimal_distribution} always converges to a weighted sum capacity-achieving distribution for state $m_k$ of tag $k$.
 			\end{proof}

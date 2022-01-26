@@ -250,13 +250,11 @@
 			To maximize the mutual information for a general non-binary-input continuous-output channel, not only the decision region design remains an open problem, but also the optimal number of decision thresholds is still unknown. The reason is that the optimal decision region $\mathcal{R}_j$ of hypothesis $\mathcal{H}_j$ may be non-convex (i.e., consist of more than one disjoint partitions). The authors of \cite{Nguyen2021} showed that any optimal quantizer with arbitrary cost function must separate the backward channel  (i.e., posterior distribution) into convex decision regions, and provided an upper bound on the number of thresholds.
 
 			\begin{theorem}
-				If any $L$-input continuous-output channel follows Erlang distribution~\eqref{eq:energy_distribution}, then the optimal number of thresholds is $L+1$ and the capacity-achieving decision region $j$ has convex structure $\mathcal{R}_j^\star = [t_{j-1}^\star, t_j^\star)$.
+				For any $L$-input continuous-output channel with Erlang distribution~\eqref{eq:energy_distribution}, the number of thresholds required to achieve the \gls{dmtc} capacity is $L+1$ and the optimal decision region $j \in \mathcal{L} \triangleq \{1,\ldots,L\}$ has a convex structure $\mathcal{R}_j^\star = [t_{j-1}^\star, t_j^\star)$.
 			\end{theorem}
 
 			\begin{proof}
-				For any finite number of thresholds $S \ge L+1$, let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{S \times 1}$ be the thresholding vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.\footnote{We consider strict inequality in the definition, as otherwise $S$ and $\boldsymbol{t}$ could be non-unique for a given thresholding scheme.} Denote the decision partition $s$ as $R_s \triangleq [t_{s-1},t_s)$. Without loss of generality, we assume
-				% $L \mid S$ and
-				$\mathcal{R}_j = \bigcup_{s \equiv j \pmod L} R_s$.\footnote{The proof holds for general mapping $R_s \mapsto \mathcal{R}_j$, and we focus on this specific case for the ease of notation.} The thresholding design problem can be expressed as
+				Assume the optimal number of thresholds is $S+1$. Since $x \to z \to \bar{z}$ formulates a Markov chain, we need at least $L+1$ thresholds to construct $L$ valid detection regions and minimize the distortion between $x$ and $\bar{z}$. It suggests $S \ge L$. Let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{(S+1) \times 1}$ be the optimal thresholding vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.\footnote{We consider strict inequality in the definition, as otherwise $S$ and $\boldsymbol{t}$ could be non-unique for a given thresholding scheme.} Denote the decision partition $s$ as $R_s \triangleq [t_{s-1},t_s)$. Without loss of generality, we assume $\mathcal{R}_j = \bigcup_{s \equiv j \pmod L} R_s$.\footnote{The proof holds for general mapping $R_s \mapsto \mathcal{R}_j$, and we focus on this specific case for the ease of notation.} The thresholding design problem can be expressed as
 				\begin{maxi!}
 					{\scriptstyle{\boldsymbol{t}}}{I_{\mathrm{B}}(c_{\mathcal{K}};z)}{\label{op:thresholding}}{\label{ob:backscatter_mutual_information}}
 					\addConstraint{t_{s-1}}{< t_s,}{\quad \forall s \in \mathcal{S}.}{\label{co:strict_inequality}}
@@ -265,9 +263,8 @@
 				Problem~\eqref{op:thresholding} is intricate due to the strict inequality constraint~\eqref{co:strict_inequality}. Following \cite{Nguyen2020}, we first relax it to the convex counterpart, then discard the solutions that violate the original constraints. The Lagrangian function for the relaxed problem is
 				\begin{equation}
 					L(\boldsymbol{t},\boldsymbol{\mu}) = - I_{\mathrm{B}}(c_{\mathcal{K}};z) + \sum_{s \in \mathcal{S}} \mu_s (t_{s-1} - t_s),
-					% = \sum_{j \in \mathcal{L}} P(\bar{z}_j) \log P(\bar{z}_j) - \sum_{i \in \mathcal{L}} \sum_{j \in \mathcal{L}}
 				\end{equation}
-				where $\mu_s$ is the Lagrange multiplier associated with the non-strict version of \eqref{co:strict_inequality} and $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_S]^T \in \mathbb{R}^{S \times 1}$. The corresponding \gls{kkt} conditions on the optimal primal and dual solutions are, $\forall s \in \mathcal{S}$,
+				where $\mu_s$ is the Lagrange multiplier associated with the non-strict version of \eqref{co:strict_inequality} and $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_S]^T \in \mathbb{R}^{S \times 1}$. The \gls{kkt} conditions on the optimal primal and dual solutions are, $\forall s \in \mathcal{S}$,
 				\begin{subequations}
 					\label{eq:kkt_thresholding}
 					\begin{equation}
@@ -284,25 +281,31 @@
 					\end{equation}
 
 				\end{subequations}
-				Due to the strict inequality constraint~\eqref{co:strict_inequality}, conditions \eqref{eq:dual_feasibility} and \eqref{eq:complementary_slackness} together imply $\mu_s^\star = 0$, $\forall s \in \mathcal{S}$. For \gls{dmtc} based on energy detection~\eqref{eq:energy_distribution}, it is trivial to conclude $t_0^\star = 0$ and $t_S^\star = \infty$. Hence, we focus on $s' \in \mathcal{S} \setminus \{S\}$ and \eqref{eq:kkt_thresholding} reduces to
+				% For \gls{dmtc} based on energy detection~\eqref{eq:energy_distribution}, it is trivial to conclude $t_0^\star = 0$ and $t_S^\star = \infty$.
+				Due to the strict inequality constraint~\eqref{co:strict_inequality}, conditions \eqref{eq:dual_feasibility} and \eqref{eq:complementary_slackness} together imply $\mu_s^\star = 0$, $\forall s \in \mathcal{S}$. Besides, it is trivial to conclude $t_0^\star = 0$ for our \gls{dmtc} based on energy detection. As such, the necessary optimality condition for $t_s^\star$, $s \in \mathcal{S}$ is
 				\begin{equation}
-					\nabla_{t_{s'}^\star} I^\star_{\mathrm{B}}(c_{\mathcal{K}};z) = 0,
+					\nabla_{t_{s}^\star} I^\star_{\mathrm{B}}(c_{\mathcal{K}};z) = 0,
 				\end{equation}
-				that is, for $j \in \mathcal{L}$ and $j \equiv s' \pmod L$,
+				namely
 				\begin{equation}
-					\sum_l a_{l,j} f(t_{s'}^\star \mid x_l) = 0,
+					\sum_l a_{l,j} f(t_{s}^\star \mid x_l) = 0,
 					\label{eq:kkt_thresholding_explicit}
 				\end{equation}
-				where
+				where $j \equiv s \pmod L$, $j \in \mathcal{L}$ and
 				\begin{equation}
-					a_{l,j} =
+					a_{l,j} \triangleq
 					\begin{cases}
 						P(x_l) \log \frac{P(x_l \mid z_{j+1}^\star)}{P(x_l \mid z_j^\star)}, & j \in \mathcal{L} \setminus \{L\},\\
 						P(x_l) \log \frac{P(x_l \mid z_{1}^\star)}{P(x_l \mid z_j^\star)}, & j = L.
 					\end{cases}
 				\end{equation}
 
-				Since the optimal backward channel quantizer is convex and separates each pair of posterior distribution by a hyperplane~\cite{Nguyen2020a}, the sequence $(a_{l,j})_{l=1}^{L}$ only change sign once for a given $j$. Besides, we notice the LHS of~\eqref{eq:kkt_thresholding_explicit} is a generalized Dirichlet polynomial, as $f(t_{s'}^\star \mid x_l)$ follows Erlang distribution~\eqref{eq:energy_distribution}. By Descartes' rule of signs~\cite{Jameson2006}, for each $j \in \mathcal{L}$, $t_s^\star$ has at most 1 real solution if $\sigma_l^2 \ne \sigma_{l'}^2$, $l,l' \in \mathcal{L}$.
+				Since the optimal backward channel quantizer is convex and separates each pair of posterior distribution by a hyperplane~\cite{Nguyen2020a}, for a given $j$, the sequence $(a_{l,j})_{l=1}^{L}$ only change sign once. As $f(t_{s}^\star \mid x_l)$ follows Erlang distribution~\eqref{eq:energy_distribution}, the LHS of~\eqref{eq:kkt_thresholding_explicit} is a generalized Dirichlet polynomial and has at most one real solution by Descartes' rule of signs~\cite{Jameson2006}. In other words, each decision region $j \in \mathcal{L}$ requires at most one additional threshold, and therefore $S \le L$. This suggests $S = L$ completes the proof.
+
+				% . By Descartes' rule of signs~\cite{Jameson2006}, for each $j \in \mathcal{L}$, $t_s^\star$ has at most 1 real solution if $\sigma_l^2 \ne \sigma_{l'}^2$, $\forall l,l' \in \mathcal{L}$.
+
+				% In other words, based on $t_0^\star = 0$, each decision region $j \in \mathcal{L}$ requires at most one additional threshold, such that $S \le L+1$.
+				% $s \equiv j \pmod L$
 
 				% if $\sigma_l^2 \ne \sigma_{l'}^2$, $l,l' \in \mathcal{L}$, then $t_s^\star$ has at most 1 real solution.
 

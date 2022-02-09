@@ -1,4 +1,4 @@
-function [wsr, primaryRate, secondaryRate, inputDistribution] = input_distribution(weight, symbolRatio, snr, dmc, nTags, tolerance)
+function [wsr, primaryRate, secondaryRate, inputDistribution, equivalentDistribution] = input_distribution(weight, symbolRatio, snr, dmtc, nTags, tolerance)
 	% Function:
     %   - compute the weighted sum rate of the primary user and all backscatter tags
 	%	- obtain the optimal tag input distribution for a given discrete memoryless MAC
@@ -7,7 +7,7 @@ function [wsr, primaryRate, secondaryRate, inputDistribution] = input_distributi
 	%	- weight: the priority of the primary link
 	%	- symbolRatio: the duration ratio of the secondary symbol period over the primary symbol period
 	%	- snr [nInputs * 1]: signal-to-noise ratio of the primary link corresponding to all tag input combinations
-    %   - dmc [nInputs * nOutputs]: the transition probability matrix of the backscatter discrete memoryless MAC
+    %   - dmtc [nInputs * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- nTags: number of tags
     %   - tolerance: minimum rate gain per iteration
     %
@@ -16,6 +16,7 @@ function [wsr, primaryRate, secondaryRate, inputDistribution] = input_distributi
 	%	- primaryRate: the achievable rate for the primary link (bps/Hz)
 	%	- secondaryRate: the achievable rate for the secondary link (bpcu)
 	%	- inputDistribution: optimal input probability distribution
+	%	- equivalentDistribution: optimal input combination probability distribution
     %
     % Comment:
     %   - iteratively update the input distribution and achievable rates
@@ -31,28 +32,28 @@ function [wsr, primaryRate, secondaryRate, inputDistribution] = input_distributi
 		weight;
 		symbolRatio;
 		snr;
-		dmc;
+		dmtc;
 		nTags;
-		tolerance = eps;
+		tolerance = 1e-12;
 	end
 
 	% * Ensure non-zero transitional probability as required by Blahut-Arimoto algorithm
-	dmc(dmc < eps) = eps;
+	dmtc(dmtc < eps) = eps;
 
 	% * Get data
-	nStates = nthroot(size(dmc, 1), nTags);
+	nStates = nthroot(size(dmtc, 1), nTags);
 
 	% * Initialize
 	inputDistribution = normr(sqrt(rand(nTags, nStates))) .^ 2;
 	combinationDistribution = combination_distribution(inputDistribution);
-	jointDistribution = prod(combinationDistribution, 1);
+	equivalentDistribution = prod(combinationDistribution, 1);
 	primaryInformationFunction = primary_information_function(symbolRatio, snr);
-	secondaryInformationFunction = secondary_information_function(jointDistribution, dmc);
-	primaryRate = jointDistribution * primaryInformationFunction;
-	secondaryRate = jointDistribution * secondaryInformationFunction;
+	secondaryInformationFunction = secondary_information_function(equivalentDistribution, dmtc);
+	primaryRate = equivalentDistribution * primaryInformationFunction;
+	secondaryRate = equivalentDistribution * secondaryInformationFunction;
 	informationFunction = weight * primaryInformationFunction + (1 - weight) * secondaryInformationFunction;
 	marginalInformation = marginal_information(combinationDistribution, informationFunction);
-	mutualInformation = jointDistribution * informationFunction;
+	mutualInformation = equivalentDistribution * informationFunction;
 
 	% * Iteratively update input distribution for all tags
 	wsr = mutualInformation;
@@ -62,21 +63,18 @@ function [wsr, primaryRate, secondaryRate, inputDistribution] = input_distributi
 		for iTag = 1 : nTags
 			inputDistribution(iTag, :) = input_distribution_local(inputDistribution(iTag, :), marginalInformation(:, iTag));
 			combinationDistribution = combination_distribution(inputDistribution);
-			jointDistribution = prod(combinationDistribution, 1);
+			equivalentDistribution = prod(combinationDistribution, 1);
 			primaryInformationFunction = primary_information_function(symbolRatio, snr);
-			secondaryInformationFunction = secondary_information_function(jointDistribution, dmc);
-			primaryRate = jointDistribution * primaryInformationFunction;
-			secondaryRate = jointDistribution * secondaryInformationFunction;
+			secondaryInformationFunction = secondary_information_function(equivalentDistribution, dmtc);
+			primaryRate = equivalentDistribution * primaryInformationFunction;
+			secondaryRate = equivalentDistribution * secondaryInformationFunction;
 			informationFunction = weight * primaryInformationFunction + (1 - weight) * secondaryInformationFunction;
 			marginalInformation = marginal_information(combinationDistribution, informationFunction);
-			mutualInformation = jointDistribution * informationFunction;
+			mutualInformation = equivalentDistribution * informationFunction;
 		end
 		isConverged = abs(mutualInformation - wsr) <= tolerance;
 		wsr = mutualInformation;
 	end
-
-	% * Discard codewords with negligible probability
-	inputDistribution(inputDistribution < eps) = 0;
 end
 
 
@@ -108,12 +106,12 @@ function [primaryInformationFunction] = primary_information_function(symbolRatio
 	end
 end
 
-function [secondaryInformationFunction] = secondary_information_function(jointDistribution, dmc)
-	[nInputs, nOutputs] = size(dmc);
+function [secondaryInformationFunction] = secondary_information_function(equivalentDistribution, dmtc)
+	[nInputs, nOutputs] = size(dmtc);
 	secondaryInformationFunction = zeros(nInputs, nOutputs);
 	for iInput = 1 : nInputs
 		for iOutput = 1 : nOutputs
-			secondaryInformationFunction(iInput, iOutput) = dmc(iInput, iOutput) * log2(dmc(iInput, iOutput) / (jointDistribution * dmc(:, iOutput)));
+			secondaryInformationFunction(iInput, iOutput) = dmtc(iInput, iOutput) * log2(dmtc(iInput, iOutput) / (equivalentDistribution * dmtc(:, iOutput)));
 		end
 	end
 	secondaryInformationFunction = sum(secondaryInformationFunction, 2);

@@ -1,13 +1,13 @@
 clear; clc;
 nTxs = 1;
-nTags = 3;
-nStates = 4;
+nTags = 2;
+nStates = 2;
 [nInputs, nOutputs] = deal(nStates ^ nTags);
 weight = eps;
 reflectRatio = 0.5;
 symbolRatio = 10;
 noisePower = 1;
-nLevels = 2 ^ 8;
+nLevels = 2 ^ 6;
 constellation = phase_shift_keying(nStates);
 tolerance = eps;
 
@@ -49,14 +49,22 @@ dmtc(mapIndex, mapIndex) = dmtc;
 isConverged = false;
 while ~isConverged
 	% * Update thresholding scheme
-	threshold = thresholding(dmc, equivalentDistribution, quantizedPower);
+	tic
+	[threshold] = thresholding(dmc, equivalentDistribution, quantizedPower);
+	toc
+	tic
+	[threshold_smawk] = thresholding_smawk(dmc, equivalentDistribution, quantizedPower);
+	toc
 
 	% * Update DMTC
 	dmtc = discretize_channel(nInputs, nOutputs, symbolRatio, receivedPower, threshold);
 	dmtc(mapIndex, mapIndex) = dmtc;
+	dmtc_smawk = discretize_channel(nInputs, nOutputs, symbolRatio, receivedPower, threshold_smawk);
+	dmtc_smawk(mapIndex, mapIndex) = dmtc_smawk;
 
 	% * Update tag input distribution
 	[wsr, primaryRate, secondaryRate, inputDistribution, equivalentDistribution] = input_distribution(weight, symbolRatio, snr, dmtc, nTags);
+	[wsr_smawk, primaryRate_smawk, secondaryRate_smawk, inputDistribution_smawk, equivalentDistribution_smawk] = input_distribution(weight, symbolRatio, snr, dmtc_smawk, nTags);
 
 	% * Test convergence
 	isConverged = abs(wsr - wsr_) <= tolerance;

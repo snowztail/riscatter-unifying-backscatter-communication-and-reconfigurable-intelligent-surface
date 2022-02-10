@@ -39,7 +39,7 @@ function [threshold] = thresholding(dmc, equivalentDistribution, quantizedPower)
 	% * Compute dp
 	for iOutput = 2 : nOutputs
 		for iLevel = nLevels - nOutputs + iOutput : - 1 : iOutput
-			dpCandidate = inf(nLevels - 2, 1);
+			dpCandidate = Inf(nLevels - 2, 1);
 			for iThreshold = iOutput - 1 : iLevel - 1
 				dpCandidate(iThreshold) = dp(iThreshold, iOutput - 1) + quantization_cost(iThreshold + 1, iLevel, equivalentDistribution, dmc);
 			end

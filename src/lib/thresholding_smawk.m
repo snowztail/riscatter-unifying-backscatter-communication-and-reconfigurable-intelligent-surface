@@ -1,11 +1,11 @@
-function [threshold, sol] = thresholding_smawk(dmc, equivalentDistribution, quantizedPower)
+function [threshold, sol] = thresholding_smawk(dmc, equivalentDistribution, thresholdCandidate)
 	% Function:
 	%	- obtain the DMTC capacity-achieving thresholding scheme by dynamic programming
     %
     % Input:
     %   - dmc [nInputs * nLevels]: the transition probability matrix of the backscatter discrete memoryless MAC obtained by quantization
 	%	- equivalentDistribution: optimal input combination probability distribution
-	%	- nTags: number of tags
+	%	- thresholdCandidate [1 * nLevels + 1]: all possible threshold values
     %
     % Output:
 	%	- threshold: the optimal thresholding values
@@ -19,7 +19,7 @@ function [threshold, sol] = thresholding_smawk(dmc, equivalentDistribution, quan
 	arguments
 		dmc;
 		equivalentDistribution;
-		quantizedPower;
+		thresholdCandidate;
 	end
 
 	% * Ensure non-zero transitional probability as required by Blahut-Arimoto algorithm
@@ -65,7 +65,7 @@ function [threshold, sol] = thresholding_smawk(dmc, equivalentDistribution, quan
 	for iOutput = nOutputs : - 1 : 1
 		index(iOutput) = sol(index(iOutput + 1), iOutput);
 	end
-	threshold = quantizedPower(index + 1);
+	threshold = thresholdCandidate(index + 1);
 end
 
 

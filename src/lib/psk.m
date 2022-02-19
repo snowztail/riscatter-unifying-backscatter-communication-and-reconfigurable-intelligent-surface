@@ -1,4 +1,4 @@
-function [constellation] = phase_shift_keying(nStates, offset)
+function [constellation] = psk(nStates, offset)
 	% Function:
     %   - simulate the constellation diagram of M-ary phase shift keying
     %

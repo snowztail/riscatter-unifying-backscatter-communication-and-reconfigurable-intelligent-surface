@@ -1,0 +1,69 @@
+function [threshold, backscatterMutualInformation] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio, tolerance)
+	% Function:
+	%	- obtain the DMTC capacity-achieving thresholding scheme by dynamic programming
+    %
+    % Input:
+	%	- thresholdCandidate [1 * (nBins + 1)]: candidate threshold values
+    %   - dmc [(nStates ^ nTags) * nBins]: the transition probability matrix of the backscatter discrete memoryless MAC obtained by quantization
+	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
+	%	- receivedPower [(nStates ^ nTags) * 1]: received power per primary symbol corresponding to each input letter combination combination
+	%	- symbolRatio: the ratio of the secondary symbol period over the primary symbol period
+	%	- tolerance: maximum bisection deviation from zero
+    %
+    % Output:
+	%	- threshold [1 * nOutputs] : the optimal thresholding values
+	%	- backscatterMutualInformation: the optimal sum backscatter mutual information
+    %
+    % Author & Date: Yang (i@snowztail.com), 22 Feb 09
+
+	% * Declare default tolerance
+	arguments
+		thresholdCandidate;
+		dmc;
+		equivalentDistribution;
+		receivedPower;
+		symbolRatio;
+		tolerance = eps;
+	end
+
+	% * Get data
+	nOutputs = sum(equivalentDistribution >= tolerance);
+	nBins = size(thresholdCandidate, 2);
+
+	% * Initialization
+	dp = zeros(nBins, nOutputs);
+	sol = zeros(nBins, nOutputs);
+	for iBin = 1 : nBins
+		dp(iBin, 1) = quantization_cost(1 : iBin, equivalentDistribution, dmc);
+	end
+
+	% * Compute dp
+	for iOutput = 2 : nOutputs
+		for iBin = nBins - nOutputs + iOutput : - 1 : iOutput
+			dpCandidate = Inf(nBins - 2, 1);
+			for iThreshold = iOutput - 1 : iBin - 1
+				dpCandidate(iThreshold) = dp(iThreshold, iOutput - 1) + quantization_cost(iThreshold + 1 : iBin, equivalentDistribution, dmc);
+			end
+			[dp(iBin, iOutput), sol(iBin, iOutput)] = min(dpCandidate);
+		end
+	end
+
+	% * Recursively generate thresholds
+	index(nOutputs + 1, 1) = nBins;
+	for iOutput = nOutputs : - 1 : 1
+		index(iOutput) = sol(index(iOutput + 1), iOutput);
+	end
+	threshold = thresholdCandidate(index + 1);
+
+	% * Construct DMTC and compute mutual information
+	dmtc = discretize_channel(threshold, receivedPower, symbolRatio);
+	backscatterMutualInformation = equivalentDistribution * information_function_backscatter(equivalentDistribution, dmtc);
+end
+
+
+function [quantizationCost] = quantization_cost(binIndex, equivalentDistribution, dmc)
+	outputDistribution = equivalentDistribution * dmc;
+	jointDistribution = transpose(equivalentDistribution) .* dmc;
+	conditionalDistribution = sum(jointDistribution(:, binIndex), 2) / sum(outputDistribution(binIndex), 2);
+	quantizationCost = - sum(outputDistribution(binIndex)) * sum(conditionalDistribution .* log2(conditionalDistribution));
+end

@@ -1,4 +1,4 @@
-function [combination] = nested_combvec(vector, times)
+function [combination] = combvec_nested(vector, times)
 	% Function:
     %   - create all combinations of copies of a vector
     %
@@ -12,7 +12,7 @@ function [combination] = nested_combvec(vector, times)
     % Author & Date: Yang (i@snowztail.com), 21 Dec 25
 
 	if times > 1
-		combination = sortrows(combvec(vector, nested_combvec(vector, times - 1)));
+		combination = sortrows(combvec(vector, combvec_nested(vector, times - 1)));
 	elseif times == 1
 		combination = vector;
 	end

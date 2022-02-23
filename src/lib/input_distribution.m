@@ -1,4 +1,4 @@
-function [inputDistribution, equivalentDistribution, wsr] = input_distribution(nTags, dmtc, weight, snr, symbolRatio, tolerance)
+function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution(nTags, dmtc, weight, symbolRatio, snr, tolerance)
 	% Function:
     %   - compute the weighted sum rate of the primary user and all backscatter tags
 	%	- obtain the optimal tag input distribution for a given discrete memoryless MAC
@@ -7,14 +7,14 @@ function [inputDistribution, equivalentDistribution, wsr] = input_distribution(n
 	%	- nTags: number of tags
     %   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- weight [2 * 1]: the relative priority of the primary and backscatter links
-	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
+	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
     %   - tolerance: minimum rate gain per iteration
     %
     % Output:
 	%	- inputDistribution [nTags * nStates]: input probability distribution
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- wsr: weighted sum of primary rate and total backscatter rate
+	%	- weightedSumRate: weighted sum of primary rate and total backscatter rate
 	%		- primaryRate: the achievable rate for the primary link (bps/Hz)
 	%		- backscatterRate: the achievable sum rate for the backscatter link (bpcu)
     %
@@ -33,8 +33,8 @@ function [inputDistribution, equivalentDistribution, wsr] = input_distribution(n
 		nTags;
 		dmtc;
 		weight;
-		snr;
 		symbolRatio;
+		snr;
 		tolerance = eps;
 	end
 
@@ -49,12 +49,12 @@ function [inputDistribution, equivalentDistribution, wsr] = input_distribution(n
 	inputDistribution = normr(sqrt(rand(nTags, nStates))) .^ 2;
 	combinationDistribution = combination_distribution(inputDistribution);
 	equivalentDistribution = prod(combinationDistribution, 1);
-	informationFunction = [information_function_primary(snr, symbolRatio), information_function_backscatter(equivalentDistribution, dmtc)] * weight;
+	informationFunction = [information_function_primary(symbolRatio, snr), information_function_backscatter(equivalentDistribution, dmtc)] * weight;
 	marginalInformation = marginal_information(combinationDistribution, informationFunction);
 	mutualInformation = equivalentDistribution * informationFunction;
 
 	% * Iteratively update input distribution for all tags
-	wsr = mutualInformation;
+	weightedSumRate = mutualInformation;
 	isConverged = false;
 	while ~isConverged
 		% * Update input distribution, information functions associated with each codeword, marginal information of each codeword, and mutual information for each tag
@@ -62,12 +62,12 @@ function [inputDistribution, equivalentDistribution, wsr] = input_distribution(n
 			inputDistribution(iTag, :) = input_distribution_local(inputDistribution(iTag, :), marginalInformation(:, iTag));
 			combinationDistribution = combination_distribution(inputDistribution);
 			equivalentDistribution = prod(combinationDistribution, 1);
-			informationFunction = [information_function_primary(snr, symbolRatio), information_function_backscatter(equivalentDistribution, dmtc)] * weight;
+			informationFunction = [information_function_primary(symbolRatio, snr), information_function_backscatter(equivalentDistribution, dmtc)] * weight;
 			marginalInformation = marginal_information(combinationDistribution, informationFunction);
 			mutualInformation = equivalentDistribution * informationFunction;
 		end
-		isConverged = abs(mutualInformation - wsr) <= tolerance;
-		wsr = mutualInformation;
+		isConverged = abs(mutualInformation - weightedSumRate) <= tolerance;
+		weightedSumRate = mutualInformation;
 	end
 end
 

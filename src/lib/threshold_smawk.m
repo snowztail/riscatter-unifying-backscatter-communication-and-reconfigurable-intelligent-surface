@@ -1,4 +1,4 @@
-function [threshold, backscatterMutualInformation] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio, tolerance)
+function [threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio, tolerance)
 	% Function:
 	%	- obtain the DMTC capacity-achieving thresholding scheme by dynamic programming accelerated by SMAWK algorithm
     %
@@ -12,7 +12,8 @@ function [threshold, backscatterMutualInformation] = threshold_smawk(thresholdCa
     %
     % Output:
 	%	- threshold [1 * nOutputs] : the optimal thresholding values
-	%	- backscatterMutualInformation: the optimal sum backscatter mutual information
+	%   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
+	%	- backscatterRate: the achievable sum rate for the backscatter link (bpcu)
     %
     % Comment:
     %   - SWAWK algorithm requires the quantization cost function to satisfy the Quadrangle Inequality (QI)
@@ -48,7 +49,7 @@ function [threshold, backscatterMutualInformation] = threshold_smawk(thresholdCa
 				if iRow >= iColumn
 					D(iRow, iColumn) = dp(iColumn - 2 + iOutput, iOutput - 1) + quantization_cost(iColumn - 1 + iOutput : iRow - 1 + iOutput, equivalentDistribution, dmc);
 				else
-					D(iRow, iColumn) = Inf;
+					D(iRow, iColumn) = inf;
 				end
 			end
 		end
@@ -73,7 +74,7 @@ function [threshold, backscatterMutualInformation] = threshold_smawk(thresholdCa
 
 	% * Construct DMTC and compute mutual information
 	dmtc = discretize_channel(threshold, receivedPower, symbolRatio);
-	backscatterMutualInformation = equivalentDistribution * information_function_backscatter(equivalentDistribution, dmtc);
+	backscatterRate = equivalentDistribution * information_function_backscatter(equivalentDistribution, dmtc);
 end
 
 

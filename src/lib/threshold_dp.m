@@ -1,4 +1,4 @@
-function [threshold, backscatterMutualInformation] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio, tolerance)
+function [threshold, dmtc, backscatterRate] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio, tolerance)
 	% Function:
 	%	- obtain the DMTC capacity-achieving thresholding scheme by dynamic programming
     %
@@ -12,7 +12,8 @@ function [threshold, backscatterMutualInformation] = threshold_dp(thresholdCandi
     %
     % Output:
 	%	- threshold [1 * nOutputs] : the optimal thresholding values
-	%	- backscatterMutualInformation: the optimal sum backscatter mutual information
+	%   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
+	%	- backscatterRate: the achievable sum rate for the backscatter link (bpcu)
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 09
 
@@ -28,7 +29,7 @@ function [threshold, backscatterMutualInformation] = threshold_dp(thresholdCandi
 
 	% * Get data
 	nOutputs = sum(equivalentDistribution >= tolerance);
-	nBins = size(thresholdCandidate, 2);
+	nBins = size(dmc, 2);
 
 	% * Initialization
 	dp = zeros(nBins, nOutputs);
@@ -40,7 +41,7 @@ function [threshold, backscatterMutualInformation] = threshold_dp(thresholdCandi
 	% * Compute dp
 	for iOutput = 2 : nOutputs
 		for iBin = nBins - nOutputs + iOutput : - 1 : iOutput
-			dpCandidate = Inf(nBins - 2, 1);
+			dpCandidate = inf(nBins - 2, 1);
 			for iThreshold = iOutput - 1 : iBin - 1
 				dpCandidate(iThreshold) = dp(iThreshold, iOutput - 1) + quantization_cost(iThreshold + 1 : iBin, equivalentDistribution, dmc);
 			end
@@ -57,7 +58,7 @@ function [threshold, backscatterMutualInformation] = threshold_dp(thresholdCandi
 
 	% * Construct DMTC and compute mutual information
 	dmtc = discretize_channel(threshold, receivedPower, symbolRatio);
-	backscatterMutualInformation = equivalentDistribution * information_function_backscatter(equivalentDistribution, dmtc);
+	backscatterRate = equivalentDistribution * information_function_backscatter(equivalentDistribution, dmtc);
 end
 
 

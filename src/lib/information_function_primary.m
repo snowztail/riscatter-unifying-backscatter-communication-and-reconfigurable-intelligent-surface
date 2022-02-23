@@ -1,4 +1,4 @@
-function [primaryInformationFunction] = information_function_primary(snr, symbolRatio)
+function [primaryInformationFunction] = information_function_primary(symbolRatio, snr)
 	% Function:
     %   - compute the primary information function associated with each tag input letter combination
     %

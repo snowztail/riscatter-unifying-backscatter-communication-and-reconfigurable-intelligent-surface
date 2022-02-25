@@ -1,7 +1,6 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution(nTags, dmtc, weight, symbolRatio, snr, tolerance)
+function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr, tolerance)
 	% Function:
-    %   - compute the weighted sum rate of the primary user and all backscatter tags
-	%	- obtain the optimal tag input distribution for a given discrete memoryless MAC
+	%	- obtain the tag input distribution that satisfies the KKT conditions of maximizing weighted sum primary-backscatter rate
     %
     % Input:
 	%	- nTags: number of tags
@@ -38,7 +37,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 		tolerance = eps;
 	end
 
-	% * Ensure non-zero transitional probability as required by Blahut-Arimoto algorithm
+	% * Ensure non-zero channel transition probability
 	dmtc(dmtc < eps) = eps;
 	dmtc = dmtc ./ sum(dmtc, 2);
 

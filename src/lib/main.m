@@ -1,6 +1,6 @@
 clear; clc;
 nTxs = 1;
-nTags = 2;
+nTags = 3;
 nStates = 2;
 [nInputs, nOutputs] = deal(nStates ^ nTags);
 weight = [eps; 1 - eps];
@@ -51,7 +51,8 @@ equivalentDistribution = prod(combinationDistribution, 1);
 % * Update input distribution and detection threshold alternatively
 isConverged = false;
 while ~isConverged
-	[inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution(nTags, dmtc, weight, symbolRatio, snr);
+	[inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
+	[inputDistribution1, equivalentDistribution1, weightedSumRate1] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
 	[threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 	[threshold1, dmtc1, backscatterRate1] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 	[threshold2, dmtc2, backscatterRate2] = threshold_bisection(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);

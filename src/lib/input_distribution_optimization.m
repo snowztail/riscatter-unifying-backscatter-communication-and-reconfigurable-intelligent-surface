@@ -44,31 +44,28 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 
 	% * Initialization
 	indexCombination = combvec_nested(1 : nStates, nTags);
-	[powerSet, complementSet] = power_set(1 : nTags);
+	powerSet = power_set(1 : nTags);
 	nCases = length(powerSet);
 	inputArraySet = cell(nCases, 1);
 	rateBound = cell(nCases, 1);
 
-	% * 2-tag case
 	cvx_begin
 		% * Create variables
 		for iCase = 1 : nCases
-			inputArraySet{iCase} = ind2var('inputArray', powerSet{iCase});
-% 			varName{iCase} = [ind2var('P', powerSet{iCase}), ind2var('P', complementSet{iCase})];
-% 			cvx_problem = create_variable(varName{iCase}, num2str(repmat(nStates,[1, length(powerSet{iCase})])), cvx_problem);
-% 			[cvx_problem, a] = create_variable(varName{iCase}, num2str(repmat(nStates,[1, length(powerSet{iCase})])), cvx_problem);
+			inputArraySet{iCase} = strcat('inputArray', sprintf('%d', powerSet{iCase}));;
 			eval(['variable', ' ', inputArraySet{iCase}, '(', num2str(repmat(nStates,[1, length(powerSet{iCase})])), ')']);
 		end
 		variables rate(nTags, 1);
 
-		% * Express upper-bound functions
+		% * Express upper bounds of sum rate on all subsets
+		jointArray = eval(inputArraySet{iCase});
 		for iCase = 1 : nCases
-% 			rateBound{iCase} = ind2var('f', powerSet{iCase});
 			if iCase < nCases
-				rateBound{iCase} = rate_bound(dmtc, powerSet{iCase}, eval(inputArraySet{iCase}), eval(inputArraySet{nCases - iCase}));
+				complementArray = eval(inputArraySet{nCases - iCase});
 			else
-				rateBound{iCase} = rate_bound(dmtc, powerSet{iCase}, eval(inputArraySet{iCase}), []);
+				complementArray = [];
 			end
+			rateBound{iCase} = rate_bound(dmtc, powerSet{iCase}, jointArray, complementArray);
 
 
 
@@ -113,17 +110,3 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 				P == semidefinite(nStates);
 	cvx_end
 end
-
-
-function [variable] = ind2var(prefix, suffix)
-	variable = strcat(prefix, sprintf('%d', suffix));
-end
-
-% function [cvx_problem] = create_variable(name, size, cvx_problem)
-% 	eval(['variable', ' ', name, '(', size, ')']);
-% end
-
-% function [cvx_problem, variable] = create_variable(name, size, cvx_problem)
-% 	eval(['variable', ' ', name, '(', size, ')']);
-% 	variable = cvx_problem.variables.name;
-% end

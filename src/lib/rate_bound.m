@@ -15,6 +15,8 @@ function [rateBound] = rate_bound(dmtc, subSet, jointArray, complementArray)
     %
     % Author & Date: Yang (i@snowztail.com), 22 Jan 09
 
+	jointArray = rand(size(jointArray));
+	complementArray = rand(size(complementArray));
 	% * Get data
 	nTags = ndims(jointArray);
 	nStates = size(jointArray, 1);
@@ -24,7 +26,7 @@ function [rateBound] = rate_bound(dmtc, subSet, jointArray, complementArray)
 	setIndexCombination = combvec_nested(1 : nStates, nTags);
 	complementSet = setdiff(1 : nTags, subSet);
 	subSetIndexCombination = combvec_nested(1 : nStates, length(subSet));
-	complementSetIndexCombination = combvec_nested(1 : nStates, ndims(complementArray));
+	complementSetIndexCombination = combvec_nested(1 : nStates, nTags - length(subSet));
 	nSubSets = size(subSetIndexCombination, 2);
 	nComplementSets = size(complementSetIndexCombination, 2);
 
@@ -43,20 +45,11 @@ function [rateBound] = rate_bound(dmtc, subSet, jointArray, complementArray)
 				setIndex = [subSetIndex complementSetIndex];
 				setIndex([subSet complementSet]) = setIndex;
 				pp = jointArray(setIndex);
-				cc = dmtc(all(setIndexCombination == transpose(setIndex)), :);
+				cc = dmtc(iOutput, all(setIndexCombination == transpose(setIndex)));
+				cn(iSubSet) = pp * cc;
 			end
+			cn = sum(cn);
 		end
-% 		for iSubSet = 1 : nSubSets
-% 			idx = subSetCombination(:, iSubSet);
-% 		end
-% 		for iSubSet = 1 :
-		% for iComplement = 1 :
-
-% 			ft1(iOutput) = transpose(vec(transpose(P))) * entr(dmtc(:, iOutput));
-% 		for iInput = 1 : size(indexCombination, 2)
-% 			combination = num2cell(indexCombination(:, iInput));
-% 			z = jointArray(combination{:});
-% 		end
 	end
 
 

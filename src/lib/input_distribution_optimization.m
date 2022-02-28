@@ -5,7 +5,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
     % Input:
 	%	- nTags: number of tags
     %   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- weight [(nTags + 1) * 1]: the relative priority of the user and tags
+	%	- weight [2 * 1]: the relative priority of the primary and backscatter links
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
 	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
     %   - tolerance: minimum rate gain per iteration
@@ -57,9 +57,9 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 		end
 		variables rate(nTags, 1);
 
-		% * Express upper bounds of sum rate on all subsets
+		% * Formulate upper bounds of sum rate on all subsets
 		jointArray = eval(inputArraySet{iCase});
-		for iCase = 1 : nCases
+		for iCase = 6 : nCases
 			if iCase < nCases
 				complementArray = eval(inputArraySet{nCases - iCase});
 			else

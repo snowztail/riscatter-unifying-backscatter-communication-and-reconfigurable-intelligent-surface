@@ -1,6 +1,6 @@
 clear; clc;
 nTxs = 1;
-nTags = 3;
+nTags = 5;
 nStates = 2;
 [nInputs, nOutputs] = deal(nStates ^ nTags);
 weight = [eps; 1 - eps];
@@ -47,6 +47,7 @@ combinationDistribution = combination_distribution(inputDistribution);
 equivalentDistribution = prod(combinationDistribution, 1);
 [threshold, dmtc] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 [weightedSumRate, primaryRate, backscatterRate] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+% dmtc = normr(sqrt(rand(nStates ^ nTags, nStates ^ nTags))) .^ 2;
 
 % * Update input distribution and detection threshold alternatively
 isConverged = false;

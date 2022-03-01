@@ -1,4 +1,4 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr, tolerance)
+function [weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr, tolerance)
 	% Function:
 	%	- optimize the tag input distribution to characterize the capacity region of user and tags
     %
@@ -44,43 +44,51 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 
 	% * Initialization
 	indexCombination = combvec_nested(1 : nStates, nTags);
-	powerSet = power_set(1 : nTags);
+	[powerSet, complementSet] = power_set(1 : nTags);
 	nCases = length(powerSet);
 	inputArraySet = cell(nCases, 1);
-	rateBound = cell(nCases, 1);
+	subSetRate = cvx(zeros(nCases, 1));
+	rateBound = cvx(zeros(nCases, 1));
 
 	cvx_begin
-		% * Create variables
-		for iCase = 1 : nCases
-			inputArraySet{iCase} = strcat('inputArray', sprintf('%d', powerSet{iCase}));;
-			eval(['variable', ' ', inputArraySet{iCase}, '(', num2str(repmat(nStates,[1, length(powerSet{iCase})])), ')']);
-		end
+		% * Create variables and expressions
 		variables rate(nTags, 1);
+		for iCase = 1 : nCases
+			inputArraySet{iCase} = strcat('inputArray', sprintf('%d', powerSet{iCase}));
+			eval(['variable', ' ', inputArraySet{iCase}, '(', num2str(repmat(nStates,[1, length(powerSet{iCase})])), ')']);
+			subSetRate(iCase) = sum(rate(powerSet{iCase}));
+		end
 
-		% * Formulate upper bounds of sum rate on all subsets
-		jointArray = eval(inputArraySet{iCase});
-		for iCase = 6 : nCases
+		% * Obtain upper bounds of sum rate on all subsets
+		jointArray = eval(inputArraySet{end});
+		for iCase = 1 : nCases
 			if iCase < nCases
 				complementArray = eval(inputArraySet{nCases - iCase});
 			else
 				complementArray = [];
 			end
-			rateBound{iCase} = rate_bound(dmtc, powerSet{iCase}, jointArray, complementArray);
-
-
-
-
-
-
-
-
-			eval([rateBound{iCase} '= [2 3 4 5]']);
+			rateBound(iCase) = rate_bound(dmtc, powerSet{iCase}, jointArray, complementArray);
 		end
+
+		% * Formulate problem
+		maximize sum(rate)
+		subject to
+			for iCase = 1 : nCases
+				0 <= subSetRate(iCase) <= rateBound(iCase);
+				permute(sum_nested(eval(inputArraySet{end}), complementSet{iCase}), [powerSet{iCase}, complementSet{iCase}]) == eval(inputArraySet{iCase});
+			end
+			eval(inputArraySet{end}) == semidefinite(size(eval(inputArraySet{end})));
+			sum_nested(eval(inputArraySet{end}), powerSet{end}) == 1;
+	cvx_end
+	weightedSumRate = sum(rate);
+
+	cvx_begin
+		variables P(nStates, nStates) p1(nStates, 1) p2(nStates, 1) R1 R2;
+		expressions f1 f2 f12;
 
 		for iOutput = 1 : nOutputs
 			pp12 = transpose(vec(transpose(P))) * dmtc(:, iOutput);
-% 			f12t2(iOutput) = rel_entr(pp12, 1);
-			f12t2(iOutput) = - entr(pp12);
+			f12t2(iOutput) = rel_entr(pp12, 1);
 			ft1(iOutput) = transpose(vec(transpose(P))) * entr(dmtc(:, iOutput));
 
 			for iState = 1 : nStates
@@ -101,12 +109,14 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 
 		maximize R1 + R2
 		subject to
-				0 <= R1 <= f1;
-				0 <= R2 <= f2;
-				R1 + R2 <= f12;
-				P * ones(nStates, 1) == p1;
-				P' * ones(nStates, 1) == p2;
-				ones(1, nStates) * P * ones(nStates, 1) == 1;
-				P == semidefinite(nStates);
+			0 <= R1 <= f1;
+			0 <= R2 <= f2;
+			R1 + R2 <= f12;
+			P * ones(nStates, 1) == p1;
+			P' * ones(nStates, 1) == p2;
+			ones(1, nStates) * P * ones(nStates, 1) == 1;
+			P == semidefinite(nStates);
 	cvx_end
+
+	R1 + R2 - sum(rate)
 end

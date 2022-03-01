@@ -15,23 +15,21 @@ function [rateBound] = rate_bound(dmtc, subSet, jointArray, complementArray)
     %
     % Author & Date: Yang (i@snowztail.com), 22 Jan 09
 
-% 	jointArray = rand(size(jointArray));
-% 	complementArray = rand(size(complementArray));
 	% * Get data
 	nTags = ndims(jointArray);
 	nStates = size(jointArray, 1);
 	nOutputs = size(dmtc, 2);
 
 	% * Initialization
-	setIndexCombination = combvec_nested(1 : nStates, nTags);
 	complementSet = setdiff(1 : nTags, subSet);
+	setIndexCombination = combvec_nested(1 : nStates, nTags);
 	subSetIndexCombination = combvec_nested(1 : nStates, length(subSet));
-	complementSetIndexCombination = combvec_nested(1 : nStates, nTags - length(subSet));
+	complementSetIndexCombination = combvec_nested(1 : nStates, length(complementSet));
 	nSubSets = size(subSetIndexCombination, 2);
 	nComplementSets = size(complementSetIndexCombination, 2);
 
-	% * Formulate upper bounds
-	jointDistribution = cvx(zeros(nOutputs, nComplementSets, nSubSets));
+	% * Obtain upper bounds
+	marginalDistribution = cvx(zeros(nOutputs, nComplementSets, nSubSets));
 	conditionalEntropy = cvx(zeros(nOutputs, 1));
 	relativeEntropy = cvx(zeros(nOutputs, nComplementSets));
 	for iOutput = 1 : nOutputs
@@ -45,44 +43,14 @@ function [rateBound] = rate_bound(dmtc, subSet, jointArray, complementArray)
 				setIndex = [subSetIndex complementSetIndex];
 				setIndex([subSet complementSet]) = setIndex;
 				setIndexCell = num2cell(setIndex);
-				jointDistribution(iOutput, iComplementSet, iSubSet) = jointArray(setIndexCell{:}) * dmtc(iOutput, all(setIndexCombination == transpose(setIndex)));
+				marginalDistribution(iOutput, iComplementSet, iSubSet) = jointArray(setIndexCell{:}) * dmtc(all(setIndexCombination == transpose(setIndex)), iOutput);
 			end
-			relativeEntropy(iOutput, iComplementSet) = rel_entr(sum(jointDistribution(iOutput, iComplementSet, :)), complementArray(complementSetIndexCell{:}));
+			if ~isempty(complementArray(complementSetIndexCell{:}))
+				relativeEntropy(iOutput, iComplementSet) = rel_entr(sum(marginalDistribution(iOutput, iComplementSet, :)), complementArray(complementSetIndexCell{:}));
+			else
+				relativeEntropy(iOutput, iComplementSet) = - entr(sum(marginalDistribution(iOutput, iComplementSet, :)));
+			end
 		end
 	end
 	rateBound = - sum(conditionalEntropy) - sum(sum(relativeEntropy));
-
-
-% 	for iOutput = 1 : nOutputs
-% 		pp12 = transpose(vec(transpose(P))) * dmtc(:, iOutput);
-% % 			f12t2(iOutput) = rel_entr(pp12, 1);
-% 		f12t2(iOutput) = - entr(pp12);
-% 		ft1(iOutput) = transpose(vec(transpose(P))) * entr(dmtc(:, iOutput));
-% 
-% 		for iState = 1 : nStates
-% 			iIndex = indexCombination(1, :) == iState;
-% 			pp2 = P(iState, :) * dmtc(iIndex, iOutput);
-% 			f2t2(iState, iOutput) = rel_entr(pp2, p1(iState));
-% 		end
-% 
-% 		for jState = 1 : nStates
-% 			jIndex = indexCombination(2, :) == jState;
-% 			pp1 = transpose(P(:, jState)) * dmtc(jIndex, iOutput);
-% 			f1t2(jState, iOutput) = rel_entr(pp1, p2(jState));
-% 		end
-% 	end
-% 	f1 = - sum(ft1) - sum(sum(f1t2));
-% 	f2 = - sum(ft1) - sum(sum(f2t2));
-% 	f12 = - sum(ft1) - sum(f12t2);
-% 
-% 
-% 	for iTag = 1 : nTags
-% 		for iState = 1 : nStates
-% 			marginalSet = find(indexCombination(iTag, :) == iState);
-% 			for iInput = marginalSet
-% 				marginalInformation(iTag, iState, iInput) = prod(combinationDistribution(setdiff(tagSet, iTag), iInput), 1) * informationFunction(iInput);
-% 			end
-% 		end
-% 	end
-% 	rateBound = 1;
 end

@@ -15,5 +15,7 @@ function [combination] = combvec_nested(vector, times)
 		combination = sortrows(combvec(vector, combvec_nested(vector, times - 1)));
 	elseif times == 1
 		combination = vector;
+	elseif times == 0
+		combination = double.empty(0, 1);
 	end
 end

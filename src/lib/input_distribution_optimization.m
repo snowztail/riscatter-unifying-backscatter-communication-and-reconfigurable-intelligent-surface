@@ -40,16 +40,15 @@ function [weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight
 
 	% * Get data
 	nStates = nthroot(size(dmtc, 1), nTags);
-	nOutputs = size(dmtc, 2);
 
 	% * Initialization
-	indexCombination = combvec_nested(1 : nStates, nTags);
 	[powerSet, complementSet] = power_set(1 : nTags);
 	nCases = length(powerSet);
 	inputArraySet = cell(nCases, 1);
 	subSetRate = cvx(zeros(nCases, 1));
 	rateBound = cvx(zeros(nCases, 1));
 
+	% * Optimize correlated input probability arrays
 	cvx_begin
 		% * Create variables and expressions
 		variables rate(nTags, 1);
@@ -82,41 +81,47 @@ function [weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight
 	cvx_end
 	weightedSumRate = sum(rate);
 
-	cvx_begin
-		variables P(nStates, nStates) p1(nStates, 1) p2(nStates, 1) R1 R2;
-		expressions f1 f2 f12;
-
-		for iOutput = 1 : nOutputs
-			pp12 = transpose(vec(transpose(P))) * dmtc(:, iOutput);
-			f12t2(iOutput) = rel_entr(pp12, 1);
-			ft1(iOutput) = transpose(vec(transpose(P))) * entr(dmtc(:, iOutput));
-
-			for iState = 1 : nStates
-				iIndex = indexCombination(1, :) == iState;
-				pp2 = P(iState, :) * dmtc(iIndex, iOutput);
-				f2t2(iState, iOutput) = rel_entr(pp2, p1(iState));
+	% * Randomization
+	nKernels = 4;
+	isConverged = false;
+	% referenceArray = 0;
+	kernelVector = rand(nStates, nTags, nKernels);
+	kernelVector = kernelVector ./ sum(kernelVector, 1);
+	kernelArray = cell(nKernels, 1);
+	while ~isConverged
+		cvx_begin
+			variable kernelCoefficient(nKernels, 1)
+			for iKernel = 1 : nKernels
+				pCell = num2cell(kernelVector(:, :, iKernel), 1);
+				% referenceArray = referenceArray + kernelCoefficient(iKernel) * outer_product(pCell{:});
+				kernelArray{iKernel} = kernelCoefficient(iKernel) * outer_product(pCell{:});
 			end
+			referenceArray = sum(cat(nTags + 1, kernelArray{:}), nTags + 1);
+			relativeEntropy = sum_nested(rel_entr(jointArray, referenceArray), 1 : nTags);
+			minimize relativeEntropy
+			subject to
+				kernelCoefficient == simplex(nKernels);
+		cvx_end
 
-			for jState = 1 : nStates
-				jIndex = indexCombination(2, :) == jState;
-				pp1 = transpose(P(:, jState)) * dmtc(jIndex, iOutput);
-				f1t2(jState, iOutput) = rel_entr(pp1, p2(jState));
-			end
+		for iTag = 1 : nTags
+			cvx_begin
+				variable objectVector(nStates, nKernels)
+				for iKernel = 1 : nKernels
+					pCell = num2cell(kernelVector(:, :, iKernel), 1);
+					pCell{iTag} = objectVector(:, iKernel);
+					kernelArray{iKernel} = kernelCoefficient(iKernel) * outer_product(pCell{:});
+				end
+				referenceArray = sum(cat(nTags + 1, kernelArray{:}), nTags + 1);
+				relativeEntropy = sum_nested(rel_entr(jointArray, referenceArray), 1 : nTags);
+				minimize relativeEntropy
+				subject to
+					for iKernel = 1 : nKernels
+						objectVector(:, iKernel) == simplex(nStates);
+					end
+			cvx_end
+% 			kernelVector(:, iTag, :) = permute(objectVector, [1 3 2]);
+			kernelVector(:, iTag, :) = objectVector;
 		end
-		f1 = - sum(ft1) - sum(sum(f1t2));
-		f2 = - sum(ft1) - sum(sum(f2t2));
-		f12 = - sum(ft1) - sum(f12t2);
-
-		maximize R1 + R2
-		subject to
-			0 <= R1 <= f1;
-			0 <= R2 <= f2;
-			R1 + R2 <= f12;
-			P * ones(nStates, 1) == p1;
-			P' * ones(nStates, 1) == p2;
-			ones(1, nStates) * P * ones(nStates, 1) == 1;
-			P == semidefinite(nStates);
-	cvx_end
-
-	R1 + R2 - sum(rate)
+		isConverged = abs(relativeEntropy) <= eps;
+	end
 end

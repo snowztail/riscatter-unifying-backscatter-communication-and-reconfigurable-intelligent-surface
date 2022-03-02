@@ -16,7 +16,7 @@ function [rateBound] = rate_bound(dmtc, subSet, jointArray, complementArray)
     % Author & Date: Yang (i@snowztail.com), 22 Jan 09
 
 	% * Get data
-	nTags = ndims(jointArray);
+	nTags = ndims_modified(jointArray);
 	nStates = size(jointArray, 1);
 	nOutputs = size(dmtc, 2);
 
@@ -34,7 +34,7 @@ function [rateBound] = rate_bound(dmtc, subSet, jointArray, complementArray)
 	relativeEntropy = cvx(zeros(nOutputs, nComplementSets));
 	for iOutput = 1 : nOutputs
 		% * Simplify operation by rearranging array dimensions in natural order
-		conditionalEntropy(iOutput) = transpose(vec(permute(jointArray, ndims(jointArray) : -1 : 1))) * entr(dmtc(:, iOutput));
+		conditionalEntropy(iOutput) = transpose(vec(permute(jointArray, ndims_modified(jointArray) : -1 : 1))) * entr(dmtc(:, iOutput));
 		for iComplementSet = 1 : nComplementSets
 			complementSetIndex = transpose(complementSetIndexCombination(:, iComplementSet));
 			complementSetIndexCell = num2cell(complementSetIndex);

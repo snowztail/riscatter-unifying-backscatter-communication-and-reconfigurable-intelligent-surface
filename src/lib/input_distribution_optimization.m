@@ -45,8 +45,6 @@ function [weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight
 	[powerSet, complementSet] = power_set(1 : nTags);
 	nCases = length(powerSet);
 	inputArraySet = cell(nCases, 1);
-% 	subSetRate = cvx(zeros(nCases, 1));
-% 	rateBound = cvx(zeros(nCases, 1));
 
 	% * Optimize correlated input probability arrays
 	cvx_begin
@@ -80,8 +78,8 @@ function [weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight
 			eval(inputArraySet{end}) == semidefinite(size(eval(inputArraySet{end})));
 			sum_nested(eval(inputArraySet{end}), powerSet{end}) == 1;
 	cvx_end
-	weightedSumRate = sum(rate);
 	relaxedRate = rate;
+	weightedSumRate = sum(relaxedRate);
 
 	% * Randomization
 	nKernels = 4;
@@ -122,12 +120,11 @@ function [weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight
 			cvx_end
 			kernelVector(:, iTag, :) = objectVector;
 		end
-% 		isConverged = abs(relativeEntropy) <= tolerance;
-		isConverged = true;
+		isConverged = abs(relativeEntropy) <= tolerance;
 	end
 	% * Generate random vectors with prescribed mean by kernel vectors
-	randomizedRate = zeros(nTags, nKernels, nSamples);
-	randomizedInputDistribution = cell(nKernels, nSamples);
+	randomizedRate = [];
+	randomizedInputDistribution = [];
 	for iKernel = 1 : nKernels
 		for iSample = 1 : round(kernelCoefficient(iKernel) * nSamples)
 			projectVector = zeros(nTags, nStates);
@@ -164,11 +161,11 @@ function [weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight
 						0 <= subSetRate(iCase) <= rateBound(iCase);
 					end
 			cvx_end
-			randomizedRate(:, iKernel, iSample) = rate;
-			randomizedInputDistribution{iKernel, iSample} = projectVector;
+			randomizedRate = cat(2, randomizedRate, rate);
+			randomizedInputDistribution = cat(3, randomizedInputDistribution, projectVector);
 		end
 	end
-	[~, randomizedIndex] = max(sum(randomizedRate, 1), 'all');
-	randomizedRate = randomizedRate(:, 1);
-	randomizedInputDistribution = randomizedInputDistribution{randomizedIndex};
+	[~, randomizedIndex] = max(sum(randomizedRate, 1));
+	randomizedRate = randomizedRate(:, randomizedIndex);
+	randomizedInputDistribution = randomizedInputDistribution(:, :, randomizedIndex);
 end

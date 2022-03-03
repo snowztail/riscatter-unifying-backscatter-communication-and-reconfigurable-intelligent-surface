@@ -17,7 +17,5 @@ function [outerProduct] = outer_product(varargin)
 	for iVector = 2 : numel(varargin)
 		vector = permute(varargin{iVector}, circshift(1 : (ndims_modified(outerProduct) + 1), ndims_modified(outerProduct)));
 		outerProduct = repmat(outerProduct, size(vector)) .* repmat(vector, size(outerProduct));
-% 		outerProduct = outerProduct .* permute(varargin{iVector}, circshift(1 : (ndims_modified(outerProduct) + 1), ndims_modified(outerProduct)));
-% 		outerProduct = outerProduct .* permute(varargin{iVector}, circshift(1 : (ndims_modified(outerProduct) + ndims_modified(varargin{iVector})), [0, ndims_modified(outerProduct)]));
 	end
 end

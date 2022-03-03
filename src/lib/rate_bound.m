@@ -4,6 +4,7 @@ function [rateBound] = rate_bound(dmtc, subSet, jointArray, complementArray)
     %
     % Input:
     %   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
+	%	- subset: the subset of tag indexes
 	%	- jointArray [nStates * ... (nTags) ... * nStates]: the joint input probability matrix of all tags
 	%	- complementArray [nStates * ... (cardinate of subset complement) ... * nStates]: the joint input probability matrix of tags that belongs to subset complement
     %
@@ -43,7 +44,7 @@ function [rateBound] = rate_bound(dmtc, subSet, jointArray, complementArray)
 				setIndex = [subSetIndex complementSetIndex];
 				setIndex([subSet complementSet]) = setIndex;
 				setIndexCell = num2cell(setIndex);
-				marginalDistribution(iOutput, iComplementSet, iSubSet) = jointArray(setIndexCell{:}) * dmtc(all(setIndexCombination == transpose(setIndex)), iOutput);
+				marginalDistribution(iOutput, iComplementSet, iSubSet) = jointArray(setIndexCell{:}) * dmtc(all(setIndexCombination == transpose(setIndex), 1), iOutput);
 			end
 			if ~isempty(complementArray(complementSetIndexCell{:}))
 				relativeEntropy(iOutput, iComplementSet) = rel_entr(sum(marginalDistribution(iOutput, iComplementSet, :)), complementArray(complementSetIndexCell{:}));

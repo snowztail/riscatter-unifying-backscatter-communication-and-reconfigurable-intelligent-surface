@@ -1,4 +1,4 @@
-function [weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr, tolerance)
+function [jointArray, weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr, tolerance)
 	% Function:
 	%	- optimize the tag input distribution to characterize the capacity region of user and tags
     %
@@ -11,15 +11,14 @@ function [weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight
     %   - tolerance: minimum rate gain per iteration
     %
     % Output:
-	%	- inputDistribution [nTags * nStates]: input probability distribution
-	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
+	%	- jointArray [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
 	%	- weightedSumRate: weighted sum of primary rate and total backscatter rate
-	%		- primaryRate: the achievable rate for the primary link (bps/Hz)
+	%		- % TODO primaryRate: the achievable rate for the primary link (bps/Hz)
 	%		- backscatterRate: the achievable sum rate for the backscatter link (bpcu)
     %
     % Comment:
-    %   - Obtain the joint input probability matrix by optimization (corresponding to the optimal input with full transmit cooperation)
-	%	- Extract rank-1 solution from the joint input probability matrix by randomization or marginalization
+    %   - obtain the joint input probability matrix by optimization (corresponding to the optimal input with full transmit cooperation)
+	%	- extract rank-1 solution from the joint input probability matrix by randomization or marginalization
 	%	- the discrete memoryless MAC is given in joint (equivalent point-to-point) form P(y | x_1, ..., x_K), instead of marginal form p(y | x_k)
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 23
@@ -80,92 +79,4 @@ function [weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight
 	cvx_end
 	relaxedRate = rate;
 	weightedSumRate = sum(relaxedRate);
-
-	% * Randomization
-	nKernels = 4;
-	nSamples = 10;
-	isConverged = false;
-	kernelVector = rand(nStates, nTags, nKernels);
-	kernelVector = kernelVector ./ sum(kernelVector, 1);
-	kernelArray = cell(nKernels, 1);
-	while ~isConverged
-		cvx_begin
-			variable kernelCoefficient(nKernels, 1)
-			for iKernel = 1 : nKernels
-				kernelVectorCell = num2cell(kernelVector(:, :, iKernel), 1);
-				kernelArray{iKernel} = kernelCoefficient(iKernel) * outer_product(kernelVectorCell{:});
-			end
-			referenceArray = sum(cat(nTags + 1, kernelArray{:}), nTags + 1);
-			relativeEntropy = sum_nested(rel_entr(jointArray, referenceArray), 1 : nTags);
-			minimize relativeEntropy
-			subject to
-				kernelCoefficient == simplex(nKernels);
-		cvx_end
-
-		for iTag = 1 : nTags
-			cvx_begin
-				variable objectVector(nStates, nKernels)
-				for iKernel = 1 : nKernels
-					kernelVectorCell = num2cell(kernelVector(:, :, iKernel), 1);
-					kernelVectorCell{iTag} = objectVector(:, iKernel);
-					kernelArray{iKernel} = kernelCoefficient(iKernel) * outer_product(kernelVectorCell{:});
-				end
-				referenceArray = sum(cat(nTags + 1, kernelArray{:}), nTags + 1);
-				relativeEntropy = sum_nested(rel_entr(jointArray, referenceArray), 1 : nTags);
-				minimize relativeEntropy
-				subject to
-					for iKernel = 1 : nKernels
-						objectVector(:, iKernel) == simplex(nStates);
-					end
-			cvx_end
-			kernelVector(:, iTag, :) = objectVector;
-		end
-		isConverged = abs(relativeEntropy) <= tolerance;
-	end
-	% * Generate random vectors with prescribed mean by kernel vectors
-	randomizedRate = [];
-	randomizedInputDistribution = [];
-	for iKernel = 1 : nKernels
-		for iSample = 1 : round(kernelCoefficient(iKernel) * nSamples)
-			projectVector = zeros(nTags, nStates);
-			for iTag = 1 : nTags
-				% * Retrieve radius of the uniform random vector whose boundary lies within the probability simplex
-				meanVector = kernelVector(:, iTag, iKernel);
-				radiusBound(nStates + 1) = norm(meanVector) ^ 2;
-				for iState = 1 : nStates
-					radiusBound(iState) = abs(sum(meanVector(setdiff(1 : nStates, iState))) - 1) / sqrt(nStates - 1);
-				end
-				radius = min(radiusBound);
-				% * Generate random vector uniformly distributed within the (nStates-dimensional) sphere
-				isValid = false;
-				while ~isValid
-					randomVector = 2 * radius * rand(nStates, 1) + meanVector - radius;
-					isValid = norm(randomVector - meanVector) <= radius;
-				end
-				projectVector(iTag, :) = transpose(randomVector + (1 - ones(1, nStates) * randomVector) / nStates * ones(nStates, 1));
-			end
-			% * Optimize rates with project vectors as input distributions
-			rateBound = zeros(nCases, 1);
-			cvx_begin
-				variables rate(nTags, 1);
-				expressions subSetRate(nCases, 1) rateBound(nCases, 1);
-				for iCase = 1 : nCases
-					subSetRate(iCase) = sum(rate(powerSet{iCase}));
-					rateBound(iCase) = rate_bound_randomization(dmtc, powerSet{iCase}, projectVector);
-				end
-
-				% * Formulate problem
-				maximize sum(rate)
-				subject to
-					for iCase = 1 : nCases
-						0 <= subSetRate(iCase) <= rateBound(iCase);
-					end
-			cvx_end
-			randomizedRate = cat(2, randomizedRate, rate);
-			randomizedInputDistribution = cat(3, randomizedInputDistribution, projectVector);
-		end
-	end
-	[~, randomizedIndex] = max(sum(randomizedRate, 1));
-	randomizedRate = randomizedRate(:, randomizedIndex);
-	randomizedInputDistribution = randomizedInputDistribution(:, :, randomizedIndex);
 end

@@ -47,13 +47,16 @@ combinationDistribution = combination_distribution(inputDistribution);
 equivalentDistribution = prod(combinationDistribution, 1);
 [threshold, dmtc] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 [weightedSumRate_, primaryRate_, backscatterRate_] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
-% dmtc = normr(sqrt(rand(nStates ^ nTags, nStates ^ nTags))) .^ 2;
 
 % * Update input distribution and detection threshold alternatively
 isConverged = false;
 while ~isConverged
-% 	[inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
-	[weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
+	[jointArray, weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
+
+	% * Randomization
+	[randomizedRate, randomizedInputDistribution] = recovery_randomization(jointArray, dmtc);
+
+
 	[inputDistribution0, equivalentDistribution0, weightedSumRate0] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
 	[threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 	[threshold1, dmtc1, backscatterRate1] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);

@@ -1,4 +1,4 @@
-function [randomizedRate, randomizedInputDistribution] = recovery_randomization(jointArray, dmtc, nKernels, nSamples, tolerance)
+function [randomizedInputDistribution, randomizedEquivalentDistribution, randomizedRate] = recovery_randomization(jointArray, dmtc, nKernels, nSamples, tolerance)
 	% Function:
 	%	- approximate any joint input distribution array by reduced-rank distribution
     %
@@ -10,8 +10,9 @@ function [randomizedRate, randomizedInputDistribution] = recovery_randomization(
 	%	- tolerance: the maximum tolerable relative entropy between the original and approximated arrays
     %
     % Output:
-	%	- randomizedRate [nTags * 1]: the individual tag rate when the sum rate is maximized
 	%	- randomizedInputDistribution [nTags * nStates]: the input probability distribution when the sum rate is maximized
+	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent randomized input combination probability distribution
+	%	- randomizedRate [nTags * 1]: the individual tag rate when the sum rate is maximized
     %
     % Comment:
     %   - generate random samples of candidate tag probability vectors whose outer product expectation equals to the joint input distribution array
@@ -122,4 +123,5 @@ function [randomizedRate, randomizedInputDistribution] = recovery_randomization(
 	[~, randomizedIndex] = max(sum(randomizedRate, 1));
 	randomizedRate = randomizedRate(:, randomizedIndex);
 	randomizedInputDistribution = randomizedInputDistribution(:, :, randomizedIndex);
+	randomizedEquivalentDistribution = prod(combination_distribution(randomizedInputDistribution), 1);
 end

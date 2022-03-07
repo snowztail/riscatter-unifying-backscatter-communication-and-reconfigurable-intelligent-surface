@@ -12,7 +12,7 @@ function [weightedSumRate, primaryRate, backscatterRate] = weighted_sum_rate(wei
     % Output:
 	%	- weightedSumRate: weighted sum of primary rate and total backscatter rate
 	%	- primaryRate: the achievable rate for the primary link (bps/Hz)
-	%	- backscatterRate: the achievable sum rate for the backscatter link (bpcu)
+	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 22
 

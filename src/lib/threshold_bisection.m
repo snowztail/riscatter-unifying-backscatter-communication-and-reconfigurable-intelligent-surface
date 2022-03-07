@@ -13,7 +13,7 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandi
     % Output:
 	%	- threshold [1 * nOutputs] : the optimal thresholding values
 	%   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- backscatterRate: the achievable sum rate for the backscatter link (bpcu)
+	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
     % Comment:
     %   - For a given t_0 and t_1, the optimal t_j for j = 2, ..., K - 1 can be uniquely determined by bisection

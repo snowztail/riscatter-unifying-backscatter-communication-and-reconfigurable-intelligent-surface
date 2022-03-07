@@ -13,7 +13,7 @@ function [threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate
     % Output:
 	%	- threshold [1 * nOutputs] : the optimal thresholding values
 	%   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- backscatterRate: the achievable sum rate for the backscatter link (bpcu)
+	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
     % Comment:
     %   - SWAWK algorithm requires the quantization cost function to satisfy the Quadrangle Inequality (QI)
@@ -82,5 +82,5 @@ function [quantizationCost] = quantization_cost(binIndex, equivalentDistribution
 	outputDistribution = equivalentDistribution * dmc;
 	jointDistribution = transpose(equivalentDistribution) .* dmc;
 	conditionalDistribution = sum(jointDistribution(:, binIndex), 2) / sum(outputDistribution(binIndex), 2);
-	quantizationCost = - sum(outputDistribution(binIndex)) * sum(conditionalDistribution .* log2(conditionalDistribution));
+	quantizationCost = - sum(outputDistribution(binIndex)) * sum(conditionalDistribution .* log(conditionalDistribution));
 end

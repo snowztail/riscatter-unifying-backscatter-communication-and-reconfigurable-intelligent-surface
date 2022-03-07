@@ -14,6 +14,6 @@ function [primaryInformationFunction] = information_function_primary(symbolRatio
 	nInputs = size(snr, 1);
 	primaryInformationFunction = zeros(nInputs, 1);
 	for iInput = 1 : nInputs
-		primaryInformationFunction(iInput) = symbolRatio * log2(1 + snr(iInput));
+		primaryInformationFunction(iInput) = symbolRatio * log(1 + snr(iInput));
 	end
 end

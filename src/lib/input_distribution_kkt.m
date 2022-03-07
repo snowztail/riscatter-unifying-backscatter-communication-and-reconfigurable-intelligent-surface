@@ -15,7 +15,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
 	%	- weightedSumRate: weighted sum of primary rate and total backscatter rate
 	%		- primaryRate: the achievable rate for the primary link (bps/Hz)
-	%		- backscatterRate: the achievable sum rate for the backscatter link (bpcu)
+	%		- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
     % Comment:
     %   - iteratively update the input distribution and achievable rates

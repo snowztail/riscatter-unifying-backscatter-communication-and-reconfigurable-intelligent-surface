@@ -15,7 +15,7 @@ function [backscatterInformationFunction] = information_function_backscatter(equ
 	backscatterInformationFunction = zeros(nInputs, nOutputs);
 	for iInput = 1 : nInputs
 		for iOutput = 1 : nOutputs
-			backscatterInformationFunction(iInput, iOutput) = dmtc(iInput, iOutput) * log2(dmtc(iInput, iOutput) / (equivalentDistribution * dmtc(:, iOutput)));
+			backscatterInformationFunction(iInput, iOutput) = dmtc(iInput, iOutput) * log(dmtc(iInput, iOutput) / (equivalentDistribution * dmtc(:, iOutput)));
 		end
 	end
 	backscatterInformationFunction = sum(backscatterInformationFunction, 2);

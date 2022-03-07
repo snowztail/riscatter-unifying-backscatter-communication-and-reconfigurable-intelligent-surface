@@ -51,13 +51,14 @@ equivalentDistribution = prod(combinationDistribution, 1);
 % * Update input distribution and detection threshold alternatively
 isConverged = false;
 while ~isConverged
+	% * Joint distribution
 	[jointArray, weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
-
 	% * Randomization
-	[randomizedRate, randomizedInputDistribution] = recovery_randomization(jointArray, dmtc);
+	[randomizedInputDistribution, randomizedEquivalentDistribution, randomizedRate] = recovery_randomization(jointArray, dmtc);
+	% * KKT solution
+	[inputDistribution, equivalentDistribution, weightedSumRate_] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
 
-
-	[inputDistribution0, equivalentDistribution0, weightedSumRate0] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
+	% * Thresholding
 	[threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 	[threshold1, dmtc1, backscatterRate1] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 	[threshold2, dmtc2, backscatterRate2] = threshold_bisection(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);

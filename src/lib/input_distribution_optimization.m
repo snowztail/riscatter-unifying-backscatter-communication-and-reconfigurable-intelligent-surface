@@ -14,7 +14,7 @@ function [jointArray, weightedSumRate] = input_distribution_optimization(nTags, 
 	%	- jointArray [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
 	%	- weightedSumRate: weighted sum of primary rate and total backscatter rate
 	%		- % TODO primaryRate: the achievable rate for the primary link (bps/Hz)
-	%		- backscatterRate: the achievable sum rate for the backscatter link (bpcu)
+	%		- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
     % Comment:
     %   - obtain the joint input probability matrix by optimization (corresponding to the optimal input with full transmit cooperation)

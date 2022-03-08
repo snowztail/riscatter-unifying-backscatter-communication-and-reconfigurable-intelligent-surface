@@ -4,21 +4,21 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
     %
     % Input:
 	%	- nTags: number of tags
-    %   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
+    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- weight [2 * 1]: the relative priority of the primary and backscatter links
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
 	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
-    %   - tolerance: minimum rate gain per iteration
+    %	- tolerance: minimum rate gain per iteration
     %
     % Output:
 	%	- inputDistribution [nTags * nStates]: input probability distribution
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
 	%	- weightedSumRate: weighted sum of primary rate and total backscatter rate
-	%		- primaryRate: the achievable rate for the primary link (bps/Hz)
+	%		- primaryRate: the achievable rate for the primary link (nats per second per Hertz)
 	%		- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
     % Comment:
-    %   - iteratively update the input distribution and achievable rates
+    %	- iteratively update the input distribution and achievable rates
 	%	- returns KKT solution but without optimality guarantee
 	%	- the marginal information function associated with codeword c_m_k of tag k satisfies:
 	%		- I_k(c_m_k; Z) = C for P_k(c_m_k) > 0

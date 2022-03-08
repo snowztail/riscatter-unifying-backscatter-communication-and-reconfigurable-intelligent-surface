@@ -1,6 +1,6 @@
 function [primaryInformationFunction] = information_function_primary(symbolRatio, snr)
 	% Function:
-    %   - compute the primary information function associated with each tag input letter combination
+    %	- compute the primary information function associated with each tag input letter combination
     %
     % Input:
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period

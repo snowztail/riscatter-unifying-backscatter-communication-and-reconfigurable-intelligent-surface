@@ -3,7 +3,7 @@ function [rateBound] = rate_bound(dmtc, subSet, jointArray, complementArray)
 	%	- obtain the upper bounds of sum rate on subset of tags
     %
     % Input:
-    %   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
+    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- subset: the subset of tag indexes
 	%	- jointArray [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
 	%	- complementArray [nStates * ... (cardinate of subset complement) ... * nStates]: the joint input probability matrix of tags that belongs to subset complement
@@ -12,7 +12,7 @@ function [rateBound] = rate_bound(dmtc, subSet, jointArray, complementArray)
 	%	- rateBound: the upper bounds of sum rate on subset of tags
     %
     % Comment:
-    %   - Reverse the order of dimensions of the input probability matrices for the ease of implementation
+    %	- Reverse the order of dimensions of the input probability matrices for the ease of implementation
     %
     % Author & Date: Yang (i@snowztail.com), 22 Jan 09
 

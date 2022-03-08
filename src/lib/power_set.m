@@ -1,9 +1,9 @@
 function [powerSet, complementSet] = power_set(set)
 	% Function:
-    %   - obtain the power set (exclude the empty set) of the input set
+    %	- obtain the power set (exclude the empty set) of the input set
     %
     % Input:
-    %   - set [1 * nElements]: the input set as row vector
+    %	- set [1 * nElements]: the input set as row vector
     %
     % Output:
 	%	- powerSet: a cell array containing all subsets (exclude the empty set) of the input set

@@ -12,7 +12,7 @@ function [discreteChannel] = discretize_channel(threshold, receivedPower, symbol
 	%	- discreteChannel [(nStates ^ nTags) * nOutputs]: the DMC probability mass function after quantization (or the DMTC based on decision thresholds)
     %
     % Comment:
-    %   - for a given tag input combination, the continous-output channel follows Erlang distribution
+    %	- for a given tag input combination, the continous-output channel follows Erlang distribution
 	%	- the discrete channel depends on bin boundaries or decision thresholds
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 09

@@ -4,7 +4,7 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandi
     %
     % Input:
 	%	- thresholdCandidate [1 * (nBins + 1)]: candidate threshold values
-    %   - dmc [(nStates ^ nTags) * nBins]: the transition probability matrix of the backscatter discrete memoryless MAC obtained by quantization
+    %	- dmc [(nStates ^ nTags) * nBins]: the transition probability matrix of the backscatter discrete memoryless MAC obtained by quantization
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
 	%	- receivedPower [(nStates ^ nTags) * 1]: received power per primary symbol corresponding to each input letter combination combination
 	%	- symbolRatio: the ratio of the secondary symbol period over the primary symbol period
@@ -12,11 +12,11 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandi
     %
     % Output:
 	%	- threshold [1 * nOutputs] : the optimal thresholding values
-	%   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
+	%	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
     % Comment:
-    %   - For a given t_0 and t_1, the optimal t_j for j = 2, ..., K - 1 can be uniquely determined by bisection
+    %	- For a given t_0 and t_1, the optimal t_j for j = 2, ..., K - 1 can be uniquely determined by bisection
 	%	- Traverse all possible t_1 and choose the corresponding thresholding set that maximizes mutual information
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 18

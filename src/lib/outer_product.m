@@ -1,6 +1,6 @@
 function [outerProduct] = outer_product(varargin)
 	% Function:
-    %   - compute the outer product of arbitrary number of vectors
+    %	- compute the outer product of arbitrary number of vectors
     %
     % Input:
 	%	- varargin: the cell containing input vectors
@@ -9,7 +9,7 @@ function [outerProduct] = outer_product(varargin)
 	%	- outerProduct: the outer product of input vectors
     %
     % Comment:
-    %   - Modified from https://stackoverflow.com/a/14356614/8891100
+    %	- Modified from https://stackoverflow.com/a/14356614/8891100
     %
     % Author & Date: Yang (i@snowztail.com), 22 Mar 02
 

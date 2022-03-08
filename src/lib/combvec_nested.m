@@ -1,9 +1,9 @@
 function [combination] = combvec_nested(vector, times)
 	% Function:
-    %   - create all combinations of copies of a vector
+    %	- create all combinations of copies of a vector
     %
     % Input:
-    %   - vector: the vector to be repeated and combined (as the argument in nested for loops)
+    %	- vector: the vector to be repeated and combined (as the argument in nested for loops)
 	%	- times: the number of copies to combine
     %
     % Output:

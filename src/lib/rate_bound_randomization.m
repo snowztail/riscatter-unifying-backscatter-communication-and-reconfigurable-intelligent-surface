@@ -3,7 +3,7 @@ function [rateBound] = rate_bound_randomization(dmtc, subSet, inputDistribution)
 	%	- obtain the upper bounds of sum rate on subset of tags
     %
     % Input:
-    %   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
+    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- subset: the subset of tag indexes
 	%	- inputDistribution [nTags * nStates]: input probability distribution
     %
@@ -11,7 +11,7 @@ function [rateBound] = rate_bound_randomization(dmtc, subSet, inputDistribution)
 	%	- rateBound: the upper bounds of sum rate on subset of tags
     %
     % Comment:
-    %   - Numerically compute the upper bound of the sum rate on the subset for a given input distribution
+    %	- Numerically compute the upper bound of the sum rate on the subset for a given input distribution
     %
     % Author & Date: Yang (i@snowztail.com), 22 Mar 03
 

@@ -4,7 +4,7 @@ function [randomizedInputDistribution, randomizedEquivalentDistribution, randomi
     %
     % Input:
 	%	- jointArray [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
-    %   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
+    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- nKernels: number of kernels used in the approximation (equals to the rank)
 	%	- nSamples: number of random samples to be generated in randomization
 	%	- tolerance: the maximum tolerable relative entropy between the original and approximated arrays
@@ -15,7 +15,7 @@ function [randomizedInputDistribution, randomizedEquivalentDistribution, randomi
 	%	- randomizedRate [nTags * 1]: the individual tag rate when the sum rate is maximized
     %
     % Comment:
-    %   - generate random samples of candidate tag probability vectors whose outer product expectation equals to the joint input distribution array
+    %	- generate random samples of candidate tag probability vectors whose outer product expectation equals to the joint input distribution array
 	%	- equivalent to a random search with guiduance on the correlation matrix of the distributions
 	%	- the number of kernels and random samples are designable (performance-complexity tradeoff)
 	%	- the candidates follows uniform distribution within a sphere bounded within the probability simplex
@@ -38,11 +38,11 @@ function [randomizedInputDistribution, randomizedEquivalentDistribution, randomi
 	% * Initialization
 	powerSet = power_set(1 : nTags);
 	nCases = length(powerSet);
+	kernelVector = rand(nStates, nTags, nKernels);
+	kernelVector = kernelVector ./ sum(kernelVector, 1);
 
 	% * Randomization
 	isConverged = false;
-	kernelVector = rand(nStates, nTags, nKernels);
-	kernelVector = kernelVector ./ sum(kernelVector, 1);
 	kernelArray = cell(nKernels, 1);
 	while ~isConverged
 		cvx_begin

@@ -1,6 +1,6 @@
 function [nDimensions] = ndims_modified(array)
 	% Function:
-    %   - get the actual dimensions of an array
+    %	- get the actual dimensions of an array
 	%	- obtain the optimal tag input distribution for a given discrete memoryless MAC
     %
     % Input:
@@ -11,7 +11,7 @@ function [nDimensions] = ndims_modified(array)
     %
     % Comment:
 	%	- return 1 for row/column vectors and 0 for []
-    %   - https://stackoverflow.com/a/53694167/8891100
+    %	- https://stackoverflow.com/a/53694167/8891100
     %
     % Author & Date: Yang (i@snowztail.com), 22 Mar 02
 

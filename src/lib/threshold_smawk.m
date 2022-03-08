@@ -4,7 +4,7 @@ function [threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate
     %
     % Input:
 	%	- thresholdCandidate [1 * (nBins + 1)]: candidate threshold values
-    %   - dmc [(nStates ^ nTags) * nBins]: the transition probability matrix of the backscatter discrete memoryless MAC obtained by quantization
+    %	- dmc [(nStates ^ nTags) * nBins]: the transition probability matrix of the backscatter discrete memoryless MAC obtained by quantization
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
 	%	- receivedPower [(nStates ^ nTags) * 1]: received power per primary symbol corresponding to each input letter combination combination
 	%	- symbolRatio: the ratio of the secondary symbol period over the primary symbol period
@@ -12,11 +12,11 @@ function [threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate
     %
     % Output:
 	%	- threshold [1 * nOutputs] : the optimal thresholding values
-	%   - dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
+	%	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
     % Comment:
-    %   - SWAWK algorithm requires the quantization cost function to satisfy the Quadrangle Inequality (QI)
+    %	- SWAWK algorithm requires the quantization cost function to satisfy the Quadrangle Inequality (QI)
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 09
 

@@ -1,9 +1,9 @@
 function [marginalArray] = sum_nested(array, dimension)
 	% Function:
-    %   - obtain the sum of array over specific dimensions
+    %	- obtain the sum of array over specific dimensions
     %
     % Input:
-    %   - array: the input array
+    %	- array: the input array
 	%	- dimension: the dimensions to be summed
     %
     % Output:

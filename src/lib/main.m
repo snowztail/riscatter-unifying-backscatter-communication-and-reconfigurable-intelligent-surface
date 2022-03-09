@@ -1,6 +1,6 @@
 clear; cvx_clear; clc;
 nTxs = 1;
-nTags = 3;
+nTags = 2;
 nStates = 2;
 [nInputs, nOutputs] = deal(nStates ^ nTags);
 weight = [eps; 1 - eps];
@@ -42,31 +42,22 @@ end
 dmc = discretize_channel(thresholdCandidate, receivedPower, symbolRatio);
 
 % * Initialize input distribution, detection threshold, and DMTC
-inputDistribution = normr(sqrt(rand(nTags, nStates))) .^ 2;
+inputDistribution = rand_normalized([nTags, nStates], 2);
 combinationDistribution = combination_distribution(inputDistribution);
 equivalentDistribution = prod(combinationDistribution, 1);
 [threshold, dmtc] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
-[weightedSumRate_, primaryRate_, backscatterRate_] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+[weightedSumRate, primaryRate, backscatterRate] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 
 % * Update input distribution and detection threshold alternatively
 isConverged = false;
 while ~isConverged
-	% * Joint distribution
-	[jointArray, weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
-	% * Randomization
-	[randomizedInputDistribution, randomizedEquivalentDistribution, randomizedRate] = recovery_randomization(jointArray, dmtc);
+	% * Joint input optimization and individual input recovery by randomization
+	[inputDistribution, equivalentDistribution, weightedSumRateUpperBound, weightedSumRateLowerBound] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
 	% * KKT solution
-	[inputDistribution, equivalentDistribution, weightedSumRate_] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
+	[inputDistribution_, equivalentDistribution_, weightedSumRate_] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
 
 	% * Thresholding
 	[threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 	[threshold1, dmtc1, backscatterRate1] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 	[threshold2, dmtc2, backscatterRate2] = threshold_bisection(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
-
-	[weightedSumRate_, primaryRate, backscatterRate] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
-	[weightedSumRate1_, primaryRate1, backscatterRate1] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc1);
-	[weightedSumRate2_, primaryRate2, backscatterRate2] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc2);
-
-	isConverged = abs(weightedSumRate_ - weightedSumRate) <= tolerance;
-	weightedSumRate = weightedSumRate_;
 end

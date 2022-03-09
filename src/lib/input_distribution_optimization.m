@@ -1,4 +1,4 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr, tolerance)
+function [inputDistribution, equivalentDistribution, weightedSumRateUpperBound, weightedSumRateLowerBound] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr)
 	% Function:
 	%	- optimize the joint input distribution of all tags (corresponding to the optimal input with full transmit cooperation)
 	%	- extract a good tag input distribution (corresponding to no transmit cooperation) by randomization
@@ -9,14 +9,12 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	%	- weight [2 * 1]: the relative priority of the primary and backscatter links
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
 	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
-    %	- tolerance: minimum rate gain per iteration
     %
     % Output:
 	%	- inputDistribution [nTags * nStates]: input probability distribution
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- weightedSumRate: weighted sum of primary rate and total backscatter rate
-	%		- primaryRate: the achievable rate for the primary link (nats per second per Hertz)
-	%		- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
+	%	- weightedSumRateUpperBound: maximum achievable weighted sum rate with tag transmit correlation
+	%	- weightedSumRateLowerBound: maximum achievable weighted sum rate without tag transmit correlation
     %
     % Comment:
 	%	- joint input optimization
@@ -36,7 +34,6 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 		weight;
 		symbolRatio;
 		snr;
-		tolerance = 1e-6;
 	end
 
 	% * Ensure non-zero channel transition probability
@@ -52,14 +49,14 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 		equivalentDistribution = transpose(vec(permute(jointDistribution, nTags : -1 : 1)));
 		primaryRate = equivalentDistribution * information_function_primary(symbolRatio, snr);
 		backscatterRate = backscatter_rate(equivalentDistribution, dmtc);
-		weightedSumRate = [primaryRate, backscatterRate] * weight;
+		weightedSumRateUpperBound = [primaryRate, backscatterRate] * weight;
 
-		maximize weightedSumRate
+		maximize weightedSumRateUpperBound
 		subject to
 			jointDistribution == nonnegative(size(jointDistribution));
 			sum(equivalentDistribution) == 1;
 	cvx_end
-	inputDistribution = 1;
+	[inputDistribution, equivalentDistribution, weightedSumRateLowerBound] = recovery_randomization(jointDistribution, dmtc, weight, symbolRatio, snr);
 end
 
 

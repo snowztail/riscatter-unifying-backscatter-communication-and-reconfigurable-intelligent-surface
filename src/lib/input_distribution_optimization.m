@@ -1,7 +1,6 @@
-function [inputDistribution, equivalentDistribution, weightedSumRateUpperBound, weightedSumRateLowerBound] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr)
+function [jointDistribution, equivalentDistribution, weightedSumRateUpperBound] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr)
 	% Function:
 	%	- optimize the joint input distribution of all tags (corresponding to the optimal input with full transmit cooperation)
-	%	- extract a good tag input distribution (corresponding to no transmit cooperation) by randomization
     %
     % Input:
 	%	- nTags: number of tags
@@ -11,19 +10,12 @@ function [inputDistribution, equivalentDistribution, weightedSumRateUpperBound, 
 	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
     %
     % Output:
-	%	- inputDistribution [nTags * nStates]: input probability distribution
+	%	- jointDistribution [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- weightedSumRateUpperBound: maximum achievable weighted sum rate with tag transmit correlation
-	%	- weightedSumRateLowerBound: maximum achievable weighted sum rate without tag transmit correlation
+	%	- weightedSumRateUpperBound: maximum achievable weighted sum rate with full tag transmit correlation
     %
     % Comment:
-	%	- joint input optimization
-	%		- tags are assumed with equal weight (hence sum rate of tags is considered)
-	%	- rank-1 approximation
-    %		- generate random samples of candidate tag probability vectors whose outer product expectation equals to the joint input distribution array
-	%		- equivalent to a random search with guiduance on the correlation matrix of the distributions
-	%		- the number of kernels and random samples are designable (performance-complexity tradeoff)
-	%		- the candidates follows uniform distribution within a sphere bounded within the probability simplex
+	%	- tags are assumed with equal weight (hence sum rate of tags is considered)
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 23
 
@@ -56,7 +48,6 @@ function [inputDistribution, equivalentDistribution, weightedSumRateUpperBound, 
 			jointDistribution == nonnegative(size(jointDistribution));
 			sum(equivalentDistribution) == 1;
 	cvx_end
-	[inputDistribution, equivalentDistribution, weightedSumRateLowerBound] = recovery_randomization(jointDistribution, dmtc, weight, symbolRatio, snr);
 end
 
 

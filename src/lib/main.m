@@ -1,6 +1,6 @@
 clear; cvx_clear; clc;
 nTxs = 1;
-nTags = 2;
+nTags = 3;
 nStates = 2;
 [nInputs, nOutputs] = deal(nStates ^ nTags);
 weight = [eps; 1 - eps];
@@ -51,11 +51,13 @@ equivalentDistribution = prod(combinationDistribution, 1);
 % * Update input distribution and detection threshold alternatively
 isConverged = false;
 while ~isConverged
-	% * Joint input optimization and individual input recovery by randomization
-	[inputDistribution, equivalentDistribution, weightedSumRateUpperBound, weightedSumRateLowerBound] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
-	% * KKT solution
+	% * Joint input optimization
+	[jointDistribution, equivalentDistribution, weightedSumRateUpperBound] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
+	% * Individual input recovery by randomization and marginalization
+	[inputDistributionRandomization, equivalentDistributionRandomization, weightedSumRateRandomization] = recovery_randomization(jointDistribution, dmtc, weight, symbolRatio, snr);
+	[inputDistributionMarginalization, equivalentDistributionMarginalization, weightedSumRateMarginalization] = recovery_marginalization(jointDistribution, dmtc, weight, symbolRatio, snr);
+	% * Input distribution by KKT solution
 	[inputDistribution_, equivalentDistribution_, weightedSumRate_] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
-
 	% * Thresholding
 	[threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 	[threshold1, dmtc1, backscatterRate1] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);

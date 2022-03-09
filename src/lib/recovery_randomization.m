@@ -1,8 +1,6 @@
 function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery_randomization(jointDistribution, dmtc, weight, symbolRatio, snr, nKernels, nSamples, tolerance)
 	% Function:
-	%	- approximate any joint input distribution array by reduced-rank distribution
-	%	- perform a random search over the probability simplex with guided joint input distribution array
-	%	- choose the best candidate input distribution that maximizes the weighed sum rate
+	%	- extract a good tag input distribution (corresponding to no transmit cooperation) by randomization
     %
     % Input:
 	%	- jointDistribution [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
@@ -22,6 +20,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 	%		- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
     % Comment:
+	%	- approximate any joint input distribution array by reduced-rank distribution
     %	- generate random samples of candidate tag probability vectors whose outer product expectation equals to the joint input distribution array
 	%	- equivalent to a random search with guiduance on the correlation matrix of the distributions
 	%	- the number of kernels and random samples are designable (performance-complexity tradeoff)
@@ -38,7 +37,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 		snr;
 		nKernels = 4;
 		nSamples = 5e2;
-		tolerance = 1e-6;
+		tolerance = 1e-8;
 	end
 
 	% * Get data
@@ -79,7 +78,6 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 						newBasis(:, iKernel) == simplex(nStates);
 					end
 			cvx_end
-			kernelBasis(:, iTag, :) = newBasis;
 		end
 		isConverged = abs(relativeEntropy) <= tolerance;
 	end

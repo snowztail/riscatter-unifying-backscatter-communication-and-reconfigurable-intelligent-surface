@@ -35,9 +35,9 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 		weight;
 		symbolRatio;
 		snr;
-		nKernels = 4;
+		nKernels = 10;
 		nSamples = 5e2;
-		tolerance = 1e-8;
+		tolerance = 1e-7;
 	end
 
 	% * Get data

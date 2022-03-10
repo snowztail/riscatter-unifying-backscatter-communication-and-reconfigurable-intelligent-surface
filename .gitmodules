@@ -1,0 +1,6 @@
+[submodule "src/toolbox/tensor_toolbox"]
+	path = src/toolbox/tensor_toolbox
+	url = https://gitlab.com/tensors/tensor_toolbox.git
+[submodule "src/toolbox/CVX"]
+	path = src/toolbox/CVX
+	url = https://github.com/cvxr/CVX.git

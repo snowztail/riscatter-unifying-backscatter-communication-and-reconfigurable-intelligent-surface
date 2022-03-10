@@ -1,4 +1,4 @@
-clear; cvx_clear; clc;
+clear; cvx_clear; clc; setup;
 nTxs = 1;
 nTags = 3;
 nStates = 2;
@@ -53,13 +53,14 @@ isConverged = false;
 while ~isConverged
 	% * Joint input optimization
 	[jointDistribution, equivalentDistribution, weightedSumRateUpperBound] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
-	% * Individual input recovery by randomization and marginalization
+	% * Individual input recovery by randomization, marginalization, and decomposition
 	[inputDistributionRandomization, equivalentDistributionRandomization, weightedSumRateRandomization] = recovery_randomization(jointDistribution, dmtc, weight, symbolRatio, snr);
 	[inputDistributionMarginalization, equivalentDistributionMarginalization, weightedSumRateMarginalization] = recovery_marginalization(jointDistribution, dmtc, weight, symbolRatio, snr);
+	[inputDistributionDecomposition, equivalentDistributionDecomposition, weightedSumRateDecomposition] = recovery_decomposition(jointDistribution, dmtc, weight, symbolRatio, snr);
 	% * Input distribution by KKT solution
-	[inputDistribution_, equivalentDistribution_, weightedSumRate_] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
+	[inputDistributionKkt, equivalentDistributionKkt, weightedSumRateKkt] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
 	% * Thresholding
-	[threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
-	[threshold1, dmtc1, backscatterRate1] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
-	[threshold2, dmtc2, backscatterRate2] = threshold_bisection(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
+	[thresholdSmawk, dmtcSmawk, backscatterRateSmawk] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
+	[thresholdDp, dmtcDp, backscatterRateDp] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
+	[thresholdBisection, dmtcBisection, backscatterRateBisection] = threshold_bisection(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 end

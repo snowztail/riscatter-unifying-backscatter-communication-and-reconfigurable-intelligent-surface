@@ -48,6 +48,8 @@ function [jointDistribution, equivalentDistribution, weightedSumRateUpperBound] 
 			jointDistribution == nonnegative(size(jointDistribution));
 			sum(equivalentDistribution) == 1;
 	cvx_end
+	jointDistribution = regularization(jointDistribution);
+	equivalentDistribution = regularization(equivalentDistribution);
 end
 
 

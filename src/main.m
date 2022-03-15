@@ -51,14 +51,16 @@ equivalentDistribution = prod(combinationDistribution, 1);
 % * Update input distribution and detection threshold alternatively
 isConverged = false;
 while ~isConverged
+	% * Input distribution by SCA
+	[inputDistributionSca, equivalentDistributionSca, weightedSumRateSca] = input_distribution_sca(nTags, dmtc, weight, symbolRatio, snr);
+	% * Input distribution by KKT solution
+	[inputDistributionKkt, equivalentDistributionKkt, weightedSumRateKkt] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
 	% * Joint input optimization
-	[jointDistribution, equivalentDistribution, weightedSumRateUpperBound] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
+	[jointDistribution, equivalentDistribution, weeightedSumRateUpperBound] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
 	% * Individual input recovery by randomization, marginalization, and decomposition
 	[inputDistributionRandomization, equivalentDistributionRandomization, weightedSumRateRandomization] = recovery_randomization(jointDistribution, dmtc, weight, symbolRatio, snr);
 	[inputDistributionMarginalization, equivalentDistributionMarginalization, weightedSumRateMarginalization] = recovery_marginalization(jointDistribution, dmtc, weight, symbolRatio, snr);
 	[inputDistributionDecomposition, equivalentDistributionDecomposition, weightedSumRateDecomposition] = recovery_decomposition(jointDistribution, dmtc, weight, symbolRatio, snr);
-	% * Input distribution by KKT solution
-	[inputDistributionKkt, equivalentDistributionKkt, weightedSumRateKkt] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
 	% * Thresholding
 	[thresholdSmawk, dmtcSmawk, backscatterRateSmawk] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 	[thresholdDp, dmtcDp, backscatterRateDp] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);

@@ -52,7 +52,7 @@ end
 dmc = discretize_channel(thresholdCandidate, receivedPower, symbolRatio);
 
 % * Initialize input distribution, detection threshold, and DMTC
-inputDistribution = rand_normalized([nTags, nStates], 2);
+inputDistribution = ones(nTags, nStates) ./ nStates;
 combinationDistribution = combination_distribution(inputDistribution);
 equivalentDistribution = prod(combinationDistribution, 1);
 [threshold, dmtc] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);

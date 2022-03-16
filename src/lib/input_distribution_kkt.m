@@ -45,7 +45,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	nStates = nthroot(size(dmtc, 1), nTags);
 
 	% * Initialize
-	inputDistribution = rand_normalized([nTags, nStates], 2);
+	inputDistribution = ones(nTags, nStates) ./ nStates;
 	combinationDistribution = combination_distribution(inputDistribution);
 	equivalentDistribution = prod(combinationDistribution, 1);
 	informationFunction = [information_function_primary(symbolRatio, snr), information_function_backscatter(equivalentDistribution, dmtc)] * weight;

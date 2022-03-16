@@ -29,7 +29,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 		weight;
 		symbolRatio;
 		snr;
-		tolerance = 1e-6;
+		tolerance = 1e-8;
 	end
 
 	% * Ensure non-zero channel transition probability
@@ -42,19 +42,16 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 
 	% * Initialize
 	indexCombination = combvec_nested(1 : nStates, nTags);
-% 	inputDistribution = rand_normalized([nTags, nStates], 2);
 	inputDistribution = ones(nTags, nStates) ./ nStates;
 	equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
 	weightedSumRate = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 
 	% * Iteratively update input distribution by SCA
 	isConverged = false;
-	isDominated = false;
-	while ~isConverged && ~isDominated
+	while ~isConverged
 		inputDistribution_ = inputDistribution;
 		weightedSumRate_ = weightedSumRate;
 		cvx_begin
-			cvx_precision high;
 			variables inputDistribution(nTags, nStates);
 			expressions auxiliary(1, nInputs);
 
@@ -65,35 +62,24 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 				end
 				auxiliary(iInput) = auxiliary(iInput) - (nTags - 1) * prod(inputDistribution_(sub2ind(size(inputDistribution_), transpose(1 : nTags), indexCombination(:, iInput))), 1);
 			end
-
 			primaryRate = auxiliary * information_function_primary(symbolRatio, snr);
 			backscatterRate = backscatter_rate(auxiliary, dmtc);
-			weightedSumRateApprox = [primaryRate, backscatterRate] * weight;
+			weightedSumRateSca = [primaryRate, backscatterRate] * weight;
 
-			maximize weightedSumRateApprox
+			maximize weightedSumRateSca
 			subject to
 				for iTag = 1 : nTags
 					transpose(inputDistribution(iTag, :)) == simplex(nStates);
 				end
-				transpose(auxiliary) == nonnegative(nInputs);
 		cvx_end
 
 		% * Compute actual weighted sum rate
-% 		equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
-% 		weightedSumRate = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+		equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
+		weightedSumRate = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 
-		% * Test convergence and dominance
-% 		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance;
-% 		if weightedSumRate < weightedSumRate_
-% 			isDominated = true;
-% 			weightedSumRate = weightedSumRate_;
-% 			inputDistribution = inputDistribution_;
-% 		end
-		weightedSumRate = weightedSumRateApprox;
+		% * Test convergence
 		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance;
 	end
-	equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
-	weightedSumRate = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 end
 
 

@@ -1,11 +1,11 @@
-function [jointDistribution, equivalentDistribution, weightedSumRateUpperBound] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr)
+function [jointDistribution, equivalentDistribution, weightedSumRateUpperBound] = input_distribution_joint(nTags, dmtc, weight, symbolRatio, snr)
 	% Function:
 	%	- optimize the joint input distribution of all tags (corresponding to the optimal input with full transmit cooperation)
     %
     % Input:
 	%	- nTags: number of tags
     %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- weight [2 * 1]: the relative priority of the primary and backscatter links
+	%	- weight: the relative priority of the primary link
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
 	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
     %
@@ -38,10 +38,8 @@ function [jointDistribution, equivalentDistribution, weightedSumRateUpperBound] 
 	% * Optimize joint input probability distribution of all tags
 	cvx_begin
 		variables jointDistribution(nStates * ones(1, nTags));
-		equivalentDistribution = transpose(vec(permute(jointDistribution, nTags : -1 : 1)));
-		primaryRate = equivalentDistribution * information_function_primary(symbolRatio, snr);
-		backscatterRate = backscatter_rate(equivalentDistribution, dmtc);
-		weightedSumRateUpperBound = [primaryRate, backscatterRate] * weight;
+		equivalentDistribution = transpose(vec(permute(jointDistribution, nTags : - 1 : 1)));
+		weightedSumRateUpperBound = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 
 		maximize weightedSumRateUpperBound
 		subject to
@@ -50,14 +48,4 @@ function [jointDistribution, equivalentDistribution, weightedSumRateUpperBound] 
 	cvx_end
 	jointDistribution = regularization(jointDistribution);
 	equivalentDistribution = regularization(equivalentDistribution);
-end
-
-
-function [backscatterRate] = backscatter_rate(equivalentDistribution, dmtc)
-	nOutputs = size(dmtc, 2);
-	backscatterRate = cvx(zeros(nOutputs, 1));
-	for iOutput = 1 : nOutputs
-		backscatterRate(iOutput) = entr(equivalentDistribution * dmtc(:, iOutput)) - equivalentDistribution * entr(dmtc(:, iOutput));
-	end
-	backscatterRate = sum(backscatterRate);
 end

@@ -13,7 +13,7 @@ function [marginalArray] = sum_nested(array, dimension)
 	%	- CVX does not support sum over multiple dimensions yet
 	%	- Require dimension indexes in ascending order
     %
-    % Author & Date: Yang (i@snowztail.com), 22 Mar 1
+    % Author & Date: Yang (i@snowztail.com), 22 Mar 01
 
 	marginalArray = array;
 	if length(dimension) >= 1

@@ -5,7 +5,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
     % Input:
 	%	- nTags: number of tags
     %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- weight [2 * 1]: the relative priority of the primary and backscatter links
+	%	- weight: the relative priority of the primary link
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
 	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
     %	- tolerance: minimum rate gain per iteration
@@ -19,8 +19,9 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
     %
     % Comment:
 	%	- sequentially approximate the equivalent (i.e. product of individual) distribution by its first-order Taylor expansion at previous point
+	%	- converges to the KKT points
     %
-    % Author & Date: Yang (i@snowztail.com), 15 Mar 23
+    % Author & Date: Yang (i@snowztail.com), 23 Mar 15
 
 	% * Declare default tolerance
 	arguments
@@ -40,11 +41,11 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	nInputs = size(dmtc, 1);
 	nStates = nthroot(nInputs, nTags);
 
-	% * Initialize
-	indexCombination = combvec_nested(1 : nStates, nTags);
+	% * Initialization
+	indexCombination = index_combination(nTags, nStates);
 	inputDistribution = ones(nTags, nStates) ./ nStates;
 	equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
-	weightedSumRate = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+	weightedSumRate = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 
 	% * Iteratively update input distribution by SCA
 	isConverged = false;
@@ -54,7 +55,6 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 		cvx_begin
 			variables inputDistribution(nTags, nStates);
 			expressions auxiliary(1, nInputs);
-
 			for iInput = 1 : nInputs
 				for iTag = 1 : nTags
 					iComplement = setdiff(1 : nTags, iTag);
@@ -62,9 +62,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 				end
 				auxiliary(iInput) = auxiliary(iInput) - (nTags - 1) * prod(inputDistribution_(sub2ind(size(inputDistribution_), transpose(1 : nTags), indexCombination(:, iInput))), 1);
 			end
-			primaryRate = auxiliary * information_function_primary(symbolRatio, snr);
-			backscatterRate = backscatter_rate(auxiliary, dmtc);
-			weightedSumRateSca = [primaryRate, backscatterRate] * weight;
+			weightedSumRateSca = rate_weighted_sum(weight, symbolRatio, snr, auxiliary, dmtc);
 
 			maximize weightedSumRateSca
 			subject to
@@ -75,19 +73,9 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 
 		% * Compute actual weighted sum rate
 		equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
-		weightedSumRate = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+		weightedSumRate = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 
 		% * Test convergence
 		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance;
 	end
-end
-
-
-function [backscatterRate] = backscatter_rate(equivalentDistribution, dmtc)
-	nOutputs = size(dmtc, 2);
-	backscatterRate = cvx(zeros(nOutputs, 1));
-	for iOutput = 1 : nOutputs
-		backscatterRate(iOutput) = entr(equivalentDistribution * dmtc(:, iOutput)) - equivalentDistribution * entr(dmtc(:, iOutput));
-	end
-	backscatterRate = sum(backscatterRate);
 end

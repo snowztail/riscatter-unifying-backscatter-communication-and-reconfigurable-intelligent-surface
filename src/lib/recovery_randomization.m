@@ -5,7 +5,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
     % Input:
 	%	- jointDistribution [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
     %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- weight [2 * 1]: the relative priority of the primary and backscatter links
+	%	- weight: the relative priority of the primary link
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
 	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
 	%	- nKernels: number of kernels used in the approximation (equals to the rank)
@@ -26,7 +26,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 	%	- the number of kernels and random samples are designable (performance-complexity tradeoff)
 	%	- the candidates follows uniform distribution within a sphere bounded within the probability simplex
     %
-    % Author & Date: Yang (i@snowztail.com), 22 Mar 3
+    % Author & Date: Yang (i@snowztail.com), 22 Mar 03
 
 	% * Declare default tolerance
 	arguments
@@ -105,12 +105,22 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 				inputDistributionCandidate(iTag, :) = transpose(randomVector + (1 - ones(1, nStates) * randomVector) / nStates * ones(nStates, 1));
 			end
 			equivalentDistributionCandidate = prod(combination_distribution(inputDistributionCandidate), 1);
-			weightedSumRateCandidate = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistributionCandidate, dmtc);
+			weightedSumRateCandidate = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionCandidate, dmtc);
 			if weightedSumRateCandidate > weightedSumRate
 				inputDistribution = inputDistributionCandidate;
 				equivalentDistribution = equivalentDistributionCandidate;
 				weightedSumRate = weightedSumRateCandidate;
 			end
 		end
+	end
+end
+
+
+function [outerProduct] = outer_product(matrix)
+	nVectors = size(matrix, 2);
+    outerProduct = matrix(:, 1);
+	for iVector = 2 : nVectors
+		vector = permute(matrix(:, iVector), circshift(1 : (ndims_modified(outerProduct) + 1), ndims_modified(outerProduct)));
+		outerProduct = repmat(outerProduct, size(vector)) .* repmat(vector, size(outerProduct));
 	end
 end

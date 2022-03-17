@@ -1,4 +1,4 @@
-function [discreteChannel] = discretize_channel(threshold, receivedPower, symbolRatio)
+function [discreteChannel] = channel_discretization(threshold, receivedPower, symbolRatio)
 	% Function:
 	%	- obtain discrete channel based on channel probability distribution and bin boundaries
 	%	- construct equivalent DMTC based on decision thresholds

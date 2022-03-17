@@ -1,9 +1,9 @@
-function [weightedSumRate, primaryRate, backscatterRate] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc)
+function [weightedSumRate, primaryRate, backscatterRate] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistribution, dmtc)
 	% Function:
     %	- compute the weighted sum rate for a given input combination distribution and thresholding scheme
     %
     % Input:
-	%	- weight [2 * 1]: the relative priority of the primary and backscatter links
+	%	- weight: the relative priority of the primary link
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
 	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
@@ -16,7 +16,8 @@ function [weightedSumRate, primaryRate, backscatterRate] = weighted_sum_rate(wei
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 22
 
-	primaryRate = equivalentDistribution * information_function_primary(symbolRatio, snr);
-	backscatterRate = equivalentDistribution * information_function_backscatter(equivalentDistribution, dmtc);
-	weightedSumRate = [primaryRate, backscatterRate] * weight;
+
+	primaryRate = rate_primary(symbolRatio, snr, equivalentDistribution);
+	backscatterRate = rate_backscatter(equivalentDistribution, dmtc);
+	weightedSumRate = weight * primaryRate + (1 - weight) * backscatterRate;
 end

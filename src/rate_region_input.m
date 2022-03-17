@@ -29,7 +29,7 @@ for iTag = 1 : nTags
 end
 
 % * Compute expected received power per primary symbol
-indexCombination = combvec_nested(1 : nStates, nTags);
+indexCombination = index_combination(nTags, nStates);
 inputCombination = transpose(constellation(indexCombination));
 equivalentChannel = zeros(nInputs, nTxs);
 for iInput = 1 : nInputs
@@ -49,7 +49,7 @@ else
 end
 
 % * Discretize continuous output and remaps to DMC
-dmc = discretize_channel(thresholdCandidate, receivedPower, symbolRatio);
+dmc = channel_discretization(thresholdCandidate, receivedPower, symbolRatio);
 
 % * Initialize input distribution, detection threshold, and DMTC
 inputDistribution = ones(nTags, nStates) ./ nStates;
@@ -67,7 +67,7 @@ for iWeight = 1 : nWeights
 	weight = weightSet(:, iWeight);
 
 	% * Joint input optimization
-	[jointDistribution, equivalentDistributionJoint, weightedSumRateUpperBound] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
+	[jointDistribution, equivalentDistributionJoint, weightedSumRateUpperBound] = input_distribution_joint(nTags, dmtc, weight, symbolRatio, snr);
 
 	% * Individual input recovery by randomization, marginalization, and decomposition
 	[inputDistributionRandomization, equivalentDistributionRandomization, weightedSumRateRandomization] = recovery_randomization(jointDistribution, dmtc, weight, symbolRatio, snr);
@@ -78,11 +78,11 @@ for iWeight = 1 : nWeights
 	[inputDistributionKkt, equivalentDistributionKkt, weightedSumRateKkt] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
 
 	% * Compute achievable rate of primary and secondary links
-	[~, rateJoint(iWeight, 1), rateJoint(iWeight, 2)] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistributionJoint, dmtc);
-	[~, rateRandomization(iWeight, 1), rateRandomization(iWeight, 2)] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistributionRandomization, dmtc);
-	[~, rateMarginalization(iWeight, 1), rateMarginalization(iWeight, 2)] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistributionMarginalization, dmtc);
-	[~, rateDecomposition(iWeight, 1), rateDecomposition(iWeight, 2)] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistributionDecomposition, dmtc);
-	[~, rateKkt(iWeight, 1), rateKkt(iWeight, 2)] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistributionKkt, dmtc);
+	[~, rateJoint(iWeight, 1), rateJoint(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionJoint, dmtc);
+	[~, rateRandomization(iWeight, 1), rateRandomization(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionRandomization, dmtc);
+	[~, rateMarginalization(iWeight, 1), rateMarginalization(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionMarginalization, dmtc);
+	[~, rateDecomposition(iWeight, 1), rateDecomposition(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionDecomposition, dmtc);
+	[~, rateKkt(iWeight, 1), rateKkt(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionKkt, dmtc);
 end
 
 figure('name', 'Achievable rate region by different input distribution design', 'position', [0, 0, 500, 400]);

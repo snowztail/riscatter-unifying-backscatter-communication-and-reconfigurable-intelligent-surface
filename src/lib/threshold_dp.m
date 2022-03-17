@@ -57,8 +57,8 @@ function [threshold, dmtc, backscatterRate] = threshold_dp(thresholdCandidate, d
 	threshold = thresholdCandidate(index + 1);
 
 	% * Construct DMTC and compute mutual information
-	dmtc = discretize_channel(threshold, receivedPower, symbolRatio);
-	backscatterRate = equivalentDistribution * information_function_backscatter(equivalentDistribution, dmtc);
+	dmtc = channel_discretization(threshold, receivedPower, symbolRatio);
+	backscatterRate = rate_backscatter(equivalentDistribution, dmtc);
 end
 
 

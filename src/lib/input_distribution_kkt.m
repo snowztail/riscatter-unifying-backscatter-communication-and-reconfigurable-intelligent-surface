@@ -5,7 +5,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
     % Input:
 	%	- nTags: number of tags
     %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- weight [2 * 1]: the relative priority of the primary and backscatter links
+	%	- weight: the relative priority of the primary link
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
 	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
     %	- tolerance: minimum rate gain per iteration
@@ -18,7 +18,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	%		- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
     % Comment:
-    %	- iteratively update the input distribution and achievable rates
+    %	- iteratively update the input distribution by coordinate descent
 	%	- returns KKT solution but without optimality guarantee
 	%	- the marginal information function associated with codeword c_m_k of tag k satisfies:
 	%		- I_k(c_m_k; Z) = C for P_k(c_m_k) > 0
@@ -44,11 +44,11 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	% * Get data
 	nStates = nthroot(size(dmtc, 1), nTags);
 
-	% * Initialize
+	% * Initialization
 	inputDistribution = ones(nTags, nStates) ./ nStates;
 	combinationDistribution = combination_distribution(inputDistribution);
 	equivalentDistribution = prod(combinationDistribution, 1);
-	informationFunction = [information_function_primary(symbolRatio, snr), information_function_backscatter(equivalentDistribution, dmtc)] * weight;
+	informationFunction = information_function(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 	marginalInformation = marginal_information(combinationDistribution, informationFunction);
 	mutualInformation = equivalentDistribution * informationFunction;
 
@@ -61,7 +61,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 			inputDistribution(iTag, :) = input_distribution_local(inputDistribution(iTag, :), marginalInformation(:, iTag));
 			combinationDistribution = combination_distribution(inputDistribution);
 			equivalentDistribution = prod(combinationDistribution, 1);
-			informationFunction = [information_function_primary(symbolRatio, snr), information_function_backscatter(equivalentDistribution, dmtc)] * weight;
+			informationFunction = information_function(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 			marginalInformation = marginal_information(combinationDistribution, informationFunction);
 			mutualInformation = equivalentDistribution * informationFunction;
 		end
@@ -84,7 +84,7 @@ function [marginalInformation] = marginal_information(combinationDistribution, i
 	[nTags, nInputs] = size(combinationDistribution);
 	nStates = nthroot(nInputs, nTags);
 	tagSet = transpose(1 : nTags);
-	indexCombination = combvec_nested(1 : nStates, nTags);
+	indexCombination = index_combination(nTags, nStates);
 	marginalInformation = zeros(nTags, nStates, nInputs);
 	for iTag = 1 : nTags
 		for iState = 1 : nStates

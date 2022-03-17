@@ -9,7 +9,7 @@ function [instance] = rand_normalized(arraySize, dimension)
     % Output:
 	%	- instance: an instance of the random array with all elements in uniform distribution and normalized sum in specific dimension
     %
-    % Author & Date: Yang (i@snowztail.com), 22 Mar 9
+    % Author & Date: Yang (i@snowztail.com), 22 Mar 09
 
 	instance = rand(arraySize);
 	instance = instance ./ sum(instance, dimension);

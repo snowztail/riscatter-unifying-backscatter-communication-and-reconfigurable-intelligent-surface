@@ -1,9 +1,9 @@
 clear; cvx_clear; clc; setup;
 nTxs = 1;
-nTags = 3;
-nStates = 2;
+nTags = 2;
+nStates = 4;
 [nInputs, nOutputs] = deal(nStates ^ nTags);
-weight = [eps; 1 - eps];
+weight = eps;
 reflectRatio = 0.5;
 symbolRatio = 10;
 noisePower = 1;
@@ -19,7 +19,7 @@ for iTag = 1 : nTags
 end
 
 % * Compute expected received power per primary symbol
-indexCombination = combvec_nested(1 : nStates, nTags);
+indexCombination = index_combination(nTags, nStates);
 inputCombination = transpose(constellation(indexCombination));
 equivalentChannel = zeros(nInputs, nTxs);
 for iInput = 1 : nInputs
@@ -39,24 +39,26 @@ else
 end
 
 % * Discretize continuous output and remaps to DMC
-dmc = discretize_channel(thresholdCandidate, receivedPower, symbolRatio);
+dmc = channel_discretization(thresholdCandidate, receivedPower, symbolRatio);
 
 % * Initialize input distribution, detection threshold, and DMTC
 inputDistribution = ones(nTags, nStates) ./ nStates;
 combinationDistribution = combination_distribution(inputDistribution);
 equivalentDistribution = prod(combinationDistribution, 1);
 [threshold, dmtc] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
-[weightedSumRate, primaryRate, backscatterRate] = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+[weightedSumRate, primaryRate, backscatterRate] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 
 % * Update input distribution and detection threshold alternatively
 isConverged = false;
 while ~isConverged
+	% * Input distribution by exhaustive search
+	[inputDistributionExhaustive, equivalentDistributionExhaustive, weightedSumRateExhaustive] = input_distribution_exhaustive(nTags, dmtc, weight, symbolRatio, snr);
 	% * Input distribution by SCA
 	[inputDistributionSca, equivalentDistributionSca, weightedSumRateSca] = input_distribution_sca(nTags, dmtc, weight, symbolRatio, snr);
 	% * Input distribution by KKT solution
 	[inputDistributionKkt, equivalentDistributionKkt, weightedSumRateKkt] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
 	% * Joint input optimization
-	[jointDistribution, equivalentDistribution, weeightedSumRateUpperBound] = input_distribution_optimization(nTags, dmtc, weight, symbolRatio, snr);
+	[jointDistribution, equivalentDistribution, weeightedSumRateUpperBound] = input_distribution_joint(nTags, dmtc, weight, symbolRatio, snr);
 	% * Individual input recovery by randomization, marginalization, and decomposition
 	[inputDistributionRandomization, equivalentDistributionRandomization, weightedSumRateRandomization] = recovery_randomization(jointDistribution, dmtc, weight, symbolRatio, snr);
 	[inputDistributionMarginalization, equivalentDistributionMarginalization, weightedSumRateMarginalization] = recovery_marginalization(jointDistribution, dmtc, weight, symbolRatio, snr);

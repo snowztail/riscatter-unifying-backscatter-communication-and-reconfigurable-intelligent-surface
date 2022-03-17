@@ -5,7 +5,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
     % Input:
 	%	- jointDistribution [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
     %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- weight [2 * 1]: the relative priority of the primary and backscatter links
+	%	- weight: the relative priority of the primary link
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
 	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
     %
@@ -28,5 +28,5 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 	inputDistribution = cell2mat(cellfun(@transpose, cpTensor.U, 'UniformOutput', false));
 	inputDistribution = inputDistribution ./ sum(inputDistribution, 2);
 	equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
-	weightedSumRate = weighted_sum_rate(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+	weightedSumRate = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 end

@@ -103,8 +103,8 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandi
 
 		% * Construct DMTC and compute mutual information
 		if isValid
-			dmtc = discretize_channel(threshold, receivedPower, symbolRatio);
-			backscatterRateSet(iLevel) = equivalentDistribution * information_function_backscatter(equivalentDistribution, dmtc);
+			dmtc = channel_discretization(threshold, receivedPower, symbolRatio);
+			backscatterRateSet(iLevel) = rate_backscatter(equivalentDistribution, dmtc);
 			thresholdSet{iLevel} = threshold;
 		else
 			backscatterRateSet(iLevel) = nan;
@@ -113,7 +113,7 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandi
 	end
 	[backscatterRate, optimalLevel] = max(backscatterRateSet);
 	threshold = thresholdSet{optimalLevel};
-	dmtc = discretize_channel(threshold, receivedPower, symbolRatio);
+	dmtc = channel_discretization(threshold, receivedPower, symbolRatio);
 end
 
 

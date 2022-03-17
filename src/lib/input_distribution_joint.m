@@ -1,4 +1,4 @@
-function [jointDistribution, equivalentDistribution, weightedSumRateUpperBound] = input_distribution_joint(nTags, dmtc, weight, symbolRatio, snr)
+function [jointDistribution, equivalentDistribution, weightedSumRate] = input_distribution_joint(nTags, dmtc, weight, symbolRatio, snr)
 	% Function:
 	%	- optimize the joint input distribution of all tags (corresponding to the optimal input with full transmit cooperation)
     %
@@ -12,7 +12,9 @@ function [jointDistribution, equivalentDistribution, weightedSumRateUpperBound] 
     % Output:
 	%	- jointDistribution [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- weightedSumRateUpperBound: maximum achievable weighted sum rate with full tag transmit correlation
+	%	- weightedSumRate: maximum achievable weighted sum of primary rate and total backscatter rate with full tag transmit cooperation
+	%		- primaryRate: the achievable rate for the primary link (nats per second per Hertz)
+	%		- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
     % Comment:
 	%	- tags are assumed with equal weight (hence sum rate of tags is considered)
@@ -39,9 +41,9 @@ function [jointDistribution, equivalentDistribution, weightedSumRateUpperBound] 
 	cvx_begin
 		variables jointDistribution(nStates * ones(1, nTags));
 		equivalentDistribution = transpose(vec(permute(jointDistribution, nTags : - 1 : 1)));
-		weightedSumRateUpperBound = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+		weightedSumRate = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 
-		maximize weightedSumRateUpperBound
+		maximize weightedSumRate
 		subject to
 			jointDistribution == nonnegative(size(jointDistribution));
 			sum(equivalentDistribution) == 1;

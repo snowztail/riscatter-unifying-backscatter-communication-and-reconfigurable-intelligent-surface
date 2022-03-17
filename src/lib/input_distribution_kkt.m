@@ -50,28 +50,27 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	equivalentDistribution = prod(combinationDistribution, 1);
 	informationFunction = information_function(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 	marginalInformation = marginal_information(combinationDistribution, informationFunction);
-	mutualInformation = equivalentDistribution * informationFunction;
+	weightedSumRate = equivalentDistribution * informationFunction;
 
 	% * Iteratively update input distribution for all tags
-	weightedSumRate = mutualInformation;
 	isConverged = false;
 	while ~isConverged
+		weightedSumRate_ = weightedSumRate;
 		% * Update input distribution, information functions associated with each codeword, marginal information of each codeword, and mutual information for each tag
 		for iTag = 1 : nTags
-			inputDistribution(iTag, :) = input_distribution_local(inputDistribution(iTag, :), marginalInformation(:, iTag));
+			inputDistribution(iTag, :) = input_distribution(inputDistribution(iTag, :), marginalInformation(:, iTag));
 			combinationDistribution = combination_distribution(inputDistribution);
 			equivalentDistribution = prod(combinationDistribution, 1);
 			informationFunction = information_function(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 			marginalInformation = marginal_information(combinationDistribution, informationFunction);
-			mutualInformation = equivalentDistribution * informationFunction;
+			weightedSumRate = equivalentDistribution * informationFunction;
 		end
-		isConverged = abs(mutualInformation - weightedSumRate) <= tolerance;
-		weightedSumRate = mutualInformation;
+		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance;
 	end
 end
 
 
-function [inputDistribution] = input_distribution_local(inputDistribution, marginalInformation)
+function [inputDistribution] = input_distribution(inputDistribution, marginalInformation)
 	nStates = size(inputDistribution, 2);
 	inputDistribution_ = inputDistribution;
 	for iState = 1 : nStates

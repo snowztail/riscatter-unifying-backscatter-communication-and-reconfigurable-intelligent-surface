@@ -1,7 +1,7 @@
 clear; cvx_clear; clc; setup;
 nTxs = 1;
 nTags = 2;
-nStates = 4;
+nStates = 2;
 [nInputs, nOutputs] = deal(nStates ^ nTags);
 weight = eps;
 reflectRatio = 0.5;

@@ -1,19 +1,10 @@
 clear; cvx_clear; clc; close all; setup;
 nTxs = 1;
-nTags = 3;
+nTags = 2;
 nStates = 2;
 [nInputs, nOutputs] = deal(nStates ^ nTags);
-% weight = [eps; 1 - eps];
-
 nWeights = 2e1;
-% weightSet = [linspace(0, 1, nWeights); linspace(1, 0, nWeights)];
-% weightSet = [linspace(1 - eps, eps, nWeights); linspace(eps, 1 - eps, nWeights)];
-% weightSet = [1 - exp(-(linspace(0, 10, nWeights))); exp(-(linspace(0, 8, nWeights)))];
-% weightSet = [logspace(log(eps), log(1 - eps), nWeights); 1 - logspace(log(eps), log(1 - eps), nWeights)];
-% weightSet = [tanh(0 : nWeights - 1); 1 - tanh(0 : nWeights - 1)];
-% weight = [exp(-(linspace(0, pi, nWeights) .^ 2)); 1 - exp(-(linspace(0, pi, nWeights) .^ 2))];
-weightSet = [linspace(0, 0.2, nWeights - 1), 1 - eps; linspace(1, 0.8, nWeights - 1), eps];
-
+weightSet = [linspace(0, 0.1, nWeights - 1), 1];
 reflectRatio = 0.5;
 symbolRatio = 10;
 noisePower = 1;
@@ -57,51 +48,54 @@ combinationDistribution = combination_distribution(inputDistribution);
 equivalentDistribution = prod(combinationDistribution, 1);
 [threshold, dmtc] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 
-rateJoint = zeros(nWeights, 2);
+rateCooperation = zeros(nWeights, 2);
+rateExhaustive = zeros(nWeights, 2);
+rateKkt = zeros(nWeights, 2);
 rateRandomization = zeros(nWeights, 2);
 rateMarginalization = zeros(nWeights, 2);
 rateDecomposition = zeros(nWeights, 2);
-rateKkt = zeros(nWeights, 2);
 for iWeight = 1 : nWeights
-	% * Retrieve weight
-	weight = weightSet(:, iWeight);
-
-	% * Joint input optimization
-	[jointDistribution, equivalentDistributionJoint, weightedSumRateUpperBound] = input_distribution_joint(nTags, dmtc, weight, symbolRatio, snr);
-
+	weight = weightSet(iWeight);
+	% * Joint input with full transmit cooperation
+	[jointDistribution, equivalentDistributionCooperation, weightedSumRateUpperBound] = input_distribution_cooperation(nTags, dmtc, weight, symbolRatio, snr);
+	% * Input distribution by exhaustive search
+	[inputDistributionExhaustive, equivalentDistributionExhaustive, weightedSumRateExhaustive] = input_distribution_exhaustion(nTags, dmtc, weight, symbolRatio, snr);
+	% * Input distribution by KKT solution
+	[inputDistributionKkt, equivalentDistributionKkt, weightedSumRateKkt] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
 	% * Individual input recovery by randomization, marginalization, and decomposition
 	[inputDistributionRandomization, equivalentDistributionRandomization, weightedSumRateRandomization] = recovery_randomization(jointDistribution, dmtc, weight, symbolRatio, snr);
 	[inputDistributionMarginalization, equivalentDistributionMarginalization, weightedSumRateMarginalization] = recovery_marginalization(jointDistribution, dmtc, weight, symbolRatio, snr);
 	[inputDistributionDecomposition, equivalentDistributionDecomposition, weightedSumRateDecomposition] = recovery_decomposition(jointDistribution, dmtc, weight, symbolRatio, snr);
-
-	% * Input distribution by KKT solution
-	[inputDistributionKkt, equivalentDistributionKkt, weightedSumRateKkt] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
-
 	% * Compute achievable rate of primary and secondary links
-	[~, rateJoint(iWeight, 1), rateJoint(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionJoint, dmtc);
+	[~, rateCooperation(iWeight, 1), rateCooperation(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionCooperation, dmtc);
+	[~, rateExhaustive(iWeight, 1), rateExhaustive(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionExhaustive, dmtc);
+	[~, rateKkt(iWeight, 1), rateKkt(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionKkt, dmtc);
 	[~, rateRandomization(iWeight, 1), rateRandomization(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionRandomization, dmtc);
 	[~, rateMarginalization(iWeight, 1), rateMarginalization(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionMarginalization, dmtc);
 	[~, rateDecomposition(iWeight, 1), rateDecomposition(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionDecomposition, dmtc);
-	[~, rateKkt(iWeight, 1), rateKkt(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionKkt, dmtc);
 end
 
 figure('name', 'Achievable rate region by different input distribution design', 'position', [0, 0, 500, 400]);
-rateJoint(end + 2, 2) = max(rateJoint(:, 2));
+rateCooperation(end + 2, 2) = max(rateCooperation(:, 2));
+rateExhaustive(end + 2, 2) = max(rateExhaustive(:, 2));
+rateKkt(end + 2, 2) = max(rateKkt(:, 2));
 rateRandomization(end + 2, 2) = max(rateRandomization(:, 2));
 rateMarginalization(end + 2, 2) = max(rateMarginalization(:, 2));
 rateDecomposition(end + 2, 2) = max(rateDecomposition(:, 2));
-rateKkt(end + 2, 2) = max(rateKkt(:, 2));
+plotHandle = gobjects(1, 6);
 hold all;
-plot(rateJoint(convhull(rateJoint), 1), rateJoint(convhull(rateJoint), 2));
-plot(rateRandomization(convhull(rateRandomization), 1), rateRandomization(convhull(rateRandomization), 2));
-plot(rateMarginalization(convhull(rateMarginalization), 1), rateMarginalization(convhull(rateMarginalization), 2));
-plot(rateDecomposition(convhull(rateDecomposition), 1), rateDecomposition(convhull(rateDecomposition), 2));
-plot(rateKkt(convhull(rateKkt), 1), rateKkt(convhull(rateKkt), 2));
+plotHandle(1) = plot(rateCooperation(convhull(rateCooperation), 1), rateCooperation(convhull(rateCooperation), 2));
+plotHandle(2) = plot(rateExhaustive(convhull(rateExhaustive), 1), rateExhaustive(convhull(rateExhaustive), 2));
+plotHandle(3) = plot(rateKkt(convhull(rateKkt), 1), rateKkt(convhull(rateKkt), 2));
+plotHandle(4) = plot(rateRandomization(convhull(rateRandomization), 1), rateRandomization(convhull(rateRandomization), 2));
+plotHandle(5) = plot(rateMarginalization(convhull(rateMarginalization), 1), rateMarginalization(convhull(rateMarginalization), 2));
+plotHandle(6) = plot(rateDecomposition(convhull(rateDecomposition), 1), rateDecomposition(convhull(rateDecomposition), 2));
 hold off;
 grid minor;
-legend('Outer Bound', 'Randomization', 'Marginalization', 'Decomposition', 'KKT');
+legend('Tag Cooperation', 'Exhaustive Search', 'KKT', 'Randomization', 'Marginalization', 'Decomposition', 'Location', 'southwest');
 xlabel('Primary rate [nats/s/Hz]');
 ylabel('Baskcatter sum rate [nats/channel use]');
 xlim([0 inf]);
 ylim([0 inf]);
 box on;
+plot_style(plotHandle);

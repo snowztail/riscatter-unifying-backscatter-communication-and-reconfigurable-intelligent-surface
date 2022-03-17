@@ -51,14 +51,14 @@ equivalentDistribution = prod(combinationDistribution, 1);
 % * Update input distribution and detection threshold alternatively
 isConverged = false;
 while ~isConverged
+	% * Joint input with full transmit cooperation
+	[jointDistribution, equivalentDistributionCooperation, weightedSumRateCooperation] = input_distribution_cooperation(nTags, dmtc, weight, symbolRatio, snr);
 	% * Input distribution by exhaustive search
-	[inputDistributionExhaustive, equivalentDistributionExhaustive, weightedSumRateExhaustive] = input_distribution_exhaustive(nTags, dmtc, weight, symbolRatio, snr);
+	[inputDistributionExhaustive, equivalentDistributionExhaustive, weightedSumRateExhaustive] = input_distribution_exhaustion(nTags, dmtc, weight, symbolRatio, snr);
 	% * Input distribution by SCA
-	[inputDistributionSca, equivalentDistributionSca, weightedSumRateSca] = input_distribution_sca(nTags, dmtc, weight, symbolRatio, snr);
+	% [inputDistributionSca, equivalentDistributionSca, weightedSumRateSca] = input_distribution_sca(nTags, dmtc, weight, symbolRatio, snr);
 	% * Input distribution by KKT solution
 	[inputDistributionKkt, equivalentDistributionKkt, weightedSumRateKkt] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
-	% * Joint input optimization
-	[jointDistribution, equivalentDistribution, weeightedSumRateUpperBound] = input_distribution_joint(nTags, dmtc, weight, symbolRatio, snr);
 	% * Individual input recovery by randomization, marginalization, and decomposition
 	[inputDistributionRandomization, equivalentDistributionRandomization, weightedSumRateRandomization] = recovery_randomization(jointDistribution, dmtc, weight, symbolRatio, snr);
 	[inputDistributionMarginalization, equivalentDistributionMarginalization, weightedSumRateMarginalization] = recovery_marginalization(jointDistribution, dmtc, weight, symbolRatio, snr);

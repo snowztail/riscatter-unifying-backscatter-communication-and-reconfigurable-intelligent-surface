@@ -1,4 +1,4 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_exhaustive(nTags, dmtc, weight, symbolRatio, snr, resolution)
+function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_exhaustion(nTags, dmtc, weight, symbolRatio, snr, resolution)
 	% Function:
 	%	- obtain the WSR-optimal tag input distribution by (nTags-dimensional) exhaustive search
     %

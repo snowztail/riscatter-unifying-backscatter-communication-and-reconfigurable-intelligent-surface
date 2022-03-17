@@ -11,7 +11,7 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandi
 	%	- tolerance: maximum bisection deviation from zero
     %
     % Output:
-	%	- threshold [1 * nOutputs] : the optimal thresholding values
+	%	- threshold [1 * (nOutputs + 1)] : the optimal thresholding values
 	%	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %

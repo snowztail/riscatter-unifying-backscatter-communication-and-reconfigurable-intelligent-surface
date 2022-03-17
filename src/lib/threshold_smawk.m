@@ -8,10 +8,10 @@ function [threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
 	%	- receivedPower [(nStates ^ nTags) * 1]: received power per primary symbol corresponding to each input letter combination combination
 	%	- symbolRatio: the ratio of the secondary symbol period over the primary symbol period
-	%	- tolerance: maximum bisection deviation from zero
+	%	- tolerance: minimum non-zero input probability
     %
     % Output:
-	%	- threshold [1 * nOutputs] : the optimal thresholding values
+	%	- threshold [1 * (nOutputs + 1)] : the optimal thresholding values
 	%	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %

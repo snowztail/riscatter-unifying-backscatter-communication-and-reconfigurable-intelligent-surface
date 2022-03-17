@@ -67,4 +67,5 @@ while ~isConverged
 	[thresholdSmawk, dmtcSmawk, backscatterRateSmawk] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 	[thresholdDp, dmtcDp, backscatterRateDp] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 	[thresholdBisection, dmtcBisection, backscatterRateBisection] = threshold_bisection(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
+	[thresholdMl, dmtcMl, backscatterRateMl] = threshold_ml(equivalentDistribution, receivedPower, symbolRatio);
 end

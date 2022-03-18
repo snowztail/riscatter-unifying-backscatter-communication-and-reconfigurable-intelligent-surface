@@ -43,7 +43,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 
 	% * Initialization
 	indexCombination = index_combination(nTags, nStates);
-	inputDistribution = ones(nTags, nStates) ./ nStates;
+	inputDistribution = ones(nTags, nStates) / nStates;
 	equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
 	weightedSumRate = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistribution, dmtc);
 

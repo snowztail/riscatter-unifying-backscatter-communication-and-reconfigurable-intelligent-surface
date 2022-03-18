@@ -32,7 +32,8 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandi
 	end
 
 	% * Get data
-	nOutputs = sum(equivalentDistribution >= tolerance);
+% 	nOutputs = sum(equivalentDistribution >= tolerance);
+	nOutputs = length(equivalentDistribution);
 	nLevels = size(thresholdCandidate, 2);
 
 	% * Optimal t_0 = 0 and t_K+1 = ∞, traverse all possible t_1

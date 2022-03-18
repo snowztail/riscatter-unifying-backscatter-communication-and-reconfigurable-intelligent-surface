@@ -28,7 +28,8 @@ function [threshold, dmtc, backscatterRate] = threshold_dp(thresholdCandidate, d
 	end
 
 	% * Get data
-	nOutputs = sum(equivalentDistribution >= tolerance);
+% 	nOutputs = sum(equivalentDistribution >= tolerance);
+	nOutputs = length(equivalentDistribution);
 	nBins = size(dmc, 2);
 
 	% * Initialization

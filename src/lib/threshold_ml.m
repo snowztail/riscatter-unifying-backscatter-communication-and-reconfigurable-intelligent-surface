@@ -27,7 +27,8 @@ function [threshold, dmtc, backscatterRate] = threshold_ml(equivalentDistributio
 	end
 
 	% * Get data
-	nOutputs = sum(equivalentDistribution >= tolerance);
+% 	nOutputs = sum(equivalentDistribution >= tolerance);
+	nOutputs = length(equivalentDistribution);
 
 	% * Initialization
 	[receivedPower, outputIndex] = sort(receivedPower);

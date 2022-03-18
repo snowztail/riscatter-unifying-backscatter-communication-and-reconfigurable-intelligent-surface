@@ -42,7 +42,7 @@ end
 dmc = channel_discretization(thresholdCandidate, receivedPower, symbolRatio);
 
 % * Initialize input distribution, detection threshold, and DMTC
-inputDistribution = ones(nTags, nStates) ./ nStates;
+inputDistribution = ones(nTags, nStates) / nStates;
 combinationDistribution = combination_distribution(inputDistribution);
 equivalentDistribution = prod(combinationDistribution, 1);
 [threshold, dmtc] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
@@ -54,7 +54,7 @@ while ~isConverged
 	% * Joint input with full transmit cooperation
 	[jointDistribution, equivalentDistributionCooperation, weightedSumRateCooperation] = input_distribution_cooperation(nTags, dmtc, weight, symbolRatio, snr);
 	% * Input distribution by exhaustive search
-	[inputDistributionExhaustive, equivalentDistributionExhaustive, weightedSumRateExhaustive] = input_distribution_exhaustion(nTags, dmtc, weight, symbolRatio, snr);
+	[inputDistributionExhaustion, equivalentDistributionExhaustion, weightedSumRateExhaustion] = input_distribution_exhaustion(nTags, dmtc, weight, symbolRatio, snr);
 	% * Input distribution by SCA
 	% [inputDistributionSca, equivalentDistributionSca, weightedSumRateSca] = input_distribution_sca(nTags, dmtc, weight, symbolRatio, snr);
 	% * Input distribution by KKT solution

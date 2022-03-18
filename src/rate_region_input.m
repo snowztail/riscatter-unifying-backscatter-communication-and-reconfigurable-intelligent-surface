@@ -43,13 +43,13 @@ end
 dmc = channel_discretization(thresholdCandidate, receivedPower, symbolRatio);
 
 % * Initialize input distribution, detection threshold, and DMTC
-inputDistribution = ones(nTags, nStates) ./ nStates;
+inputDistribution = ones(nTags, nStates) / nStates;
 combinationDistribution = combination_distribution(inputDistribution);
 equivalentDistribution = prod(combinationDistribution, 1);
 [threshold, dmtc] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 
 rateCooperation = zeros(nWeights, 2);
-rateExhaustive = zeros(nWeights, 2);
+rateExhaustion = zeros(nWeights, 2);
 rateKkt = zeros(nWeights, 2);
 rateRandomization = zeros(nWeights, 2);
 rateMarginalization = zeros(nWeights, 2);
@@ -59,7 +59,7 @@ for iWeight = 1 : nWeights
 	% * Joint input with full transmit cooperation
 	[jointDistribution, equivalentDistributionCooperation, weightedSumRateUpperBound] = input_distribution_cooperation(nTags, dmtc, weight, symbolRatio, snr);
 	% * Input distribution by exhaustive search
-	[inputDistributionExhaustive, equivalentDistributionExhaustive, weightedSumRateExhaustive] = input_distribution_exhaustion(nTags, dmtc, weight, symbolRatio, snr);
+	[inputDistributionExhaustion, equivalentDistributionExhaustion, weightedSumRateExhaustion] = input_distribution_exhaustion(nTags, dmtc, weight, symbolRatio, snr);
 	% * Input distribution by KKT solution
 	[inputDistributionKkt, equivalentDistributionKkt, weightedSumRateKkt] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr);
 	% * Individual input recovery by randomization, marginalization, and decomposition
@@ -68,7 +68,7 @@ for iWeight = 1 : nWeights
 	[inputDistributionDecomposition, equivalentDistributionDecomposition, weightedSumRateDecomposition] = recovery_decomposition(jointDistribution, dmtc, weight, symbolRatio, snr);
 	% * Compute achievable rate of primary and secondary links
 	[~, rateCooperation(iWeight, 1), rateCooperation(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionCooperation, dmtc);
-	[~, rateExhaustive(iWeight, 1), rateExhaustive(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionExhaustive, dmtc);
+	[~, rateExhaustion(iWeight, 1), rateExhaustion(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionExhaustion, dmtc);
 	[~, rateKkt(iWeight, 1), rateKkt(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionKkt, dmtc);
 	[~, rateRandomization(iWeight, 1), rateRandomization(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionRandomization, dmtc);
 	[~, rateMarginalization(iWeight, 1), rateMarginalization(iWeight, 2)] = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionMarginalization, dmtc);
@@ -77,7 +77,7 @@ end
 
 figure('name', 'Achievable rate region by different input distribution design', 'position', [0, 0, 500, 400]);
 rateCooperation(end + 2, 2) = max(rateCooperation(:, 2));
-rateExhaustive(end + 2, 2) = max(rateExhaustive(:, 2));
+rateExhaustion(end + 2, 2) = max(rateExhaustion(:, 2));
 rateKkt(end + 2, 2) = max(rateKkt(:, 2));
 rateRandomization(end + 2, 2) = max(rateRandomization(:, 2));
 rateMarginalization(end + 2, 2) = max(rateMarginalization(:, 2));
@@ -85,7 +85,7 @@ rateDecomposition(end + 2, 2) = max(rateDecomposition(:, 2));
 plotHandle = gobjects(1, 6);
 hold all;
 plotHandle(1) = plot(rateCooperation(convhull(rateCooperation), 1), rateCooperation(convhull(rateCooperation), 2));
-plotHandle(2) = plot(rateExhaustive(convhull(rateExhaustive), 1), rateExhaustive(convhull(rateExhaustive), 2));
+plotHandle(2) = plot(rateExhaustion(convhull(rateExhaustion), 1), rateExhaustion(convhull(rateExhaustion), 2));
 plotHandle(3) = plot(rateKkt(convhull(rateKkt), 1), rateKkt(convhull(rateKkt), 2));
 plotHandle(4) = plot(rateRandomization(convhull(rateRandomization), 1), rateRandomization(convhull(rateRandomization), 2));
 plotHandle(5) = plot(rateMarginalization(convhull(rateMarginalization), 1), rateMarginalization(convhull(rateMarginalization), 2));

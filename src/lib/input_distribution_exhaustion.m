@@ -29,7 +29,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 		weight;
 		symbolRatio;
 		snr;
-		resolution = 1e-2;
+		resolution = 5e-3;
 	end
 
 	% * Ensure non-zero channel transition probability

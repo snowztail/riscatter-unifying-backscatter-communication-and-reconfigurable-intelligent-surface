@@ -3,8 +3,8 @@ nTxs = 1;
 nTags = 2;
 nStates = 2;
 [nInputs, nOutputs] = deal(nStates ^ nTags);
-nWeights = 2e1;
-weightSet = [linspace(0, 0.1, nWeights - 1), 1];
+nWeights = 3e1;
+weightSet = [linspace(0, 0.25, nWeights - 1), 1];
 reflectRatio = 0.5;
 symbolRatio = 10;
 noisePower = 1;
@@ -80,7 +80,7 @@ end
 
 save('data/rate_region.mat');
 
-figure('name', 'Achievable rate regions by different input and threshold design', 'position', [0, 0, 500, 400]);
+figureHandle = figure('name', 'Achievable rate regions by different input and threshold design', 'position', [0, 0, 500, 400]);
 rateCooperationSmawk(end + 2, 2) = max(rateCooperationSmawk(:, 2));
 rateCooperationBisection(end + 2, 2) = max(rateCooperationBisection(:, 2));
 rateCooperationMl(end + 2, 2) = max(rateCooperationMl(:, 2));
@@ -98,43 +98,42 @@ rateMarginalizationBisection(end + 2, 2) = max(rateMarginalizationBisection(:, 2
 rateMarginalizationMl(end + 2, 2) = max(rateMarginalizationMl(:, 2));
 
 plotHandle = gobjects(3, 4);
-legendString = cell(3, 4);
+legendHandle = cell(3, 4);
 hold all;
 
 plotHandle(1, 1) = plot(rateCooperationSmawk(convhull(rateCooperationSmawk), 1), rateCooperationSmawk(convhull(rateCooperationSmawk), 2));
 plotHandle(2, 1) = plot(rateCooperationBisection(convhull(rateCooperationBisection), 1), rateCooperationBisection(convhull(rateCooperationBisection), 2));
 plotHandle(3, 1) = plot(rateCooperationMl(convhull(rateCooperationMl), 1), rateCooperationMl(convhull(rateCooperationMl), 2));
-legendString{1, 1} = 'Cooperation-SMAWK';
-legendString{2, 1} = 'Cooperation-Bisection';
-legendString{3, 1} = 'Cooperation-ML';
+legendHandle{1, 1} = 'Cooperation-SMAWK';
+legendHandle{2, 1} = 'Cooperation-Bisection';
+legendHandle{3, 1} = 'Cooperation-ML';
 
 plotHandle(1, 2) = plot(rateExhaustionSmawk(convhull(rateExhaustionSmawk), 1), rateExhaustionSmawk(convhull(rateExhaustionSmawk), 2));
 plotHandle(2, 2) = plot(rateExhaustionBisection(convhull(rateExhaustionBisection), 1), rateExhaustionBisection(convhull(rateExhaustionBisection), 2));
 plotHandle(3, 2) = plot(rateExhaustionMl(convhull(rateExhaustionMl), 1), rateExhaustionMl(convhull(rateExhaustionMl), 2));
-legendString{1, 2} = 'Exhaustion-SMAWK';
-legendString{2, 2} = 'Exhaustion-Bisection';
-legendString{3, 2} = 'Exhaustion-ML';
+legendHandle{1, 2} = 'Exhaustion-SMAWK';
+legendHandle{2, 2} = 'Exhaustion-Bisection';
+legendHandle{3, 2} = 'Exhaustion-ML';
 
 plotHandle(1, 3) = plot(rateKktSmawk(convhull(rateKktSmawk), 1), rateKktSmawk(convhull(rateKktSmawk), 2));
 plotHandle(2, 3) = plot(rateKktBisection(convhull(rateKktBisection), 1), rateKktBisection(convhull(rateKktBisection), 2));
 plotHandle(3, 3) = plot(rateKktMl(convhull(rateKktMl), 1), rateKktMl(convhull(rateKktMl), 2));
-legendString{1, 3} = 'KKT-SMAWK';
-legendString{2, 3} = 'KKT-Bisection';
-legendString{3, 3} = 'KKT-ML';
+legendHandle{1, 3} = 'KKT-SMAWK';
+legendHandle{2, 3} = 'KKT-Bisection';
+legendHandle{3, 3} = 'KKT-ML';
 
 plotHandle(1, 4) = plot(rateMarginalizationSmawk(convhull(rateMarginalizationSmawk), 1), rateMarginalizationSmawk(convhull(rateMarginalizationSmawk), 2));
 plotHandle(2, 4) = plot(rateMarginalizationBisection(convhull(rateMarginalizationBisection), 1), rateMarginalizationBisection(convhull(rateMarginalizationBisection), 2));
 plotHandle(3, 4) = plot(rateMarginalizationMl(convhull(rateMarginalizationMl), 1), rateMarginalizationMl(convhull(rateMarginalizationMl), 2));
-legendString{1, 4} = 'Marginalization-SMAWK';
-legendString{2, 4} = 'Marginalization-Bisection';
-legendString{3, 4} = 'Marginalization-ML';
+legendHandle{1, 4} = 'Marginalization-SMAWK';
+legendHandle{2, 4} = 'Marginalization-Bisection';
+legendHandle{3, 4} = 'Marginalization-ML';
 
 hold off;
 grid minor;
 box on;
-legend(legendString(:));
+legend(legendHandle(:), 'Location', 'southwest');
 xlabel('Primary rate [nats/s/Hz]');
 ylabel('Baskcatter sum rate [nats/channel use]');
-xlim([0 inf]);
-ylim([0 inf]);
 plot_style_group(plotHandle(:), 3);
+magnifyOnFigure(figureHandle, 'Mode', 'interactive', 'initialPositionMagnifier', [360 250 20 20], 'initialPositionSecondaryAxes', [300 65 100 100], 'secondaryAxesFaceColor', [0.9 0.9 0.9]);

@@ -45,13 +45,13 @@ function [rate, inputDistribution, equivalentDistribution] = alternating_optimiz
 		% * Threshold design
 		switch options.Threshold
 		case 'smawk'
-			[~, dmtc] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
+			[~, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 		case 'dp'
-			[~, dmtc] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
+			[~, dmtc, backscatterRate] = threshold_dp(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 		case 'bisection'
-			[~, dmtc] = threshold_bisection(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
+			[~, dmtc, backscatterRate] = threshold_bisection(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio);
 		case 'ml'
-			[~, dmtc] = threshold_ml(equivalentDistribution, receivedPower, symbolRatio);
+			[~, dmtc, backscatterRate] = threshold_ml(equivalentDistribution, receivedPower, symbolRatio);
 		end
 		% * Input design
 		switch options.Input
@@ -73,6 +73,8 @@ function [rate, inputDistribution, equivalentDistribution] = alternating_optimiz
 			jointDistribution = input_distribution_cooperation(nTags, dmtc, weight, symbolRatio, snr);
 			[inputDistribution, equivalentDistribution, weightedSumRate] = recovery_randomization(jointDistribution, dmtc, weight, symbolRatio, snr);
 		end
+		% ! To check later
+		equivalentDistribution(equivalentDistribution < eps) = eps;
 		% * Test convergence
 		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance;
 	end

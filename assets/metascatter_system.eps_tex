@@ -1,6 +1,6 @@
-%% Creator: Inkscape 1.1 (c4e8f9ed74, 2021-05-24), www.inkscape.org
+%% Creator: Inkscape 1.1.2 (0a00cf5339, 2022-02-04, custom), www.inkscape.org
 %% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
-%% Accompanies image file 'symbiotic_radio.pdf' (pdf, eps, ps)
+%% Accompanies image file 'metascatter_system.eps' (pdf, eps, ps)
 %%
 %% To include the image in your LaTeX document, write
 %%   \input{<filename>.pdf_tex}
@@ -38,7 +38,7 @@
   \newcommand*\fsize{\dimexpr\f@size pt\relax}%
   \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{141.80073953bp}%
+    \setlength{\unitlength}{161.00489292bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -50,16 +50,17 @@
   \global\let\svgwidth\undefined%
   \global\let\svgscale\undefined%
   \makeatother%
-  \begin{picture}(1,0.36861607)%
+  \begin{picture}(1,0.32765601)%
     \lineheight{1}%
     \setlength\tabcolsep{0pt}%
-    \put(0.22110485,0.1242948){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}AP\end{tabular}}}}%
-    \put(0,0){\includegraphics[width=\unitlength,page=1]{symbiotic_radio.pdf}}%
-    \put(0.95888674,0.10910393){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}UE\end{tabular}}}}%
-    \put(0.72347183,0.00292658){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}TG\end{tabular}}}}%
-    \put(0,0){\includegraphics[width=\unitlength,page=2]{symbiotic_radio.pdf}}%
-    \put(0.57997462,0.27155728){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{\mathrm{D}}$\end{tabular}}}}%
-    \put(0.41072305,0.13987955){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{\mathrm{F}}$\end{tabular}}}}%
-    \put(0.75980444,0.08698845){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{\mathrm{B}}$\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength]{metascatter_system.eps}}%
+    \put(0.17539875,0.09913411){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}AP\end{tabular}}}}%
+    \put(0.82548752,0.0795976){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}UE\end{tabular}}}}%
+    \put(0.88708383,0.04019132){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$\dots$\end{tabular}}}}%
+    \put(0.49216413,0.2174711){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$\boldsymbol{h}_{\mathrm{D}}^H$\end{tabular}}}}%
+    \put(0.92044965,0.21925135){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}TG $k$ \end{tabular}}}}%
+    \put(0.5057691,0.30877462){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$\boldsymbol{h}_{\mathrm{F},k}^H$\end{tabular}}}}%
+    \put(0.73308335,0.23386131){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{\mathrm{B},k}$\end{tabular}}}}%
+    \put(0.64220185,0.01054808){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}TG $k'$ \end{tabular}}}}%
   \end{picture}%
 \endgroup%

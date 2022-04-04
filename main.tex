@@ -12,6 +12,7 @@
 \usepackage{cite}
 \usepackage{colortbl}
 \usepackage{environ}
+\usepackage{fixmath}
 \usepackage{grffile}
 \usepackage{hyperref}
 \usepackage{import}
@@ -19,19 +20,20 @@
 \usepackage{microtype}
 \usepackage{multirow}
 \usepackage{pgffor}
+\usepackage{pgfgantt}
 \usepackage{pgfplots}
 \usepackage{physics}
 \usepackage{siunitx}
 \usepackage{stfloats}
+\usepackage{tcolorbox}
 \usepackage{tikz}
 \usepackage{url}
 \usepackage{xcolor}
-\usepackage[acronym]{glossaries-extra}
 \usepackage[T1]{fontenc}
+\usepackage[acronym]{glossaries-extra}
 \usepackage[caption=false,font=footnotesize,subrefformat=parens,labelformat=parens]{subfig}
 \usepackage[short]{optidef}
-% \usepackage[subtle]{savetrees}
-% \usepackage{stmaryrd}
+\usepackage[subtle]{savetrees}
 
 \listfiles
 \interdisplaylinepenalty=2500
@@ -51,6 +53,7 @@
 	#1\;\delimsize\|\;#2%
 }
 \newcommand{\infdiv}{D\infdivx}
+\renewcommand{\qedsymbol}{\hfill\ensuremath{\Box}}
 
 \makeatletter
 \tikzset{
@@ -76,6 +79,7 @@
 
 \setabbreviationstyle[acronym]{long-short}
 
+\newacronym{af}{AF}{Amplify-and-Forward}
 \newacronym{ambc}{AmBC}{Ambient Backscatter Communications}
 \newacronym{ap}{AP}{Access Point}
 \newacronym{awgn}{AWGN}{Additive White Gaussian Noise}
@@ -85,557 +89,680 @@
 \newacronym{bpsphz}{\si{bps/Hz}}{bit per second per Hertz}
 \newacronym{cscg}{CSCG}{Circularly Symmetric Complex Gaussian}
 \newacronym{csi}{CSI}{Channel State Information}
+\newacronym{df}{DF}{Decode-and-Forward}
 \newacronym{dmc}{DMC}{Discrete Memoryless Channel}
 \newacronym{dmtc}{DMTC}{Discrete Memoryless Thresholding Channel}
+\newacronym{dmtmac}{DMTMAC}{Discrete Memoryless Thresholding Multiple Access Channel}
+\newacronym{dp}{DP}{Dynamic Programming}
+\newacronym{iid}{i.i.d.}{independent and identically distributed}
 \newacronym{irs}{IRS}{Intelligent Reflecting Surface}
 \newacronym{kkt}{KKT}{Karush–Kuhn–Tucker}
 \newacronym{mac}{MAC}{Multiple Access Channel}
 \newacronym{mc}{MC}{Multiplication Coding}
+\newacronym{miso}{MISO}{Multiple-Input Single-Output}
+\newacronym{mimo}{MIMO}{Multiple-Input Multiple-Output}
 \newacronym{ml}{ML}{Maximum-Likelihood}
+\newacronym{noma}{NOMA}{Non-Orthogonal Multiple Access}
+\newacronym{ofdm}{OFDM}{Orthogonal Frequency-Division Multiplexing}
+\newacronym{pdf}{PDF}{Probability Density Function}
 \newacronym{psk}{PSK}{Phase Shift Keying}
+\newacronym{pin}{PIN}{Positive Intrinsic-Negative}
 \newacronym{qam}{QAM}{Quadrature Amplitude Modulation}
 \newacronym{rf}{RF}{Radio Frequency}
 \newacronym{sc}{SC}{Superposition Coding}
 \newacronym{sic}{SIC}{Successive Interference Cancellation}
+\newacronym{simo}{SIMO}{Single-Input Multiple-Output}
+\newacronym{sinr}{SINR}{Signal-to-Interference-plus-Noise Ratio}
+\newacronym{smawk}{SMAWK}{Shor-Moran-Aggarwal-Wilber-Klawe}
 \newacronym{sr}{SR}{Symbiotic Radio}
+\newacronym{tdma}{TDMA}{Time-Division Multiple Access}
 \newacronym{tg}{TG}{tag}
 \newacronym{ue}{UE}{user}
 
 
-
 \begin{document}
-	\title{Backscatter Modulation Design for Symbiotic Radio Networks}
-	\maketitle
+\title{Metascatter: Unifying Symbiotic Radio and Intelligent Reflecting Surface}
+\author{
+	\IEEEauthorblockN{
+		Yang~Zhao,~\IEEEmembership{Member,~IEEE,}
+		and~Bruno~Clerckx,~\IEEEmembership{Senior~Member,~IEEE}
+	}
+	\thanks{
+		The authors are with the Department of Electrical and Electronic Engineering, Imperial College London, London SW7 2AZ, U.K. (e-mail: \{yang.zhao18, b.clerckx\}@imperial.ac.uk).
+	}
+}
+\maketitle
 
-	\begin{section}{Backscatter Model}
-		\begin{subsection}{Backscatter Principles}
-			\begin{figure}[!t]
-				\centering
-				\subfloat[Block diagram of a passive tag]{
-					\resizebox{0.6\columnwidth}{!}{
-						\begin{circuitikz}[transform shape]
-							\coordinate (O) at (0,0);
-							\node[block,from={O to $(O) + (6.375,3.25)$}](T){};
-							\draw (0,1.75)
-								to[short] ++(-1,0)
-								to[short] ++(0,0.75) node[bareantenna](A){Ant};
-							\draw (0,1.75)
-								to[short,-*] ++(0.25,0) coordinate(J);
-							\draw (J)
-								to[short] ++(0,1)
-								to[short] ++(0.5,0) coordinate(J1);
-							\node[block,from={$(J1) + (0,-0.25)$ to $(J1) + (2.5,0.25)$}](R){Rectifier};
-							\draw (J)
-								to[short] ++(0.5,0) coordinate(J2);
-							\node[block,from={$(J2) + (0,-0.25)$ to $(J2) + (2.5,0.25)$}](D){Demodulator};
-							\draw (J)
-								to[short] ++(0,-1)
-								to[short] ++(0.5,0) coordinate(J3)
-								to [vR,mirror,invert,/tikz/circuitikz/bipoles/length=1cm] ++(1.75,0) node[ground,rotate=90]{};
-							\node[block,from={$(J3) + (0,-0.25)$ to $(J3) + (2.5,0.25)$},draw=none](M){};
-							\draw ($(J3) + (0,-0.25)$) rectangle ($(J3) + (2.5,0.25)$);
-							\draw ($(J3) + (1.25,-0.5)$) node[]{Modulator};
-							\draw[-{Latex[length=2mm]}] (R.east) -- ++(0.75,0);
-							\draw[-{Latex[length=2mm]}] (D.east) -- ++(0.75,0);
-							\draw[{Latex[length=2mm]}-] (M.east) -- ++(0.75,0);
-							\node[block,from={$(R.east) + (0.75,-0.25)$ to $(R.east) + (2.875,0.25)$}](P){Power buffer};
-							\node[block,from={$(M.east) + (0.75,-0.25)$ to $(D.east) + (2.875,0.25)$}](S){Digital\\section};
-							\draw[dashed,-{Latex[length=2mm]}] (P.south) to (S.north);
-							\coordinate (F1) at ($(P.south)!0.5!(S.north)$);
-							\coordinate (F2) at ($(D.east)!0.5!(S.west)$);
-							\coordinate (F3) at ($(D.south)!0.5!(M.north)$);
-							\draw[dashed] (F1) to (F1-|D.north);
-							\draw[dashed,-{Latex[length=2mm]}] (F1-|D.north) to (D.north);
-							\draw[dashed] (F1-|F2) to (F2|-F3) to (M|-F3);
-							\draw[dashed,-{Latex[length=2mm]}] (M|-F3) to (M.north);
-						\end{circuitikz}
-					}
-					\label{fi:block_diagram_of_a_passive_tag}
-				}
-				\subfloat[Backscatter modualtion]{
-					\resizebox{0.35\columnwidth}{!}{
-						\begin{circuitikz}[transform shape]
-							\draw (0,0) node[bareantenna](bareantenna){};
-							\draw (bareantenna.west) ++(-1.5,0) node[waves](WI){};
-							\draw (WI.north east) ++(0.25,0) node[font=\Large]{$\vec{E}_{\mathrm{I}}$};
-							\draw (WI.south east) ++(0.25,0) node[font=\Large]{$\vec{H}_{\mathrm{I}}$};
-							\draw (bareantenna.east) ++(0.875,0) node[waves](WR){};
-							\draw (WR.north east) ++(0.25,0) node[font=\Large]{$\vec{E}_m$};
-							\draw (WR.south east) ++(0.25,0) node[font=\Large]{$\vec{H}_m$};
-							\draw (bareantenna)
-								to [R=$Z_{\mathrm{A}}$,font=\Large,/tikz/circuitikz/bipoles/length=1cm] ++(0,-2)
-								to [R=$Z_m$,font=\Large,/tikz/circuitikz/bipoles/length=1cm] ++(2,0) node[ground]{};
-						\end{circuitikz}
-					}
-					\label{fi:backscatter_modualtion}
-				}
-				\caption{For a passive tag, the rectifier and demodulator rely on the incident electromagnetic wave for energy harvesting and source decoding, while the load-switcher adjusts the reradiated signal for backscatter modulation.}
-				\label{fi:tag}
-			\end{figure}
-			A bistatic backscatter system consists of an excitation source, multiple (semi-)passive tags, and a backscatter reader. When illuminated, the tags simultaneously harvest energy, backscatter message, and demodulate the source signal if necessary. Fig.~\subref*{fi:block_diagram_of_a_passive_tag} shows a typical passive with a scattering antenna, an energy harvester, an integrated receiver\footnote{For example, \cite{Kim2021a} prototyped a compact-size pulse position demodulator based on an envelope detector, which brings great potential to coordination, synchronization, and reflection pattern control.}, a load-switching modulator, and on-chip components (e.g., micro-controller, memory, and sensors). A portion of the impinging signal is absorbed by the tag while the remaining is backscattered to the space. According to Green's decomposition \cite{Hansen1989}, the backscattered signal can be decomposed into the \emph{structural mode} component and the \emph{antenna mode} component. The former is fixed and depends on the antenna geometry and material properties\footnote{The structural mode component can be regarded as part of the environment multipath and modeled by channel estimation \cite{Boyer2014}.}, while the latter is adjustable and depends on the mismatch of the antenna and load impedance. Fig.~\subref*{fi:backscatter_modualtion} illustrates a simplified circuit and backscatter model at tag state $m$. The corresponding reflection coefficient is defined as\footnote{We assume the linear backscatter model where the reflection coefficient is irrelevant to the incident electromagnetic field at the tag \cite{Dobkin2012}.}
-			\begin{equation}
-				\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
-				\label{eq:reflection_coefficient}
-			\end{equation}
-			where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
-		\end{subsection}
+\begin{section}{Introduction}
+	\IEEEPARstart{B}{ackscatter} is recently re-innovated as a promising approach to support low-power communications and control wireless propagation environments.
+	The concept of \gls{ambc} was first proposed in \cite{Liu2013b}, where each tag harvests energy from and modulates information over ambient \gls{rf} signals by periodically switching between different reflection patterns.
+	It enables battery-free communication between fully passive nodes, but the backscatter signal strength can be relatively weak and the decoding is subject to strong direct-link interference.
+	To solve this, \cite{Yang2018d} exploited the repeating structure of \gls{ofdm} symbol for interference cancellation based on backscatter channel strength.
+	Cooperative primary-backscatter decoding using co-located receiver, known as cooperative \gls{ambc}, was proposed in \cite{Yang2018}.
+	The authors evaluated the error performance of \gls{ml}, linear, and \gls{sic} detectors for flat fading channels, and proposed a low-complexity \gls{ml} detector for frequency-selective fading channels with ambient \gls{ofdm} carrier.
+	When transmit cooperation is also available, cooperative \gls{ambc} is more commonly known as \gls{sr} \cite{Liang2020}.
+	The authors of \cite{Guo2019b} classified \gls{sr} into commensal, parasitic, and competitive modes based on the relative link priority, then derived their instantaneous achievable rate and optimal power allocation.
+	The outage probability for those modes was later studied in \cite{Ding2020}.
+	On the other hand, it was concluded in \cite{Long2020a} that if the backscatter symbol period is much longer than the primary symbol period, then the non-coherent achievable rate of primary decoding would approach that of the coherent case.
+	The authors also considered the transmit precoder design for weighted sum-rate maximization and transmit power minimization problems.
+	\cite{Zhou2019a} explored how the number of transmit antennas, receive antennas, and symbol period ratio asymptotically influence the ergodic rate of primary and backscatter links.
+	With multi-antenna at all ends, \cite{Wu2021a} optimized the transmit precoder to maximize the backscatter achievable rate under primary rate constraint.
+	However, those paper only considered single tag scenario and the optimal tag multiple access scheme remains unknown.
+	\cite{Xu2021a} proposed a \gls{noma}-based \gls{sr} and studied the receive combiner design when the receiver decodes in the order of equivalent channel strength.
+	A \gls{tdma}-based \gls{sr} with energy harvesting constraints was also presented in \cite{Yang2021a}, and energy efficiency maximization was considered with respect to transmit power, reflection efficiency, and time allocation design.
+	In \cite{Han2021}, random code-assisted backscatter multiple access was combined with \gls{sr}, and the authors evaluated the asymptotic \gls{sinr} performance using random matrix theory.
 
-		\begin{subsection}{Backscatter Modulation}
-			Backscatter modulation is achieved by switching the tag load impedance between different states. For an $M$-ary \gls{qam} at state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$, the reflection coefficient $\Gamma_m$ maps to the signal constellation point $\bar{c}_m$ as \cite{Thomas2012a}
-			\begin{equation}
-				\Gamma_m = \alpha \frac{\bar{c}_m}{\max_{m'} \lvert \bar{c}_{m'} \rvert},
-				\label{eq:backscatter_modulation}
-			\end{equation}
-			where $\alpha \in [0,1]$ is the reflection efficiency at a given direction. For simplicity, we consider an $M$-ary \gls{psk} with constellation set $\mathcal{C} \triangleq \{\bar{c}_1,\ldots,\bar{c}_M\}$, where the $m$-th constellation point is
-			\begin{equation}
-				\bar{c}_m = \exp \left(j \frac{2 \pi m}{M}\right).
-				\label{eq:mpsk}
-			\end{equation}
+	On the other hand, \gls{irs} has recently emerged as a promising technique to enhance the energy efficiency.
+	In practice, an \gls{irs} consists of multiple individual sub-wavelength reflecting elements to adjust the amplitude and phase of the incoming signal (i.e., passive beamforming).
+	Different from relay, backscatter and frequency-selective surface \cite{Anwar2018}, \gls{irs} assists the primary transmission using passive components with much lower energy consumption and thermal noise, but is limited to frequency-dependent reflection.
+	\cite{Wu2018} proposed an \gls{irs}-assisted \gls{miso} system and jointly optimized the precoder and the phase shifts to minimize the transmit power.
+	The active and passive beamforming problem was then extended to the discrete phase shift case \cite{Wu2019a} and the multi-user case \cite{Wu2019}.
+	In \cite{Abeywickrama2020}, the authors investigated the impact of non-zero resistance on the reflection pattern and emphasized the coupling between reflection amplitude and phase shift in practice.
+	To estimate the cascaded link without \gls{rf}-chains at the \gls{irs}, practical protocols were developed based on element-wise on/off switching \cite{Nadeem2019}, training sequence and reflection pattern design \cite{You2019,Kang2020}, and compressed sensing \cite{Wang2020}.
+	\gls{irs} was also added to single-tag and multi-tag \gls{sr} systems to improve backscatter efficiency \cite{Chen2021,Zhang2021d}.
+	Recently, the idea of \gls{irs}-empowered \gls{sr} was proposed in \cite{Xu2020b,Hua2022}, where the reflection pattern can be decoupled as the multiplication of whole phase shift matrix and one backscatter symbol.
+	The idea was combined with spatial modulation to divide the \gls{irs} into reflection and information and elements, and the error performance of non-coherent backscatter detection was studied accordingly \cite{Hu2021a}.
 
-			\begin{remark}
-				For passive tags, the reflection efficiency $\alpha$ controls the tradeoff between the harvestable power and backscatter strength: $\alpha = 0$ corresponds to maximum power transfer to the tag, while $\alpha = 1$ with $M$-\gls{psk} corresponds to ideal \gls{irs} with $M$ discrete states.
-			\end{remark}
-		\end{subsection}
-	\end{section}
-
-	\begin{section}{Backscatter Detection and Achievable Rates}
-		\begin{subsection}{System Model}
-			\begin{figure}[!t]
-				\centering
-				\def\svgwidth{0.9\columnwidth}
-				\import{assets/}{symbiotic_radio.eps_tex}
-				\caption{A single-user multi-tag symbiotic radio system.}
-				\label{fi:symbiotic_radio}
-			\end{figure}
-			As shown in Fig.~\ref{fi:symbiotic_radio}, we propose a single-\gls{ue} multi-\gls{tg} symbiotic radio network where the \gls{rf} signal generated by the $Q$-antenna \gls{ap} is shared by two coexisting systems. In the primary downlink system, the \gls{ap} transmits information to the single-antenna user. In the secondary backscatter system, the \gls{ap} acts as the carrier emitter, the $K$ nearby single-antenna tags modulate their information over the reradiated \gls{rf} signals, and the user serves as the multi-tag backscatter reader. Denote the \gls{ap}-\gls{ue} direct channel as $\boldsymbol{h}_{\mathrm{D}}^H \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-\gls{tg} $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, the \gls{tg} $k$-\gls{ue} backward channel as $h_{\mathrm{B},k}$, and the cascaded forward-backward channel of tag $k$ as $\boldsymbol{h}_{\mathrm{C},k}^H \triangleq h_{\mathrm{B},k} \boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$. For simplicity, we consider a quasi-static block fading model where the channel coefficients remain constant within each coherence interval and vary independently over different coherence intervals, and assume the coherence interval $T$ is much longer than the backscatter symbol period $T_c$ and primary symbol period $T_s$. We also assume the direct channel and all cascaded channels can be successfully estimated and fed back to the \gls{ap}.\footnote{Due to the lack of \gls{rf} chains at the passive tag, accurate and efficient \gls{csi} acquisition at the \gls{ap} can be challenging. One possible approach is that the \gls{ap} sends pre-defined pilots, the tags respond in well-designed manners, and the user performs least-square estimation with feedbacks \cite{Bharadia2015,Yang2015b,Guo2019g}.} Since the tags need to physically switch the loads for backscatter modulation, they communicate at a much longer symbol period (and lower rates) than the primary system. As such, we assume the transitions of all tags are perfectly synchronized, and the backscatter symbol period satisfies $T_c = N T_s$ where $N \gg 1$ is a positive integer.
-
-			Without loss of generality, we focus on the transmissions and detections during one particular backscatter symbol period. To provide a preliminary insight, we assume the primary symbol $s[n]$ at block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is in standard \gls{cscg} distribution, and the backscatter symbol $c_k$ of tag $k$ employs $M$-\gls{psk} modulation by \eqref{eq:mpsk}, i.e., $c_k \in \mathcal{C}$, $\forall k \in \mathcal{K}$. Thus, the signal received by the user at block $n$ can be expressed as\footnote{We omit the signal reflected by two or more times\cite{Wu2019} and assume the time difference of arrival from different paths are negligible\cite{Guo2019b}.}
-			\begin{equation}
-				y[n] = \left(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H c_k\right) \boldsymbol{w} s[n] + w[n],
-				\label{eq:received_signal}
-			\end{equation}
-			where $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the active precoder satisfying $\lVert \boldsymbol{w} \rVert^2 \le P$, $P$ is the average transmit power constraint at the \gls{ap}, and $w[n] \sim \mathcal{CN}(0,\sigma_w^2)$ is the equivalent \gls{awgn} at block $n$. Besides, we collect the backscatter symbols of $K$ tags into $c_{\mathcal{K}} \triangleq \{c_k : k \in \mathcal{K}\}$, stack the received signal over $N$ blocks as $\boldsymbol{y} \triangleq \left[y[1],\ldots,y[N]\right]^T \in \mathbb{C}^{N \times 1}$, and define the equivalent channel for primary transmission as
-			\begin{equation}
-				\boldsymbol{h}_{\mathrm{E}}^H(c_{\mathcal{K}}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H c_k.
-				\label{eq:equivalent_primary_channel}
-			\end{equation}
-
-			\begin{remark}
-				The proposed symbiotic radio system includes a multiplicative \gls{mac} where the \gls{ap} and the tags simultaneously transmit to the user. It inspired [TODO] to perform \gls{sic} that first non-coherently detects the primary message under backscatter uncertainty, then cancels its contribution and decodes the tag messages. This scheme requires non-coherent coding at the \gls{ap} and $K$ re-encoding, precoding, and subtraction operations at the user. However, different from the conventional \gls{mac} with \gls{sc}, the symbiotic radio system involves \gls{mc} that combines the primary and secondary messages by multiplication. Hence, novel multi-stream detection techniques should be tailored to symbiotic radio systems to accommodate the massive connectivity of tags and the multiplicative combination of links.
-			\end{remark}
-		\end{subsection}
-
-		\begin{subsection}{Backscatter Detection}
-			To reveal the impact of backscatter modulation on the primary transmission and avoid the exponential complexity of joint detection, we extend the non-coherent \gls{ambc} detection \cite{Qian2019} to the multi-tag case, and propose a low-complexity energy detection to decode the backscatter symbols under primary source uncertainty. It requires no dedicated receivers or non-coherent codes at the \gls{ap}, and can be readily implemented over legacy downlink systems.
-
-			\begin{remark}
-				One key property of symbiotic radio is the primary message propagates to the user from a known channel and multiple multiplicative channels with uncertainty introduced by backscatter modulation. As such, each reflection coefficient simultaneously encodes the tag message and influences the equivalent channel of the primary link. If the backscatter symbols can be successfully decoded first, they can be modeled within the equivalent channel \eqref{eq:equivalent_primary_channel} as in channel training, instead of being removed by \gls{sic}.
-			\end{remark}
-
-			To explicitly specify the instances of the backscatter symbols, we define the modulation index set as $m_{\mathcal{K}} \triangleq \{m_k \in \mathcal{M} : k \in \mathcal{K}\}$ and label the corresponding tag input combination as $\bar{c}_{m_{\mathcal{K}}} \triangleq \{\bar{c}_{m_k} \in \mathcal{C} : m_k \in \mathcal{M}, k \in \mathcal{K}\}$. Since any $\bar{c}_{m_{\mathcal{K}}}$ remains constant per $N$ primary symbols, the received signal at block $n$ is only subject to the variation of the primary source $s[n]$ and \gls{awgn} $w[n]$, and thus follows \gls{cscg} distribution $y_{m_{\mathcal{K}}}[n] \sim \mathcal{CN}\left(0,\sigma_{m_{\mathcal{K}}}^2\right)$, where the variance
-			\begin{equation}
-				\sigma_{m_{\mathcal{K}}}^2 = \Bigl\lvert \underbrace{\bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H \bar{c}_{m_k}\bigr)}_{\boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}})} \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2,
-				\label{eq:receive_variance}
-			\end{equation}
-			denotes the expectation of the received power per primary block under tag modulation index set $m_{\mathcal{K}}$. For the ease of exposition, we denote the hypothesis that the tag input combination at state $i \in \mathcal{I} \triangleq \{1,\ldots,M^K\}$ as $\mathcal{H}_i$, sort $\{\sigma_{m_{\mathcal{K}}}^2\}$ in ascending order by a one-to-one mapping $m_{\mathcal{K}} \mapsto i$,\footnote{When more than one modulation index sets yield the same energy level, the mapping is not unique and the detection fails to separate them. This blind spot issue can be potentially mitigated by multi-antenna techniques and is beyond the scope of this paper.} define the received signal energy over $N$ primary blocks as $z \triangleq \lVert \boldsymbol{y} \rVert^2$, and let $f(z \mid \mathcal{H}_i)$ be the conditional probability density function of receiving $z$ under hypothesis $\mathcal{H}_i$. Correspondingly, $z$ is the sum of $N$ i.i.d. exponential variables each with mean $\sigma_i^2$, and the conditional probability density function follows Erlang distribution with shape $N$ and scale $\sigma_i^2$ as\footnote{In some papers, it may also be referred to as Gamma distribution.}
-			\begin{equation}
-				f(z \mid \mathcal{H}_i) = \frac{z^{N-1} e^{-z/\sigma_i^2}}{\sigma_i^{2N} (N-1)!}.
-				\label{eq:energy_distribution}
-			\end{equation}
-
-			\begin{remark}
-				The backscatter links essentially form a discrete-input continuous-output memoryless channel. To further reduce decoding complexity, we apply hard-decision detection and construct a \gls{dmtc}, whose capacity is a function of both input distribution and decision thresholds \cite{Nguyen2018}.
-			\end{remark}
-
-			To maximize the mutual information for a general non-binary-input continuous-output channel, not only the decision region design remains an open problem, but also the optimal number of decision thresholds is still unknown. The reason is that the optimal decision region $\mathcal{R}_j$ of hypothesis $\mathcal{H}_j$ may be non-convex (i.e., consist of more than one disjoint partitions). The authors of \cite{Nguyen2021} showed that any optimal quantizer with arbitrary cost function must separate the backward channel  (i.e., posterior distribution) into convex decision regions, and provided an upper bound on the number of thresholds.
-
-			\begin{theorem}
-				For any $L$-input continuous-output channel with Erlang distribution~\eqref{eq:energy_distribution}, the number of thresholds required to achieve the \gls{dmtc} capacity is $L+1$ and the optimal decision region $j \in \mathcal{L} \triangleq \{1,\ldots,L\}$ has a convex structure $\mathcal{R}_j^\star = [t_{j-1}^\star, t_j^\star)$.
-			\end{theorem}
-
-			\begin{proof}
-				Assume the optimal number of thresholds is $S+1$. Since $x \to z \to \bar{z}$ formulates a Markov chain, we need at least $L+1$ thresholds to construct $L$ valid detection regions and minimize the distortion between $x$ and $\bar{z}$. It suggests $S \ge L$. Let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{(S+1) \times 1}$ be the optimal thresholding vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.\footnote{We consider strict inequality in the definition, as otherwise $S$ and $\boldsymbol{t}$ could be non-unique for a given thresholding scheme.} Denote the decision partition $s$ as $R_s \triangleq [t_{s-1},t_s)$. Without loss of generality, we assume $\mathcal{R}_j = \bigcup_{s \equiv j \pmod L} R_s$.\footnote{The proof holds for general mapping $R_s \mapsto \mathcal{R}_j$, and we focus on this specific case for the ease of notation.} The thresholding design problem can be expressed as
-				\begin{maxi!}
-					{\scriptstyle{\boldsymbol{t}}}{I_{\mathrm{B}}(c_{\mathcal{K}};z)}{\label{op:thresholding}}{\label{ob:backscatter_mutual_information}}
-					\addConstraint{t_{s-1}}{< t_s,}{\quad \forall s \in \mathcal{S}.}{\label{co:strict_inequality}}
-				\end{maxi!}
-
-				Problem~\eqref{op:thresholding} is intricate due to the strict inequality constraint~\eqref{co:strict_inequality}. Following \cite{Nguyen2020}, we first relax it to the convex counterpart, then discard the solutions that violate the original constraints. The Lagrangian function for the relaxed problem is
-				\begin{equation}
-					L(\boldsymbol{t},\boldsymbol{\mu}) = - I_{\mathrm{B}}(c_{\mathcal{K}};z) + \sum_{s \in \mathcal{S}} \mu_s (t_{s-1} - t_s),
-				\end{equation}
-				where $\mu_s$ is the Lagrange multiplier associated with the non-strict version of \eqref{co:strict_inequality} and $\boldsymbol{\mu} \triangleq [\mu_1,\ldots,\mu_S]^T \in \mathbb{R}^{S \times 1}$. The \gls{kkt} conditions on the optimal primal and dual solutions are, $\forall s \in \mathcal{S}$,
-				\begin{subequations}
-					\label{eq:kkt_thresholding}
-					\begin{equation}
-						- \nabla_{t_s^\star} I^\star_{\mathrm{B}}(c_{\mathcal{K}};z) + \mu_{s-1}^\star - \mu_s^\star = 0,
-						\label{eq:stationarity}
-					\end{equation}
-					\begin{equation}
-						\mu_s^\star \ge 0,
-						\label{eq:dual_feasibility}
-					\end{equation}
-					\begin{equation}
-						\mu_s^\star (t_{s-1}^\star - t_s^\star) = 0.
-						\label{eq:complementary_slackness}
-					\end{equation}
-
-				\end{subequations}
-				% For \gls{dmtc} based on energy detection~\eqref{eq:energy_distribution}, it is trivial to conclude $t_0^\star = 0$ and $t_S^\star = \infty$.
-				Due to the strict inequality constraint~\eqref{co:strict_inequality}, conditions \eqref{eq:dual_feasibility} and \eqref{eq:complementary_slackness} together imply $\mu_s^\star = 0$, $\forall s \in \mathcal{S}$. Besides, it is trivial to conclude $t_0^\star = 0$ for our \gls{dmtc} based on energy detection. As such, the necessary optimality condition for $t_s^\star$, $s \in \mathcal{S}$ is
-				\begin{equation}
-					\nabla_{t_{s}^\star} I^\star_{\mathrm{B}}(c_{\mathcal{K}};z) = 0,
-				\end{equation}
-				namely
-				\begin{equation}
-					\sum_l a_{l,j} f(t_{s}^\star \mid x_l) = 0,
-					\label{eq:kkt_thresholding_explicit}
-				\end{equation}
-				where $j \equiv s \pmod L$, $j \in \mathcal{L}$ and
-				\begin{equation}
-					a_{l,j} \triangleq
-					\begin{cases}
-						P(x_l) \log \frac{P(x_l \mid z_{j+1}^\star)}{P(x_l \mid z_j^\star)}, & j \in \mathcal{L} \setminus \{L\},\\
-						P(x_l) \log \frac{P(x_l \mid z_{1}^\star)}{P(x_l \mid z_j^\star)}, & j = L.
-					\end{cases}
-				\end{equation}
-
-				Since the optimal backward channel quantizer is convex and separates each pair of posterior distribution by a hyperplane~\cite{Nguyen2020a}, for a given $j$, the sequence $(a_{l,j})_{l=1}^{L}$ only change sign once. As $f(t_{s}^\star \mid x_l)$ follows Erlang distribution~\eqref{eq:energy_distribution}, the LHS of~\eqref{eq:kkt_thresholding_explicit} is a generalized Dirichlet polynomial and has at most one real solution by Descartes' rule of signs~\cite{Jameson2006}. In other words, each decision region $j \in \mathcal{L}$ requires at most one additional threshold, and therefore $S \le L$. This suggests $S = L$ completes the proof.
-
-				% . By Descartes' rule of signs~\cite{Jameson2006}, for each $j \in \mathcal{L}$, $t_s^\star$ has at most 1 real solution if $\sigma_l^2 \ne \sigma_{l'}^2$, $\forall l,l' \in \mathcal{L}$.
-
-				% In other words, based on $t_0^\star = 0$, each decision region $j \in \mathcal{L}$ requires at most one additional threshold, such that $S \le L+1$.
-				% $s \equiv j \pmod L$
-
-				% if $\sigma_l^2 \ne \sigma_{l'}^2$, $l,l' \in \mathcal{L}$, then $t_s^\star$ has at most 1 real solution.
-
-				% for a given $j$, $t_s^\star$ has at most 1 real solution if $\sigma_l^2 \ne \sigma_{l'}^2$, $l,l' \in \mathcal{L}$.
-
-				% Therefore,
-
-				% it can be concluded that for a given $j$, the sequence $(a_{l,j})_{l=1}^{L}$ only change sign once. Plugging~\eqref{eq:energy_distribution} into~\eqref{eq:kkt_thresholding_explicit}, we have
-				% \begin{equation}
-				% 	\sum_l a_{l,j} e^{-{t_s^\star}/{\sigma_l^2}} = 0,
-				% 	\label{eq:optimal_thresholding_condition}
-				% \end{equation}
-				% where the LHS is a generalized Dirichlet polynomial. By Descartes' rule of signs~\cite{Jameson2006}, for a given $j$, $t_s^\star$ has at most 1 real solution if $\sigma_l^2 \ne \sigma_{l'}^2$, $l,l' \in \mathcal{L}$.
-
-				% he number of positive roots is at most the number of sign changes in the sequence of polynomial's coefficients
-				% and by Descartes' rule of signs has at most $L-1$ distinct real roots if $\sigma_i^2 \ne \sigma_j^2$, $i,j \in \mathcal{L}$.
+	To the best of our knowledge, most existing \gls{sr} systems \cite{Yang2018,Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a} assumed Gaussian codebook at the tags and employed \gls{sic} from primary to backscatter link.
+	It thus requires non-coherent primary encoding at the transmitter and involves re-encoding, precoding, and subtraction operations that may not be available to legacy receivers.
+	Besides, the primary and backscatter symbols in \gls{sr} are mixed by multiplication coding instead of superposition coding, and the backscatter symbol period can be much longer than the primary symbol period due to physical constraints.
+	Inspired by above, we propose a novel Metascatter network where multiple battery-free tags ride over a conventional point-to-point system and adapt their input probability distribution to simultaneously act as backscatter tags of \gls{sr} and reflecting elements of \gls{irs}.
+	To fully utilize the reflection pattern and signal structure, we also present a novel decoding strategy with minor modifications on existing receivers.
+	The contributions of this paper is summarized as follows.
 
 
-				% % As proved by~\cite{Nguyen2020a}, the optimal backward channel quantizer
-				% % \begin{equation}
-				% % 	\sum_l P(x_l) \log \frac{P(z_j)}{P(z_{j+1})} \frac{P(z_{j+1} \mid x_l)}{P(z_j \mid x_l)} f(t_s^\star \mid x_l) = 0,
-				% % \end{equation}
-				% where $j \equiv s \pmod L$. Since the
-				% % We notice that for a given $j$, $a_l \triangleq P(x_l) \log \frac{P(z_j)}{P(z_{j+1})} \frac{P(z_{j+1} \mid x_l)}{P(z_j \mid x_l)}$ is a constant for all $s \equiv j \pmod L$. Plugging~\eqref{eq:energy_distribution} into \eqref{eq:kkt_thresholding_explicit}, we have
-				% \begin{equation}
-				% 	\sum_l a_{l,j} e^{-{h_s}/{\sigma_l^2}} = 0,
-				% 	\label{eq:optimal_thresholding_condition}
-				% \end{equation}
-				% where the LHS is a Dirichlet polynomial and by Descartes' rule of signs has at most $L-1$ distinct real roots if $\sigma_i^2 \ne \sigma_j^2$, $i,j \in \mathcal{L}$.
-				% % where the directional derivative can be explicitly written as
-				% % \begin{subequations}
-				% % 	\begin{align}
-				% % 		\nabla_{t_{s'}^\star} I^\star_{\mathrm{B}}(c_{\mathcal{K}};z)
-				% % 		& = \sum_l P(x_l) \log \frac{P(z_j)}{P(z_{j+1})} \frac{P(z_{j+1} \mid x_l)}{P(z_j \mid x_l)} f(h_s \mid x_l)\\
-				% % 		& = 1
-				% % 	\end{align}
-				% % \end{subequations}
-			\end{proof}
+	\emph{First,} Metascatter adapts the input probability distribution of a finite-state backscatter device based on the primary and backscatter \gls{csi}.
+	It generalizes the backscatter tags of \gls{sr} and reflecting elements of \gls{irs} to improve the primary-backscatter tradeoff in a flexible manner.
+	When the primary link is absolutely prioritized, the tag input probability boils down to \num{1} at the state that maximizes the equivalent channel strength and \num{0} at other states, which is essentially the phase shift selection of an \gls{irs} element.
+	When we only care about the backscatter performance, the network boils down to a multi-tag \gls{ambc} and the input design can be simplified accordingly.
 
-			% It was proved in \cite{Nguyen2021} that the optimal quantizer producing maximizing mutual information with arbitrary cost function separates the backward channel (i.e., posterior distribution) in a convex manner
+	\emph{Second,} we propose a novel receiving strategy where the backscatter symbol of all tags are first recovered by energy-based decoding, then modeled within equivalent \gls{csi} for primary decoding.
+	When the ratio of backscatter symbol period over primary symbol period is large enough, the randomness of primary source can be averaged out and the performance of non-coherent backscatter decoding can be greatly improved.
+	Since the primary and backscatter symbols are mixed by multiplication coding, the backscatter decoding can be viewed as part of primary channel training, which avoids non-coherent encoding at the transmitter and \gls{sic} at the receiver.
 
-			% not only the capacity-achieving thresholding design remains an open problem, but also the optimal number of thresholds for general non-binary-input channels remains unknown. I am now trying to prove that, for our channel in Gamma distribution, the optimal decision region for each codeword cannot be disjoint
+	\emph{Third,} we characterize the achievable primary-(sum-)backscatter rate region by iteratively optimizing the tag input distribution, the backscatter decision threshold, and the transmit precoder.
+	For the input design, we propose a numerical method to evaluate the \gls{kkt} solutions by limits of sequences.
+	For the threshold design, we derive the minimum number of decision thresholds to maximize the total backscatter rate, and obtain the optimal thresholds by \gls{dp} accelerated by \gls{smawk} algorithm.
+	However, the optimal precoder design can be non-trivial and we may end up with a low-complexity suboptimal solution.
 
-			% Denote the decision region of hypothesis $\mathcal{H}_i$ as
-			% \begin{equation}
-			% 	\mathcal{R}_i \triangleq [t_{i-1,i}, t_{i,i+1}),
-			% 	\label{eq:decision_region}
-			% \end{equation}
-			% where $t_{i-1,i}$ is the decision threshold between $\mathcal{H}_{i-1}$ and $\mathcal{H}_i$, and $t_{i,i+1}$ is the decision threshold between $\mathcal{H}_i$ and $\mathcal{H}_{i+1}$. We also define $t_{0,1} \triangleq 0$, $t_{M^K,M^K+1} \triangleq \infty$, and $\boldsymbol{t} \triangleq [t_{0,1},\ldots,t_{M^K,M^K+1}]^T \in \mathbb{R}^{(M^K + 1) \times 1}$.
+\end{section}
 
-			% Consider the (\gls{ml}) detector for example. The likelihood ratio between hypotheses $\mathcal{H}_i$ and $\mathcal{H}_{i'}$ is \cite{Qian2019}
-			% \begin{equation}
-			% 	\Lambda_{i,{i'}}^{\mathrm{\gls{ml}}}(z) = \frac{f(z \mid \mathcal{H}_i)}{f(z \mid \mathcal{H}_{i'})} = \left( \frac{\sigma_{i'}^2}{\sigma_i^2} \right)^N \exp \left( \frac{\sigma_i^2 - \sigma_{i'}^2}{\sigma_i^2 \sigma_{i'}^2} z \right),
-			% 	\label{eq:likelihood_ratio}
-			% \end{equation}
-			% the corresponding decision rule is
-			% \begin{equation}
-			% 	\Lambda_{i,{i'}}^{\mathrm{\gls{ml}}}(z) \underset{\mathcal{H}_{i'}}{\overset{\mathcal{H}_i}{\lessgtr}} 1 \iff z \underset{\mathcal{H}_{i'}}{\overset{\mathcal{H}_i}{\lessgtr}} t_{i,{i'}}^{\mathrm{\gls{ml}}},
-			% 	\label{eq:decision_rule}
-			% \end{equation}
-			% and the detection threshold is
-			% \begin{equation}
-			% 	t_{i,{i'}}^{\mathrm{\gls{ml}}} \triangleq N \frac{\sigma_i^2 \sigma_{i'}^2}{\sigma_i^2 - \sigma_{i'}^2} \log \frac{\sigma_i^2}{\sigma_{i'}^2}.
-			% 	\label{eq:detection_threshold}
-			% \end{equation}
+\begin{section}{Backscatter Principles}
+	\begin{figure}[!t]
+		\centering
+		\subfloat[Passive tag structure]{
+			\resizebox{0.6\columnwidth}{!}{
+				\begin{circuitikz}[transform shape]
+					\coordinate (O) at (0,0);
+					\node[block,from={O to $(O) + (6.375,3.25)$}](T){};
+					\draw (0,1.75)
+					to[short] ++(-0.875,0)
+					to[short] ++(0,0.5) node[bareantenna](A){Bx};
+					\draw (0,1.75)
+					to[short,-*] ++(0.25,0) coordinate(J);
+					\draw (J)
+					to[short] ++(0,1)
+					to[short] ++(0.5,0) coordinate(J1);
+					\node[block,from={$(J1) + (0,-0.25)$ to $(J1) + (2.5,0.25)$}](R){Rectifier};
+					\draw (J)
+					to[short] ++(0.5,0) coordinate(J2);
+					\node[block,from={$(J2) + (0,-0.25)$ to $(J2) + (2.5,0.25)$}](D){Demodulator};
+					\draw (J)
+					to[short] ++(0,-1)
+					to[short] ++(0.5,0) coordinate(J3)
+					to [vR,mirror,invert,/tikz/circuitikz/bipoles/length=1cm] ++(1.75,0) node[ground,rotate=90]{};
+					\node[block,from={$(J3) + (0,-0.25)$ to $(J3) + (2.5,0.25)$},draw=none](M){};
+					\draw ($(J3) + (0,-0.25)$) rectangle ($(J3) + (2.5,0.25)$);
+					\draw ($(J3) + (1.25,-0.5)$) node[]{Modulator};
+					\draw[-{Latex[length=2mm]}] (R.east) -- ++(0.75,0);
+					\draw[-{Latex[length=2mm]}] (D.east) -- ++(0.75,0);
+					\draw[{Latex[length=2mm]}-] (M.east) -- ++(0.75,0);
+					\node[block,from={$(R.east) + (0.75,-0.25)$ to $(R.east) + (2.875,0.25)$}](P){Power buffer};
+					\node[block,from={$(M.east) + (0.75,-0.25)$ to $(D.east) + (2.875,0.25)$}](S){Digital\\section};
+					\draw[dashed,-{Latex[length=2mm]}] (P.south) to (S.north);
+					\coordinate (F1) at ($(P.south)!0.5!(S.north)$);
+					\coordinate (F2) at ($(D.east)!0.5!(S.west)$);
+					\coordinate (F3) at ($(D.south)!0.5!(M.north)$);
+					\draw[dashed] (F1) to (F1-|D.north);
+					\draw[dashed,-{Latex[length=2mm]}] (F1-|D.north) to (D.north);
+					\draw[dashed] (F1-|F2) to (F2|-F3) to (M|-F3);
+					\draw[dashed,-{Latex[length=2mm]}] (M|-F3) to (M.north);
+				\end{circuitikz}
+			}
+			\label{fi:passive_tag_structure}
+		}
+		\subfloat[Equivalent model]{
+			\resizebox{0.35\columnwidth}{!}{
+				\begin{circuitikz}[transform shape]
+					\draw (0,0) node[bareantenna](bareantenna){};
+					\draw (bareantenna.west) ++(-1.5,0) node[waves](WI){};
+					\draw (WI.north east) ++(0.25,0) node[font=\Large]{$\vec{E}_{\mathrm{I}}$};
+					\draw (WI.south east) ++(0.25,0) node[font=\Large]{$\vec{H}_{\mathrm{I}}$};
+					\draw (bareantenna.east) ++(0.875,0) node[waves](WR){};
+					\draw (WR.north east) ++(0.35,0) node[font=\Large]{$\vec{E}_m$};
+					\draw (WR.south east) ++(0.35,0) node[font=\Large]{$\vec{H}_m$};
+					\draw (bareantenna)
+					to [R=$Z_{\mathrm{A}}$,font=\Large,/tikz/circuitikz/bipoles/length=1cm] ++(0,-1.5) node[rotary switch=4 in 90 wiper 30,anchor=ext center,rotate=270](SW){};
+					\draw (SW.cout 2) node[below=0.1cm,font=\Large]{$m$}
+					to [R=$Z_m$,font=\Large,/tikz/circuitikz/bipoles/length=1cm] ++(2,0) node[ground]{};
+				\end{circuitikz}
+			}
+			\label{fi:equivalent_model}
+		}
+		\caption{For a passive tag, the rectifier and demodulator rely on the incident electromagnetic wave for energy harvesting and source decoding, while the load-switcher adjusts the reradiated signal for backscatter modulation.}
+		\label{fi:tag}
+	\end{figure}
+	Consider a bistatic backscatter system with an excitation source, multiple (semi-)passive tags, and a backscatter reader.
+	The structure of a passive tag is shown in Fig. \subref*{fi:passive_tag_structure}.
+	It typically consists of a scattering antenna, an energy harvester, an integrated receiver, a load-switching modulator, and on-chip components (e.g., micro-controller and sensors) \cite{Dobkin2012}.
+	When a tag is illuminated, a portion of the impinging signal is absorbed while the remaining is scattered back, and the tag can harvest energy, transmit message, and decode the source if necessary.
+	According to \cite{Hansen1989}, the backscatter signal can be decomposed into a \emph{structural component} that depends on the antenna geometry and material properties, and an \emph{antenna component} that depends on the antenna-load impedance mismatch.
+	The former contributes to environment multipath and can be modeled by channel estimation \cite{Boyer2014}, while the latter can be utilized for backscatter modulation.
+	As illustrated by Fig. \subref*{fi:equivalent_model}, if $M$ symbol states are available at the tag, the reflection coefficient at state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$ is
+	\footnote{
+		It corresponds to a linear backscatter model where the reflection coefficient is irrelevant to incident electromagnetic field strength.
+	}
+	\begin{equation}
+		\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
+		\label{eq:reflection_coefficient}
+	\end{equation}
+	where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
 
-			% \begin{remark}
-			% 	Although the \gls{ml} decision threshold is optimal in terms of the likelihood function, it is not necessarily capacity-achieving, although the performance gap can be negligible in the single-tag \gls{bibo} case.
-			% \end{remark}
+	Tags periodically switch between different states to perform backscatter modulation.
+	For $M$-ary \gls{qam}, the complex constellation point $c_m \in \mathcal{C}$ maps to the reflection coefficient by \cite{Thomas2012a}
+	\begin{equation}
+		\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
+		\label{eq:backscatter_modulation}
+	\end{equation}
+	where $\alpha \in [0,1]$ models the (amplitude) harvest-backscatter efficiency at the direction of interest.
+	For passive tags, $\alpha \ll 1$ is commonly assumed as the majority of the incident wave can be harvested to support tag modules \cite{Thomas2012a}.
 
-			Once the decision region is determined, the discrete memoryless \gls{mac} can be recast as an equivalent point-to-point \gls{dmc} from tag input combination alphabet $\mathcal{I}$ to output energy level alphabet $\mathcal{I}$. The the probability of receiving energy level $j$ under tag input combination $i$ is\footnote{For simplicity, we assume there exists at least one feasible precoder that produces distinct received energy levels for all tag input combinations. [TODO] Merge with precoder design.}
-			\begin{equation}
-				P(\bar{z}_j \mid \bar{c}_i) = P(z \in \mathcal{R}_j \mid \mathcal{H}_i) = \int_{\mathcal{R}_j} f(z \mid \mathcal{H}_i) \dd z,
-				\label{eq:point_to_point_channel}
-			\end{equation}
-			which corresponds to $P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})$ by reverse mapping $m_k \mapsto i$. In summary, with the \gls{csi} knowledge and for any given precoder and detection threshold set, we can obtain the expected power of the received signal per block by \eqref{eq:receive_variance}, the conditional probability density function of the accumulated energy by \eqref{eq:energy_distribution}, the corresponding decision region by \eqref{eq:decision_region}, and the equivalent point-to-point channel by \eqref{eq:point_to_point_channel}.
-		\end{subsection}
+	\begin{remark}
+		By choosing proper load impedance, it is possible to implement any signal constellation or think beyond modulation.
+		For example, perfect matching enables maximum power transfer to the tag, while perfect mismatch leads to complete reflection as desired by ideal \gls{irs}.
+		It inspires Metascatter to design a smart reflection and unify wireless power transfer, backscatter modulation, and passive beamforming.
+	\end{remark}
+\end{section}
 
-		\begin{subsection}{Sum backscatter rate}
-			We first introduce some prerequisites of information theory. Define the input probability distribution of tag $k$ at state $m_k$ as $P_k(\bar{c}_{m_k})$, and let $\boldsymbol{p}_k \triangleq [P_k(\bar{c}_1),\ldots,P_k(\bar{c}_M)]^T \in \mathbb{R}^{M \times 1}$, $\boldsymbol{P} \triangleq [\boldsymbol{p}_1^T,\ldots,\boldsymbol{p}_K^T]^T \in \mathbb{R}^{M \times K}$. Assume the input distribution of all tags are mutually independent such that the probability associated with input combination $\bar{c}_{m_{\mathcal{K}}}$ satisfies $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Following \cite{Rezaeian2004}, the corresponding backscatter information function is defined as
-			\begin{equation}
-				I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}};z) \triangleq \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{P(\bar{z}_j)},
-				\label{eq:backscatter_information_function}
-			\end{equation}
-			where $P(\bar{z}_j) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})$.
-			The backscatter marginal information function of tag $k \in \mathcal{K}$ associated with $\bar{c}_{m_k}$, $m_k \in \mathcal{M}$ is defined as
-			\begin{equation}
-				I_{\mathrm{B},k}(\bar{c}_{m_k};z) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}},\bar{c}_{m_k};z),
-				\label{eq:backscatter_marginal_information_function}
-			\end{equation}
-			where $P_{\mathcal{K} \setminus \{k\}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}}) = \prod_{q \in \mathcal{K} \setminus \{k\}} P_{q}(\bar{c}_{m_{q}})$. The backscatter mutual information can be expressed as\footnote{Please be aware that $c_{\mathcal{K}}$, $c_k$, $z$ are random variables, while $\bar{c}_{m_{\mathcal{K}}}$ and $\bar{c}_i$, $\bar{c}_{m_k}$, $\bar{z}_j$ represent the corresponding instances.}
-			\begin{subequations}
-				\begin{align}
-					I_{\mathrm{B}}(c_{\mathcal{K}};z)
-					& = \mathbb{E}_{c_{\mathcal{K}}} \left[I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}};z)\right] = \mathbb{E}_{c_k} \left[I_{\mathrm{B},k}(\bar{c}_{m_k};z)\right]\label{eq:backscatter_sum_rate_expectation}\\
-					& = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}})}{P(\bar{z}_j)}.\label{eq:backscatter_sum_rate_expansion}
-				\end{align}
-				\label{eq:backscatter_sum_rate}
-			\end{subequations}
-			Evidently, \eqref{eq:backscatter_information_function}--\eqref{eq:backscatter_sum_rate} are functions of the tag input distribution $\boldsymbol{P}$ as well as the discrete memoryless \gls{mac} $P(z \mid c_{\mathcal{K}})$, and thus depend on the transmit precoder $\boldsymbol{w}$ and the detection threshold $\boldsymbol{t}$.
-		\end{subsection}
+\begin{section}{Metascatter}
+	\begin{subsection}{System Model}
+		\begin{figure}[!t]
+			\centering
+			\def\svgwidth{0.9\columnwidth}
+			\import{assets/}{metascatter_system.eps_tex}
+			\caption{The proposed Metascatter system.}
+			\label{fi:metascatter_system}
+		\end{figure}
+		As shown in Fig. \ref{fi:metascatter_system}, we propose a single-\gls{ue} multi-\gls{tg} symbiotic radio network where the \gls{rf} signal generated by the $Q$-antenna \gls{ap} is shared by two coexisting systems.
+		In the primary point-to-point system, the \gls{ap} transmits information to the single-antenna user.
+		In the secondary backscatter system, the \gls{ap} acts as the carrier emitter, the $K$ nearby single-antenna tags modulate their information over the reradiated \gls{rf} signals, and the user receives and decodes the backscatter messages.
+		Denote the \gls{ap}-\gls{ue} direct channel as $\boldsymbol{h}_{\mathrm{D}}^H \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-\gls{tg} $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, the \gls{tg} $k$-\gls{ue} backward channel as $h_{\mathrm{B},k}$, and define the cascaded channel of tag $k$ as $\boldsymbol{h}_{\mathrm{C},k}^H \triangleq h_{\mathrm{B},k} \boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$.
+		For simplicity, we consider a quasi-static block fading model where the channel response remain constant within each coherence interval and vary independently between consecutive blocks.
+		Since backscatter modulation involves load switching, tags typically transmit at much lower rate, and we assume the backscatter symbol period is $N \in \mathbb{Z}_{++}$ times the primary symbol period.
+		We also assume the direct channel and all cascaded channels can be estimated and fed back to the \gls{ap}.
+		\footnote{
+			Due to the lack of \gls{rf} chains at the passive tag, accurate and efficient \gls{csi} acquisition at the \gls{ap} can be challenging.
+			One possible approach is that the \gls{ap} sends pre-defined pilots, the tags respond in well-designed manners, and the user performs least-square estimation with feedbacks \cite{Bharadia2015,Yang2015b,Guo2019g}.
+		}
 
-		\begin{subsection}{Ergodic primary rate}
-			Once the tag input combination is successfully decoded, the user can eliminate backscatter uncertainty and model its contribution within the equivalent primary channel \eqref{eq:equivalent_primary_channel}. As such, the tags can adjust the propagation environment in a potentially beneficial manner, and create artificial channel variation within each fading block. Similarly, we define the primary information function associated with tag input combination $\bar{c}_{m_{\mathcal{K}}}$ and the primary marginal information function of tag $k$ associated with symbol $\bar{c}_{m_k}$ respectively as
+		Consider the signal model during one backscatter symbol period.
+		We assume the primary symbol follows standard \gls{cscg} distribution and the backscatter symbol of all tags employs $M$-\gls{qam}.
+		Under perfect synchronization, the signal received by the user at primary symbol block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
+		\footnote{
+			We omit the signal reflected by two or more times\cite{Wu2019} and assume the time difference of arrival from different paths are negligible\cite{Guo2019b}.
+		}
+		\begin{equation}
+			y[n] = \left(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k\right) \boldsymbol{w} s[n] + w[n],
+			\label{eq:received_signal}
+		\end{equation}
+		where $\alpha_k$ and $x_k$ denote respectively the harvest-backscatter efficiency and backscatter symbol of tag $k$, $s[n]$ and $w[n] \sim \mathcal{CN}(0,\sigma_w^2)$ denote respectively the primary symbol and \gls{awgn} at block $n$, and $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the transmit precoder satisfying power constraint $\lVert \boldsymbol{w} \rVert^2 \le P$.
+		For the ease of notation, we define $x_{\mathcal{K}} \triangleq \{x_k : k \in \mathcal{K}\}$ as the tag input combination, and $\boldsymbol{y} \triangleq \left[y[1],\ldots,y[N]\right]^T \in \mathbb{C}^{N \times 1}$ as the received signal per backscatter symbol period.
+		For primary transmission, the equivalent channel is subject to backscatter modulation uncertainty as
+		\begin{equation}
+			\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k.
+			\label{eq:equivalent_channel}
+		\end{equation}
 
-			\begin{align}
-				I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K}}};\boldsymbol{y})
-				& \triangleq N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right),\label{eq:primary_information_function}\\
-				I_{\mathrm{P},k}(\bar{c}_{m_k};\boldsymbol{y})
-				& \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}},\bar{c}_{m_k};\boldsymbol{y}),\label{eq:primary_marginal_information_function}
-			\end{align}
-			and the ergodic primary rate can be expressed as\footnote{The unit of \eqref{eq:backscatter_information_function}--\eqref{eq:backscatter_sum_rate} are \gls{bpcu}, while the unit of \eqref{eq:primary_information_function}--\eqref{eq:primary_ergodic_rate} are \gls{bpsphz}.}
-			\begin{subequations}
-				\begin{align}
-					I_{\mathrm{P}}(c_{\mathcal{K}};\boldsymbol{y})
-					& = \mathbb{E}_{c_{\mathcal{K}}} \left[I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K}}};\boldsymbol{y})\right] = \mathbb{E}_{c_k} \left[I_{\mathrm{P},k}(\bar{c}_{m_k};\boldsymbol{y})\right]\label{eq:primary_ergodic_rate_expectation}\\
-					& = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right).
-					\label{eq:primary_ergodic_rate_expansion}
-				\end{align}
-				\label{eq:primary_ergodic_rate}
-			\end{subequations}
+		\begin{remark}
+			Metascatter involves an unconventional \gls{mac} where the primary and backscatter symbols of different duration are mixed by \gls{mc} instead of \gls{sc}.
+			For each tag, the reflection coefficient not only encodes the backscatter message but also influences the equivalent primary channel \eqref{eq:equivalent_channel}.
+			As such, novel receiving strategy other than \gls{sic} should be tailored to signal characteristics to unveil how reflection pattern potentially influences the primary-backscatter tradeoff.
+		\end{remark}
+	\end{subsection}
 
-			In contrast to the backscatter case, \eqref{eq:primary_information_function}--\eqref{eq:primary_ergodic_rate} are irrelevant to the detection threshold $\boldsymbol{t}$, but depend on the tag input probability distribution $\boldsymbol{P}$ and the transmit precoder $\boldsymbol{w}$.
-		\end{subsection}
-	\end{section}
+	\begin{subsection}{Receiving Strategy}
+		We propose a novel receiving strategy where the backscatter symbol of all tags are first jointly identified by non-coherent energy detection, then modeled within equivalent channel \eqref{eq:equivalent_channel} as if passive beamforming.
+		Compared with conventional schemes as joint decoding and \gls{sic}, the Metascatter receiver may not achieve as high data rate for one tag, but it avoids non-coherent primary encoding and enables tag multiple access in a practical and low-complexity manner.
+		Therefore, we believe it can be compatible to and readily implemented over legacy point-to-point systems.
 
-	\begin{section}{Input Distribution, Decision Region, and Precoder Design}
-		\begin{subsection}{Primary-backscatter rate region}
-			Define the weighted sum information function associated with tag input combination $\bar{c}_{m_{\mathcal{K}}}$ as
-			\begin{equation}
-				I(\bar{c}_{m_{\mathcal{K}}};\boldsymbol{y},z) \triangleq \rho I_{\mathrm{P}}(\bar{c}_{m_{\mathcal{K}}};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B}}(\bar{c}_{m_{\mathcal{K}}};z),
-				\label{eq:weighted_sum_information_function}
-			\end{equation}
-			the weighted sum marginal information of tag $k$ associated with symbol $\bar{c}_{m_k}$ as
-			\begin{equation}
-				I_k(\bar{c}_{m_k};\boldsymbol{y},z) \triangleq \rho I_{\mathrm{P},k}(\bar{c}_{m_k};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B},k}(\bar{c}_{m_k};z),
-				\label{eq:weighted_sum_marginal_information}
-			\end{equation}
-			and the weighted sum primary-backscatter rate as
-			\begin{equation}
-				I(c_{\mathcal{K}};\boldsymbol{y},z) \triangleq \rho I_{\mathrm{P}}(c_{\mathcal{K}};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B}}(c_{\mathcal{K}};z),
-				\label{eq:weighted_sum_rate}
-			\end{equation}
-			where $\rho \in [0,1]$ denotes the priority of the primary link. To investigate how backscatter modulation and detection may influence the primary transmission, we optimize the input probability distribution, decision region, and transmit precoder to maximize the weighted sum primary-backscatter rate
-			\begin{maxi!}
-				{\scriptstyle{\boldsymbol{P},\boldsymbol{t},\boldsymbol{w}}}{I(c_{\mathcal{K}};\boldsymbol{y},z)}{\label{op:rate_region}}{\label{ob:weighted_sum_rate}}
-				\addConstraint{\sum \nolimits_{m_k} P_k(\bar{c}_{m_k})}{=1,}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
-				\addConstraint{P_k(\bar{c}_{m_k})}{\ge 0,}{\quad \forall m_k \in \mathcal{M}, \ \forall k \in \mathcal{K}}{\label{co:nonnegative_probability}}
-				\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.}{\label{co:average_transmit_power}}
-			\end{maxi!}
-			where \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} are input probability constraints and \eqref{co:average_transmit_power} is the average transmit power budget. As problem \eqref{op:rate_region} is not jointly convex over $\boldsymbol{P}$, $\boldsymbol{t}$ and $\boldsymbol{w}$, we propose a \gls{bcd} method that iteratively updates the input distribution, decision region, and transmit precoder, until convergence is achieved.
-		\end{subsection}
+		Define $m_k \in \mathcal{M}$ as the modulation index of tag $k$, and $m_{\mathcal{K}} \triangleq \{m_k: k \in \mathcal{K}\}$ as the modulation index combination of all tags.
+		Recall that $x_k$ and $x_{\mathcal{K}}$ are random variables representing the backscatter symbol of tag $k$ and the symbol combination of all tags, respectively.
+		Their instances are denoted by modulation index (combination) as $x_{m_k}$ and $x_{m_\mathcal{K}}$.
+		Since any backscatter combination $x_{m_\mathcal{K}}$ remains unchanged over $N$ primary symbol duration, the received signal at symbol block $n$ is only subject to the variation of $s[n]$ and $w[n]$, and follows zero-mean \gls{cscg} distribution with variance
+		\begin{equation}
+			\sigma_{m_{\mathcal{K}}}^2 = \Bigl\lvert \underbrace{\bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_{m_k}\bigr)}_{\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})} \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2.
+			\label{eq:receive_variance}
+		\end{equation}
 
-		\begin{subsection}{Input probability distribution}
-			For any fixed decision boundary $\boldsymbol{t}$ and transmit precoder $\boldsymbol{w}$, the equivalent discrete memoryless \gls{mac} can be determined by \eqref{eq:point_to_point_channel} and problem~\eqref{op:rate_region} boils down to
-			\begin{maxi!}
-				{\scriptstyle{\boldsymbol{P}}}{I(c_{\mathcal{K}};\boldsymbol{y},z)}{\label{op:input_probability_distribution}}{}
-				\addConstraint{\eqref{co:sum_probability},\eqref{co:nonnegative_probability},}
-			\end{maxi!}
-			which is non-convex for $K > 1$ due to the product term $\prod_{k \in \mathcal{K}} P_k(\bar{c}_{m_k})$. Fortunately, the \gls{kkt} conditions are necessary and sufficient for this type of problem, and the proof follows straightforwardly from \cite{Watanabe2009}.\footnote{For any elementary discrete memoryless \gls{mac} (sizes of input alphabets are no greater than that of output alphabet), the sufficiency can be proved by combining the local maximum and connectedness of \gls{kkt} solutions. For any general discrete memoryless \gls{mac}, the capacity can be achieved by an elementary discrete memoryless \gls{mac} included within. Thus, we restrict the discussion of this paper to elementary discrete memoryless \gls{mac}s.}
-			\begin{proposition}
-				The necessary and sufficient conditions for an input probability distribution $\boldsymbol{P}^\star$ to maximize the weighted sum primary-backscatter rate are that, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
-				\begin{subequations}
-					\label{eq:optimal_conditions}
-					\begin{alignat}{2}
-						I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) & = I^\star(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^\star(\bar{c}_{m_k}) > 0,\label{eq:probable_states}\\
-						I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) & \le I^\star(c_{\mathcal{K}};\boldsymbol{y},z), \quad && P_k^\star(\bar{c}_{m_k}) = 0.\label{eq:dropped_states}
-					\end{alignat}
-				\end{subequations}
-				\eqref{eq:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{eq:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
-				\label{pr:optimal_conditions}
-			\end{proposition}
-			\begin{proof}
-				Denote the Lagrange multiplier associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\boldsymbol{\nu} \triangleq [\nu_1,\ldots,\nu_K]^T \in \mathbb{R}^{K \times 1}$ and $\boldsymbol{\Lambda} \triangleq [\boldsymbol{\lambda}_1^T,\ldots,\boldsymbol{\lambda}_K^T]^T \in \mathbb{R}^{M \times K}$ with $\boldsymbol{\lambda}_k \triangleq [\lambda_{k,1},\ldots,\lambda_{k,M}]^T \in \mathbb{R}^{M \times 1}$, respectively. The Lagrangian function of problem~\eqref{op:input_probability_distribution} is
-				\begin{align}
-					L(\boldsymbol{P},\boldsymbol{\nu},\boldsymbol{\Lambda})
-					& = - I(c_{\mathcal{K}};\boldsymbol{y},z) + \sum_{k \in \mathcal{K}} \nu_k \left( \sum_{m_k \in \mathcal{M}} P_k(\bar{c}_{m_k}) - 1 \right)\nonumber\\
-					& \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(\bar{c}_{m_k}),
-				\end{align}
-				and the corresponding \gls{kkt} conditions are, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
-				\begin{subequations}
-					\begin{equation}
-						- \nabla_{P_k^\star(\bar{c}_{m_k})} I^\star(c_{\mathcal{K}};\boldsymbol{y},z) + \nu_k^\star - \lambda_{k,m_k}^\star = 0,
-					\end{equation}
-					\begin{equation}
-						\lambda_{k,m_k}^\star = 0, \quad P_k^\star(\bar{c}_{m_k}) > 0,
-					\end{equation}
-					\begin{equation}
-						\lambda_{k,m_k}^\star \ge 0, \quad P_k^\star(\bar{c}_{m_k}) = 0,
-					\end{equation}
-				\end{subequations}
-				where the directional derivative can be explicitly expressed as
-				\begin{equation}
-					\nabla_{P_k^\star(\bar{c}_{m_k})} I^\star(c_{\mathcal{K}};\boldsymbol{y},z) = I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) - (1 - \rho).
-				\end{equation}
+		Besides, we denote the total received energy as $z \triangleq \lVert \boldsymbol{y} \rVert^2$ and the hypothesis of modulation index combination $m_{\mathcal{K}}$ as $\mathcal{H}_{m_{\mathcal{K}}}$.
+		Since $z$ is the sum of $N$ \gls{iid} exponential variables, its conditional \gls{pdf} under $\mathcal{H}_{m_{\mathcal{K}}}$ follows Erlang distribution with shape $N$ and scale $\sigma_{m_{\mathcal{K}}}^2$ as
+		\begin{equation}
+			f(z \mid \mathcal{H}_{m_{\mathcal{K}}}) = \frac{z^{N-1} e^{-z/\sigma_{m_{\mathcal{K}}}^2}}{\sigma_{m_{\mathcal{K}}}^{2N} (N-1)!}.
+			\label{eq:energy_distribution}
+		\end{equation}
 
-				Due to the necessity and sufficiency of the \gls{kkt} conditions, we conclude that any input probability distribution $\boldsymbol{P}^\star$ maximizes the weighted sum primary-backscatter rate if and only if, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
-				\begin{subequations}
-					\begin{alignat}{2}
-						I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) & = \nu_k^\star + (1 - \rho), \quad && P_k^\star(\bar{c}_{m_k}) > 0,\label{eq:probable_states_marginal}\\
-						I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) & \le \nu_k^\star + (1 - \rho), \quad && P_k^\star(\bar{c}_{m_k}) = 0,\label{eq:dropped_states_marginal}
-					\end{alignat}
-				\end{subequations}
-				which implies
-				\begin{equation}
-					\sum_{m_k} P_k^\star(\bar{c}_{m_k}) I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) = \nu_k^\star + (1 - \rho).
-				\end{equation}
+		Energy-based backscatter detection essentially formulates a discrete-input continuous-output memoryless \gls{mac}.
+		To further reduce decoding complexity, we divide the continuous output $z$ into disjoint decision regions to construct a \gls{dmtmac}, where the transition probability from tag input combination $x_{m_{\mathcal{K}}}$ to detector output combination $\hat{x}_{m_{\mathcal{K}}'}$ is
+		\begin{equation}
+			P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) = \int_{\mathcal{R}_{m_{\mathcal{K}}'}} f(z \mid \mathcal{H}_{m_{\mathcal{K}}}) \dd z,
+			\label{eq:dmtmac}
+		\end{equation}
+		where $\mathcal{R}_{m_{\mathcal{K}}'}$ is the decision region over $z$ for hypothesis $\mathcal{H}_{m_{\mathcal{K}}'}$.
+	\end{subsection}
 
-				On the other hand, by definition of marginations \eqref{eq:backscatter_sum_rate_expectation}, \eqref{eq:primary_ergodic_rate_expectation} and weighted summations \eqref{eq:weighted_sum_marginal_information}, \eqref{eq:weighted_sum_rate}, we have
-				\begin{equation}
-					\sum_{m_k} P_k^\star(\bar{c}_{m_k}) I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) = I^\star(c_{\mathcal{K}};\boldsymbol{y},z),
-				\end{equation}
-				which is irrelevant to $k$. It suggests $I^\star(c_{\mathcal{K}};\boldsymbol{y},z) = \nu_k^\star + (1 - \rho)$, $\forall k \in \mathcal{K}$, and completes the proof.
-			\end{proof}
+	\begin{subsection}{Achievable Rates}
+		Denote the input probability distribution vector of tag $k$ as $\boldsymbol{p}_k \triangleq [P_k(x_1),\ldots,P_k(x_M)]^T \in \mathbb{R}^{M \times 1}$, where $P_k(x_{m_k})$ is the probability at state $m_k$.
+		Consider independent encoding at all tags such that the probability of input combination $x_{m_{\mathcal{K}}}$ is $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k})$.
+		The backscatter information function of input combination $x_{m_{\mathcal{K}}}$ is defined as
+		\begin{equation}
+			I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}) \triangleq \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}})}{P(\hat{x}_{m_{\mathcal{K}}'})},
+			\label{eq:backscatter_information_function}
+		\end{equation}
+		where $P(\hat{x}_{m_{\mathcal{K}}'}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}})$.
+		Besides, the backscatter marginal information function associated with letter $x_{m_k}$ of tag $k$ is
+		\begin{equation}
+			I_{\mathrm{B},k}(x_{m_k};\hat{x}_{\mathcal{K}}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}),
+			\label{eq:backscatter_marginal_information_function}
+		\end{equation}
+		where $P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) = \prod_{q \in \mathcal{K} \setminus \{k\}} P_{q}(x_{m_{q}})$.
+		Therefore, the backscatter mutual information is
+		\begin{equation}
+			I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}})}{P(\hat{x}_{m_{\mathcal{K}}'})}.
+			\label{eq:backscatter_mutual_information}
+		\end{equation}
 
-			Next, we extend the Blahut-Arimoto algorithm to the proposed case and obtain the optimal input probability distribution as follows.
+		Once the tag input combination is successfully decoded, the backscatter uncertainty can be eliminated and the equivalent channel for primary transmission can be updated by \eqref{eq:equivalent_channel}.
+		Similar to above, the primary information function of input combination $x_{m_{\mathcal{K}}}$ is
+		\begin{equation}
+			I_{\mathrm{P}}(x_{m_{\mathcal{K}}};\boldsymbol{y}) \triangleq N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right),
+			\label{eq:primary_information_function}
+		\end{equation}
+		the primary marginal information function associated with letter $x_{m_k}$ of tag $k$ is
+		\begin{equation}
+			I_{\mathrm{P},k}(x_{m_k};\boldsymbol{y}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{P}}(x_{m_{\mathcal{K}}};\boldsymbol{y}),
+			\label{eq:primary_marginal_information_function}
+		\end{equation}
+		and the primary (ergodic) mutual information is
+		\begin{equation}
+			I_{\mathrm{P}}(x_{\mathcal{K}};\boldsymbol{y}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right).
+			\label{eq:primary_mutual_information}
+		\end{equation}
 
-			\begin{theorem}
-				The input probability distribution that achieves the weighted sum primary-backscatter capacity, at state $m_k \in \mathcal{M}$ of tag $k \in \mathcal{K}$, is given by the converging point of sequence\footnote{Note that the probability distribution of tag $k$ is based on the updated probability distribution of tags $1,\ldots,k-1$.}
-				\begin{equation}
-					P_k^{(r+1)}(\bar{c}_{m_k}) = \frac{P_k^{(r)}(\bar{c}_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k^{(r)}(\bar{c}_{m_k};\boldsymbol{y},z) \right)}{\sum_{m_k'} P_k^{(r)}(\bar{c}_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k^{(r)}(\bar{c}_{m_k'};\boldsymbol{y},z) \right)},
-					\label{eq:optimal_distribution}
-				\end{equation}
-				where $r \in \mathbb{Z}_+$ is the iteration index and $P_k^{(0)}(\bar{c}_{m_k}) > 0$.
-				% , $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$.
-				\label{th:optimal_distribution}
-			\end{theorem}
-			\begin{proof}
-				We first prove sequence~\eqref{eq:optimal_distribution} is non-decreasing in mutual information. For state $m_k \in \mathcal{M}$ of tag $k \in \mathcal{K}$, let $P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(\bar{c}_{m_q})$ and $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) = P_k'(\bar{c}_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(\bar{c}_{m_q})$ be two probability distributions with potentially different marginal for tag $k$, and define an intermediate function $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ by \eqref{eq:intermediate_information_function}. Apparently, $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) = J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \right)$.
-				\begin{figure*}[!b]
-					\hrule
-					\begin{align}
-						J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)
-						& \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(\bar{c}_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right)\nonumber\\
-						& \quad + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})}{P'(\bar{z}_j) P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}})}.
-						\label{eq:intermediate_information_function}
-					\end{align}
-				\end{figure*}
-				For a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)$ is a concave function of $P_k(\bar{c}_{m_k})$ and is maximized at $\nabla_{P_k^\star(\bar{c}_{m_k})} J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right) = 0$, namely
-				\begin{equation}
-					S_k'(\bar{c}_{m_k}) - S_k'(\bar{c}_{i_k}) + (1 - \rho) \log \frac{P_k(\bar{c}_{i_k})}{P_k^\star(\bar{c}_{m_k})} = 0,
-					\label{eq:optimal_intermediate_information_condition}
-				\end{equation}
-				where $i_k \ne m_k$ is the reference state and
-				\begin{align}
-					S_k'(\bar{c}_{m_k})
-					& \triangleq I_k'(\bar{c}_{m_k};\boldsymbol{y},z) + (1 - \rho) \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}})\nonumber\\
-					& \quad \times \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K} \setminus \{k\}}},\bar{c}_{m_k}) \log P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K} \setminus \{k\}}},\bar{c}_{m_k}).
-				\end{align}
-				Evidently, $\forall m_k \ne i_k$, \eqref{eq:optimal_intermediate_information_condition} boils down to
-				% \begin{subequations}
-				% 	\begin{align}
-				% 		P_k^\star(\bar{c}_{m_k})
-				% 		& = \frac{\exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k}) \right)}{\sum_{m_k'} \exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k'}) \right)}\\
-				% 		& = \frac{P_k'(\bar{c}_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k'(\bar{c}_{m_k};\boldsymbol{y},z) \right)}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k'(\bar{c}_{m_k'};\boldsymbol{y},z) \right)}.
-				% 		\label{eq:optimal_relative_distribution}
-				% 	\end{align}
-				% \end{subequations}
-				\begin{subequations}
-					\begin{align}
-						P_k^\star(\bar{c}_{m_k})
-						& = \frac{\exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k}) \right)}{\sum_{m_k'} \exp \left( \frac{1}{1 - \rho} S_k'(\bar{c}_{m_k'}) \right)}\\
-						& = \frac{P_k'(\bar{c}_{m_k}) u_k'(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) u_k'(\bar{c}_{m_k'})},
-						\label{eq:optimal_relative_distribution}
-					\end{align}
-				\end{subequations}
-				where we define $u_k'(\bar{c}_{m_k}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k'(\bar{c}_{m_k};\boldsymbol{y},z) \right)$. Although $P_k(\bar{c}_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^\star(\bar{c}_{m_k})$ is not guaranteed to be optimal, it has exactly the same form as \eqref{eq:optimal_relative_distribution}. In such case, the solution of choosing $i_k$ as reference would coincide with that of choosing any $m_k \ne i_k$ as reference, while optimality for $i_k$ is guaranteed in the latter case. Therefore, for a fixed $P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}})$, $\forall i_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$, \eqref{eq:optimal_relative_distribution} ensures
-				\begin{equation}
-					J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right) \ge I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z).
-					\label{eq:information_difference_lower}
-				\end{equation}
+		Therefore, the weighted sum information function, marginal information function, and mutual information of primary and backscatter links are respectively given by
+		\begin{align}
+			I(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}},\boldsymbol{y})
+			 & \triangleq \rho I_{\mathrm{P}}(x_{m_{\mathcal{K}}};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_information_function} \\
+			I_k(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})
+			 & \triangleq \rho I_{\mathrm{P},k}(x_{m_k};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B},k}(x_{m_k};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_marginal_information}                     \\
+			I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})
+			 & \triangleq \rho I_{\mathrm{P}}(x_{\mathcal{K}};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_mutual_information}
+		\end{align}
+		where $\rho \in [0,1]$ represents the priority of the primary link.
+	\end{subsection}
 
-				On the other hand, choosing $P_k(\bar{c}_{m_k})$ by \eqref{eq:optimal_relative_distribution} also satisfies
-				\begin{subequations}
-					\label{eq:information_difference_upper}
-					\begin{align}
-						\Delta
-						& \triangleq I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) - J \left( P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(\bar{c}_{m_{\mathcal{K}}}) \right)\\
-						& = (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(\bar{c}_{m_{\mathcal{K}}}) \sum_j P(\bar{z}_j \mid \bar{c}_{m_{\mathcal{K}}}) \log \frac{P'(\bar{z}_j) P_k(\bar{c}_{m_k})}{P(\bar{z}_j) P_k'(\bar{c}_{m_k})}\\
-						& = (1 - \rho) \sum_{m_k} \frac{P_k'(\bar{c}_{m_k}) u_k'(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) u_k'(\bar{c}_{m_k'})} \sum_j P(\bar{z}_j \mid \bar{c}_{m_k})\nonumber\\
-						& \quad \times \log \frac{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k'(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k'(\bar{c}_{m_k'})}\\
-						& \ge (1 - \rho) \sum_{m_k} \frac{P_k'(\bar{c}_{m_k}) u_k'(\bar{c}_{m_k})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) u_k'(\bar{c}_{m_k'})} \sum_j P(\bar{z}_j \mid \bar{c}_{m_k})\nonumber\\
-						& \quad \times \left( 1 - \frac{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k'(\bar{c}_{m_k'})}{\sum_{m_k'} P_k'(\bar{c}_{m_k'}) P(\bar{z}_j \mid \bar{c}_{m_k'}) u_k'(\bar{c}_{m_k})} \right)\\
-						& = 0,
-					\end{align}
-				\end{subequations}
-				where the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges. Combining \eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper} suggests $I(\bar{c}_{\mathcal{K}};\boldsymbol{y},z) \ge I'(\bar{c}_{\mathcal{K}};\boldsymbol{y},z)$. Since mutual information is bounded above, we conclude sequence \eqref{eq:optimal_distribution} is non-decreasing and convergent in mutual information.
+\end{section}
 
-				We then prove any converging point of sequence \eqref{eq:optimal_distribution}, denoted as $P_k^\star(\bar{c}_{m_k})$, fulfills the optimal conditions \eqref{eq:optimal_conditions} and achieves the weighted primary-backscatter sum capacity. To see this, define
-				\begin{equation}
-					D_k^{(r)}(\bar{c}_{m_k}) \triangleq \frac{P_k^{(r+1)}(\bar{c}_{m_k})}{P_k^{(r)}(\bar{c}_{m_k})} = \frac{u_k^{(r)}(\bar{c}_{m_k})}{\sum_{m_k'} P_k^{(r)}(\bar{c}_{m_k'}) u_k^{(r)}(\bar{c}_{m_k'})},
-				\end{equation}
-				where $P_k^{(0)}(\bar{c}_{m_k}) > 0$. As sequence \eqref{eq:optimal_distribution} is convergent, any state with $P_k^\star(\bar{c}_{m_k}) > 0$ need to satisfy $D_k^\star(\bar{c}_{m_k}) \triangleq \lim_{r \to \infty} D_k^{(r)}(\bar{c}_{m_k}) = 1$, namely
-				\begin{equation}
-					I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) = \frac{1 - \rho}{\rho} \log \sum_{m_k'} P_k^\star(\bar{c}_{m_k'}) u_k^\star(\bar{c}_{m_k'}),
-				\end{equation}
-				which coincides with \eqref{eq:probable_states_marginal} and implies \eqref{eq:probable_states}. That is, given $P_k^{(0)}(\bar{c}_{m_k}) > 0$, any converging point with $P_k^\star(\bar{c}_{m_k}) > 0$ must satisfy \eqref{eq:probable_states}.
-				On the other hand, we assume $P_k^\star(\bar{c}_{m_k})$ does not satisfy \eqref{eq:dropped_states}, such that for any state with $P_k^\star(\bar{c}_{m_k}) = 0$,
-				% On the other hand, we show if $P_k^\star(\bar{c}_{m_k})$ does not satisfy \eqref{eq:dropped_states}, then it is not a converging point of sequence \eqref{eq:optimal_distribution}. By this assumption, for any state with $P_k^\star(\bar{c}_{m_k}) = 0$,
-				\begin{equation}
-					I_k^\star(\bar{c}_{m_k};\boldsymbol{y},z) > I^\star(c_{\mathcal{K}};\boldsymbol{y},z) = \sum_{m_k'} P_k^\star(\bar{c}_{m_k'}) I_k^\star(\bar{c}_{m_k'};\boldsymbol{y},z),
-				\end{equation}
-				where the equality origins from \eqref{eq:backscatter_sum_rate_expectation} and \eqref{eq:primary_ergodic_rate_expectation}. Since the exponential function is monotonically increasing, we have $u_k^\star(\bar{c}_{m_k}) > \sum_{m_k'} P_k^\star(\bar{c}_{m_k'}) u_k^\star(\bar{c}_{m_k'})$ and $D_k^\star(\bar{c}_{m_k}) > 1$. Considering $P_k^{(0)}(\bar{c}_{m_k}) > 0$ and $P_k^\star(\bar{c}_{m_k}) = 0$, it contradicts with
-				\begin{equation}
-					P_k^{(r)}(\bar{c}_{m_k}) = P_k^{(0)}(\bar{c}_{m_k}) \prod_{n=1}^r D_k^{(n)}(\bar{c}_{m_k}).
-				\end{equation}
-				Therefore, given $P_k^{(0)}(\bar{c}_{m_k}) > 0$, any converging point with $P_k^\star(\bar{c}_{m_k}) = 0$ must satisfy \eqref{eq:dropped_states}.
+\begin{section}{Input, Threshold, and Precoder Design}
+To characterize the achievable primary-(sum-)backscatter rate region of Metascatter, we aim to maximize the weighted sum mutual information with respect to tag input probability distribution $\{\boldsymbol{p}_k\}$, decision threshold vector $\boldsymbol{t}$, and transmit precoder $\boldsymbol{w}$
+\begin{maxi!}
+{\scriptstyle{\{\boldsymbol{p}_k\},\boldsymbol{t},\boldsymbol{w}}}{I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
+\addConstraint{\sum \nolimits_{m_k} P_k(x_{m_k})}{=1,}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
+\addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k \in \mathcal{K}, \ \forall m_k \in \mathcal{M}}{\label{co:nonnegative_probability}}
+\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.}{\label{co:transmit_power}}
+\end{maxi!}
+Since problem \eqref{op:weighted_sum_rate} is not jointly convex, we propose a \gls{bcd} algorithm that iteratively updates $\{\boldsymbol{p}_k\}$, $\boldsymbol{t}$ and $\boldsymbol{w}$ until convergence.
 
-				In conclusion, sequence \eqref{eq:optimal_distribution} always converges to a weighted sum capacity-achieving distribution for state $m_k$ of tag $k$.
-			\end{proof}
-		\end{subsection}
+\begin{subsection}{Input Probability Distribution}
+For any fixed decision boundary $\boldsymbol{t}$ and transmit precoder $\boldsymbol{w}$, the equivalent \gls{dmtmac} can be formulated by \eqref{eq:dmtmac} and problem \eqref{op:weighted_sum_rate} boils down to
+\begin{maxi!}
+{\scriptstyle{\{\boldsymbol{p}_k\}}}{I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\label{op:input_probability_distribution}}{}
+\addConstraint{\eqref{co:sum_probability},\eqref{co:nonnegative_probability},}
+\end{maxi!}
+which involves the product term $\prod_{k \in \mathcal{K}} P_k(x_{m_k})$ and is non-convex when $K > 1$.
+Interestingly, the sum-rate optimal input design for general discrete memoryless \gls{mac} remains an open problem, and we instead propose a \gls{kkt} solution to problem \eqref{op:input_probability_distribution}.
+\footnote{
+	As pointed out in \cite{Buhler2011}, \gls{kkt} conditions are only necessary for sum-rate optimality and these solutions may end up being saddle points.
+}
+\begin{proposition}
+	The \gls{kkt} optimality conditions for problem \eqref{op:input_probability_distribution} are equivalent to, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$,
+	\begin{subequations}
+		\label{eq:input_kkt_condition}
+		\begin{alignat}{2}
+			I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) & = I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}), \quad   &  & P_k^\star(x_{m_k}) > 0,\label{eq:probable_states} \\
+			I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) & \le I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}), \quad &  & P_k^\star(x_{m_k}) = 0.\label{eq:dropped_states}
+		\end{alignat}
+	\end{subequations}
+	\label{pr:input_kkt_condition}
+\end{proposition}
+
+\begin{proof}
+	Please refer to Appendix \ref{ap:input_kkt_condition}.
+	\label{pf:input_kkt_condition}
+\end{proof}
+
+We notice \eqref{eq:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{eq:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
+Next, we generalize the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} and propose a numerical evaluation of \gls{kkt} points by limits of sequences.
+
+\begin{proposition}
+	The \gls{kkt} solution of input probability of tag $k$ at state $m_k$ is given by the converging point of the sequence
+	\begin{equation}
+		P_k^{(r+1)}(x_{m_k}) = \frac{P_k^{(r)}(x_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k^{(r)}(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)}{\sum_{m_k'} P_k^{(r)}(x_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k^{(r)}(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)},
+		\label{eq:input_kkt_solution}
+	\end{equation}
+	where $r$ is the iteration index and $\boldsymbol{p}_k^{(0)} > \boldsymbol{0}$, $\forall k \in \mathcal{K}$.
+	At each iteration, the input distribution of tag $k$ is evaluated based on the updated input distribution of tags $1$ to $k-1$.
+	\label{pr:input_kkt_solution}
+\end{proposition}
+\begin{proof}
+	Please refer to Appendix \ref{ap:input_kkt_solution}.
+	\label{pf:input_kkt_solution}
+\end{proof}
+\end{subsection}
 
 
-		\begin{subsection}{Decision region}
-			As indicated by \cite{Qian2019b}, the optimal \gls{ml} decision regions are very close to the optimal decision regions to problem \eqref{op:rate_region}. We can either use \eqref{eq:decision_region} as suboptimal, or take derivative of \eqref{eq:backscatter_sum_rate} w.r.t. $t_{i-1,i}$ and $t_{i,i+1}$ (however, closed-form solutions are unavailable and two-dimensional search is needed).
-		\end{subsection}
+\begin{subsection}{Decision Threshold}
+	For a given tag input distribution $\{\boldsymbol{p}_k\}$, we can formulate an equivalent information source with augmented alphabet of tag input combination.
+	This equivalent source transmits at the total backscatter rate, and the input distribution is given by $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k})$, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$.
 
-		\begin{subsection}{Precoder}
-			Interestingly, we can design precoder to adjust the expectation of the received power \eqref{eq:receive_variance} at each tag input combination, which can avoid the detection blind spots in \cite{Qian2019} and further boost the weighted sum-rate. However, the problem is highly non-convex -- the information function associated with input combination state $i$ is
-			\begin{align}
-				I(\bar{c}_i;z)
-				& = \sum_{j \in \mathcal{I}} \int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z\nonumber\\
-				& \quad \times \log \frac{\int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z}{\sum_{i' \in \mathcal{I}} \int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2\right)^N (N-1)!} \dd z},
-				\label{eq:foo}
-			\end{align}
-			and the mutual information can be expressed as a function of $W$ by combining \eqref{eq:backscatter_sum_rate} and \eqref{eq:foo}.
+	\begin{remark}
+		Since the equivalent source transmits at the total backscatter rate, the \gls{dmtmac} \eqref{eq:dmtmac} is essentially a point-to-point \gls{dmtc} and we can simplify the decision threshold design accordingly.
+		\label{re:input_combination}
+	\end{remark}
 
-			So far I have no idea how to solve this issue, and found no reference regarding precoder design for \gls{ambc}/\gls{sr} with discrete channels (although some naive combiner designs are available for \gls{bibo}). Personally, I believe the precoder design is the key to (i) boost the rate region and avoid blind spots in conventional \gls{ambc}; (ii) build our proposal over existing infrastructures. Ideally, assuming the number of transmit antennas $Q$ is larger than the number of tags $K$, the optimal energy levels should be almost uniformly spaced (as $z$ follows Erlang distribution) to concentrate the channel transitional probability on diagonal as possible.
-		\end{subsection}
-	\end{section}
-	\bibliographystyle{IEEEtran}
-	\bibliography{IEEEabrv,library.bib}
+	Interestingly, the optimal threshold design to maximize the mutual information for a general \gls{dmtc} with a fixed number of output letters remains an open issue.
+	The reason is that each decision region may contain more than one disjoint partitions (i.e., non-convex) and the number of thresholds are unknown.
+	Fortunately, for the proposed energy detection, we proved that the \gls{dmtc} capacity can be achieved using only convex decision regions.
+	This conclusion is summarized below.
+
+	\begin{proposition}
+		For a discrete-input continuous-output channel in Erlang distribution \eqref{eq:energy_distribution}, if the \gls{dmtc} is constructed for detection (i.e., same input/output alphabet) and $L$ input letters are with non-zero probability, then it is possible to achieve the \gls{dmtc} capacity by $L$ non-empty convex decision regions defined by $L+1$ distinct decision thresholds.
+		\label{pr:threshold}
+	\end{proposition}
+
+	\begin{proof}
+		Please refer to Appendix \ref{ap:threshold}.
+		\label{pf:threshold}
+	\end{proof}
+
+	Once the optimal number of decision threshold is determined, we can first discretize the output energy level into numerous bins, then obtain the optimal decision regions that maximizes the total backscatter rate by \gls{dp} accelerated by \gls{smawk} algorithm \cite{He2021}.
+
+	\begin{tcolorbox}
+		We may need to tailor threshold design for Metascatter as threshold design has potential impact on primary achievable rate, as implied by some simulation results.
+	\end{tcolorbox}
+\end{subsection}
+
+\begin{subsection}{Precoder}
+	\begin{tcolorbox}
+		The optimal precoder design is highly non-convex that involves integration, entropy term, and variable on exponential.
+		We may propose a suboptimal precoder based on linear combination of equivalent and cascaded channels, or consider single transmit antenna instead.
+	\end{tcolorbox}
+	\begin{align}
+		I(x_i;\hat{x}_j)
+		 & = \sum_{j \in \mathcal{I}} \int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z\nonumber                                                                                                                                                                                                                    \\
+		 & \quad \times \log \frac{\int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z}{\sum_{i' \in \mathcal{I}} \int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2\right)^N (N-1)!} \dd z},
+	\end{align}
+\end{subsection}
+\end{section}
+
+\begin{section}{Preliminary Results}
+	\begin{table}[t!]
+		\centering
+		\caption{Parameters in simulation}
+		\begin{tabular}{ll}
+			Transmit antenna $Q$     & 1   \\
+			Tags $K$                 & 2   \\
+			States $M$               & 2   \\
+			Reflect ratio $\alpha$   & 0.5 \\
+			Duration ratio $N$       & 10  \\
+			Noise power $\sigma_w^2$ & 1   \\
+			Discretization bins      & 256
+		\end{tabular}
+		\label{ta:parameters}
+	\end{table}
+	Table \ref{ta:parameters} shows the parameters used in simulation.
+	We assume all links are in standard \gls{cscg} distribution and evaluated the rate regions on two instances.
+	For the input design, ``Cooperation'' assumes full transmit cooperation at all tags (i.e., joint encoding), ``Exhaustion'' runs exhaustive search on all possible input distributions, ``\gls{kkt}'' is proposed \gls{kkt} input design \eqref{eq:input_kkt_solution}, and ``Marginalization'' marginalizes the joint input array by ``Cooperation'' to obtain independent tag input distribution.
+	For the threshold design, ``\gls{smawk}'' refers to the \gls{dp}-based quantization proposed in \cite{He2021}, ``Bisection'' sequentially optimizes each threshold by bisection \cite{Nguyen2020a}, and ``\gls{ml}'' is the \gls{ml} detector that requires no knowledge of input distribution.
+
+	Figs. \ref{fi:rate_region_1} and \ref{fi:rate_region_2} show two typical scenarios where joint encoding can be helpful and unnecessary, respectively.
+	Although the proposed \gls{kkt} input design converges to the optimal solutions in both examples, it may be trapped at saddle points under poor initialization, especially when the number of tags increases.
+
+	We believed threshold design has no impact on the primary achievable rate, because primary decoding acts on $\boldsymbol{y}$ while thresholding acts on $z$.
+	As such, the threshold that maximizes the total backscatter rate should also maximize the weighted sum rate.
+	Interestingly, this may not be the case because the \gls{smawk} and Bisection threshold designs, both maximizing the total backscatter rate, can be outperformed by the \gls{ml} when it comes to weighted sum primary-(sum-)backscatter rate.
+	It may result from a precision issue, but inspires further research on threshold design for Metascatter.
+
+	\begin{figure}[!t]
+		\centering
+		\resizebox{\columnwidth}{!}{
+			\includegraphics{assets/rate_region_1.eps}
+		}
+		\caption{Achievable rate regions by input-threshold design: Case I.}
+		\label{fi:rate_region_1}
+	\end{figure}
+
+	\begin{figure}[!t]
+		\centering
+		\resizebox{\columnwidth}{!}{
+			\includegraphics{assets/rate_region_2.eps}
+		}
+		\caption{Achievable rate regions by input-threshold design: Case II.}
+		\label{fi:rate_region_2}
+	\end{figure}
+\end{section}
+
+\begin{appendix}
+\begin{subsection}{Proof of Proposition \ref{pr:input_kkt_condition}}
+	Denote the Lagrange multipliers associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\{\nu_k\}_{k \in \mathcal{K}}$ and $\{\lambda_{k,m_k}\}_{k \in \mathcal{K},m_k \in \mathcal{M}}$, respectively.
+	The Lagrangian function of problem \eqref{op:input_probability_distribution} is
+	\begin{align}
+		% L(\{\boldsymbol{p}_k\},\{\nu_k\},\{\lambda_{k,m_k}\})
+		L
+		 & = - I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) + \sum_{k \in \mathcal{K}} \nu_k \left( \sum_{m_k \in \mathcal{M}} P_k(x_{m_k}) - 1 \right)\nonumber \\
+		 & \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(x_{m_k}),
+	\end{align}
+	and the \gls{kkt} conditions on the optimal primal and dual variables are, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
+	\begin{subequations}
+		\label{eq:input_kkt_condition_original}
+		\begin{equation}
+			- \nabla_{P_k^\star(x_{m_k})} I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) + \nu_k^\star - \lambda_{k,m_k}^\star = 0,
+		\end{equation}
+		\begin{equation}
+			\lambda_{k,m_k}^\star = 0, \quad P_k^\star(x_{m_k}) > 0,
+		\end{equation}
+		\begin{equation}
+			\lambda_{k,m_k}^\star \ge 0, \quad P_k^\star(x_{m_k}) = 0,
+		\end{equation}
+	\end{subequations}
+	where the directional derivative can be explicitly expressed as
+	\begin{equation}
+		\nabla_{P_k^\star(x_{m_k})} I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) - (1 - \rho).
+		\label{eq:input_directional_derivative}
+	\end{equation}
+
+	Combining \eqref{eq:input_kkt_condition_original} and \eqref{eq:input_directional_derivative}, we have
+	\begin{subequations}
+		\label{eq:input_kkt_condition_transformed}
+		\begin{alignat}{2}
+			I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) & = \nu_k^\star + (1 - \rho), \quad   &  & P_k^\star(x_{m_k}) > 0,\label{eq:probable_states_marginal} \\
+			I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) & \le \nu_k^\star + (1 - \rho), \quad &  & P_k^\star(x_{m_k}) = 0,\label{eq:dropped_states_marginal}
+		\end{alignat}
+	\end{subequations}
+	which suggests
+	\begin{equation}
+		\sum_{m_k} P_k^\star(x_{m_k}) I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = \nu_k^\star + (1 - \rho).
+		\label{eq:input_kkt_condition_implied}
+	\end{equation}
+
+	On the other hand, by definition of weighted sum marginal information \eqref{eq:weighted_sum_marginal_information},
+	\begin{equation}
+		\sum_{m_k} P_k^\star(x_{m_k}) I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}),
+		\label{eq:weighted_sum_marginal_information_implied}
+	\end{equation}
+	where the right-hand side is irrelevant to $k$.
+	\eqref{eq:input_kkt_condition_transformed}, \eqref{eq:input_kkt_condition_implied}, and \eqref{eq:weighted_sum_marginal_information_implied} together complete the proof.
+	\qedsymbol
+	\label{ap:input_kkt_condition}
+\end{subsection}
+
+\begin{subsection}{Proof of Proposition \ref{pr:input_kkt_solution}}
+	We first prove sequence \eqref{eq:input_kkt_solution} is non-decreasing in mutual information.
+	Let $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(x_{m_q})$ and $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) = P_k'(x_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(x_{m_q})$ be two probability distributions with potentially different marginal for tag $k \in \mathcal{K}$ at state $m_k \in \mathcal{M}$, and define an intermediate function $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)$ as \eqref{eq:intermediate_information_function}.
+	\begin{figure*}[!b]
+		\hrule
+		\begin{align}
+			J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)
+			 & \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right)\nonumber                                                                                                                          \\
+			 & \quad + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})}.
+			\label{eq:intermediate_information_function}
+		\end{align}
+	\end{figure*}
+	It is straightforward to verify $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \right) = I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})$ and $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)$ is a concave function for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$.
+	By choosing $\nabla_{P_k^\star(x_{m_k})} J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right) = 0$, we have
+	\begin{equation}
+		S_k'(x_{m_k}) - S_k'(x_{i_k}) + (1 - \rho) \log \frac{P_k(x_{i_k})}{P_k^\star(x_{m_k})} = 0,
+		\label{eq:optimal_intermediate_information_condition}
+	\end{equation}
+	where $i_k \ne m_k$ is the reference state and
+	\begin{align}
+		S_k'(x_{m_k})
+		 & \triangleq I_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) + (1 - \rho) \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}})\nonumber \\
+		 & \quad \times \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) \log P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}).
+	\end{align}
+
+	Evidently, $\forall m_k \ne i_k$, \eqref{eq:optimal_intermediate_information_condition} boils down to
+	\begin{equation}
+		P_k^\star(x_{m_k}) = \frac{P_k'(x_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)}{\sum_{m_k'} P_k'(x_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)}.
+		\label{eq:optimal_relative_distribution}
+	\end{equation}
+
+	Although it seems $P_k(x_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^\star(x_{m_k})$ has no optimality guarantee, we can verify that $P_k(x_{i_k})$ has exactly the same form as \eqref{eq:optimal_relative_distribution}.
+	It implies the selection of reference state does not matter and \eqref{eq:optimal_relative_distribution} is indeed optimal $\forall m_k \in \mathcal{M}$.
+	Therefore, for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$, choosing $P_k(x_{m_k})$ by \eqref{eq:optimal_relative_distribution} ensures
+	\begin{equation}
+		J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right) \ge I'(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}).
+		\label{eq:information_difference_lower}
+	\end{equation}
+
+	On the other hand, \eqref{eq:optimal_relative_distribution} also guarantees
+	\begin{subequations}
+		\label{eq:information_difference_upper}
+		\begin{align}
+			\Delta
+			 & \triangleq I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) - J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)                                                                                                                               \\
+			 & = (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k})\nonumber                                  \\
+			 & \quad \times \log \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k'}) f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k'}) f_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})}               \\
+			 & \ge (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k})\nonumber                                \\
+			 & \quad \times \left( 1 - \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k'}) f_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k'}) f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})} \right) \\
+			 & = 0,
+		\end{align}
+	\end{subequations}
+	where $f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges.
+	\eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper} together imply $I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \ge I'(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})$.
+	Since mutual information is bounded above, we conclude the sequence \eqref{eq:input_kkt_solution} is non-decreasing and convergent in mutual information.
+
+	Next, we prove that any converging point of sequence \eqref{eq:input_kkt_solution}, denoted as $P_k^\star(x_{m_k})$, fulfills \gls{kkt} conditions \eqref{eq:input_kkt_condition}.
+	To see this, consider $P_k^{(0)}(x_{m_k}) > 0$ and define
+	\begin{equation}
+		D_k^{(r)}(x_{m_k}) \triangleq \frac{P_k^{(r+1)}(x_{m_k})}{P_k^{(r)}(x_{m_k})} = \frac{f_k^{(r)}(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k^{(r)}(x_{m_k'}) f_k^{(r)}(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})}.
+	\end{equation}
+
+	As sequence \eqref{eq:input_kkt_solution} is convergent, any state with $P_k^\star(x_{m_k}) > 0$ need to satisfy $D_k^\star(x_{m_k}) \triangleq \lim_{r \to \infty} D_k^{(r)}(x_{m_k}) = 1$, namely
+	\begin{equation}
+		I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = \frac{1 - \rho}{\rho} \log \sum_{m_k'} P_k^\star(x_{m_k'}) f_k^\star(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y}),
+	\end{equation}
+	which is reminiscent of \eqref{eq:probable_states_marginal} (and hence \eqref{eq:probable_states}).
+	That is to say, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) > 0$ must satisfy \eqref{eq:probable_states}.
+	On the other hand, we assume $P_k^\star(x_{m_k})$ does not satisfy \eqref{eq:dropped_states}, such that for any state with $P_k^\star(x_{m_k}) = 0$,
+	% On the other hand, we show if $P_k^\star(x_{m_k})$ does not satisfy \eqref{eq:dropped_states}, then it is not a converging point of sequence \eqref{eq:input_kkt_solution}. By this assumption, for any state with $P_k^\star(x_{m_k}) = 0$,
+	\begin{equation}
+		I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) > I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = \sum_{m_k'} P_k^\star(x_{m_k'}) I_k^\star(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y}),
+	\end{equation}
+	where the equality inherits from \eqref{eq:weighted_sum_mutual_information}.
+	Since the exponential function is monotonically increasing, we have $f_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) > \sum_{m_k'} P_k^\star(x_{m_k'}) f_k^\star(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})$ and $D_k^\star(x_{m_k}) > 1$.
+	Considering $P_k^{(0)}(x_{m_k}) > 0$ and $P_k^\star(x_{m_k}) = 0$, it contradicts with
+	\begin{equation}
+		P_k^{(r)}(x_{m_k}) = P_k^{(0)}(x_{m_k}) \prod_{n=1}^r D_k^{(n)}(x_{m_k}).
+	\end{equation}
+	Therefore, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) = 0$ must satisfy \eqref{eq:dropped_states}.
+	This completes the proof.
+	\qedsymbol
+	\label{ap:input_kkt_solution}
+\end{subsection}
+
+\begin{subsection}{Proof of Proposition \ref{pr:threshold}}
+Since $L$ input letters are with non-zero probability and $x \to z \to \hat{x}$ formulates a Markov chain, we need $L$ non-empty decision regions and at least $L+1$ distinct thresholds (including \num{0} and $\infty$) to minimize the distortion between source and decision.
+On the other hand, the optimal decision regions are apparently empty for those unused letters.
+
+Suppose the optimal number of thresholds is $S+1$ where $S \ge L$.
+Let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{(S+1) \times 1}$ be the optimal threshold vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.
+Since the optimal decision region for any letter may consist of multiple partitions, without loss of generality, we assume the mapping from threshold vector to decision region $l' \in \mathcal{L} \triangleq \{1,\ldots,L\}$ is given by $\mathcal{R}_{l'} = \bigcup_{s \equiv l' \pmod L} [t_{s-1},t_s)$.
+\footnote{
+	The proof holds for any valid mapping from threshold vector to decision regions, and we consider this specific case for the ease of presentation.
+}
+The threshold optimization problem is
+\begin{maxi!}
+{\scriptstyle{\boldsymbol{t}}}{I_{\mathrm{B}}(x;\hat{x})}{\label{op:decision_threshold}}{\label{ob:backscatter_mutual_information}}
+\addConstraint{t_{s-1}}{< t_s,}{\quad \forall s \in \mathcal{S}.}{\label{co:strict_inequality}}
+\end{maxi!}
+
+Problem \eqref{op:decision_threshold} is intricate due to the strict inequality constraint \eqref{co:strict_inequality}.
+Following \cite{Nguyen2020}, we first relax it to the convex counterpart, then discard the solutions that violate any original constraint.
+The Lagrangian function for the relaxed problem is
+\begin{equation}
+	L = - I_{\mathrm{B}}(x;\hat{x}) + \sum_{s \in \mathcal{S}} \mu_s (t_{s-1} - t_s),
+\end{equation}
+where $\mu_s$ is the Lagrange multiplier associated with the non-strict version of \eqref{co:strict_inequality}.
+The \gls{kkt} conditions on the optimal primal and dual solutions are, $\forall s \in \mathcal{S}$,
+\begin{subequations}
+	\label{eq:kkt_thresholding}
+	\begin{equation}
+		- \nabla_{t_s^\star} I^\star_{\mathrm{B}}(x;\hat{x}) + \mu_{s-1}^\star - \mu_s^\star = 0,
+		\label{eq:stationarity}
+	\end{equation}
+	\begin{equation}
+		\mu_s^\star \ge 0,
+		\label{eq:dual_feasibility}
+	\end{equation}
+	\begin{equation}
+		\mu_s^\star (t_{s-1}^\star - t_s^\star) = 0.
+		\label{eq:complementary_slackness}
+	\end{equation}
+
+\end{subequations}
+Due to the strict inequality constraint \eqref{co:strict_inequality}, conditions \eqref{eq:dual_feasibility} and \eqref{eq:complementary_slackness} together imply $\mu_s^\star = 0$, $\forall s \in \mathcal{S}$.
+Besides, it is trivial to conclude $t_0^\star = 0$ for energy-based detection.
+As such, the necessary optimality conditions for problem \eqref{op:decision_threshold}, $s \in \mathcal{S}$,
+\begin{equation}
+	\nabla_{t_{s}^\star} I^\star_{\mathrm{B}}(x;\hat{x}) = 0,
+\end{equation}
+which can be explicitly written as
+\begin{equation}
+	\sum_l P(x_l) \frac{(t_s^\star)^{N-1} e^{-t_s^\star/\sigma_l^2}}{\sigma_l^{2N} (N-1)!} \log \frac{P(x_l \mid \hat{x}_{l'+1})}{P(x_l \mid \hat{x}_{l'})} = 0,
+	\label{eq:kkt_threshold_explicit}
+\end{equation}
+where $l' \equiv s \pmod L$.
+According to \cite{Nguyen2020a}, the optimal backward channel quantizer is convex and separates each pair of posterior distribution by a hyperplane.
+It implies the sequence $\{\log {P(x_l \mid \hat{x}_{l'+1})}/{P(x_l \mid \hat{x}_{l'})}\}_{l \in \mathcal{L}}$ changes sign exactly once.
+We notice the left-hand side of \eqref{eq:kkt_threshold_explicit} is a generalized Dirichlet polynomial, which has at most one real solution by Descartes' rule of signs \cite{Jameson2006}.
+In other words, starting from $t_0^\star$, each optimal decision region requires at most one additional distinct threshold, and we have $S \le L$.
+Therefore, we conclude $S = L$ and the proof is completed.
+\qedsymbol
+\label{ap:threshold}
+\end{subsection}
+\end{appendix}
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{library.bib}
 \end{document}

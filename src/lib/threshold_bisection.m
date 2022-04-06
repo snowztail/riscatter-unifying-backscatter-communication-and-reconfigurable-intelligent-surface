@@ -28,7 +28,7 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandi
 		equivalentDistribution;
 		receivedPower;
 		symbolRatio;
-		tolerance = eps;
+		tolerance = 1e-6;
 	end
 
 	% * Get data

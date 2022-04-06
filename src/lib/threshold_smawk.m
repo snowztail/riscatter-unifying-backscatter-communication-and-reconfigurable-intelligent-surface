@@ -27,7 +27,7 @@ function [threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate
 		equivalentDistribution;
 		receivedPower;
 		symbolRatio;
-		tolerance = eps;
+		tolerance = 1e-6;
 	end
 
 	% * Get data

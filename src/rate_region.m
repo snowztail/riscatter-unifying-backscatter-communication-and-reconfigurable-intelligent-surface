@@ -1,14 +1,14 @@
-clear; cvx_clear; clc; close all; setup;
+setup; clear; cvx_clear; clc; close all;
 nTxs = 1;
 nTags = 2;
 nStates = 2;
 [nInputs, nOutputs] = deal(nStates ^ nTags);
-nWeights = 3e1;
+nWeights = 2e1;
 weightSet = [linspace(0, 0.25, nWeights - 1), 1];
 reflectRatio = 0.5;
 symbolRatio = 10;
 noisePower = 1;
-nBins = 2 ^ 8;
+nBins = 2 ^ 9;
 constellation = qammod(0 : nStates - 1, nStates);
 confidenceScore = 10;
 tolerance = 1e-6;

@@ -1,4 +1,4 @@
-clear; cvx_clear; clc; setup;
+setup; clear; cvx_clear; clc;
 nTxs = 1;
 nTags = 2;
 nStates = 2;
@@ -10,7 +10,7 @@ noisePower = 1;
 nBins = 2 ^ 8;
 constellation = qammod(0 : nStates - 1, nStates);
 confidenceScore = 10;
-tolerance = eps;
+tolerance = 1e-6;
 precoder = normc(randn(nTxs, 1));
 directChannel = sqrt(0.5) * (randn(1, nTxs) + 1i * randn(1, nTxs));
 cascadedChannel = zeros(nTags, nTxs);

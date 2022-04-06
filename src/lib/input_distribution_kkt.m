@@ -34,7 +34,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 		weight;
 		symbolRatio;
 		snr;
-		tolerance = eps;
+		tolerance = 1e-6;
 	end
 
 	% * Ensure non-zero channel transition probability

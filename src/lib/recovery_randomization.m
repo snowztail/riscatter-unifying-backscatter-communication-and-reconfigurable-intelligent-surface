@@ -37,7 +37,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 		snr;
 		nKernels = 10;
 		nSamples = 5e2;
-		tolerance = 1e-7;
+		tolerance = 1e-6;
 	end
 
 	% * Get data

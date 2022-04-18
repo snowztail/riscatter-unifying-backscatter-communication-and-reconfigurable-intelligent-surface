@@ -1,13 +1,15 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_kkt(nTags, dmtc, weight, symbolRatio, snr, tolerance)
+function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_kkt(weight, nTags, symbolRatio, equivalentChannel, noisePower, precoder, dmtc, tolerance)
 	% Function:
 	%	- obtain the tag input distribution that satisfies the KKT conditions of maximizing weighted sum primary-backscatter rate
     %
     % Input:
-	%	- nTags: number of tags
-    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- weight: the relative priority of the primary link
+	%	- nTags: number of tags
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- noisePower: average noise power at the user
+	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
     %	- tolerance: minimum rate gain per iteration
     %
     % Output:
@@ -23,17 +25,19 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	%	- the marginal information function associated with codeword c_m_k of tag k satisfies:
 	%		- I_k(c_m_k; Z) = C for P_k(c_m_k) > 0
 	%		- I_k(c_m_k; Z) <= C for P_k(c_m_k) = 0
-	%	- the discrete memoryless MAC is given in joint (equivalent point-to-point) form P(y | x_1, ..., x_K), instead of marginal form p(y | x_k)
+	%	- the discrete memoryless MAC is given in joint (equivalent point-to-point) form P(y | x_1, ..., x_K), instead of marginal form p(y | x_K)
     %
     % Author & Date: Yang (i@snowztail.com), 22 Jan 09
 
 	% * Declare default tolerance
 	arguments
-		nTags;
-		dmtc;
 		weight;
+		nTags;
 		symbolRatio;
-		snr;
+		equivalentChannel;
+		noisePower;
+		precoder;
+		dmtc;
 		tolerance = 1e-6;
 	end
 
@@ -48,7 +52,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	inputDistribution = ones(nTags, nStates) / nStates;
 	combinationDistribution = combination_distribution(inputDistribution);
 	equivalentDistribution = prod(combinationDistribution, 1);
-	informationFunction = information_function(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+	informationFunction = information_function(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc);
 	marginalInformation = marginal_information(combinationDistribution, informationFunction);
 	weightedSumRate = equivalentDistribution * informationFunction;
 
@@ -61,7 +65,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 			inputDistribution(iTag, :) = input_distribution(inputDistribution(iTag, :), marginalInformation(:, iTag));
 			combinationDistribution = combination_distribution(inputDistribution);
 			equivalentDistribution = prod(combinationDistribution, 1);
-			informationFunction = information_function(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+			informationFunction = information_function(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc);
 			marginalInformation = marginal_information(combinationDistribution, informationFunction);
 			weightedSumRate = equivalentDistribution * informationFunction;
 		end

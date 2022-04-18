@@ -1,13 +1,15 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery_randomization(jointDistribution, dmtc, weight, symbolRatio, snr, nKernels, nSamples, tolerance)
+function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery_randomization(weight, symbolRatio, equivalentChannel, noisePower, jointDistribution, precoder, dmtc, nKernels, nSamples, tolerance)
 	% Function:
 	%	- extract a good tag input distribution (corresponding to no transmit cooperation) by randomization
     %
     % Input:
-	%	- jointDistribution [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
-    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- weight: the relative priority of the primary link
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- noisePower: average noise power at the user
+	%	- jointDistribution [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
+	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- nKernels: number of kernels used in the approximation (equals to the rank)
 	%	- nSamples: number of random samples to be generated in randomization
 	%	- tolerance: the maximum tolerable relative entropy between the original and approximated arrays
@@ -30,11 +32,13 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 
 	% * Declare default tolerance
 	arguments
-		jointDistribution;
-		dmtc;
 		weight;
 		symbolRatio;
-		snr;
+		equivalentChannel;
+		noisePower;
+		jointDistribution;
+		precoder;
+		dmtc;
 		nKernels = 10;
 		nSamples = 5e2;
 		tolerance = 1e-6;
@@ -105,7 +109,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 				inputDistributionCandidate(iTag, :) = transpose(randomVector + (1 - ones(1, nStates) * randomVector) / nStates * ones(nStates, 1));
 			end
 			equivalentDistributionCandidate = prod(combination_distribution(inputDistributionCandidate), 1);
-			weightedSumRateCandidate = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionCandidate, dmtc);
+			weightedSumRateCandidate = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc);
 			if weightedSumRateCandidate > weightedSumRate
 				inputDistribution = inputDistributionCandidate;
 				equivalentDistribution = equivalentDistributionCandidate;

@@ -1,13 +1,15 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery_decomposition(jointDistribution, dmtc, weight, symbolRatio, snr)
+function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery_decomposition(weight, symbolRatio, equivalentChannel, noisePower, jointDistribution, precoder, dmtc)
 	% Function:
 	%	- extract a good tag input distribution (corresponding to no transmit cooperation) by normalizing the best rank-1 CP approximation
     %
     % Input:
-	%	- jointDistribution [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
-    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- weight: the relative priority of the primary link
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- noisePower: average noise power at the user
+	%	- jointDistribution [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
+	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
     %
     % Output:
 	%	- inputDistribution [nTags * nStates]: input probability distribution
@@ -28,5 +30,5 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 	inputDistribution = cell2mat(cellfun(@transpose, cpTensor.U, 'UniformOutput', false));
 	inputDistribution = inputDistribution ./ sum(inputDistribution, 2);
 	equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
-	weightedSumRate = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+	weightedSumRate = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc);
 end

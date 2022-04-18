@@ -1,46 +1,35 @@
-function [threshold, dmtc, backscatterRate] = threshold_ml(equivalentDistribution, receivedPower, symbolRatio, tolerance)
+function [threshold, dmtc] = threshold_ml(symbolRatio, equivalentChannel, noisePower, precoder)
 	% Function:
-	%	- obtain the maximum likelihood detection thresholds based on typical power levels
+	%	- obtain the decision thresholds of maximum likelihood detector
     %
     % Input:
-	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- receivedPower [(nStates ^ nTags) * 1]: received power per primary symbol corresponding to each input letter combination combination
 	%	- symbolRatio: the ratio of the secondary symbol period over the primary symbol period
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- noisePower: average noise power at the user
+	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
     %
     % Output:
 	%	- threshold [1 * (nOutputs + 1)] : the ML thresholding values
 	%	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
-	%	- tolerance: minimum non-zero input probability
     %
     % Comment:
-    %	- ML detection thresholds do not depend on tag input distribution
+    %	- ML detection does not require input distribution
     %
     % Author & Date: Yang (i@snowztail.com), 23 Mar 17
 
-	% * Declare default tolerance
-	arguments
-		equivalentDistribution;
-		receivedPower;
-		symbolRatio;
-		tolerance = 1e-6;
-	end
-
 	% * Get data
-% 	nOutputs = sum(equivalentDistribution >= tolerance);
-	nOutputs = length(equivalentDistribution);
+	nOutputs = size(equivalentChannel, 1);
 
-	% * Initialization
-	[receivedPower, outputIndex] = sort(receivedPower);
+	% * Compute the expected received power under all backscatter input combinations
+	[sortedPower, outputIndex] = sort(abs(equivalentChannel * precoder) .^ 2 + noisePower);
 
 	% * Each ML threshold depends on the average received power of adjacent detection regions
 	threshold(nOutputs + 1) = inf;
 	for iOutput = 2 : nOutputs
-		threshold(iOutput) = symbolRatio * (receivedPower(iOutput - 1) * receivedPower(iOutput)) / (receivedPower(iOutput - 1) - receivedPower(iOutput)) * log(receivedPower(iOutput - 1) / receivedPower(iOutput));
+		threshold(iOutput) = symbolRatio * (sortedPower(iOutput - 1) * sortedPower(iOutput)) / (sortedPower(iOutput - 1) - sortedPower(iOutput)) * log(sortedPower(iOutput - 1) / sortedPower(iOutput));
 	end
 
-	% * Construct DMTC and compute mutual information
-	dmtc = channel_discretization(threshold, receivedPower, symbolRatio);
+	% * Construct DMTC
+	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, threshold);
 	dmtc = dmtc(:, outputIndex);
-	backscatterRate = rate_backscatter(equivalentDistribution, dmtc);
 end

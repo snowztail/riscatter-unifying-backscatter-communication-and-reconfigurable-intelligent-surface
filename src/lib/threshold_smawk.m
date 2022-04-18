@@ -1,17 +1,17 @@
-function [threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio, tolerance)
+function [threshold, dmtc, backscatterRate] = threshold_smawk(symbolRatio, equivalentChannel, noisePower, nBins, equivalentDistribution, precoder)
 	% Function:
-	%	- obtain the DMTC capacity-achieving thresholding scheme by dynamic programming accelerated by SMAWK algorithm
+	%	- group the received energy bins into convex decision regions by dynamic programming accelerated by SMAWK algorithm
     %
     % Input:
-	%	- thresholdCandidate [1 * (nBins + 1)]: candidate threshold values
-    %	- dmc [(nStates ^ nTags) * nBins]: the transition probability matrix of the backscatter discrete memoryless MAC obtained by quantization
+	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- noisePower: average noise power at the user
+	%	- nBins: number of discretization bins over received signal
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- receivedPower [(nStates ^ nTags) * 1]: received power per primary symbol corresponding to each input letter combination combination
-	%	- symbolRatio: the ratio of the secondary symbol period over the primary symbol period
-	%	- tolerance: minimum non-zero input probability
+	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
     %
     % Output:
-	%	- threshold [1 * (nOutputs + 1)] : the optimal thresholding values
+	%	- threshold [1 * (nOutputs + 1)]: boundaries of decision regions
 	%	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
@@ -20,20 +20,15 @@ function [threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 09
 
-	% * Declare default tolerance
-	arguments
-		thresholdCandidate;
-		dmc;
-		equivalentDistribution;
-		receivedPower;
-		symbolRatio;
-		tolerance = 1e-6;
-	end
 
 	% * Get data
-% 	nOutputs = sum(equivalentDistribution >= tolerance);
-	nOutputs = length(equivalentDistribution);
-	nBins = size(dmc, 2);
+	nOutputs = size(equivalentDistribution, 2);
+
+	% * Obtain threshold candidates that delimit output into discrete bins
+	thresholdCandidate = threshold_candidate(symbolRatio, equivalentChannel, noisePower, nBins, precoder);
+
+	% * Evaluate DMC over all bins
+	dmc = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, thresholdCandidate);
 
 	% * Initialization
 	dp = zeros(nBins, nOutputs);
@@ -74,7 +69,7 @@ function [threshold, dmtc, backscatterRate] = threshold_smawk(thresholdCandidate
 	threshold = thresholdCandidate(index + 1);
 
 	% * Construct DMTC and compute mutual information
-	dmtc = channel_discretization(threshold, receivedPower, symbolRatio);
+	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, threshold);
 	backscatterRate = rate_backscatter(equivalentDistribution, dmtc);
 end
 

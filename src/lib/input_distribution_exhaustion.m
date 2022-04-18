@@ -1,14 +1,16 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_exhaustion(nTags, dmtc, weight, symbolRatio, snr, resolution)
+function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_exhaustion(weight, nTags, symbolRatio, equivalentChannel, noisePower, precoder, dmtc, resolution)
 	% Function:
 	%	- obtain the WSR-optimal tag input distribution by (nTags-dimensional) exhaustive search
     %
     % Input:
-	%	- nTags: number of tags
-    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- weight: the relative priority of the primary link
+	%	- nTags: number of tags
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
-    %	- tolerance: minimum rate gain per iteration
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- noisePower: average noise power at the user
+	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
+	%	- resolution: gap between exhaustive search levels
     %
     % Output:
 	%	- inputDistribution [nTags * nStates]: input probability distribution
@@ -24,11 +26,13 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 
 	% * Declare default resolution
 	arguments
-		nTags;
-		dmtc;
 		weight;
+		nTags;
 		symbolRatio;
-		snr;
+		equivalentChannel;
+		noisePower;
+		precoder;
+		dmtc;
 		resolution = 5e-3;
 	end
 
@@ -51,7 +55,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	for iCombination = 1 : nCombinations
 		inputDistributionSet{iCombination} = probabilitySimplex(indexCombination(:, iCombination), :);
 		equivalentDistributionSet{iCombination} = prod(combination_distribution(inputDistributionSet{iCombination}), 1);
-		weightedSumRateSet(iCombination) = rate_weighted_sum(weight, symbolRatio, snr, equivalentDistributionSet{iCombination}, dmtc);
+		weightedSumRateSet(iCombination) = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistributionSet{iCombination}, precoder, dmtc);
 	end
 	[weightedSumRate, optimalIndex] = max(weightedSumRateSet);
 	inputDistribution = inputDistributionSet{optimalIndex};

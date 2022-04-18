@@ -1,17 +1,17 @@
-function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandidate, dmc, equivalentDistribution, receivedPower, symbolRatio, tolerance)
+function [threshold, dmtc, backscatterRate] = threshold_bisection(symbolRatio, equivalentChannel, noisePower, nBins, equivalentDistribution, precoder)
 	% Function:
-	%	- obtain the DMTC capacity-achieving thresholding scheme by bisection
+	%	- group the received energy bins into convex decision regions by bisection
     %
     % Input:
-	%	- thresholdCandidate [1 * (nBins + 1)]: candidate threshold values
-    %	- dmc [(nStates ^ nTags) * nBins]: the transition probability matrix of the backscatter discrete memoryless MAC obtained by quantization
+	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- noisePower: average noise power at the user
+	%	- nBins: number of discretization bins over received signal
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- receivedPower [(nStates ^ nTags) * 1]: received power per primary symbol corresponding to each input letter combination combination
-	%	- symbolRatio: the ratio of the secondary symbol period over the primary symbol period
-	%	- tolerance: maximum bisection deviation from zero
+	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
     %
     % Output:
-	%	- threshold [1 * (nOutputs + 1)] : the optimal thresholding values
+	%	- threshold [1 * (nOutputs + 1)]: boundaries of decision regions
 	%	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
     %
@@ -21,20 +21,15 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandi
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 18
 
-	% * Declare default tolerance
-	arguments
-		thresholdCandidate;
-		dmc;
-		equivalentDistribution;
-		receivedPower;
-		symbolRatio;
-		tolerance = 1e-6;
-	end
-
 	% * Get data
-% 	nOutputs = sum(equivalentDistribution >= tolerance);
-	nOutputs = length(equivalentDistribution);
-	nLevels = size(thresholdCandidate, 2);
+	nOutputs = size(equivalentDistribution, 2);
+	nLevels = nBins + 1;
+
+	% * Obtain threshold candidates that delimit output into discrete bins
+	thresholdCandidate = threshold_candidate(symbolRatio, equivalentChannel, noisePower, nBins, precoder);
+
+	% * Evaluate DMC over all bins
+	dmc = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, thresholdCandidate);
 
 	% * Optimal t_0 = 0 and t_K+1 = ∞, traverse all possible t_1
 	backscatterRateSet = zeros(nLevels, 1);
@@ -49,7 +44,7 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandi
 		for iThreshold = 3 : nOutputs
 			% * Compute reference divergence
 			binIndex = find(thresholdCandidate == threshold(iThreshold - 2)) : find(thresholdCandidate == threshold(iThreshold - 1)) - 1;
-			thresholdDensity = threshold_density(receivedPower, symbolRatio, threshold(iThreshold - 1));
+			thresholdDensity = threshold_density(symbolRatio, equivalentChannel, precoder, threshold(iThreshold - 1));
 			divergence = backward_divergence(dmc, equivalentDistribution, binIndex, thresholdDensity);
 
 			% * Initialize upper and lower bound of threshold
@@ -104,7 +99,7 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandi
 
 		% * Construct DMTC and compute mutual information
 		if isValid
-			dmtc = channel_discretization(threshold, receivedPower, symbolRatio);
+			dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, threshold);
 			backscatterRateSet(iLevel) = rate_backscatter(equivalentDistribution, dmtc);
 			thresholdSet{iLevel} = threshold;
 		else
@@ -114,7 +109,7 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(thresholdCandi
 	end
 	[backscatterRate, optimalLevel] = max(backscatterRateSet);
 	threshold = thresholdSet{optimalLevel};
-	dmtc = channel_discretization(threshold, receivedPower, symbolRatio);
+	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, threshold);
 end
 
 
@@ -131,6 +126,7 @@ function [divergence] = backward_divergence(dmc, equivalentDistribution, binInde
 	divergence = sum(divergence, 1);
 end
 
-function [thresholdDensity] = threshold_density(receivedPower, symbolRatio, threshold)
+function [thresholdDensity] = threshold_density(symbolRatio, equivalentChannel, precoder, threshold)
+	receivedPower = abs(equivalentChannel * precoder) .^ 2 + noisePower;
 	thresholdDensity = (threshold .^ (symbolRatio - 1) .* exp(-threshold ./ receivedPower)) ./ (receivedPower .^ symbolRatio .* gamma(symbolRatio));
 end

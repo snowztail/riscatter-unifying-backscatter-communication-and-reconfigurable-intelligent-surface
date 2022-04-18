@@ -1,13 +1,15 @@
-function [jointDistribution, equivalentDistribution, weightedSumRate] = input_distribution_cooperation(nTags, dmtc, weight, symbolRatio, snr, tolerance)
+function [jointDistribution, equivalentDistribution, weightedSumRate] = input_distribution_cooperation(weight, nTags, symbolRatio, equivalentChannel, noisePower, precoder, dmtc, tolerance)
 	% Function:
 	%	- obtain the optimal joint input distribution with full transmit cooperation
     %
     % Input:
-	%	- nTags: number of tags
-    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- weight: the relative priority of the primary link
+	%	- nTags: number of tags
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- snr [(nStates ^ nTags) * 1]: signal-to-noise ratio of the primary link corresponding to to each input letter combination
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- noisePower: average noise power at the user
+	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
     %   - tolerance: minimum rate gain per iteration
     %
     % Output:
@@ -25,11 +27,13 @@ function [jointDistribution, equivalentDistribution, weightedSumRate] = input_di
 
 	% * Declare default tolerance
 	arguments
-		nTags;
-		dmtc;
 		weight;
+		nTags;
 		symbolRatio;
-		snr;
+		equivalentChannel;
+		noisePower;
+		precoder;
+		dmtc;
 		tolerance = 1e-6;
 	end
 
@@ -42,7 +46,7 @@ function [jointDistribution, equivalentDistribution, weightedSumRate] = input_di
 
 	% * Initialization
 	equivalentDistribution = ones(1, nInputs) ./ nInputs;
-	informationFunction = information_function(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+	informationFunction = information_function(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc);
 	weightedSumRate = equivalentDistribution * informationFunction;
 
 	% * Iteratively update equivalent distribution, information function associated with each (joint) codeword, and weighted sum achievable rate
@@ -51,7 +55,7 @@ function [jointDistribution, equivalentDistribution, weightedSumRate] = input_di
 		weightedSumRate_ = weightedSumRate;
 		equivalentDistribution = equivalent_distribution(equivalentDistribution, informationFunction);
 		jointDistribution = permute(reshape(equivalentDistribution, nStates * ones(1, nTags)), nTags : - 1 : 1);
-		informationFunction = information_function(weight, symbolRatio, snr, equivalentDistribution, dmtc);
+		informationFunction = information_function(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc);
 		weightedSumRate = equivalentDistribution * informationFunction;
 		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance;
 	end

@@ -1,25 +1,30 @@
-function [discreteChannel] = channel_discretization(threshold, receivedPower, symbolRatio)
+function [discreteChannel] = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, threshold)
 	% Function:
-	%	- obtain discrete channel based on channel probability distribution and bin boundaries
+	%	- obtain energy detection channel based on channel probability distribution and bin boundaries
 	%	- construct equivalent DMTC based on decision thresholds
     %
     % Input:
-	%	- threshold [1 * nOutputs + 1]: bin boundaries or decision thresholds
-	%	- receivedPower [(nStates ^ nTags) * 1]: received power per primary symbol corresponding to each input letter combination
 	%	- symbolRatio: the ratio of the secondary symbol period over the primary symbol period
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- noisePower: average noise power at the user
+	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+	%	- threshold [1 * nOutputs + 1]: bin boundaries or decision thresholds
     %
     % Output:
 	%	- discreteChannel [(nStates ^ nTags) * nOutputs]: the DMC probability mass function after quantization (or the DMTC based on decision thresholds)
     %
     % Comment:
-    %	- for a given tag input combination, the continous-output channel follows Erlang distribution
+    %	- for a given tag input combination, the continous output channel follows Erlang distribution
 	%	- the discrete channel depends on bin boundaries or decision thresholds
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 09
 
 	% * Get data
-	nInputs = size(receivedPower, 1);
+	nInputs = size(equivalentChannel, 1);
 	nOutputs = size(threshold, 2) - 1;
+
+	% * Compute the expected received power under all backscatter input combinations
+	receivedPower = abs(equivalentChannel * precoder) .^ 2 + noisePower;
 
 	% * Construct DMC based on thresholding schemes
 	discreteChannel = zeros(nInputs, nOutputs);

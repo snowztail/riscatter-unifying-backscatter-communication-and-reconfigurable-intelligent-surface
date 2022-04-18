@@ -1,8 +1,8 @@
 %% * System
 % number of transmit antennas
-nTxs = 2;
+nTxs = 3;
 % number of tags
-nTags = 1;
+nTags = 2;
 % modulation order
 nStates = 4;
 % input and output alphabet size

@@ -274,7 +274,7 @@
 		\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
 		\label{eq:backscatter_modulation}
 	\end{equation}
-	where $\alpha \in [0,1]$ models the (amplitude) harvest-backscatter efficiency at the direction of interest.
+	where $\alpha \in [0,1]$ models the harvest-backscatter ratio at the direction of interest.
 	For passive tags, $\alpha \ll 1$ is commonly assumed as the majority of the incident wave can be harvested to support tag modules \cite{Thomas2012a}.
 
 	\begin{remark}
@@ -409,109 +409,108 @@
 		\end{align}
 		where $\rho \in [0,1]$ represents the priority of the primary link.
 	\end{subsection}
-
 \end{section}
 
 \begin{section}{Input, Threshold, and Precoder Design}
-To characterize the achievable primary-(sum-)backscatter rate region of Metascatter, we aim to maximize the weighted sum mutual information with respect to tag input probability distribution $\{\boldsymbol{p}_k\}$, decision threshold vector $\boldsymbol{t}$, and transmit precoder $\boldsymbol{w}$
-\begin{maxi!}
-{\scriptstyle{\{\boldsymbol{p}_k\},\boldsymbol{t},\boldsymbol{w}}}{I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
-\addConstraint{\sum \nolimits_{m_k} P_k(x_{m_k})}{=1,}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
-\addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k \in \mathcal{K}, \ \forall m_k \in \mathcal{M}}{\label{co:nonnegative_probability}}
-\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.}{\label{co:transmit_power}}
-\end{maxi!}
-Since problem \eqref{op:weighted_sum_rate} is not jointly convex, we propose a \gls{bcd} algorithm that iteratively updates $\{\boldsymbol{p}_k\}$, $\boldsymbol{t}$ and $\boldsymbol{w}$ until convergence.
+	To characterize the achievable primary-(sum-)backscatter rate region of Metascatter, we aim to maximize the weighted sum mutual information with respect to tag input probability distribution $\{\boldsymbol{p}_k\}$, decision threshold vector $\boldsymbol{t}$, and transmit precoder $\boldsymbol{w}$
+	\begin{maxi!}
+		{\scriptstyle{\{\boldsymbol{p}_k\},\boldsymbol{t},\boldsymbol{w}}}{I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
+		\addConstraint{\sum \nolimits_{m_k} P_k(x_{m_k})}{=1,}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
+		\addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k \in \mathcal{K}, \ \forall m_k \in \mathcal{M}}{\label{co:nonnegative_probability}}
+		\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.}{\label{co:transmit_power}}
+	\end{maxi!}
+	Since problem \eqref{op:weighted_sum_rate} is not jointly convex, we propose a \gls{bcd} algorithm that iteratively updates $\{\boldsymbol{p}_k\}$, $\boldsymbol{t}$ and $\boldsymbol{w}$ until convergence.
 
-\begin{subsection}{Input Probability Distribution}
-For any fixed decision boundary $\boldsymbol{t}$ and transmit precoder $\boldsymbol{w}$, the equivalent \gls{dmtmac} can be formulated by \eqref{eq:dmtmac} and problem \eqref{op:weighted_sum_rate} boils down to
-\begin{maxi!}
-{\scriptstyle{\{\boldsymbol{p}_k\}}}{I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\label{op:input_probability_distribution}}{}
-\addConstraint{\eqref{co:sum_probability},\eqref{co:nonnegative_probability},}
-\end{maxi!}
-which involves the product term $\prod_{k \in \mathcal{K}} P_k(x_{m_k})$ and is non-convex when $K > 1$.
-Interestingly, the sum-rate optimal input design for general discrete memoryless \gls{mac} remains an open problem, and we instead propose a \gls{kkt} solution to problem \eqref{op:input_probability_distribution}.
-\footnote{
-	As pointed out in \cite{Buhler2011}, \gls{kkt} conditions are only necessary for sum-rate optimality and these solutions may end up being saddle points.
-}
-\begin{proposition}
-	The \gls{kkt} optimality conditions for problem \eqref{op:input_probability_distribution} are equivalent to, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$,
-	\begin{subequations}
-		\label{eq:input_kkt_condition}
-		\begin{alignat}{2}
-			I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) & = I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}), \quad   &  & P_k^\star(x_{m_k}) > 0,\label{eq:probable_states} \\
-			I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) & \le I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}), \quad &  & P_k^\star(x_{m_k}) = 0.\label{eq:dropped_states}
-		\end{alignat}
-	\end{subequations}
-	\label{pr:input_kkt_condition}
-\end{proposition}
+	\begin{subsection}{Input Probability Distribution}
+		For any fixed decision boundary $\boldsymbol{t}$ and transmit precoder $\boldsymbol{w}$, the equivalent \gls{dmtmac} can be formulated by \eqref{eq:dmtmac} and problem \eqref{op:weighted_sum_rate} boils down to
+		\begin{maxi!}
+			{\scriptstyle{\{\boldsymbol{p}_k\}}}{I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\label{op:input_probability_distribution}}{}
+			\addConstraint{\eqref{co:sum_probability},\eqref{co:nonnegative_probability},}
+		\end{maxi!}
+		which involves the product term $\prod_{k \in \mathcal{K}} P_k(x_{m_k})$ and is non-convex when $K > 1$.
+		Interestingly, the sum-rate optimal input design for general discrete memoryless \gls{mac} remains an open problem, and we instead propose a \gls{kkt} solution to problem \eqref{op:input_probability_distribution}.
+		\footnote{
+			As pointed out in \cite{Buhler2011}, \gls{kkt} conditions are only necessary for sum-rate optimality and these solutions may end up being saddle points.
+		}
+		\begin{proposition}
+			The \gls{kkt} optimality conditions for problem \eqref{op:input_probability_distribution} are equivalent to, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$,
+			\begin{subequations}
+				\label{eq:input_kkt_condition}
+				\begin{alignat}{2}
+					I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) & = I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}), \quad   &  & P_k^\star(x_{m_k}) > 0,\label{eq:probable_states} \\
+					I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) & \le I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}), \quad &  & P_k^\star(x_{m_k}) = 0.\label{eq:dropped_states}
+				\end{alignat}
+			\end{subequations}
+			\label{pr:input_kkt_condition}
+		\end{proposition}
 
-\begin{proof}
-	Please refer to Appendix \ref{ap:input_kkt_condition}.
-	\label{pf:input_kkt_condition}
-\end{proof}
+		\begin{proof}
+			Please refer to Appendix \ref{ap:input_kkt_condition}.
+			\label{pf:input_kkt_condition}
+		\end{proof}
 
-We notice \eqref{eq:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{eq:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
-Next, we generalize the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} and propose a numerical evaluation of \gls{kkt} points by limits of sequences.
+		We notice \eqref{eq:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{eq:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
+		Next, we generalize the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} and propose a numerical evaluation of \gls{kkt} points by limits of sequences.
 
-\begin{proposition}
-	The \gls{kkt} solution of input probability of tag $k$ at state $m_k$ is given by the converging point of the sequence
-	\begin{equation}
-		P_k^{(r+1)}(x_{m_k}) = \frac{P_k^{(r)}(x_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k^{(r)}(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)}{\sum_{m_k'} P_k^{(r)}(x_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k^{(r)}(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)},
-		\label{eq:input_kkt_solution}
-	\end{equation}
-	where $r$ is the iteration index and $\boldsymbol{p}_k^{(0)} > \boldsymbol{0}$, $\forall k \in \mathcal{K}$.
-	At each iteration, the input distribution of tag $k$ is evaluated based on the updated input distribution of tags $1$ to $k-1$.
-	\label{pr:input_kkt_solution}
-\end{proposition}
-\begin{proof}
-	Please refer to Appendix \ref{ap:input_kkt_solution}.
-	\label{pf:input_kkt_solution}
-\end{proof}
-\end{subsection}
+		\begin{proposition}
+			The \gls{kkt} solution of input probability of tag $k$ at state $m_k$ is given by the converging point of the sequence
+			\begin{equation}
+				P_k^{(r+1)}(x_{m_k}) = \frac{P_k^{(r)}(x_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k^{(r)}(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)}{\sum_{m_k'} P_k^{(r)}(x_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k^{(r)}(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)},
+				\label{eq:input_kkt_solution}
+			\end{equation}
+			where $r$ is the iteration index and $\boldsymbol{p}_k^{(0)} > \boldsymbol{0}$, $\forall k \in \mathcal{K}$.
+			At each iteration, the input distribution of tag $k$ is evaluated based on the updated input distribution of tags $1$ to $k-1$.
+			\label{pr:input_kkt_solution}
+		\end{proposition}
+		\begin{proof}
+			Please refer to Appendix \ref{ap:input_kkt_solution}.
+			\label{pf:input_kkt_solution}
+		\end{proof}
+	\end{subsection}
 
 
-\begin{subsection}{Decision Threshold}
-	For a given tag input distribution $\{\boldsymbol{p}_k\}$, we can formulate an equivalent information source with augmented alphabet of tag input combination.
-	This equivalent source transmits at the total backscatter rate, and the input distribution is given by $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k})$, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$.
+	\begin{subsection}{Decision Threshold}
+		For a given tag input distribution $\{\boldsymbol{p}_k\}$, we can formulate an equivalent information source with augmented alphabet of tag input combination.
+		This equivalent source transmits at the total backscatter rate, and the input distribution is given by $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k})$, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$.
 
-	\begin{remark}
-		Since the equivalent source transmits at the total backscatter rate, the \gls{dmtmac} \eqref{eq:dmtmac} is essentially a point-to-point \gls{dmtc} and we can simplify the decision threshold design accordingly.
-		\label{re:input_combination}
-	\end{remark}
+		\begin{remark}
+			Since the equivalent source transmits at the total backscatter rate, the \gls{dmtmac} \eqref{eq:dmtmac} is essentially a point-to-point \gls{dmtc} and we can simplify the decision threshold design accordingly.
+			\label{re:input_combination}
+		\end{remark}
 
-	Interestingly, the optimal threshold design to maximize the mutual information for a general \gls{dmtc} with a fixed number of output letters remains an open issue.
-	The reason is that each decision region may contain more than one disjoint partitions (i.e., non-convex) and the number of thresholds are unknown.
-	Fortunately, for the proposed energy detection, we proved that the \gls{dmtc} capacity can be achieved using only convex decision regions.
-	This conclusion is summarized below.
+		Interestingly, the optimal threshold design to maximize the mutual information for a general \gls{dmtc} with a fixed number of output letters remains an open issue.
+		The reason is that each decision region may contain more than one disjoint partitions (i.e., non-convex) and the number of thresholds are unknown.
+		Fortunately, for the proposed energy detection, we proved that the \gls{dmtc} capacity can be achieved using only convex decision regions.
+		This conclusion is summarized below.
 
-	\begin{proposition}
-		For a discrete-input continuous-output channel in Erlang distribution \eqref{eq:energy_distribution}, if the \gls{dmtc} is constructed for detection (i.e., same input/output alphabet) and $L$ input letters are with non-zero probability, then it is possible to achieve the \gls{dmtc} capacity by $L$ non-empty convex decision regions defined by $L+1$ distinct decision thresholds.
-		\label{pr:threshold}
-	\end{proposition}
+		\begin{proposition}
+			For a discrete-input continuous-output channel in Erlang distribution \eqref{eq:energy_distribution}, if the \gls{dmtc} is constructed for detection (i.e., same input/output alphabet) and $L$ input letters are with non-zero probability, then it is possible to achieve the \gls{dmtc} capacity by $L$ non-empty convex decision regions defined by $L+1$ distinct decision thresholds.
+			\label{pr:threshold}
+		\end{proposition}
 
-	\begin{proof}
-		Please refer to Appendix \ref{ap:threshold}.
-		\label{pf:threshold}
-	\end{proof}
+		\begin{proof}
+			Please refer to Appendix \ref{ap:threshold}.
+			\label{pf:threshold}
+		\end{proof}
 
-	Once the optimal number of decision threshold is determined, we can first discretize the output energy level into numerous bins, then obtain the optimal decision regions that maximizes the total backscatter rate by \gls{dp} accelerated by \gls{smawk} algorithm \cite{He2021}.
+		Once the optimal number of decision threshold is determined, we can first discretize the output energy level into numerous bins, then obtain the optimal decision regions that maximizes the total backscatter rate by \gls{dp} accelerated by \gls{smawk} algorithm \cite{He2021}.
 
-	\begin{tcolorbox}
-		We may need to tailor threshold design for Metascatter as threshold design has potential impact on primary achievable rate, as implied by some simulation results.
-	\end{tcolorbox}
-\end{subsection}
+		\begin{tcolorbox}
+			We may need to tailor threshold design for Metascatter as threshold design has potential impact on primary achievable rate, as implied by some simulation results.
+		\end{tcolorbox}
+	\end{subsection}
 
-\begin{subsection}{Precoder}
-	\begin{tcolorbox}
-		The optimal precoder design is highly non-convex that involves integration, entropy term, and variable on exponential.
-		We may propose a suboptimal precoder based on linear combination of equivalent and cascaded channels, or consider single transmit antenna instead.
-	\end{tcolorbox}
-	\begin{align}
-		I(x_i;\hat{x}_j)
-		 & = \sum_{j \in \mathcal{I}} \int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z\nonumber                                                                                                                                                                                                                    \\
-		 & \quad \times \log \frac{\int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z}{\sum_{i' \in \mathcal{I}} \int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2\right)^N (N-1)!} \dd z},
-	\end{align}
-\end{subsection}
+	\begin{subsection}{Precoder}
+		\begin{tcolorbox}
+			The optimal precoder design is highly non-convex that involves integration, entropy term, and variable on exponential.
+			We may propose a suboptimal precoder based on linear combination of equivalent and cascaded channels, or consider single transmit antenna instead.
+		\end{tcolorbox}
+		\begin{align}
+			I(x_i;\hat{x}_j)
+			 & = \sum_{j \in \mathcal{I}} \int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z\nonumber                                                                                                                                                                                                                    \\
+			 & \quad \times \log \frac{\int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i} W) + \sigma_w^2\right)^N (N-1)!} \dd z}{\sum_{i' \in \mathcal{I}} \int_{t_{j-1,j}}^{t_{j,j+1}} \frac{z^{N-1} \exp \left(-\frac{z}{\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2}\right)}{\left(\mathrm{tr}(H_{\mathrm{E},i'} W) + \sigma_w^2\right)^N (N-1)!} \dd z},
+		\end{align}
+	\end{subsection}
 \end{section}
 
 \begin{section}{Preliminary Results}
@@ -562,204 +561,205 @@ Next, we generalize the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} 
 \end{section}
 
 \begin{appendix}
-\begin{subsection}{Proof of Proposition \ref{pr:input_kkt_condition}}
-	Denote the Lagrange multipliers associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\{\nu_k\}_{k \in \mathcal{K}}$ and $\{\lambda_{k,m_k}\}_{k \in \mathcal{K},m_k \in \mathcal{M}}$, respectively.
-	The Lagrangian function of problem \eqref{op:input_probability_distribution} is
-	\begin{align}
-		% L(\{\boldsymbol{p}_k\},\{\nu_k\},\{\lambda_{k,m_k}\})
-		L
-		 & = - I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) + \sum_{k \in \mathcal{K}} \nu_k \left( \sum_{m_k \in \mathcal{M}} P_k(x_{m_k}) - 1 \right)\nonumber \\
-		 & \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(x_{m_k}),
-	\end{align}
-	and the \gls{kkt} conditions on the optimal primal and dual variables are, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
-	\begin{subequations}
-		\label{eq:input_kkt_condition_original}
-		\begin{equation}
-			- \nabla_{P_k^\star(x_{m_k})} I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) + \nu_k^\star - \lambda_{k,m_k}^\star = 0,
-		\end{equation}
-		\begin{equation}
-			\lambda_{k,m_k}^\star = 0, \quad P_k^\star(x_{m_k}) > 0,
-		\end{equation}
-		\begin{equation}
-			\lambda_{k,m_k}^\star \ge 0, \quad P_k^\star(x_{m_k}) = 0,
-		\end{equation}
-	\end{subequations}
-	where the directional derivative can be explicitly expressed as
-	\begin{equation}
-		\nabla_{P_k^\star(x_{m_k})} I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) - (1 - \rho).
-		\label{eq:input_directional_derivative}
-	\end{equation}
-
-	Combining \eqref{eq:input_kkt_condition_original} and \eqref{eq:input_directional_derivative}, we have
-	\begin{subequations}
-		\label{eq:input_kkt_condition_transformed}
-		\begin{alignat}{2}
-			I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) & = \nu_k^\star + (1 - \rho), \quad   &  & P_k^\star(x_{m_k}) > 0,\label{eq:probable_states_marginal} \\
-			I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) & \le \nu_k^\star + (1 - \rho), \quad &  & P_k^\star(x_{m_k}) = 0,\label{eq:dropped_states_marginal}
-		\end{alignat}
-	\end{subequations}
-	which suggests
-	\begin{equation}
-		\sum_{m_k} P_k^\star(x_{m_k}) I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = \nu_k^\star + (1 - \rho).
-		\label{eq:input_kkt_condition_implied}
-	\end{equation}
-
-	On the other hand, by definition of weighted sum marginal information \eqref{eq:weighted_sum_marginal_information},
-	\begin{equation}
-		\sum_{m_k} P_k^\star(x_{m_k}) I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}),
-		\label{eq:weighted_sum_marginal_information_implied}
-	\end{equation}
-	where the right-hand side is irrelevant to $k$.
-	\eqref{eq:input_kkt_condition_transformed}, \eqref{eq:input_kkt_condition_implied}, and \eqref{eq:weighted_sum_marginal_information_implied} together complete the proof.
-	\qedsymbol
-	\label{ap:input_kkt_condition}
-\end{subsection}
-
-\begin{subsection}{Proof of Proposition \ref{pr:input_kkt_solution}}
-	We first prove sequence \eqref{eq:input_kkt_solution} is non-decreasing in mutual information.
-	Let $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(x_{m_q})$ and $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) = P_k'(x_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(x_{m_q})$ be two probability distributions with potentially different marginal for tag $k \in \mathcal{K}$ at state $m_k \in \mathcal{M}$, and define an intermediate function $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)$ as \eqref{eq:intermediate_information_function}.
-	\begin{figure*}[!b]
-		\hrule
+	\begin{subsection}{Proof of Proposition \ref{pr:input_kkt_condition}}
+		Denote the Lagrange multipliers associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\{\nu_k\}_{k \in \mathcal{K}}$ and $\{\lambda_{k,m_k}\}_{k \in \mathcal{K},m_k \in \mathcal{M}}$, respectively.
+		The Lagrangian function of problem \eqref{op:input_probability_distribution} is
 		\begin{align}
-			J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)
-			 & \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right)\nonumber                                                                                                                          \\
-			 & \quad + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})}.
-			\label{eq:intermediate_information_function}
+			% L(\{\boldsymbol{p}_k\},\{\nu_k\},\{\lambda_{k,m_k}\})
+			L
+			 & = - I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) + \sum_{k \in \mathcal{K}} \nu_k \left( \sum_{m_k \in \mathcal{M}} P_k(x_{m_k}) - 1 \right)\nonumber \\
+			 & \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(x_{m_k}),
 		\end{align}
-	\end{figure*}
-	It is straightforward to verify $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \right) = I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})$ and $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)$ is a concave function for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$.
-	By choosing $\nabla_{P_k^\star(x_{m_k})} J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right) = 0$, we have
-	\begin{equation}
-		S_k'(x_{m_k}) - S_k'(x_{i_k}) + (1 - \rho) \log \frac{P_k(x_{i_k})}{P_k^\star(x_{m_k})} = 0,
-		\label{eq:optimal_intermediate_information_condition}
-	\end{equation}
-	where $i_k \ne m_k$ is the reference state and
-	\begin{align}
-		S_k'(x_{m_k})
-		 & \triangleq I_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) + (1 - \rho) \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}})\nonumber \\
-		 & \quad \times \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) \log P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}).
-	\end{align}
+		and the \gls{kkt} conditions on the optimal primal and dual variables are, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
+		\begin{subequations}
+			\label{eq:input_kkt_condition_original}
+			\begin{equation}
+				- \nabla_{P_k^\star(x_{m_k})} I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) + \nu_k^\star - \lambda_{k,m_k}^\star = 0,
+			\end{equation}
+			\begin{equation}
+				\lambda_{k,m_k}^\star = 0, \quad P_k^\star(x_{m_k}) > 0,
+			\end{equation}
+			\begin{equation}
+				\lambda_{k,m_k}^\star \ge 0, \quad P_k^\star(x_{m_k}) = 0,
+			\end{equation}
+		\end{subequations}
+		where the directional derivative can be explicitly expressed as
+		\begin{equation}
+			\nabla_{P_k^\star(x_{m_k})} I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) - (1 - \rho).
+			\label{eq:input_directional_derivative}
+		\end{equation}
 
-	Evidently, $\forall m_k \ne i_k$, \eqref{eq:optimal_intermediate_information_condition} boils down to
-	\begin{equation}
-		P_k^\star(x_{m_k}) = \frac{P_k'(x_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)}{\sum_{m_k'} P_k'(x_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)}.
-		\label{eq:optimal_relative_distribution}
-	\end{equation}
+		Combining \eqref{eq:input_kkt_condition_original} and \eqref{eq:input_directional_derivative}, we have
+		\begin{subequations}
+			\label{eq:input_kkt_condition_transformed}
+			\begin{alignat}{2}
+				I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) & = \nu_k^\star + (1 - \rho), \quad   &  & P_k^\star(x_{m_k}) > 0,\label{eq:probable_states_marginal} \\
+				I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) & \le \nu_k^\star + (1 - \rho), \quad &  & P_k^\star(x_{m_k}) = 0,\label{eq:dropped_states_marginal}
+			\end{alignat}
+		\end{subequations}
+		which suggests
+		\begin{equation}
+			\sum_{m_k} P_k^\star(x_{m_k}) I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = \nu_k^\star + (1 - \rho).
+			\label{eq:input_kkt_condition_implied}
+		\end{equation}
 
-	Although it seems $P_k(x_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^\star(x_{m_k})$ has no optimality guarantee, we can verify that $P_k(x_{i_k})$ has exactly the same form as \eqref{eq:optimal_relative_distribution}.
-	It implies the selection of reference state does not matter and \eqref{eq:optimal_relative_distribution} is indeed optimal $\forall m_k \in \mathcal{M}$.
-	Therefore, for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$, choosing $P_k(x_{m_k})$ by \eqref{eq:optimal_relative_distribution} ensures
-	\begin{equation}
-		J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right) \ge I'(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}).
-		\label{eq:information_difference_lower}
-	\end{equation}
+		On the other hand, by definition of weighted sum marginal information \eqref{eq:weighted_sum_marginal_information},
+		\begin{equation}
+			\sum_{m_k} P_k^\star(x_{m_k}) I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}),
+			\label{eq:weighted_sum_marginal_information_implied}
+		\end{equation}
+		where the right-hand side is irrelevant to $k$.
+		\eqref{eq:input_kkt_condition_transformed}, \eqref{eq:input_kkt_condition_implied}, and \eqref{eq:weighted_sum_marginal_information_implied} together complete the proof.
+		\qedsymbol
+		\label{ap:input_kkt_condition}
+	\end{subsection}
 
-	On the other hand, \eqref{eq:optimal_relative_distribution} also guarantees
-	\begin{subequations}
-		\label{eq:information_difference_upper}
+	\begin{subsection}{Proof of Proposition \ref{pr:input_kkt_solution}}
+		We first prove sequence \eqref{eq:input_kkt_solution} is non-decreasing in mutual information.
+		Let $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(x_{m_q})$ and $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) = P_k'(x_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(x_{m_q})$ be two probability distributions with potentially different marginal for tag $k \in \mathcal{K}$ at state $m_k \in \mathcal{M}$, and define an intermediate function $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)$ as \eqref{eq:intermediate_information_function}.
+		\begin{figure*}[!b]
+			\hrule
+			\begin{align}
+				J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)
+				 & \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right)\nonumber                                                                                                                          \\
+				 & \quad + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})}.
+				\label{eq:intermediate_information_function}
+			\end{align}
+		\end{figure*}
+		It is straightforward to verify $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \right) = I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})$ and $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)$ is a concave function for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$.
+		By choosing $\nabla_{P_k^\star(x_{m_k})} J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right) = 0$, we have
+		\begin{equation}
+			S_k'(x_{m_k}) - S_k'(x_{i_k}) + (1 - \rho) \log \frac{P_k(x_{i_k})}{P_k^\star(x_{m_k})} = 0,
+			\label{eq:optimal_intermediate_information_condition}
+		\end{equation}
+		where $i_k \ne m_k$ is the reference state and
 		\begin{align}
-			\Delta
-			 & \triangleq I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) - J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)                                                                                                                               \\
-			 & = (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k})\nonumber                                  \\
-			 & \quad \times \log \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k'}) f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k'}) f_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})}               \\
-			 & \ge (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k})\nonumber                                \\
-			 & \quad \times \left( 1 - \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k'}) f_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k'}) f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})} \right) \\
-			 & = 0,
+			S_k'(x_{m_k})
+			 & \triangleq I_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) + (1 - \rho) \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}})\nonumber \\
+			 & \quad \times \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) \log P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}).
 		\end{align}
-	\end{subequations}
-	where $f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges.
-	\eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper} together imply $I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \ge I'(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})$.
-	Since mutual information is bounded above, we conclude the sequence \eqref{eq:input_kkt_solution} is non-decreasing and convergent in mutual information.
 
-	Next, we prove that any converging point of sequence \eqref{eq:input_kkt_solution}, denoted as $P_k^\star(x_{m_k})$, fulfills \gls{kkt} conditions \eqref{eq:input_kkt_condition}.
-	To see this, consider $P_k^{(0)}(x_{m_k}) > 0$ and define
-	\begin{equation}
-		D_k^{(r)}(x_{m_k}) \triangleq \frac{P_k^{(r+1)}(x_{m_k})}{P_k^{(r)}(x_{m_k})} = \frac{f_k^{(r)}(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k^{(r)}(x_{m_k'}) f_k^{(r)}(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})}.
-	\end{equation}
+		Evidently, $\forall m_k \ne i_k$, \eqref{eq:optimal_intermediate_information_condition} boils down to
+		\begin{equation}
+			P_k^\star(x_{m_k}) = \frac{P_k'(x_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)}{\sum_{m_k'} P_k'(x_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)}.
+			\label{eq:optimal_relative_distribution}
+		\end{equation}
 
-	As sequence \eqref{eq:input_kkt_solution} is convergent, any state with $P_k^\star(x_{m_k}) > 0$ need to satisfy $D_k^\star(x_{m_k}) \triangleq \lim_{r \to \infty} D_k^{(r)}(x_{m_k}) = 1$, namely
-	\begin{equation}
-		I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = \frac{1 - \rho}{\rho} \log \sum_{m_k'} P_k^\star(x_{m_k'}) f_k^\star(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y}),
-	\end{equation}
-	which is reminiscent of \eqref{eq:probable_states_marginal} (and hence \eqref{eq:probable_states}).
-	That is to say, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) > 0$ must satisfy \eqref{eq:probable_states}.
-	On the other hand, we assume $P_k^\star(x_{m_k})$ does not satisfy \eqref{eq:dropped_states}, such that for any state with $P_k^\star(x_{m_k}) = 0$,
-	% On the other hand, we show if $P_k^\star(x_{m_k})$ does not satisfy \eqref{eq:dropped_states}, then it is not a converging point of sequence \eqref{eq:input_kkt_solution}. By this assumption, for any state with $P_k^\star(x_{m_k}) = 0$,
-	\begin{equation}
-		I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) > I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = \sum_{m_k'} P_k^\star(x_{m_k'}) I_k^\star(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y}),
-	\end{equation}
-	where the equality inherits from \eqref{eq:weighted_sum_mutual_information}.
-	Since the exponential function is monotonically increasing, we have $f_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) > \sum_{m_k'} P_k^\star(x_{m_k'}) f_k^\star(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})$ and $D_k^\star(x_{m_k}) > 1$.
-	Considering $P_k^{(0)}(x_{m_k}) > 0$ and $P_k^\star(x_{m_k}) = 0$, it contradicts with
-	\begin{equation}
-		P_k^{(r)}(x_{m_k}) = P_k^{(0)}(x_{m_k}) \prod_{n=1}^r D_k^{(n)}(x_{m_k}).
-	\end{equation}
-	Therefore, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) = 0$ must satisfy \eqref{eq:dropped_states}.
-	This completes the proof.
-	\qedsymbol
-	\label{ap:input_kkt_solution}
-\end{subsection}
+		Although it seems $P_k(x_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^\star(x_{m_k})$ has no optimality guarantee, we can verify that $P_k(x_{i_k})$ has exactly the same form as \eqref{eq:optimal_relative_distribution}.
+		It implies the selection of reference state does not matter and \eqref{eq:optimal_relative_distribution} is indeed optimal $\forall m_k \in \mathcal{M}$.
+		Therefore, for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$, choosing $P_k(x_{m_k})$ by \eqref{eq:optimal_relative_distribution} ensures
+		\begin{equation}
+			J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right) \ge I'(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}).
+			\label{eq:information_difference_lower}
+		\end{equation}
 
-\begin{subsection}{Proof of Proposition \ref{pr:threshold}}
-Since $L$ input letters are with non-zero probability and $x \to z \to \hat{x}$ formulates a Markov chain, we need $L$ non-empty decision regions and at least $L+1$ distinct thresholds (including \num{0} and $\infty$) to minimize the distortion between source and decision.
-On the other hand, the optimal decision regions are apparently empty for those unused letters.
+		On the other hand, \eqref{eq:optimal_relative_distribution} also guarantees
+		\begin{subequations}
+			\label{eq:information_difference_upper}
+			\begin{align}
+				\Delta
+				 & \triangleq I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) - J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)                                                                                                                               \\
+				 & = (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k})\nonumber                                  \\
+				 & \quad \times \log \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k'}) f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k'}) f_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})}               \\
+				 & \ge (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k})\nonumber                                \\
+				 & \quad \times \left( 1 - \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k'}) f_k'(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''} \mid x_{m_k'}) f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})} \right) \\
+				 & = 0,
+			\end{align}
+		\end{subequations}
+		where $f_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \right)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges.
+		\eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper} together imply $I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) \ge I'(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})$.
+		Since mutual information is bounded above, we conclude the sequence \eqref{eq:input_kkt_solution} is non-decreasing and convergent in mutual information.
 
-Suppose the optimal number of thresholds is $S+1$ where $S \ge L$.
-Let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{(S+1) \times 1}$ be the optimal threshold vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.
-Since the optimal decision region for any letter may consist of multiple partitions, without loss of generality, we assume the mapping from threshold vector to decision region $l' \in \mathcal{L} \triangleq \{1,\ldots,L\}$ is given by $\mathcal{R}_{l'} = \bigcup_{s \equiv l' \pmod L} [t_{s-1},t_s)$.
-\footnote{
-	The proof holds for any valid mapping from threshold vector to decision regions, and we consider this specific case for the ease of presentation.
-}
-The threshold optimization problem is
-\begin{maxi!}
-{\scriptstyle{\boldsymbol{t}}}{I_{\mathrm{B}}(x;\hat{x})}{\label{op:decision_threshold}}{\label{ob:backscatter_mutual_information}}
-\addConstraint{t_{s-1}}{< t_s,}{\quad \forall s \in \mathcal{S}.}{\label{co:strict_inequality}}
-\end{maxi!}
+		Next, we prove that any converging point of sequence \eqref{eq:input_kkt_solution}, denoted as $P_k^\star(x_{m_k})$, fulfills \gls{kkt} conditions \eqref{eq:input_kkt_condition}.
+		To see this, consider $P_k^{(0)}(x_{m_k}) > 0$ and define
+		\begin{equation}
+			D_k^{(r)}(x_{m_k}) \triangleq \frac{P_k^{(r+1)}(x_{m_k})}{P_k^{(r)}(x_{m_k})} = \frac{f_k^{(r)}(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\sum_{m_k'} P_k^{(r)}(x_{m_k'}) f_k^{(r)}(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})}.
+		\end{equation}
 
-Problem \eqref{op:decision_threshold} is intricate due to the strict inequality constraint \eqref{co:strict_inequality}.
-Following \cite{Nguyen2020}, we first relax it to the convex counterpart, then discard the solutions that violate any original constraint.
-The Lagrangian function for the relaxed problem is
-\begin{equation}
-	L = - I_{\mathrm{B}}(x;\hat{x}) + \sum_{s \in \mathcal{S}} \mu_s (t_{s-1} - t_s),
-\end{equation}
-where $\mu_s$ is the Lagrange multiplier associated with the non-strict version of \eqref{co:strict_inequality}.
-The \gls{kkt} conditions on the optimal primal and dual solutions are, $\forall s \in \mathcal{S}$,
-\begin{subequations}
-	\label{eq:kkt_thresholding}
-	\begin{equation}
-		- \nabla_{t_s^\star} I^\star_{\mathrm{B}}(x;\hat{x}) + \mu_{s-1}^\star - \mu_s^\star = 0,
-		\label{eq:stationarity}
-	\end{equation}
-	\begin{equation}
-		\mu_s^\star \ge 0,
-		\label{eq:dual_feasibility}
-	\end{equation}
-	\begin{equation}
-		\mu_s^\star (t_{s-1}^\star - t_s^\star) = 0.
-		\label{eq:complementary_slackness}
-	\end{equation}
+		As sequence \eqref{eq:input_kkt_solution} is convergent, any state with $P_k^\star(x_{m_k}) > 0$ need to satisfy $D_k^\star(x_{m_k}) \triangleq \lim_{r \to \infty} D_k^{(r)}(x_{m_k}) = 1$, namely
+		\begin{equation}
+			I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = \frac{1 - \rho}{\rho} \log \sum_{m_k'} P_k^\star(x_{m_k'}) f_k^\star(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y}),
+		\end{equation}
+		which is reminiscent of \eqref{eq:probable_states_marginal} (and hence \eqref{eq:probable_states}).
+		That is to say, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) > 0$ must satisfy \eqref{eq:probable_states}.
+		On the other hand, we assume $P_k^\star(x_{m_k})$ does not satisfy \eqref{eq:dropped_states}, such that for any state with $P_k^\star(x_{m_k}) = 0$,
+		% On the other hand, we show if $P_k^\star(x_{m_k})$ does not satisfy \eqref{eq:dropped_states}, then it is not a converging point of sequence \eqref{eq:input_kkt_solution}. By this assumption, for any state with $P_k^\star(x_{m_k}) = 0$,
+		\begin{equation}
+			I_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) > I^\star(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y}) = \sum_{m_k'} P_k^\star(x_{m_k'}) I_k^\star(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y}),
+		\end{equation}
+		where the equality inherits from \eqref{eq:weighted_sum_mutual_information}.
+		Since the exponential function is monotonically increasing, we have $f_k^\star(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y}) > \sum_{m_k'} P_k^\star(x_{m_k'}) f_k^\star(x_{m_k'};\hat{x}_{\mathcal{K}},\boldsymbol{y})$ and $D_k^\star(x_{m_k}) > 1$.
+		Considering $P_k^{(0)}(x_{m_k}) > 0$ and $P_k^\star(x_{m_k}) = 0$, it contradicts with
+		\begin{equation}
+			P_k^{(r)}(x_{m_k}) = P_k^{(0)}(x_{m_k}) \prod_{n=1}^r D_k^{(n)}(x_{m_k}).
+		\end{equation}
+		Therefore, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) = 0$ must satisfy \eqref{eq:dropped_states}.
+		This completes the proof.
+		\qedsymbol
+		\label{ap:input_kkt_solution}
+	\end{subsection}
 
-\end{subequations}
-Due to the strict inequality constraint \eqref{co:strict_inequality}, conditions \eqref{eq:dual_feasibility} and \eqref{eq:complementary_slackness} together imply $\mu_s^\star = 0$, $\forall s \in \mathcal{S}$.
-Besides, it is trivial to conclude $t_0^\star = 0$ for energy-based detection.
-As such, the necessary optimality conditions for problem \eqref{op:decision_threshold}, $s \in \mathcal{S}$,
-\begin{equation}
-	\nabla_{t_{s}^\star} I^\star_{\mathrm{B}}(x;\hat{x}) = 0,
-\end{equation}
-which can be explicitly written as
-\begin{equation}
-	\sum_l P(x_l) \frac{(t_s^\star)^{N-1} e^{-t_s^\star/\sigma_l^2}}{\sigma_l^{2N} (N-1)!} \log \frac{P(x_l \mid \hat{x}_{l'+1})}{P(x_l \mid \hat{x}_{l'})} = 0,
-	\label{eq:kkt_threshold_explicit}
-\end{equation}
-where $l' \equiv s \pmod L$.
-According to \cite{Nguyen2020a}, the optimal backward channel quantizer is convex and separates each pair of posterior distribution by a hyperplane.
-It implies the sequence $\{\log {P(x_l \mid \hat{x}_{l'+1})}/{P(x_l \mid \hat{x}_{l'})}\}_{l \in \mathcal{L}}$ changes sign exactly once.
-We notice the left-hand side of \eqref{eq:kkt_threshold_explicit} is a generalized Dirichlet polynomial, which has at most one real solution by Descartes' rule of signs \cite{Jameson2006}.
-In other words, starting from $t_0^\star$, each optimal decision region requires at most one additional distinct threshold, and we have $S \le L$.
-Therefore, we conclude $S = L$ and the proof is completed.
-\qedsymbol
-\label{ap:threshold}
-\end{subsection}
+	\begin{subsection}{Proof of Proposition \ref{pr:threshold}}
+		Since $L$ input letters are with non-zero probability and $x \to z \to \hat{x}$ formulates a Markov chain, we need $L$ non-empty decision regions and at least $L+1$ distinct thresholds (including \num{0} and $\infty$) to minimize the distortion between source and decision.
+		On the other hand, the optimal decision regions are apparently empty for those unused letters.
+
+		Suppose the optimal number of thresholds is $S+1$ where $S \ge L$.
+		Let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{(S+1) \times 1}$ be the optimal threshold vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.
+		Since the optimal decision region for any letter may consist of multiple partitions, without loss of generality, we assume the mapping from threshold vector to decision region $l' \in \mathcal{L} \triangleq \{1,\ldots,L\}$ is given by $\mathcal{R}_{l'} = \bigcup_{s \equiv l' \pmod L} [t_{s-1},t_s)$.
+		\footnote{
+			The proof holds for any valid mapping from threshold vector to decision regions, and we consider this specific case for the ease of presentation.
+		}
+		The threshold optimization problem is
+		\begin{maxi!}
+			{\scriptstyle{\boldsymbol{t}}}{I_{\mathrm{B}}(x;\hat{x})}{\label{op:decision_threshold}}{\label{ob:backscatter_mutual_information}}
+			\addConstraint{t_{s-1}}{< t_s,}{\quad \forall s \in \mathcal{S}.}{\label{co:strict_inequality}}
+		\end{maxi!}
+
+		Problem \eqref{op:decision_threshold} is intricate due to the strict inequality constraint \eqref{co:strict_inequality}.
+		Following \cite{Nguyen2020}, we first relax it to the convex counterpart, then discard the solutions that violate any original constraint.
+		The Lagrangian function for the relaxed problem is
+		\begin{equation}
+			L = - I_{\mathrm{B}}(x;\hat{x}) + \sum_{s \in \mathcal{S}} \mu_s (t_{s-1} - t_s),
+		\end{equation}
+		where $\mu_s$ is the Lagrange multiplier associated with the non-strict version of \eqref{co:strict_inequality}.
+		The \gls{kkt} conditions on the optimal primal and dual solutions are, $\forall s \in \mathcal{S}$,
+		\begin{subequations}
+			\label{eq:kkt_thresholding}
+			\begin{equation}
+				- \nabla_{t_s^\star} I^\star_{\mathrm{B}}(x;\hat{x}) + \mu_{s-1}^\star - \mu_s^\star = 0,
+				\label{eq:stationarity}
+			\end{equation}
+			\begin{equation}
+				\mu_s^\star \ge 0,
+				\label{eq:dual_feasibility}
+			\end{equation}
+			\begin{equation}
+				\mu_s^\star (t_{s-1}^\star - t_s^\star) = 0.
+				\label{eq:complementary_slackness}
+			\end{equation}
+
+		\end{subequations}
+		Due to the strict inequality constraint \eqref{co:strict_inequality}, conditions \eqref{eq:dual_feasibility} and \eqref{eq:complementary_slackness} together imply $\mu_s^\star = 0$, $\forall s \in \mathcal{S}$.
+		Besides, it is trivial to conclude $t_0^\star = 0$ for energy-based detection.
+		As such, the necessary optimality conditions for problem \eqref{op:decision_threshold}, $\forall s \in \mathcal{S}$,
+		\begin{equation}
+			\nabla_{t_{s}^\star} I^\star_{\mathrm{B}}(x;\hat{x}) = 0,
+		\end{equation}
+		which can be explicitly written as, $\forall s \equiv l' \pmod L$,
+		\begin{equation}
+			\sum_l P(x_l) \frac{(t_s^\star)^{N-1} e^{-t_s^\star/\sigma_l^2}}{\sigma_l^{2N} (N-1)!} \log \frac{P(x_l \mid \hat{x}_{l'+1})}{P(x_l \mid \hat{x}_{l'})} = 0,
+			\label{eq:kkt_threshold_explicit}
+		\end{equation}
+
+		According to \cite{He2021}, the optimal backward channel quantizer is convex and separates each pair of posterior distribution by a hyperplane.
+		It implies, for a given output letter $l'$, the sequence $\{\log {P(x_l \mid \hat{x}_{l'+1})}/{P(x_l \mid \hat{x}_{l'})}\}_{l \in \mathcal{L}}$ changes sign exactly once.
+		We notice the left-hand side of \eqref{eq:kkt_threshold_explicit} is a generalized Dirichlet polynomial, and by Descartes' rule of signs \cite{Jameson2006}, has at most one positive solution.
+		% TODO
+		In other words, starting from $t_0^\star$, each optimal decision region requires at most one additional distinct threshold, and we have $S \le L$.
+		Therefore, we conclude $S = L$ and the proof is completed.
+		\qedsymbol
+		\label{ap:threshold}
+	\end{subsection}
 \end{appendix}
 
 

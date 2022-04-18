@@ -19,5 +19,6 @@ end
 rate = zeros(2, nWeights);
 for iWeight = 1 : nWeights
 	weight = weightSet(iWeight);
-	[rate, inputDistribution, threshold, precoder] = block_coordinate_descent(weight, nTags, symbolRatio, equivalentChannel, txPower, noisePower, nBins, tolerance, 'Input', 'kkt', 'Threshold', 'smawk');
+	[rate, inputDistribution, threshold, precoder] = block_coordinate_descent(weight, nTags, symbolRatio, equivalentChannel, txPower, noisePower, nBins, tolerance, 'Input', 'cooperation', 'Recovery', 'marginalization', 'Threshold', 'smawk');
+% 	[rate, inputDistribution, threshold, precoder] = block_coordinate_descent(weight, nTags, symbolRatio, equivalentChannel, txPower, noisePower, nBins, tolerance, 'Input', 'cooperation', 'Threshold', 'smawk');
 end

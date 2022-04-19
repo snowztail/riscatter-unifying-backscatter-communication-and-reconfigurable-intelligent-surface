@@ -1,4 +1,4 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery_decomposition(weight, symbolRatio, equivalentChannel, noisePower, jointDistribution, precoder, dmtc)
+function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery_decomposition(weight, symbolRatio, equivalentChannel, noisePower, jointDistribution, beamformer, dmtc)
 	% Function:
 	%	- extract a good tag input distribution (corresponding to no transmit cooperation) by normalizing the best rank-1 CP approximation
     %
@@ -8,7 +8,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
 	%	- noisePower: average noise power at the user
 	%	- jointDistribution [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
-	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
     %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
     %
     % Output:
@@ -30,5 +30,5 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 	inputDistribution = cell2mat(cellfun(@transpose, cpTensor.U, 'UniformOutput', false));
 	inputDistribution = inputDistribution ./ sum(inputDistribution, 2);
 	equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
-	weightedSumRate = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc);
+	weightedSumRate = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, dmtc);
 end

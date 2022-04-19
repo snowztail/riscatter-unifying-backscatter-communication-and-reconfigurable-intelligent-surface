@@ -1,4 +1,4 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_sca(weight, nTags, symbolRatio, equivalentChannel, noisePower, precoder, dmtc, tolerance)
+function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_sca(weight, nTags, symbolRatio, equivalentChannel, noisePower, beamformer, dmtc, tolerance)
 	% Function:
 	%	- optimize the tag input distribution by successive convex approximation
     %
@@ -8,7 +8,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
 	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
 	%	- noisePower: average noise power at the user
-	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
     %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
     %	- tolerance: minimum rate gain per iteration
     %
@@ -32,7 +32,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 		symbolRatio;
 		equivalentChannel;
 		noisePower;
-		precoder;
+		beamformer;
 		dmtc;
 		tolerance = 1e-6;
 	end
@@ -45,11 +45,11 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	nInputs = size(dmtc, 1);
 	nStates = nthroot(nInputs, nTags);
 
-	% * Initialization
+	% * Initialize input distribution as uniform distribution
 	indexCombination = index_combination(nTags, nStates);
 	inputDistribution = ones(nTags, nStates) / nStates;
 	equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
-	weightedSumRate = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc);
+	weightedSumRate = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, dmtc);
 
 	% * Iteratively update input distribution by SCA
 	isConverged = false;
@@ -66,7 +66,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 				end
 				auxiliary(iInput) = auxiliary(iInput) - (nTags - 1) * prod(inputDistribution_(sub2ind(size(inputDistribution_), transpose(1 : nTags), indexCombination(:, iInput))), 1);
 			end
-			weightedSumRateSca = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, auxiliary, precoder, dmtc);
+			weightedSumRateSca = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, auxiliary, beamformer, dmtc);
 
 			maximize weightedSumRateSca
 			subject to
@@ -77,7 +77,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 
 		% * Compute actual weighted sum rate
 		equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
-		weightedSumRate = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc);
+		weightedSumRate = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, dmtc);
 
 		% * Test convergence
 		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance;

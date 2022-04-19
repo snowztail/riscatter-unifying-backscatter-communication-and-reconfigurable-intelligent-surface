@@ -1,4 +1,4 @@
-function [thresholdCandidate] = threshold_candidate(symbolRatio, equivalentChannel, noisePower, nBins, precoder, confidenceScore)
+function [thresholdCandidate] = threshold_candidate(symbolRatio, equivalentChannel, noisePower, nBins, beamformer, confidenceScore)
 	% Function:
     %	- obtain finite decision threshold candidates (i.e., discretized output bin boundaries)
     %
@@ -7,7 +7,7 @@ function [thresholdCandidate] = threshold_candidate(symbolRatio, equivalentChann
 	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
 	%	- noisePower: average noise power at the user
 	%	- nBins: number of discretization bins over received signal
-	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
     %	- confidenceScore: number of standard deviations from the mean (i.e., parameter k in Chebyshev's inequality)
     %
     % Output:
@@ -25,12 +25,12 @@ function [thresholdCandidate] = threshold_candidate(symbolRatio, equivalentChann
 		equivalentChannel;
 		noisePower;
 		nBins;
-		precoder;
+		beamformer;
 		confidenceScore = 10;
 	end
 
 	% * Compute the expected received power under all backscatter input combinations
-	receivedPower = abs(equivalentChannel * precoder) .^ 2 + noisePower;
+	receivedPower = abs(equivalentChannel * beamformer) .^ 2 + noisePower;
 
 	% * Obtain threshold candidates within empirical interval based on Chebyshev's inequality
 	lowerBound = symbolRatio * min(receivedPower) - confidenceScore * sqrt(symbolRatio * min(receivedPower));

@@ -1,4 +1,4 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_kkt(weight, nTags, symbolRatio, equivalentChannel, noisePower, precoder, dmtc, tolerance)
+function [inputDistribution, equivalentDistribution, weightedSumRate] = input_distribution_kkt(weight, nTags, symbolRatio, equivalentChannel, noisePower, beamformer, dmtc, tolerance)
 	% Function:
 	%	- obtain the tag input distribution that satisfies the KKT conditions of maximizing weighted sum primary-backscatter rate
     %
@@ -8,7 +8,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
 	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
 	%	- noisePower: average noise power at the user
-	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
     %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
     %	- tolerance: minimum rate gain per iteration
     %
@@ -36,7 +36,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 		symbolRatio;
 		equivalentChannel;
 		noisePower;
-		precoder;
+		beamformer;
 		dmtc;
 		tolerance = 1e-6;
 	end
@@ -48,11 +48,11 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	% * Get data
 	nStates = nthroot(size(dmtc, 1), nTags);
 
-	% * Initialization
+	% * Initialize input distribution as uniform distribution
 	inputDistribution = ones(nTags, nStates) / nStates;
 	combinationDistribution = combination_distribution(inputDistribution);
 	equivalentDistribution = prod(combinationDistribution, 1);
-	informationFunction = information_function(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc);
+	informationFunction = information_function(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, dmtc);
 	marginalInformation = marginal_information(combinationDistribution, informationFunction);
 	weightedSumRate = equivalentDistribution * informationFunction;
 
@@ -65,7 +65,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 			inputDistribution(iTag, :) = input_distribution(inputDistribution(iTag, :), marginalInformation(:, iTag));
 			combinationDistribution = combination_distribution(inputDistribution);
 			equivalentDistribution = prod(combinationDistribution, 1);
-			informationFunction = information_function(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc);
+			informationFunction = information_function(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, dmtc);
 			marginalInformation = marginal_information(combinationDistribution, informationFunction);
 			weightedSumRate = equivalentDistribution * informationFunction;
 		end

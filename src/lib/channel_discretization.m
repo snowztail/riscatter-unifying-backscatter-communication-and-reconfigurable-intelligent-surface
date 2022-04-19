@@ -1,4 +1,4 @@
-function [discreteChannel] = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, threshold)
+function [discreteChannel] = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold)
 	% Function:
 	%	- obtain energy detection channel based on channel probability distribution and bin boundaries
 	%	- construct equivalent DMTC based on decision thresholds
@@ -7,7 +7,7 @@ function [discreteChannel] = channel_discretization(symbolRatio, equivalentChann
 	%	- symbolRatio: the ratio of the secondary symbol period over the primary symbol period
 	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
 	%	- noisePower: average noise power at the user
-	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
 	%	- threshold [1 * nOutputs + 1]: bin boundaries or decision thresholds
     %
     % Output:
@@ -24,7 +24,7 @@ function [discreteChannel] = channel_discretization(symbolRatio, equivalentChann
 	nOutputs = size(threshold, 2) - 1;
 
 	% * Compute the expected received power under all backscatter input combinations
-	receivedPower = abs(equivalentChannel * precoder) .^ 2 + noisePower;
+	receivedPower = abs(equivalentChannel * beamformer) .^ 2 + noisePower;
 
 	% * Construct DMC based on thresholding schemes
 	discreteChannel = zeros(nInputs, nOutputs);

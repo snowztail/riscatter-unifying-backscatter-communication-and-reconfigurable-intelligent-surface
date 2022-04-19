@@ -1,4 +1,4 @@
-function [threshold, dmtc, backscatterRate] = threshold_bisection(symbolRatio, equivalentChannel, noisePower, nBins, equivalentDistribution, precoder)
+function [threshold, dmtc, backscatterRate] = threshold_bisection(symbolRatio, equivalentChannel, noisePower, nBins, equivalentDistribution, beamformer)
 	% Function:
 	%	- group the received energy bins into convex decision regions by bisection
     %
@@ -8,7 +8,7 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(symbolRatio, e
 	%	- noisePower: average noise power at the user
 	%	- nBins: number of discretization bins over received signal
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
     %
     % Output:
 	%	- threshold [1 * (nOutputs + 1)]: boundaries of decision regions
@@ -20,16 +20,17 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(symbolRatio, e
 	%	- Traverse all possible t_1 and choose the corresponding thresholding set that maximizes mutual information
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 18
+	% ! sort received power to match decision regions?
 
 	% * Get data
 	nOutputs = size(equivalentDistribution, 2);
 	nLevels = nBins + 1;
 
 	% * Obtain threshold candidates that delimit output into discrete bins
-	thresholdCandidate = threshold_candidate(symbolRatio, equivalentChannel, noisePower, nBins, precoder);
+	thresholdCandidate = threshold_candidate(symbolRatio, equivalentChannel, noisePower, nBins, beamformer);
 
 	% * Evaluate DMC over all bins
-	dmc = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, thresholdCandidate);
+	dmc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, thresholdCandidate);
 
 	% * Optimal t_0 = 0 and t_K+1 = ∞, traverse all possible t_1
 	backscatterRateSet = zeros(nLevels, 1);
@@ -44,7 +45,7 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(symbolRatio, e
 		for iThreshold = 3 : nOutputs
 			% * Compute reference divergence
 			binIndex = find(thresholdCandidate == threshold(iThreshold - 2)) : find(thresholdCandidate == threshold(iThreshold - 1)) - 1;
-			thresholdDensity = threshold_density(symbolRatio, equivalentChannel, precoder, threshold(iThreshold - 1));
+			thresholdDensity = threshold_density(symbolRatio, equivalentChannel, beamformer, threshold(iThreshold - 1));
 			divergence = backward_divergence(dmc, equivalentDistribution, binIndex, thresholdDensity);
 
 			% * Initialize upper and lower bound of threshold
@@ -99,7 +100,7 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(symbolRatio, e
 
 		% * Construct DMTC and compute mutual information
 		if isValid
-			dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, threshold);
+			dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold);
 			backscatterRateSet(iLevel) = rate_backscatter(equivalentDistribution, dmtc);
 			thresholdSet{iLevel} = threshold;
 		else
@@ -109,7 +110,7 @@ function [threshold, dmtc, backscatterRate] = threshold_bisection(symbolRatio, e
 	end
 	[backscatterRate, optimalLevel] = max(backscatterRateSet);
 	threshold = thresholdSet{optimalLevel};
-	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, threshold);
+	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold);
 end
 
 
@@ -126,7 +127,7 @@ function [divergence] = backward_divergence(dmc, equivalentDistribution, binInde
 	divergence = sum(divergence, 1);
 end
 
-function [thresholdDensity] = threshold_density(symbolRatio, equivalentChannel, precoder, threshold)
-	receivedPower = abs(equivalentChannel * precoder) .^ 2 + noisePower;
+function [thresholdDensity] = threshold_density(symbolRatio, equivalentChannel, beamformer, threshold)
+	receivedPower = abs(equivalentChannel * beamformer) .^ 2 + noisePower;
 	thresholdDensity = (threshold .^ (symbolRatio - 1) .* exp(-threshold ./ receivedPower)) ./ (receivedPower .^ symbolRatio .* gamma(symbolRatio));
 end

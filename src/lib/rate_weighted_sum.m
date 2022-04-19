@@ -1,4 +1,4 @@
-function [weightedSumRate, rate] = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc)
+function [weightedSumRate, rate] = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, dmtc)
 	% Function:
     %	- compute the weighted sum rate for a given input combination distribution and thresholding scheme
     %
@@ -8,7 +8,7 @@ function [weightedSumRate, rate] = rate_weighted_sum(weight, symbolRatio, equiva
 	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
 	%	- noisePower: average noise power at the user
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
     %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
     %
     % Output:
@@ -19,6 +19,6 @@ function [weightedSumRate, rate] = rate_weighted_sum(weight, symbolRatio, equiva
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 22
 
-	rate = [rate_primary(symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder); rate_backscatter(equivalentDistribution, dmtc)];
+	rate = [rate_primary(symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer); rate_backscatter(equivalentDistribution, dmtc)];
 	weightedSumRate = [weight, 1 - weight] * rate;
 end

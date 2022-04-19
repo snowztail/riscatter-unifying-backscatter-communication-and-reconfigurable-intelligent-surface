@@ -1,4 +1,4 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery_randomization(weight, symbolRatio, equivalentChannel, noisePower, jointDistribution, precoder, dmtc, nKernels, nSamples, tolerance)
+function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery_randomization(weight, symbolRatio, equivalentChannel, noisePower, jointDistribution, beamformer, dmtc, nKernels, nSamples, tolerance)
 	% Function:
 	%	- extract a good tag input distribution (corresponding to no transmit cooperation) by randomization
     %
@@ -8,7 +8,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
 	%	- noisePower: average noise power at the user
 	%	- jointDistribution [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
-	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
     %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
 	%	- nKernels: number of kernels used in the approximation (equals to the rank)
 	%	- nSamples: number of random samples to be generated in randomization
@@ -37,7 +37,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 		equivalentChannel;
 		noisePower;
 		jointDistribution;
-		precoder;
+		beamformer;
 		dmtc;
 		nKernels = 10;
 		nSamples = 5e2;
@@ -109,7 +109,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery
 				inputDistributionCandidate(iTag, :) = transpose(randomVector + (1 - ones(1, nStates) * randomVector) / nStates * ones(nStates, 1));
 			end
 			equivalentDistributionCandidate = prod(combination_distribution(inputDistributionCandidate), 1);
-			weightedSumRateCandidate = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc);
+			weightedSumRateCandidate = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, dmtc);
 			if weightedSumRateCandidate > weightedSumRate
 				inputDistribution = inputDistributionCandidate;
 				equivalentDistribution = equivalentDistributionCandidate;

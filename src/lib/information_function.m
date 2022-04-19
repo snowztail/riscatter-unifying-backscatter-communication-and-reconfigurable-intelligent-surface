@@ -1,4 +1,4 @@
-function [informationFunction] = information_function(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, precoder, dmtc)
+function [informationFunction] = information_function(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, dmtc)
 	% Function:
 	%	- compute the information function associated with each tag input combination
     %
@@ -8,7 +8,7 @@ function [informationFunction] = information_function(weight, symbolRatio, equiv
 	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
 	%	- noisePower: average noise power at the user
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
     %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
     %
     % Output:
@@ -20,7 +20,7 @@ function [informationFunction] = information_function(weight, symbolRatio, equiv
 	[nInputs, nOutputs] = size(dmtc);
 
 	% * Primary information function
-	snr = abs(equivalentChannel * precoder) .^ 2 / noisePower;
+	snr = abs(equivalentChannel * beamformer) .^ 2 / noisePower;
 	primaryInformationFunction = zeros(nInputs, 1);
 	for iInput = 1 : nInputs
 		primaryInformationFunction(iInput) = symbolRatio * log(1 + snr(iInput));

@@ -1,4 +1,4 @@
-function [threshold, dmtc] = threshold_ml(symbolRatio, equivalentChannel, noisePower, precoder)
+function [threshold, dmtc] = threshold_ml(symbolRatio, equivalentChannel, noisePower, beamformer)
 	% Function:
 	%	- obtain the decision thresholds of maximum likelihood detector
     %
@@ -6,7 +6,7 @@ function [threshold, dmtc] = threshold_ml(symbolRatio, equivalentChannel, noiseP
 	%	- symbolRatio: the ratio of the secondary symbol period over the primary symbol period
 	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
 	%	- noisePower: average noise power at the user
-	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
     %
     % Output:
 	%	- threshold [1 * (nOutputs + 1)] : the ML thresholding values
@@ -21,7 +21,7 @@ function [threshold, dmtc] = threshold_ml(symbolRatio, equivalentChannel, noiseP
 	nOutputs = size(equivalentChannel, 1);
 
 	% * Compute the expected received power under all backscatter input combinations
-	[sortedPower, outputIndex] = sort(abs(equivalentChannel * precoder) .^ 2 + noisePower);
+	[sortedPower, sortIndex] = sort(abs(equivalentChannel * beamformer) .^ 2 + noisePower);
 
 	% * Each ML threshold depends on the average received power of adjacent detection regions
 	threshold(nOutputs + 1) = inf;
@@ -30,6 +30,6 @@ function [threshold, dmtc] = threshold_ml(symbolRatio, equivalentChannel, noiseP
 	end
 
 	% * Construct DMTC
-	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, threshold);
-	dmtc = dmtc(:, outputIndex);
+	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold);
+	dmtc = dmtc(:, sortIndex);
 end

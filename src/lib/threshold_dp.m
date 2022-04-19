@@ -1,4 +1,4 @@
-function [threshold, dmtc, backscatterRate] = threshold_dp(symbolRatio, equivalentChannel, noisePower, nBins, equivalentDistribution, precoder)
+function [threshold, dmtc, backscatterRate] = threshold_dp(symbolRatio, equivalentChannel, noisePower, nBins, equivalentDistribution, beamformer)
 	% Function:
 	%	- group the received energy bins into convex decision regions by dynamic programming
     %
@@ -8,7 +8,7 @@ function [threshold, dmtc, backscatterRate] = threshold_dp(symbolRatio, equivale
 	%	- noisePower: average noise power at the user
 	%	- nBins: number of discretization bins over received signal
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- precoder [nTxs * 1]: transmit beamforming vector at the AP
+	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
     %
     % Output:
 	%	- threshold [1 * (nOutputs + 1)]: boundaries of decision regions
@@ -21,12 +21,12 @@ function [threshold, dmtc, backscatterRate] = threshold_dp(symbolRatio, equivale
 	nOutputs = size(equivalentDistribution, 2);
 
 	% * Obtain threshold candidates that delimit output into discrete bins
-	thresholdCandidate = threshold_candidate(symbolRatio, equivalentChannel, noisePower, nBins, precoder);
+	thresholdCandidate = threshold_candidate(symbolRatio, equivalentChannel, noisePower, nBins, beamformer);
 
 	% * Evaluate DMC over all bins
-	dmc = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, thresholdCandidate);
+	dmc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, thresholdCandidate);
 
-	% * Initialization
+	% * Initialize cost functions
 	dp = zeros(nBins, nOutputs);
 	sol = zeros(nBins, nOutputs);
 	for iBin = 1 : nBins
@@ -52,7 +52,7 @@ function [threshold, dmtc, backscatterRate] = threshold_dp(symbolRatio, equivale
 	threshold = thresholdCandidate(index + 1);
 
 	% * Construct DMTC and compute mutual information
-	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, precoder, threshold);
+	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold);
 	backscatterRate = rate_backscatter(equivalentDistribution, dmtc);
 end
 

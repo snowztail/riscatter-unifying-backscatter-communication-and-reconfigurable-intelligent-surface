@@ -4,7 +4,7 @@ nTxs = 3;
 % number of tags
 nTags = 2;
 % modulation order
-nStates = 4;
+nStates = 2;
 % input and output alphabet size
 [nInputs, nOutputs] = deal(nStates ^ nTags);
 % harvest-backscatter ratio

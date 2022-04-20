@@ -49,7 +49,6 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 	beamformerMatrix = beamformer * beamformer';
 
 	% * Compute expected received power under all backscatter input combinations and update DMTC
-	% TODO precision issue: can be complex
 	receivedPower = received_power(equivalentChannel, noisePower, beamformerMatrix);
 	dmtc = dmtc_local(symbolRatio, receivedPower, threshold);
 
@@ -74,6 +73,7 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 		[epsilonLower_, epsilonUpper_] = deal(epsilon_);
 
 		cvx_begin
+		cvx_solver mosek
 			variable beamformerMatrix(nTxs, nTxs) hermitian semidefinite;
 			variables epsilonLower(nInputs, nOutputs + 1) epsilonUpper(nInputs, nOutputs + 1);
 			variables xiLower(nInputs, nOutputs + 1) xiUpper(nInputs, nOutputs + 1);
@@ -101,7 +101,7 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 							- (receivedPower_(iInput) ^ 2 + (receivedPower(iInput) - receivedPower_(iInput)) * 2 * receivedPower_(iInput)) <= 2 * threshold(iOutput);
 						% * xi
 						xiUpper(iInput, iOutput) >= sum(pow_p(epsilonUpper(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1));
-						xiLower(iInput, iOutput) <= sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1)) + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * sum(pow_p(epsilonUpper_(iInput, iOutput), 1 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 2));
+						xiLower(iInput, iOutput) <= sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1)) + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 2) ./ factorial(0 : symbolRatio - 2));
 					end
 				end
 
@@ -138,7 +138,6 @@ function [dmtc] = dmtc_local(symbolRatio, receivedPower, threshold)
 	end
 end
 
-
 function [receivedPower] = received_power(equivalentChannel, noisePower, beamformerMatrix)
 	nInputs = size(equivalentChannel, 1);
 	if isa(beamformerMatrix, 'cvx')
@@ -147,7 +146,7 @@ function [receivedPower] = received_power(equivalentChannel, noisePower, beamfor
 		receivedPower = zeros(nInputs, 1);
 	end
 	for iInput = 1 : nInputs
-		receivedPower(iInput) = trace(equivalentChannel(iInput, :)' * equivalentChannel(iInput, :) * beamformerMatrix) + noisePower;
+		receivedPower(iInput) = real(trace((equivalentChannel(iInput, :)' * equivalentChannel(iInput, :)) * beamformerMatrix)) + noisePower;
 	end
 end
 

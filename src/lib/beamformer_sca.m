@@ -52,11 +52,6 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 	receivedPower = received_power(equivalentChannel, noisePower, beamformerMatrix);
 	dmtc = dmtc_local(symbolRatio, receivedPower, threshold);
 
-	% ? Sort the expected received power and arrange the equivalent distribution correspondingly
-	% receivedPower = received_power(equivalentChannel, noisePower, beamformerMatrix);
-	% [sorted, sortIndex] = sort(receivedPower);
-	% sortedDistribution = equivalentDistribution(sortIndex);
-
 	% * Initialize auxiliary variables associated with regularized incomplete gamma function
 	epsilon = epsilon_auxiliary(receivedPower, threshold);
 	xi = xi_auxiliary(symbolRatio, epsilon);
@@ -74,10 +69,11 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 
 		cvx_begin
 		cvx_solver mosek
-			variable beamformerMatrix(nTxs, nTxs) hermitian semidefinite;
-			variables epsilonLower(nInputs, nOutputs + 1) epsilonUpper(nInputs, nOutputs + 1);
-			variables xiLower(nInputs, nOutputs + 1) xiUpper(nInputs, nOutputs + 1);
-			variable regularizedGamma(nInputs, nOutputs) nonnegative;
+			variables beamformerMatrix(nTxs, nTxs) epsilonLower(nInputs, nOutputs + 1) epsilonUpper(nInputs, nOutputs + 1) xiLower(nInputs, nOutputs + 1) xiUpper(nInputs, nOutputs + 1) regularizedGamma(nInputs, nOutputs);
+			% variable epsilonLower(nInputs, nOutputs + 1) nonnegative;
+			% variable epsilonUpper(nInputs, nOutputs + 1) nonnegative;
+			% variable xiLower(nInputs, nOutputs + 1) nonnegative;
+			% variable xiUpper(nInputs, nOutputs + 1) nonnegative;
 			expressions backscatterRateSca;
 
 			for iInput = 1 : nInputs
@@ -92,6 +88,8 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 
 			maximize backscatterRateSca
 			subject to
+				beamformerMatrix == hermitian_semidefinite(nTxs);
+				trace(beamformerMatrix) <= txPower;
 				for iInput = 1 : nInputs
 					for iOutput = 1 : nOutputs + 1
 						% * epsilon
@@ -99,9 +97,15 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 							- (receivedPower_(iInput) ^ 2 + (receivedPower(iInput) - receivedPower_(iInput)) * 2 * receivedPower_(iInput)) <= - 2 * threshold(iOutput);
 						square(epsilonLower(iInput, iOutput) + receivedPower(iInput)) - (epsilonLower_(iInput, iOutput) ^ 2 + (epsilonLower(iInput, iOutput) - epsilonLower_(iInput, iOutput)) * 2 * epsilonLower_(iInput, iOutput)) ...
 							- (receivedPower_(iInput) ^ 2 + (receivedPower(iInput) - receivedPower_(iInput)) * 2 * receivedPower_(iInput)) <= 2 * threshold(iOutput);
+% 						square(epsilonLower(iInput, iOutput) - receivedPower(iInput)) - (epsilonLower_(iInput, iOutput) ^ 2 + (epsilonLower(iInput, iOutput) - epsilonLower_(iInput, iOutput)) * 2 * epsilonLower_(iInput, iOutput)) ...
+% 							- (receivedPower_(iInput) ^ 2 + (receivedPower(iInput) - receivedPower_(iInput)) * 2 * receivedPower_(iInput)) <= - 2 * threshold(iOutput);
+% 						square(epsilonUpper(iInput, iOutput) + receivedPower(iInput)) - (epsilonUpper_(iInput, iOutput) ^ 2 + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * 2 * epsilonUpper_(iInput, iOutput)) ...
+% 							- (receivedPower_(iInput) ^ 2 + (receivedPower(iInput) - receivedPower_(iInput)) * 2 * receivedPower_(iInput)) <= 2 * threshold(iOutput);
 						% * xi
 						xiUpper(iInput, iOutput) >= sum(pow_p(epsilonUpper(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1));
 						xiLower(iInput, iOutput) <= sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1)) + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 2) ./ factorial(0 : symbolRatio - 2));
+% 						xiLower(iInput, iOutput) >= sum(pow_p(epsilonUpper(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1));
+% 						xiUpper(iInput, iOutput) <= sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1)) + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 2) ./ factorial(0 : symbolRatio - 2));
 					end
 				end
 
@@ -114,10 +118,20 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 							- (exp(-epsilonUpper(iInput, iOutput + 1) + (xiLower(iInput, iOutput + 1) - xiLower_(iInput, iOutput + 1)) / xiLower_(iInput, iOutput + 1)) * xiLower_(iInput, iOutput + 1));
 					end
 				end
+
+				for iInput = 1 : nInputs
+					transpose(regularizedGamma(iInput, :)) == simplex(nInputs);
+				end
 		cvx_end
 
-		% * Compute actual weighted sum rate
-		weightedSumRate = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, dmtc);
+		% * Update auxiliary variables
+		epsilon = epsilon_auxiliary(receivedPower, threshold);
+		xi = xi_auxiliary(symbolRatio, epsilon);
+		[regularizedGamma, regularizedUpperGamma] = regularized_gamma(epsilon, xi);
+
+		% * Update DMTC and compute actual weighted sum rate
+		dmtc = dmtc_local(symbolRatio, receivedPower, threshold);
+		[weightedSumRate, rate] = rate_weighted_sum_local(weight, symbolRatio, noisePower, equivalentDistribution, receivedPower, dmtc);
 
 		% * Test convergence
 		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance;
@@ -182,4 +196,24 @@ function [regularizedGamma, regularizedUpperGamma] = regularized_gamma(epsilon, 
 		end
 	end
 	regularizedGamma = - diff(regularizedUpperGamma, 1, 2);
+end
+
+function [weightedSumRate, rate] = rate_weighted_sum_local(weight, symbolRatio, noisePower, equivalentDistribution, receivedPower, dmtc)
+	[nInputs, nOutputs] = deal(size(receivedPower, 1));
+	% * Primary achievable rate
+	primaryInformationFunction = symbolRatio * log(1 + receivedPower / noisePower);
+	primaryRate = equivalentDistribution * primaryInformationFunction;
+
+	% * Backscatter sum rate
+	backscatterInformationFunction = zeros(nInputs, nOutputs);
+	for iInput = 1 : nInputs
+		for iOutput = 1 : nOutputs
+			backscatterInformationFunction(iInput, iOutput) = dmtc(iInput, iOutput) * log(dmtc(iInput, iOutput) / (equivalentDistribution * dmtc(:, iOutput)));
+		end
+	end
+	backscatterRate = equivalentDistribution * sum(backscatterInformationFunction, 2);
+
+	% * Weighted sum rate
+	rate = [primaryRate; backscatterRate];
+	weightedSumRate = [weight, 1 - weight] * rate;
 end

@@ -8,9 +8,9 @@ nStates = 2;
 % input and output alphabet size
 [nInputs, nOutputs] = deal(nStates ^ nTags);
 % harvest-backscatter ratio
-reflectRatio = 1e-4;
+reflectRatio = 0.5;
 % symbol period ratio
-symbolRatio = 10;
+symbolRatio = 2;
 % average transmit power
 txPower = 10;
 % average noise power

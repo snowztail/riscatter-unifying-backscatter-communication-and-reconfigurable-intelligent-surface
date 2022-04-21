@@ -15,14 +15,7 @@ function [primaryRate] = rate_primary(symbolRatio, equivalentChannel, noisePower
     %
     % Author & Date: Yang (i@snowztail.com), 22 Feb 22
 
-	% * Get data
-	nInputs = size(equivalentDistribution, 2);
-
 	% * Primary achievable rate
-	snr = abs(equivalentChannel * beamformer) .^ 2 / noisePower;
-	primaryInformationFunction = zeros(nInputs, 1);
-	for iInput = 1 : nInputs
-		primaryInformationFunction(iInput) = symbolRatio * log(1 + snr(iInput));
-	end
+	primaryInformationFunction = symbolRatio * log(1 + abs(equivalentChannel * beamformer) .^ 2 / noisePower);
 	primaryRate = equivalentDistribution * primaryInformationFunction;
 end

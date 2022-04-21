@@ -20,11 +20,7 @@ function [informationFunction] = information_function(weight, symbolRatio, equiv
 	[nInputs, nOutputs] = size(dmtc);
 
 	% * Primary information function
-	snr = abs(equivalentChannel * beamformer) .^ 2 / noisePower;
-	primaryInformationFunction = zeros(nInputs, 1);
-	for iInput = 1 : nInputs
-		primaryInformationFunction(iInput) = symbolRatio * log(1 + snr(iInput));
-	end
+	primaryInformationFunction = symbolRatio * log(1 + abs(equivalentChannel * beamformer) .^ 2 / noisePower);
 
 	% * Backscatter information function
 	backscatterInformationFunction = zeros(nInputs, nOutputs);

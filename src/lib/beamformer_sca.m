@@ -76,8 +76,8 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 			% variable xiUpper(nInputs, nOutputs + 1) nonnegative;
 			expressions backscatterRateSca;
 
-			for iInput = 1 : nInputs
-				for iOutput = 1 : nOutputs
+			for iOutput = 1 : nOutputs
+				for iInput = 1 : nInputs
 					% * Marginal entropy
 					backscatterRateSca = backscatterRateSca + equivalentDistribution(iInput) * (regularizedGamma_(iInput, iOutput) * log(regularizedGamma_(iInput, iOutput)) + (regularizedGamma(iInput, iOutput) - regularizedGamma_(iInput, iOutput)) * (log(regularizedGamma_(iInput, iOutput)) + 1));
 				end
@@ -116,11 +116,19 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 							- ((-epsilonLower(iInput, iOutput + 1) + log(xiUpper(iInput, iOutput + 1)) - log(regularizedUpperGamma_(iInput, iOutput + 1))) * regularizedUpperGamma_(iInput, iOutput + 1) + regularizedUpperGamma_(iInput, iOutput + 1));
 						regularizedGamma(iInput, iOutput) <= ((-epsilonLower(iInput, iOutput) + log(xiUpper(iInput, iOutput)) - log(regularizedUpperGamma_(iInput, iOutput))) * regularizedUpperGamma_(iInput, iOutput) + regularizedUpperGamma_(iInput, iOutput)) ...
 							- (exp(-epsilonUpper(iInput, iOutput + 1) + (xiLower(iInput, iOutput + 1) - xiLower_(iInput, iOutput + 1)) / xiLower_(iInput, iOutput + 1)) * xiLower_(iInput, iOutput + 1));
+% 						regularizedGamma(iInput, iOutput) >= (exp(-epsilonLower(iInput, iOutput) + (xiUpper(iInput, iOutput) - xiUpper_(iInput, iOutput)) / xiUpper_(iInput, iOutput)) * xiUpper_(iInput, iOutput)) ...
+% 							- ((-epsilonUpper(iInput, iOutput + 1) + log(xiLower(iInput, iOutput + 1)) - log(regularizedUpperGamma_(iInput, iOutput + 1))) * regularizedUpperGamma_(iInput, iOutput + 1) + regularizedUpperGamma_(iInput, iOutput + 1));
+% 						regularizedGamma(iInput, iOutput) <= ((-epsilonUpper(iInput, iOutput) + log(xiLower(iInput, iOutput)) - log(regularizedUpperGamma_(iInput, iOutput))) * regularizedUpperGamma_(iInput, iOutput) + regularizedUpperGamma_(iInput, iOutput)) ...
+% 							- (exp(-epsilonLower(iInput, iOutput + 1) + (xiUpper(iInput, iOutput + 1) - xiUpper_(iInput, iOutput + 1)) / xiUpper_(iInput, iOutput + 1)) * xiUpper_(iInput, iOutput + 1));
 					end
 				end
 
 				for iInput = 1 : nInputs
-					transpose(regularizedGamma(iInput, :)) == simplex(nInputs);
+					transpose(regularizedGamma(iInput, :)) == simplex(nOutputs);
+% 					transpose(epsilonLower(iInput, :)) == nonnegative(nOutputs + 1);
+% 					transpose(epsilonUpper(iInput, :)) == nonnegative(nOutputs + 1);
+% 					transpose(xiLower(iInput, :)) == nonnegative(nOutputs + 1);
+% 					transpose(xiUpper(iInput, :)) == nonnegative(nOutputs + 1);
 				end
 		cvx_end
 

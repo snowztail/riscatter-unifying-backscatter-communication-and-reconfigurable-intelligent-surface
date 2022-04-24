@@ -69,7 +69,8 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 
 		cvx_begin
 		cvx_solver mosek
-			variables beamformerMatrix(nTxs, nTxs) epsilonLower(nInputs, nOutputs + 1) epsilonUpper(nInputs, nOutputs + 1) xiLower(nInputs, nOutputs + 1) xiUpper(nInputs, nOutputs + 1) regularizedGamma(nInputs, nOutputs);
+			variables beamformerMatrix(nTxs, nTxs) regularizedGamma(nInputs, nOutputs);
+			% variables beamformerMatrix(nTxs, nTxs) epsilonLower(nInputs, nOutputs + 1) epsilonUpper(nInputs, nOutputs + 1) xiLower(nInputs, nOutputs + 1) xiUpper(nInputs, nOutputs + 1) regularizedGamma(nInputs, nOutputs);
 			% variable epsilonLower(nInputs, nOutputs + 1) nonnegative;
 			% variable epsilonUpper(nInputs, nOutputs + 1) nonnegative;
 			% variable xiLower(nInputs, nOutputs + 1) nonnegative;
@@ -90,38 +91,38 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 			subject to
 				beamformerMatrix == hermitian_semidefinite(nTxs);
 				trace(beamformerMatrix) <= txPower;
-				for iInput = 1 : nInputs
-					for iOutput = 1 : nOutputs + 1
-						% * epsilon
-						square(epsilonUpper(iInput, iOutput) - receivedPower(iInput)) - (epsilonUpper_(iInput, iOutput) ^ 2 + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * 2 * epsilonUpper_(iInput, iOutput)) ...
-							- (receivedPower_(iInput) ^ 2 + (receivedPower(iInput) - receivedPower_(iInput)) * 2 * receivedPower_(iInput)) <= - 2 * threshold(iOutput);
-						square(epsilonLower(iInput, iOutput) + receivedPower(iInput)) - (epsilonLower_(iInput, iOutput) ^ 2 + (epsilonLower(iInput, iOutput) - epsilonLower_(iInput, iOutput)) * 2 * epsilonLower_(iInput, iOutput)) ...
-							- (receivedPower_(iInput) ^ 2 + (receivedPower(iInput) - receivedPower_(iInput)) * 2 * receivedPower_(iInput)) <= 2 * threshold(iOutput);
-% 						square(epsilonLower(iInput, iOutput) - receivedPower(iInput)) - (epsilonLower_(iInput, iOutput) ^ 2 + (epsilonLower(iInput, iOutput) - epsilonLower_(iInput, iOutput)) * 2 * epsilonLower_(iInput, iOutput)) ...
+% 				for iInput = 1 : nInputs
+% 					for iOutput = 1 : nOutputs + 1
+% 						% * epsilon
+% 						square(epsilonUpper(iInput, iOutput) - receivedPower(iInput)) - (epsilonUpper_(iInput, iOutput) ^ 2 + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * 2 * epsilonUpper_(iInput, iOutput)) ...
 % 							- (receivedPower_(iInput) ^ 2 + (receivedPower(iInput) - receivedPower_(iInput)) * 2 * receivedPower_(iInput)) <= - 2 * threshold(iOutput);
-% 						square(epsilonUpper(iInput, iOutput) + receivedPower(iInput)) - (epsilonUpper_(iInput, iOutput) ^ 2 + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * 2 * epsilonUpper_(iInput, iOutput)) ...
+% 						square(epsilonLower(iInput, iOutput) + receivedPower(iInput)) - (epsilonLower_(iInput, iOutput) ^ 2 + (epsilonLower(iInput, iOutput) - epsilonLower_(iInput, iOutput)) * 2 * epsilonLower_(iInput, iOutput)) ...
 % 							- (receivedPower_(iInput) ^ 2 + (receivedPower(iInput) - receivedPower_(iInput)) * 2 * receivedPower_(iInput)) <= 2 * threshold(iOutput);
-						% * xi
-						xiUpper(iInput, iOutput) >= sum(pow_p(epsilonUpper(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1));
-						xiLower(iInput, iOutput) <= sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1)) + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 2) ./ factorial(0 : symbolRatio - 2));
-% 						xiLower(iInput, iOutput) >= sum(pow_p(epsilonUpper(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1));
-% 						xiUpper(iInput, iOutput) <= sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1)) + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 2) ./ factorial(0 : symbolRatio - 2));
-					end
-				end
+% % 						square(epsilonLower(iInput, iOutput) - receivedPower(iInput)) - (epsilonLower_(iInput, iOutput) ^ 2 + (epsilonLower(iInput, iOutput) - epsilonLower_(iInput, iOutput)) * 2 * epsilonLower_(iInput, iOutput)) ...
+% % 							- (receivedPower_(iInput) ^ 2 + (receivedPower(iInput) - receivedPower_(iInput)) * 2 * receivedPower_(iInput)) <= - 2 * threshold(iOutput);
+% % 						square(epsilonUpper(iInput, iOutput) + receivedPower(iInput)) - (epsilonUpper_(iInput, iOutput) ^ 2 + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * 2 * epsilonUpper_(iInput, iOutput)) ...
+% % 							- (receivedPower_(iInput) ^ 2 + (receivedPower(iInput) - receivedPower_(iInput)) * 2 * receivedPower_(iInput)) <= 2 * threshold(iOutput);
+% 						% * xi
+% 						xiUpper(iInput, iOutput) >= sum(pow_p(epsilonUpper(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1));
+% 						xiLower(iInput, iOutput) <= sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1)) + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 2) ./ factorial(0 : symbolRatio - 2));
+% % 						xiLower(iInput, iOutput) >= sum(pow_p(epsilonUpper(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1));
+% % 						xiUpper(iInput, iOutput) <= sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 1) ./ factorial(0 : symbolRatio - 1)) + (epsilonUpper(iInput, iOutput) - epsilonUpper_(iInput, iOutput)) * sum(pow_p(epsilonUpper_(iInput, iOutput), 0 : symbolRatio - 2) ./ factorial(0 : symbolRatio - 2));
+% 					end
+% 				end
 
-				for iInput = 1 : nInputs
-					for iOutput = 1 : nOutputs
-						% * regularized incomplete gamma
-						regularizedGamma(iInput, iOutput) >= (exp(-epsilonUpper(iInput, iOutput) + (xiLower(iInput, iOutput) - xiLower_(iInput, iOutput)) / xiLower_(iInput, iOutput)) * xiLower_(iInput, iOutput)) ...
-							- ((-epsilonLower(iInput, iOutput + 1) + log(xiUpper(iInput, iOutput + 1)) - log(regularizedUpperGamma_(iInput, iOutput + 1))) * regularizedUpperGamma_(iInput, iOutput + 1) + regularizedUpperGamma_(iInput, iOutput + 1));
-						regularizedGamma(iInput, iOutput) <= ((-epsilonLower(iInput, iOutput) + log(xiUpper(iInput, iOutput)) - log(regularizedUpperGamma_(iInput, iOutput))) * regularizedUpperGamma_(iInput, iOutput) + regularizedUpperGamma_(iInput, iOutput)) ...
-							- (exp(-epsilonUpper(iInput, iOutput + 1) + (xiLower(iInput, iOutput + 1) - xiLower_(iInput, iOutput + 1)) / xiLower_(iInput, iOutput + 1)) * xiLower_(iInput, iOutput + 1));
-% 						regularizedGamma(iInput, iOutput) >= (exp(-epsilonLower(iInput, iOutput) + (xiUpper(iInput, iOutput) - xiUpper_(iInput, iOutput)) / xiUpper_(iInput, iOutput)) * xiUpper_(iInput, iOutput)) ...
-% 							- ((-epsilonUpper(iInput, iOutput + 1) + log(xiLower(iInput, iOutput + 1)) - log(regularizedUpperGamma_(iInput, iOutput + 1))) * regularizedUpperGamma_(iInput, iOutput + 1) + regularizedUpperGamma_(iInput, iOutput + 1));
-% 						regularizedGamma(iInput, iOutput) <= ((-epsilonUpper(iInput, iOutput) + log(xiLower(iInput, iOutput)) - log(regularizedUpperGamma_(iInput, iOutput))) * regularizedUpperGamma_(iInput, iOutput) + regularizedUpperGamma_(iInput, iOutput)) ...
-% 							- (exp(-epsilonLower(iInput, iOutput + 1) + (xiUpper(iInput, iOutput + 1) - xiUpper_(iInput, iOutput + 1)) / xiUpper_(iInput, iOutput + 1)) * xiUpper_(iInput, iOutput + 1));
-					end
-				end
+% 				for iInput = 1 : nInputs
+% 					for iOutput = 1 : nOutputs
+% 						% * regularized incomplete gamma
+% 						regularizedGamma(iInput, iOutput) >= (exp(-epsilonUpper(iInput, iOutput) + (xiLower(iInput, iOutput) - xiLower_(iInput, iOutput)) / xiLower_(iInput, iOutput)) * xiLower_(iInput, iOutput)) ...
+% 							- ((-epsilonLower(iInput, iOutput + 1) + log(xiUpper(iInput, iOutput + 1)) - log(regularizedUpperGamma_(iInput, iOutput + 1))) * regularizedUpperGamma_(iInput, iOutput + 1) + regularizedUpperGamma_(iInput, iOutput + 1));
+% 						regularizedGamma(iInput, iOutput) <= ((-epsilonLower(iInput, iOutput) + log(xiUpper(iInput, iOutput)) - log(regularizedUpperGamma_(iInput, iOutput))) * regularizedUpperGamma_(iInput, iOutput) + regularizedUpperGamma_(iInput, iOutput)) ...
+% 							- (exp(-epsilonUpper(iInput, iOutput + 1) + (xiLower(iInput, iOutput + 1) - xiLower_(iInput, iOutput + 1)) / xiLower_(iInput, iOutput + 1)) * xiLower_(iInput, iOutput + 1));
+% % 						regularizedGamma(iInput, iOutput) >= (exp(-epsilonLower(iInput, iOutput) + (xiUpper(iInput, iOutput) - xiUpper_(iInput, iOutput)) / xiUpper_(iInput, iOutput)) * xiUpper_(iInput, iOutput)) ...
+% % 							- ((-epsilonUpper(iInput, iOutput + 1) + log(xiLower(iInput, iOutput + 1)) - log(regularizedUpperGamma_(iInput, iOutput + 1))) * regularizedUpperGamma_(iInput, iOutput + 1) + regularizedUpperGamma_(iInput, iOutput + 1));
+% % 						regularizedGamma(iInput, iOutput) <= ((-epsilonUpper(iInput, iOutput) + log(xiLower(iInput, iOutput)) - log(regularizedUpperGamma_(iInput, iOutput))) * regularizedUpperGamma_(iInput, iOutput) + regularizedUpperGamma_(iInput, iOutput)) ...
+% % 							- (exp(-epsilonLower(iInput, iOutput + 1) + (xiUpper(iInput, iOutput + 1) - xiUpper_(iInput, iOutput + 1)) / xiUpper_(iInput, iOutput + 1)) * xiUpper_(iInput, iOutput + 1));
+% 					end
+% 				end
 
 				for iInput = 1 : nInputs
 					transpose(regularizedGamma(iInput, :)) == simplex(nOutputs);
@@ -144,6 +145,25 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 		% * Test convergence
 		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance;
 	end
+
+	% % ? NLOPT by fmincon
+	% clearvars receivedPower regularizedGamma
+	% for iInput = 1 : nInputs
+	% 	% receivedPower(iInput) = @(W) (trace(equivalentChannel(iInput, :)' * equivalentChannel(iInput, :) * W) + noisePower);
+	% 	conditionalEnergy = @(z, W) (z .^ (symbolRatio - 1) .* exp(-z ./ trace(equivalentChannel(iInput, :)' * equivalentChannel(iInput, :) * W) + noisePower)) ./ (trace(equivalentChannel(iInput, :)' * equivalentChannel(iInput, :) * W) + noisePower .^ symbolRatio .* gamma(symbolRatio));
+	% 	for iOutput = 1 : nOutputs
+	% 		regularizedGamma{iInput, iOutput} = @(W) integral(@(z) conditionalEnergy, threshold(iOutput), threshold(iOutput + 1));
+	% 	end
+	% end
+
+	% backscatterRateNlopt = @(W) 0;
+	% for iInput = 1 : nInputs
+	% 	for iOutput = 1 : nOutputs
+	% 		backscatterRateNlopt = @(W) backscatterRateNlopt(W) + equivalentDistribution(iInput) * regularizedGamma{iInput, iOutput}(W) * log(regularizedGamma{iInput, iOutput}(W) / (equivalentDistribution * regularizedGamma{:, iOutput}(W)));
+	% 	end
+	% end
+
+	% fmincon(-backscatterRateNlopt, beamformerMatrix, )
 
 end
 

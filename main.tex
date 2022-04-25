@@ -188,9 +188,53 @@
 \end{section}
 
 \begin{section}{Backscatter Principles}
+	% \begin{figure}[!t]
+	% 	\centering
+	% 	\resizebox{0.6\columnwidth}{!}{
+	% 		\begin{circuitikz}[transform shape]
+	% 			\coordinate (O) at (0,0);
+	% 			\node[block,from={O to $(O) + (6.375,3.25)$}](T){};
+	% 			\draw (0,1.75)
+	% 			to[short] ++(-0.875,0)
+	% 			to[short] ++(0,0.5) node[bareantenna](A){Bx};
+	% 			\draw (0,1.75)
+	% 			to[short,-*] ++(0.25,0) coordinate(J);
+	% 			\draw (J)
+	% 			to[short] ++(0,1)
+	% 			to[short] ++(0.5,0) coordinate(J1);
+	% 			\node[block,from={$(J1) + (0,-0.25)$ to $(J1) + (2.5,0.25)$}](R){Rectifier};
+	% 			\draw (J)
+	% 			to[short] ++(0.5,0) coordinate(J2);
+	% 			\node[block,from={$(J2) + (0,-0.25)$ to $(J2) + (2.5,0.25)$}](D){Demodulator};
+	% 			\draw (J)
+	% 			to[short] ++(0,-1)
+	% 			to[short] ++(0.5,0) coordinate(J3)
+	% 			to [vR,mirror,invert,/tikz/circuitikz/bipoles/length=1cm] ++(1.75,0) node[ground,rotate=90]{};
+	% 			\node[block,from={$(J3) + (0,-0.25)$ to $(J3) + (2.5,0.25)$},draw=none](M){};
+	% 			\draw ($(J3) + (0,-0.25)$) rectangle ($(J3) + (2.5,0.25)$);
+	% 			\draw ($(J3) + (1.25,-0.5)$) node[]{Modulator};
+	% 			\draw[dashed,-{Latex[length=2mm]}] (R.east) -- ++(0.75,0);
+	% 			\draw[-{Latex[length=2mm]}] (D.east) -- ++(0.75,0);
+	% 			\draw[{Latex[length=2mm]}-] (M.east) -- ++(0.75,0);
+	% 			\node[block,from={$(R.east) + (0.75,-0.25)$ to $(R.east) + (2.875,0.25)$}](P){Power buffer};
+	% 			\node[block,from={$(M.east) + (0.75,-0.25)$ to $(D.east) + (2.875,0.25)$}](S){Digital\\section};
+	% 			\draw[dashed,-{Latex[length=2mm]}] (P.south) to (S.north);
+	% 			\coordinate (F1) at ($(P.south)!0.5!(S.north)$);
+	% 			\coordinate (F2) at ($(D.east)!0.5!(S.west)$);
+	% 			\coordinate (F3) at ($(D.south)!0.5!(M.north)$);
+	% 			\draw[dashed] (F1) to (F1-|D.north);
+	% 			\draw[dashed,-{Latex[length=2mm]}] (F1-|D.north) to (D.north);
+	% 			\draw[dashed] (F1-|F2) to (F2|-F3) to (M|-F3);
+	% 			\draw[dashed,-{Latex[length=2mm]}] (M|-F3) to (M.north);
+	% 		\end{circuitikz}
+	% 	}
+	% 	\caption{The block diagram and equivalent circuit of a passive tag. The solid and dashed vectors represent signal and energy flows.}
+	% 	\label{fi:tag_block_diagram}
+	% \end{figure}
+
 	\begin{figure}[!t]
 		\centering
-		\subfloat[Passive tag structure]{
+		\subfloat[Block diagram]{
 			\resizebox{0.6\columnwidth}{!}{
 				\begin{circuitikz}[transform shape]
 					\coordinate (O) at (0,0);
@@ -214,7 +258,7 @@
 					\node[block,from={$(J3) + (0,-0.25)$ to $(J3) + (2.5,0.25)$},draw=none](M){};
 					\draw ($(J3) + (0,-0.25)$) rectangle ($(J3) + (2.5,0.25)$);
 					\draw ($(J3) + (1.25,-0.5)$) node[]{Modulator};
-					\draw[-{Latex[length=2mm]}] (R.east) -- ++(0.75,0);
+					\draw[dashed,-{Latex[length=2mm]}] (R.east) -- ++(0.75,0);
 					\draw[-{Latex[length=2mm]}] (D.east) -- ++(0.75,0);
 					\draw[{Latex[length=2mm]}-] (M.east) -- ++(0.75,0);
 					\node[block,from={$(R.east) + (0.75,-0.25)$ to $(R.east) + (2.875,0.25)$}](P){Power buffer};
@@ -229,11 +273,13 @@
 					\draw[dashed,-{Latex[length=2mm]}] (M|-F3) to (M.north);
 				\end{circuitikz}
 			}
-			\label{fi:passive_tag_structure}
+			\label{fi:block_diagram}
 		}
-		\subfloat[Equivalent model]{
+		\setcounter{subfigure}{2}%
+		\subfloat[Scatter model]{
 			\resizebox{0.35\columnwidth}{!}{
 				\begin{circuitikz}[transform shape]
+					\tikzstyle{every node}=[font=\Large]
 					\draw (0,0) node[bareantenna](bareantenna){};
 					\draw (bareantenna.west) ++(-1.5,0) node[waves](WI){};
 					\draw (WI.north east) ++(0.25,0) node[font=\Large]{$\vec{E}_{\mathrm{I}}$};
@@ -242,39 +288,106 @@
 					\draw (WR.north east) ++(0.35,0) node[font=\Large]{$\vec{E}_m$};
 					\draw (WR.south east) ++(0.35,0) node[font=\Large]{$\vec{H}_m$};
 					\draw (bareantenna)
-					to [R=$Z_{\mathrm{A}}$,font=\Large,/tikz/circuitikz/bipoles/length=1cm] ++(0,-1.5) node[rotary switch=4 in 90 wiper 30,anchor=ext center,rotate=270](SW){};
+					to [R=$Z_{\mathrm{A}}$] ++(0,-1.5) node[rotary switch=4 in 90 wiper 30,anchor=ext center,rotate=270](SW){};
 					\draw (SW.cout 2) node[below=0.1cm,font=\Large]{$m$}
-					to [R=$Z_m$,font=\Large,/tikz/circuitikz/bipoles/length=1cm] ++(2,0) node[ground]{};
+					to [R=$Z_m$] ++(2,0) node[ground]{};
 				\end{circuitikz}
 			}
-			\label{fi:equivalent_model}
+			\label{fi:scatter_model}
 		}
-		\caption{For a passive tag, the rectifier and demodulator rely on the incident electromagnetic wave for energy harvesting and source decoding, while the load-switcher adjusts the reradiated signal for backscatter modulation.}
-		\label{fi:tag}
+		\setcounter{subfigure}{1}
+		\subfloat[Equivalent circuit]{
+			\resizebox{0.9\columnwidth}{!}{
+				\begin{circuitikz}[transform shape]
+					\tikzstyle{every node}=[font=\Large]
+					\draw (0,0) coordinate(O)
+					to [sV,l=$V_0$] ++(0,1.5)
+					to [L,l=$X_{\mathrm{A}}$] ++(0,1.5)
+					to [R=$R_{\mathrm{A}}$,-*] ++(3,0) coordinate(AM)
+					to [sI,l_=$I_0$,-*] ++(0,-3)
+					to [short] (O);
+					\draw (AM)
+					to [short] ++(0.5,0)
+					to [L,l=$X_m$,-*] ++(3,0) coordinate(M)
+					to [R=$R_m^{\mathrm{S}}$] ++(3,0) coordinate(MH);
+					\draw (M)
+					to [R=$R_m^{\mathrm{P}}$,-*] ++(0,-3);
+					\draw (MH)
+					to [D,-*] ++(1.5,0) coordinate(H)
+					to [C=$X_{\mathrm{H}}$,-*] ++(0,-3);
+					\draw (H)
+					to [short] ++(1.5,0)
+					to [R=$R_{\mathrm{H}}$] ++(0,-3)
+					to [short] (O);
+
+					\draw [blue,dashed] (-1.125,-0.5) rectangle (3.5,4);
+					\draw [yellow,dashed] (4,-0.5) rectangle (9,4);
+					\draw [red,dashed] (9.5,-0.5) rectangle (13.5,4);
+
+					\draw [blue] (1.125,4.25) node[]{Antenna};
+					\draw [yellow] (6.5,4.25) node[]{Modulator};
+					\draw [red] (11.5,4.25) node[]{Harvester + Chip};
+
+					\draw (3.375,2.675) to [short] (3.375,3.175) to [short] (3.25,3.175) to [short,i_=$Z_{\mathrm{A}}$] (3.125,3.175);
+					\draw (4.125,-0.125) to [short] (4.125,0.375) to [short] (4.25,0.375) to [short,i=$Z_m$] (4.375,0.375);
+					\draw (9.625,-0.125) to [short] (9.625,0.375) to [short] (9.75,0.375) to [short,i=$Z_{\mathrm{H}}$] (9.875,0.375);
+				\end{circuitikz}
+			}
+			\label{fi:equivalent_circuit}
+		}
+		\caption{Block diagram, equivalent circuit, and scatter model of a typical passive tag. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
 	\end{figure}
-	Consider a bistatic backscatter system with an excitation source, multiple (semi-)passive tags, and a backscatter reader.
-	The structure of a passive tag is shown in Fig. \subref*{fi:passive_tag_structure}.
-	It typically consists of a scattering antenna, an energy harvester, an integrated receiver, a load-switching modulator, and on-chip components (e.g., micro-controller and sensors) \cite{Dobkin2012}.
-	When a tag is illuminated, a portion of the impinging signal is absorbed while the remaining is scattered back, and the tag can harvest energy, transmit message, and decode the source if necessary.
-	According to \cite{Hansen1989}, the backscatter signal can be decomposed into a \emph{structural component} that depends on the antenna geometry and material properties, and an \emph{antenna component} that depends on the antenna-load impedance mismatch.
-	The former contributes to environment multipath and can be modeled by channel estimation \cite{Boyer2014}, while the latter can be utilized for backscatter modulation.
-	As illustrated by Fig. \subref*{fi:equivalent_model}, if $M$ symbol states are available at the tag, the reflection coefficient at state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$ is
-	\footnote{
+	% In a bistatic backscatter system,
+	% Consider a bistatic backscatter system with an excitation source, multiple passive tags, and a backscatter reader.
+	Passive backscatter devices (a.k.a., tags) harvest energy from and modulate information over surrounding \gls{rf} signal.
+	As shown in Fig. \subref*{fi:block_diagram}, a typical passive tag consists of a scattering antenna, an energy harvester, an integrated receiver, a load-switching modulator, and on-chip components (e.g., micro-controller and sensors) \cite{Dobkin2012}. Its equivalent circuit is also given by Fig. \subref*{fi:equivalent_circuit}.
+	When illuminated, the tag absorbs a portion of the impinging wave and scatters the rest back to the space.
+	The absorbed signal can be used for source decoding and energy harvesting \cite{Kim2021a}, while the scattered signal can be decomposed into the \emph{structural} and \emph{antenna} mode components \cite{Hansen1989}.
+	The structural mode scattering applies to general objects and is related to the antenna structure, shape and material, which contributes to environment multipath and can be covered by channel estimation \cite{Boyer2014}.
+	On the other hand, the antenna mode scattering models the antenna radiation and depends on the antenna-load impedance mismatch, which can be used for backscatter modulation \cite{Boyer2012} or channel reconfiguration \cite{Wu2021b}.
+	Fig. \subref*{fi:scatter_model} illustrates the scatter model.
+	For a tag with $M$ candidate states, the reflection coefficient of state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$ is defined as
+	\begin{footnote}
 		It corresponds to a linear backscatter model where the reflection coefficient is irrelevant to incident electromagnetic field strength.
-	}
+	\end{footnote}
 	\begin{equation}
 		\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
 		\label{eq:reflection_coefficient}
 	\end{equation}
 	where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
 
-	Tags periodically switch between different states to perform backscatter modulation.
-	For $M$-ary \gls{qam}, the complex constellation point $c_m \in \mathcal{C}$ maps to the reflection coefficient by \cite{Thomas2012a}
-	\begin{equation}
-		\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
-		\label{eq:backscatter_modulation}
-	\end{equation}
-	where $\alpha \in [0,1]$ models the harvest-backscatter ratio at the direction of interest.
+	\begin{subsection}{Backscatter Modulation}
+		In backscatter modulation, the tag \emph{periodically varies} the reflection coefficient to embed its own information.
+		As such, there exists a mapping from the alphabet to the set.
+		When the \gls{csi} and reflection alphabet $\{\Gamma_1,\ldots,\Gamma_M\}$ are available at the reader, it can decode the tag message from the observed scattered signal.
+
+
+
+		For $M$-ary \gls{qam}, the complex constellation point $c_m$ maps to the corresponding reflection coefficient by \cite{Thomas2012a}
+		\begin{equation}
+			\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
+			\label{eq:backscatter_modulation}
+		\end{equation}
+		where $\alpha \in [0,1]$ models the harvest-backscatter ratio at the direction of interest.
+
+		% When the \gls{csi} and reflection alphabet $\{\Gamma_1,\ldots,\Gamma_M\}$ are available at the reader, the tag can be successfully decoded based on the received signal.
+
+
+
+
+
+	\end{subsection}
+
+	\begin{subsection}{Channel Reconfiguration}
+		2
+	\end{subsection}
+	% Tags periodically switch between different states to perform backscatter modulation.
+	% For $M$-ary \gls{qam}, the complex constellation point $c_m \in \mathcal{C}$ maps to the reflection coefficient by \cite{Thomas2012a}
+	% \begin{equation}
+	% 	\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
+	% 	\label{eq:backscatter_modulation}
+	% \end{equation}
+	% where $\alpha \in [0,1]$ models the harvest-backscatter ratio at the direction of interest.
 	For passive tags, $\alpha \ll 1$ is commonly assumed as the majority of the incident wave can be harvested to support tag modules \cite{Thomas2012a}.
 
 	\begin{remark}
@@ -300,17 +413,17 @@
 		For simplicity, we consider a quasi-static block fading model where the channel response remain constant within each coherence interval and vary independently between consecutive blocks.
 		Since backscatter modulation involves load switching, tags typically transmit at much lower rate, and we assume the backscatter symbol period is $N \in \mathbb{Z}_{++}$ times the primary symbol period.
 		We also assume the direct channel and all cascaded channels can be estimated and fed back to the \gls{ap}.
-		\footnote{
+		\begin{footnote}
 			Due to the lack of \gls{rf} chains at the passive tag, accurate and efficient \gls{csi} acquisition at the \gls{ap} can be challenging.
 			One possible approach is that the \gls{ap} sends pre-defined pilots, the tags respond in well-designed manners, and the user performs least-square estimation with feedbacks \cite{Bharadia2015,Yang2015b,Guo2019g}.
-		}
+		\end{footnote}
 
 		Consider the signal model during one backscatter symbol period.
 		We assume the primary symbol follows standard \gls{cscg} distribution and the backscatter symbol of all tags employs $M$-\gls{qam}.
 		Under perfect synchronization, the signal received by the user at primary symbol block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
-		\footnote{
+		\begin{footnote}
 			We omit the signal reflected by two or more times\cite{Wu2019} and assume the time difference of arrival from different paths are negligible\cite{Guo2019b}.
-		}
+		\end{footnote}
 		\begin{equation}
 			y[n] = \left(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k\right) \boldsymbol{w} s[n] + w[n],
 			\label{eq:received_signal}
@@ -429,9 +542,9 @@
 		\end{maxi!}
 		which involves the product term $\prod_{k \in \mathcal{K}} P_k(x_{m_k})$ and is non-convex when $K > 1$.
 		Interestingly, the sum-rate optimal input design for general discrete memoryless \gls{mac} remains an open problem, and we instead propose a \gls{kkt} solution to problem \eqref{op:input_probability_distribution}.
-		\footnote{
+		\begin{footnote}
 			As pointed out in \cite{Buhler2011}, \gls{kkt} conditions are only necessary for sum-rate optimality and these solutions may end up being saddle points.
-		}
+		\end{footnote}
 		\begin{proposition}
 			The \gls{kkt} optimality conditions for problem \eqref{op:input_probability_distribution} are equivalent to, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$,
 			\begin{subequations}
@@ -706,9 +819,9 @@
 		Suppose the optimal number of thresholds is $S+1$ where $S \ge L$.
 		Let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{(S+1) \times 1}$ be the optimal threshold vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.
 		Since the optimal decision region for any letter may consist of multiple partitions, without loss of generality, we assume the mapping from threshold vector to decision region $l' \in \mathcal{L} \triangleq \{1,\ldots,L\}$ is given by $\mathcal{R}_{l'} = \bigcup_{s \equiv l' \pmod L} [t_{s-1},t_s)$.
-		\footnote{
+		\begin{footnote}
 			The proof holds for any valid mapping from threshold vector to decision regions, and we consider this specific case for the ease of presentation.
-		}
+		\end{footnote}
 		The threshold optimization problem is
 		\begin{maxi!}
 			{\scriptstyle{\boldsymbol{t}}}{I_{\mathrm{B}}(x;\hat{x})}{\label{op:decision_threshold}}{\label{ob:backscatter_mutual_information}}

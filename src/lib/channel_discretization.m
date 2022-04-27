@@ -1,4 +1,4 @@
-function [discreteChannel] = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold)
+function [discreteChannel, receivedPower] = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold)
 	% Function:
 	%	- obtain energy detection channel based on channel probability distribution and bin boundaries
 	%	- construct equivalent DMTC based on decision thresholds
@@ -12,6 +12,7 @@ function [discreteChannel] = channel_discretization(symbolRatio, equivalentChann
     %
     % Output:
 	%	- discreteChannel [(nStates ^ nTags) * nOutputs]: the DMC probability mass function after quantization (or the DMTC based on decision thresholds)
+	%	- receivedPower [(nStates ^ nTags) * 1]: received power per primary symbol corresponding to each input letter combination combination
     %
     % Comment:
     %	- for a given tag input combination, the continous output channel follows Erlang distribution
@@ -24,7 +25,16 @@ function [discreteChannel] = channel_discretization(symbolRatio, equivalentChann
 	nOutputs = size(threshold, 2) - 1;
 
 	% * Compute the expected received power under all backscatter input combinations
-	receivedPower = abs(equivalentChannel * beamformer) .^ 2 + noisePower;
+	if isvector(beamformer)
+		% * Beamformer vector
+		receivedPower = abs(equivalentChannel * beamformer) .^ 2 + noisePower;
+	else
+		% * Beamformer matrix
+		receivedPower = zeros(nInputs, 1);
+		for iInput = 1 : nInputs
+			receivedPower(iInput) = real(trace(equivalentChannel(iInput, :)' * equivalentChannel(iInput, :) * beamformer) + noisePower);
+		end
+	end
 
 	% * Construct DMC based on thresholding schemes
 	discreteChannel = zeros(nInputs, nOutputs);

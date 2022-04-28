@@ -133,6 +133,16 @@
 }
 \maketitle
 
+\begin{abstract}
+	Backscatter allows wireless nodes to harvest energy from, modulate information over, and reconfigure propagation of surrounding radio waves.
+	We introduce the concept of Metascatter, which adapts the input probability distribution of a finite-state backscatter device based on Channel State Information (CSI), to simultaneously act as parasitic source of Symbiotic Radio (SR) that conveys sensor data and reflecting element of Intelligent Reflecting Surface (IRS) that assists legacy transmission.
+	Using shared spectrum, energy, and infrastructures, fully cognitive networks can be built over Metascatter, and we consider a basic scenario where a multi-antenna Access Point (AP) and multiple Metascatter simultaneously transmit to a single-antenna user.
+	Since tags involve load switching and the primary and backscatter messages are multiplied (instead of superposed) in the received signal, it is assumed the user employ joint energy detection on all tags, then model their reflection pattern within the equivalent CSI for primary decoding.
+	We characterize the achievable primary-(sum-)backscatter rate region through a joint optimization of transmit beamforming vector at the AP, input probability distribution at the tags, and energy detection regions at the user.
+	A suboptimal solution is provided by the Block Coordinate Descent (BCD) method, where the beamforming, input distribution, and decision thresholds are obtained by Successive Convex Approximation (SCA), Karush–Kuhn–Tucker (KKT), and Dynamic Programming (DP), respectively.
+	Simulation results demonstrate Metascatter can exploit the additional backscatter path to transmit and assist.
+\end{abstract}
+
 \begin{section}{Introduction}
 	\IEEEPARstart{B}{ackscatter} is recently re-innovated as a promising approach to support low-power communications and control wireless propagation environments.
 	The concept of \gls{ambc} was first proposed in \cite{Liu2013b}, where each tag harvests energy from and modulates information over ambient \gls{rf} signals by periodically switching between different reflection patterns.

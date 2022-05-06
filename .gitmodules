@@ -6,4 +6,4 @@
 	url = https://github.com/cvxr/CVX.git
 [submodule "src/toolbox/magnifyOnFigure"]
 	path = src/toolbox/magnifyOnFigure
-	url = https://github.com/hildogjr/magnifyOnFigure
+	url = https://github.com/hildogjr/magnifyOnFigure.git

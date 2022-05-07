@@ -1,4 +1,5 @@
 addpath(genpath(pwd));
+rmpath('toolbox/CVX/');
 set(groot, 'defaulttextinterpreter', 'latex');
 set(groot, 'defaultaxesticklabelinterpreter', 'latex');
 set(groot, 'defaultaxesfontname', 'latex');

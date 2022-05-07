@@ -10,7 +10,7 @@ nStates = 2;
 % harvest-backscatter ratio
 reflectRatio = 0.5;
 % symbol period ratio
-symbolRatio = 2;
+symbolRatio = 10;
 % average transmit power
 txPower = 10;
 % average noise power

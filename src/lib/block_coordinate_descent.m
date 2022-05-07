@@ -82,8 +82,10 @@ function [rate, inputDistribution, threshold, beamformer] = block_coordinate_des
 		end
 
 		% * Beamforming design
-		beamformer = beamformer_sca(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold, tolerance);
+% 		beamformer = beamformer_sca_(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold, tolerance);
 % 		beamformer = beamformer_newton(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold, tolerance);
+% 		[beamformer, wsr] = beamformer_pgd(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold);
+		[beamformer1, wsr1] = beamformer_bpgd(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold);
 
 		% * Threshold design
 		switch options.Threshold

@@ -59,9 +59,9 @@ function [beamformer, weightedSumRate] = beamformer_pgd(weight, symbolRatio, equ
 		weightedSumRate = weighted_sum_rate_local(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, threshold);
 
 		% * Test convergence
-% 		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance || weightedSumRate < weightedSumRate_;
-		norm(gradient)
-		isConverged = norm(gradient) <= 1e-3;
+		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance || weightedSumRate < weightedSumRate_;
+		% norm(gradient)
+		% isConverged = norm(gradient) <= 1e-3;
 	end
 end
 
@@ -76,7 +76,7 @@ function [gradient] = gradient_local(weight, symbolRatio, equivalentChannel, noi
 	for iInput = 1 : nInputs
 		% H(:, :, iInput) = equivalentChannel(iInput, :)' * equivalentChannel(iInput, :);
 		H{iInput} = equivalentChannel(iInput, :)' * equivalentChannel(iInput, :);
-		sigma2(iInput) = beamformer' * H{iInput} * beamformer + noisePower;
+		sigma2(iInput) = real(beamformer' * H{iInput} * beamformer + noisePower);
 	end
 
 	% * u, g and Q
@@ -99,8 +99,8 @@ function [gradient] = gradient_local(weight, symbolRatio, equivalentChannel, noi
 	dgdw = cell(nInputs, nOutputs + 1);
 	for iInput = 1 : nInputs
 		for iOutput = 1 : nOutputs + 1
-			% dQdw(iInput, iOutput) = conj(H{iInput}) * conj(beamformer) / sigma2(iInput) ^ 2 * (threshold(iOutput + 1) * exp(-u(iInput, iOutput + 1)) * (sum(((1 : symbolRatio - 1) - u(iInput, iOutput + 1)) * u(iInput, iOutput + 1)) - 1) )
-			dgdw{iInput, iOutput} = - threshold(iOutput) * conj(H{iInput}) * conj(beamformer) / sigma2(iInput) ^ 2 * exp(-u(iInput, iOutput)) * (sum(((1 : symbolRatio - 1) - u(iInput, iOutput)) .* u(iInput, iOutput) .^ (0 : symbolRatio - 2) ./ factorial(1 : symbolRatio - 1)) - 1);
+			% dQdw(iInput, iOutput) = H{iInput} * beamformer / sigma2(iInput) ^ 2 * (threshold(iOutput + 1) * exp(-u(iInput, iOutput + 1)) * (sum(((1 : symbolRatio - 1) - u(iInput, iOutput + 1)) * u(iInput, iOutput + 1)) - 1) )
+			dgdw{iInput, iOutput} = - threshold(iOutput) * H{iInput} * beamformer / sigma2(iInput) ^ 2 * exp(-u(iInput, iOutput)) * (sum(((1 : symbolRatio - 1) - u(iInput, iOutput)) .* u(iInput, iOutput) .^ (0 : symbolRatio - 2) ./ factorial(1 : symbolRatio - 1)) - 1);
 		end
 	end
 	dQdw = cell(nInputs, nOutputs);
@@ -113,13 +113,13 @@ function [gradient] = gradient_local(weight, symbolRatio, equivalentChannel, noi
 	% * dI/dw
 	dIdw = 0;
 	for iInput = 1 : nInputs
-		dIdw = dIdw + weight * equivalentDistribution(iInput) * symbolRatio * conj(H{iInput}) * conj(beamformer) / sigma2(iInput);
+		dIdw = dIdw + weight * equivalentDistribution(iInput) * symbolRatio * H{iInput} * beamformer / sigma2(iInput);
 		for iOutput = 1 : nOutputs
 			dIdw = dIdw + (1 - weight) * equivalentDistribution(iInput) * ((log(Q(iInput, iOutput) / (equivalentDistribution * Q(:, iOutput))) + 1) * dQdw{iInput, iOutput} - Q(iInput, iOutput) * sum(equivalentDistribution .* cat(2, dQdw{:, iOutput}), 2) / (equivalentDistribution * Q(:, iOutput)));
 		end
 	end
 
-	gradient = dIdw;
+	gradient = 2 * dIdw;
 end
 
 function [dmtc] = dmtc_local(symbolRatio, receivedPower, threshold)

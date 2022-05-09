@@ -10,7 +10,7 @@ function [beamformer, weightedSumRate] = beamformer_pgd(weight, symbolRatio, equ
 		noisePower;
 		equivalentDistribution;
 		threshold;
-		step = 1e-2;
+		step = 1e-1;
 		tolerance = 1e-6;
 	end
 
@@ -57,7 +57,7 @@ function [beamformer, weightedSumRate] = beamformer_pgd(weight, symbolRatio, equ
 
 		% * Update weighted sum rate
 		weightedSumRate = weighted_sum_rate_local(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, threshold);
-
+weightedSumRate - weightedSumRate_
 		% * Test convergence
 		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance || weightedSumRate < weightedSumRate_;
 		% norm(gradient)

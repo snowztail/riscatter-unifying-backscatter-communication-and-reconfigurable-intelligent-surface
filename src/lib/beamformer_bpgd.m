@@ -20,11 +20,13 @@ function [beamformer, weightedSumRate] = beamformer_bpgd(weight, symbolRatio, eq
 	threshold(end) = 10 * threshold(end - 1);
 
 	% * Get data
-	% [nInputs, nOutputs] = deal(size(equivalentChannel, 1));
-	% nTxs = size(equivalentChannel, 2);
+	[nInputs, nOutputs] = deal(size(equivalentChannel, 1));
+	nTxs = size(equivalentChannel, 2);
 
 	% * Initialize beamformer
 	beamformer = sqrt(txPower) * ctranspose(equivalentDistribution * equivalentChannel) / norm(equivalentDistribution * equivalentChannel);
+	a = rand(1, nTxs) + 1i * rand(1, nTxs);
+	beamformer = sqrt(txPower) * ctranspose(a) / norm(a);
 	weightedSumRate = weighted_sum_rate_local(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, threshold);
 
 	% * Projected gradient descent
@@ -43,7 +45,7 @@ function [beamformer, weightedSumRate] = beamformer_bpgd(weight, symbolRatio, eq
 		beamformerCandidate = beamformer + t * gradient;
 		beamformerCandidate = sqrt(txPower) * beamformerCandidate / max(sqrt(txPower), norm(beamformerCandidate));
 		y2 = weighted_sum_rate_local(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformerCandidate, threshold);
-		% while y2 > y1 + btls.Alpha * t * norm(gradient) ^ 2;
+% 		while y2 > y1 + btls.Alpha * t * norm(gradient) ^ 2
 		while y2 < y1 + btls.Alpha * t * norm(gradient) ^ 2
 			t = btls.Beta * t;
 			beamformerCandidate = beamformer + t * gradient;
@@ -63,7 +65,7 @@ function [beamformer, weightedSumRate] = beamformer_bpgd(weight, symbolRatio, eq
 
 		% * Update weighted sum rate
 		weightedSumRate = weighted_sum_rate_local(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, threshold);
-
+weightedSumRate - weightedSumRate_
 		% * Test convergence (gradient can be non-zero due to norm constraint)
 		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance || weightedSumRate < weightedSumRate_;
 % 		norm(gradient)

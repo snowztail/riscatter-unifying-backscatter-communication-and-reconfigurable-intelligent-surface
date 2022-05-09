@@ -22,7 +22,7 @@ constellation = qammod(0 : nStates - 1, nStates) ./ max(abs(qammod(0 : nStates -
 % number of weights
 nWeights = 20;
 % primary-backscatter weight pairs
-weightSet = [linspace(0, 0.1, nWeights - 1), 1];
+weightSet = [linspace(0.5, 0.1, nWeights - 1), 1]; % For large rho, MRT to equivalent channel is nearly optimal; this does not hold for small rho
 % number of output discretization bins
 nBins = 2 ^ 8;
 % minimum rate gain per iteration

@@ -5,7 +5,7 @@ function [discreteChannel, receivedPower] = channel_discretization(symbolRatio, 
     %
     % Input:
 	%	- symbolRatio: the ratio of the secondary symbol period over the primary symbol period
-	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent primary channel under each tag input combination
 	%	- noisePower: average noise power at the user
 	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
 	%	- threshold [1 * nOutputs + 1]: bin boundaries or decision thresholds

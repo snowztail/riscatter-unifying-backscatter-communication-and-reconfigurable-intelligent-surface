@@ -1,44 +1,41 @@
-function [threshold, dmtc, backscatterRate] = threshold_dp(symbolRatio, equivalentChannel, noisePower, nBins, equivalentDistribution, beamformer)
+function [threshold] = threshold_dp(equivalentDistribution, quantizationSet, binDmc)
 	% Function:
-	%	- group the received energy bins into convex decision regions by dynamic programming
+	%	- group received energy bins into convex adjoint decision regions by dynamic programming
     %
     % Input:
-	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
-	%	- noisePower: average noise power at the user
-	%	- nBins: number of discretization bins over received signal
-	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
+	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
+	%	- quantizationSet [1 x (nBins + 1)]: boundaries of quantized energy bins
+	%	- binDmc [nInputs x nBins]: discrete memoryless channel whose input is tag state tuple and output is (high-resolution) quantized energy bins
     %
     % Output:
-	%	- threshold [1 * (nOutputs + 1)]: boundaries of decision regions
-	%	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
+	%	- threshold [1 x (nOutputs + 1)]: boundaries of decision regions (including 0 and Inf)
     %
+	% Reference:
+	%	- X. He, K. Cai, W. Song, and Z. Mei, “Dynamic programming for sequential deterministic quantization of discrete memoryless channels,” IEEE Transactions on Communications, vol. 69, no. 6, pp. 3638–3651, 2021.
+	%
     % Author & Date: Yang (i@snowztail.com), 22 Feb 09
 
 	% * Get data
-	nOutputs = size(equivalentDistribution, 2);
+	[nInputs, nBins] = size(binDmc);
+	nOutputs = nInputs;
 
-	% * Obtain threshold candidates that delimit output into discrete bins
-	thresholdCandidate = threshold_candidate(symbolRatio, equivalentChannel, noisePower, nBins, beamformer);
-
-	% * Evaluate DMC over all bins
-	dmc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, thresholdCandidate);
+	% * Obtain relevant distributions
+	jointDistribution = equivalentDistribution .* binDmc;
+	outputDistribution = equivalentDistribution' * binDmc;
 
 	% * Initialize cost functions
 	dp = zeros(nBins, nOutputs);
 	sol = zeros(nBins, nOutputs);
 	for iBin = 1 : nBins
-		dp(iBin, 1) = quantization_cost(1 : iBin, equivalentDistribution, dmc);
+		dp(iBin, 1) = cost_quantization(1 : iBin, jointDistribution, outputDistribution);
 	end
 
 	% * Compute dp
 	for iOutput = 2 : nOutputs
-		for iBin = nBins - nOutputs + iOutput : - 1 : iOutput
+		for iBin = nBins - nOutputs + iOutput : -1 : iOutput
 			dpCandidate = inf(nBins - 2, 1);
 			for iThreshold = iOutput - 1 : iBin - 1
-				dpCandidate(iThreshold) = dp(iThreshold, iOutput - 1) + quantization_cost(iThreshold + 1 : iBin, equivalentDistribution, dmc);
+				dpCandidate(iThreshold) = dp(iThreshold, iOutput - 1) + cost_quantization(iThreshold + 1 : iBin, jointDistribution, outputDistribution);
 			end
 			[dp(iBin, iOutput), sol(iBin, iOutput)] = min(dpCandidate);
 		end
@@ -46,20 +43,8 @@ function [threshold, dmtc, backscatterRate] = threshold_dp(symbolRatio, equivale
 
 	% * Recursively generate thresholds
 	index(nOutputs + 1, 1) = nBins;
-	for iOutput = nOutputs : - 1 : 1
+	for iOutput = nOutputs : -1 : 1
 		index(iOutput) = sol(index(iOutput + 1), iOutput);
 	end
-	threshold = thresholdCandidate(index + 1);
-
-	% * Construct DMTC and compute mutual information
-	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold);
-	backscatterRate = rate_backscatter(equivalentDistribution, dmtc);
-end
-
-
-function [quantizationCost] = quantization_cost(binIndex, equivalentDistribution, dmc)
-	outputDistribution = equivalentDistribution * dmc;
-	jointDistribution = transpose(equivalentDistribution) .* dmc;
-	conditionalDistribution = sum(jointDistribution(:, binIndex), 2) / sum(outputDistribution(binIndex), 2);
-	quantizationCost = - sum(outputDistribution(binIndex)) * sum(conditionalDistribution .* log(conditionalDistribution));
+	threshold = quantizationSet(index + 1);
 end

@@ -1,35 +1,26 @@
-function [threshold, dmtc] = threshold_ml(symbolRatio, equivalentChannel, noisePower, beamformer)
+function [threshold] = threshold_ml(symbolRatio, receivePower)
 	% Function:
-	%	- obtain the decision thresholds of maximum likelihood detector
+	%	- obtain the decision thresholds for maximum likelihood detector
     %
     % Input:
-	%	- symbolRatio: the ratio of the secondary symbol period over the primary symbol period
-	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
-	%	- noisePower: average noise power at the user
-	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
+	%	- symbolRatio: backscatter/primary symbol duration ratio
+	%	- receivePower [nInputs x 1]: average receive power per primary symbol for each tag state tuple
     %
     % Output:
-	%	- threshold [1 * (nOutputs + 1)] : the ML thresholding values
-	%	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
+	%	- threshold [1 x (nOutputs + 1)]: boundaries of ML decision regions (including 0 and Inf)
     %
     % Comment:
-    %	- ML detection does not require input distribution
+    %	- ML detector does not depend on input distribution
     %
     % Author & Date: Yang (i@snowztail.com), 23 Mar 17
 
 	% * Get data
-	nOutputs = size(equivalentChannel, 1);
+	nOutputs = size(receivePower, 1);
 
-	% * Compute the expected received power under all backscatter input combinations
-	[sortedPower, sortIndex] = sort(abs(equivalentChannel * beamformer) .^ 2 + noisePower);
-
-	% * Each ML threshold depends on the average received power of adjacent detection regions
-	threshold(nOutputs + 1) = inf;
+	% * Each ML threshold depends on average receive power of adjacent letters
+	sortPower = sort(receivePower);
+	threshold(nOutputs + 1) = Inf;
 	for iOutput = 2 : nOutputs
-		threshold(iOutput) = symbolRatio * (sortedPower(iOutput - 1) * sortedPower(iOutput)) / (sortedPower(iOutput - 1) - sortedPower(iOutput)) * log(sortedPower(iOutput - 1) / sortedPower(iOutput));
+		threshold(iOutput) = symbolRatio * (sortPower(iOutput - 1) * sortPower(iOutput)) / (sortPower(iOutput - 1) - sortPower(iOutput)) * log(sortPower(iOutput - 1) / sortPower(iOutput));
 	end
-
-	% * Construct DMTC
-	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold);
-	dmtc = dmtc(:, sortIndex);
 end

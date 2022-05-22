@@ -5,7 +5,7 @@ function [primaryRate] = rate_primary(symbolRatio, equivalentChannel, noisePower
     %
     % Input:
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent primary channel under each tag input combination
 	%	- noisePower: average noise power at the user
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
 	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP

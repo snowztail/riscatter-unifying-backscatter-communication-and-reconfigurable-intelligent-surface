@@ -1,12 +1,12 @@
-function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold, tolerance)
+function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRatio, equivalentChannel, transmitPower, noisePower, equivalentDistribution, threshold, tolerance)
 	% Function:
 	%	- optimize the transmit beamformer to maximize the weighted sum primary-backscatter rate by successive convex approximation
     %
     % Input:
 	%	- weight: the relative priority of the primary link
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
-	%	- txPower: average transmit power at the AP
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent primary channel under each tag input combination
+	%	- transmitPower: average transmit power at the AP
 	%	- noisePower: average noise power at the user
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
 	%	- threshold [1 * (nOutputs + 1)]: boundaries of decision regions
@@ -30,7 +30,7 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 		weight;
 		symbolRatio;
 		equivalentChannel;
-		txPower;
+		transmitPower;
 		noisePower;
 		equivalentDistribution;
 		threshold;
@@ -45,7 +45,7 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 	nTxs = size(equivalentChannel, 2);
 
 	% * Initialize beamformer matrix and DMTC
-	beamformer = sqrt(txPower) * ctranspose(equivalentDistribution * equivalentChannel) / norm(equivalentDistribution * equivalentChannel);
+	beamformer = sqrt(transmitPower) * ctranspose(equivalentDistribution * equivalentChannel) / norm(equivalentDistribution * equivalentChannel);
 	beamformerMatrix = beamformer * beamformer';
 	[dmtc, receivedPower] = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold);
 	weightedSumRate = weighted_sum_rate_local(weight, symbolRatio, noisePower, equivalentDistribution, receivedPower, dmtc);
@@ -77,7 +77,7 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 			maximize backscatterRateSca
 			subject to
 				beamformerMatrix == hermitian_semidefinite(nTxs);
-				trace(beamformerMatrix) <= txPower;
+				trace(beamformerMatrix) <= transmitPower;
 		cvx_end
 
 	end
@@ -170,7 +170,7 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_sca(weight, symbolRati
 			maximize backscatterRateSca
 			subject to
 				beamformerMatrix == hermitian_semidefinite(nTxs);
-				trace(beamformerMatrix) <= txPower;
+				trace(beamformerMatrix) <= transmitPower;
 		cvx_end
 
 		% * Update DMTC and compute actual weighted sum rate

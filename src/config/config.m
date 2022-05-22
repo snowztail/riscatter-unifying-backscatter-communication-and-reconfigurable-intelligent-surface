@@ -1,29 +1,51 @@
 %% * System
+% carrier frequency
+frequency = 9e8;
 % number of transmit antennas
 nTxs = 3;
 % number of tags
 nTags = 2;
-% modulation order
+% number of available states at tags (i.e., modulation order)
 nStates = 2;
-% input and output alphabet size
+% number of possible input and output tuples (i.e., alphabet size)
 [nInputs, nOutputs] = deal(nStates ^ nTags);
-% harvest-backscatter ratio
-reflectRatio = 0.5;
-% symbol period ratio
+% amplitude scatter ratio at tags
+scatterRatio = 0.5;
+% backscatter/primary symbol duration ratio
 symbolRatio = 10;
+% constellation diagram at tags
+constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
+% constellation = transpose(exp(1i * 2 * pi * (0 : nStates - 1) / nStates));
 % average transmit power
-txPower = 10;
+% transmitPower = db2pow(6);
+transmitPower = 1e3;
 % average noise power
-noisePower = db2pow(-70);
-% backscatter symbol candidates
-constellation = qammod(0 : nStates - 1, nStates) ./ max(abs(qammod(0 : nStates - 1, nStates)));
+noisePower = db2pow(-160);
+% path loss exponents
+directExponent = 2.6;
+forwardExponent = 2.4;
+backwardExponent = 2;
+% angle of arrivals
+directAoa = 2 * pi * rand;
+forwardAoa = 2 * pi * rand(nTags, 1);
+backwardAoa = 2 * pi * rand(nTags, 1);
+% Ricean factors
+directFactor = 5;
+forwardFactor = 5;
+backwardFactor = 5;
+
+%% * Layout
+% coordinates
+ap = [5; 0];
+user = [0; 0];
+[tag(1, :), tag(2, :)] = pol2cart(2 * pi * rand(1, nTags), sqrt(1 * rand(1, nTags)));
+% distances
+directDistance = norm(ap - user);
+forwardDistance = vecnorm(ap - tag);
+backwardDistance = vecnorm(tag - user);
 
 %% * Algorithm
-% number of weights
-nWeights = 20;
-% primary-backscatter weight pairs
-weightSet = [linspace(0.5, 0.1, nWeights - 1), 1]; % For large rho, MRT to equivalent channel is nearly optimal; this does not hold for small rho
-% number of output discretization bins
-nBins = 2 ^ 8;
-% minimum rate gain per iteration
-tolerance = 1e-6;
+% relative priority of primary link
+weightSet = 0 : 0.05 : 1;
+% number of weights on rate region boundary
+nWeights = length(weightSet);

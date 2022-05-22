@@ -6,7 +6,7 @@ function [inputDistribution, equivalentDistribution, weightedSumRate] = input_di
 	%	- weight: the relative priority of the primary link
 	%	- nTags: number of tags
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent primary channel under each tag input combination
 	%	- noisePower: average noise power at the user
 	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
     %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC

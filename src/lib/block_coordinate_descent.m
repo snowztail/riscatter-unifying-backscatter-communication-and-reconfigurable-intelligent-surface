@@ -1,106 +1,123 @@
-function [rate, inputDistribution, threshold, beamformer] = block_coordinate_descent(weight, nTags, symbolRatio, equivalentChannel, txPower, noisePower, nBins, tolerance, options)
+function [rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weight, equivalentChannel, tolerance, options)
 	% Function:
-    %	- maximize the weighted sum of primary and total backscatter rate by alternatively optimizing input distribution and energy detection threshold
+	%	- iteratively update the input distribution, detection threshold, and beamforming vector to maximize weighted sum rate
     %
     % Input:
-	%	- weight: the relative priority of the primary link
 	%	- nTags: number of tags
-	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
-	%	- txPower: average transmit power at the AP
-	%	- noisePower: average noise power at the user
-	%	- nBins: number of discretization bins over received signal
+	%	- symbolRatio: backscatter/primary symbol duration ratio
+	%	- transmitPower: average transmit power
+	%	- noisePower: average noise power
+	%	- weight: relative priority of primary link
+	%	- equivalentChannel [nTxs x nInputs]: equivalent primary channel for each tag state tuple
     %   - tolerance: minimum rate gain per iteration
-	%	- options:
-	%		- Input: choose from 'cooperation', 'exhaustion', 'kkt', 'sca'
-	%		- Threshold: choose from 'smawk', 'dp', 'bisection', 'ml'
-	%		- Recovery: choose from 'marginalization', 'decomposition', 'randomization'
+	%	- options: methods and algorithms
     %
     % Output:
-	%	- rate [2 * 1]:
-	%		- primaryRate: the achievable rate for the primary link (nats per second per Hertz)
-	%		- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
-	%	- inputDistribution [nTags * nStates]: input probability distribution
-	%	- threshold [1 * (nOutputs + 1)]: boundaries of decision regions
-	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
+	%	- rate [2 x 1]: primary rate (nats/s/Hz) and total backscatter rate (nats/cu)
+	%	- distribution [nStates x nTags]: tag input (i.e., state) probability distribution
+	%	- threshold [1 x (nOutputs + 1)]: boundaries of decision regions (including 0 and Inf)
+	%	- beamforming [nTxs x 1]: transmit beamforming vector
     %
     % Comment:
-	%	- first perform non-coherent energy detection for backscatter links, then model their contribution within equivalent channel and decode primary message
+	%	- user first jointly decode all tags by energy detection, then model backscatter contribution within equivalent channel
     %
     % Author & Date: Yang (i@snowztail.com), 22 Mar 18
 
-	% * Declare options for input and threshold design
+	% * Set default tolerance
 	arguments
-		weight;
 		nTags;
 		symbolRatio;
-		equivalentChannel;
-		txPower;
+		transmitPower;
 		noisePower;
-		nBins;
+		weight;
+		equivalentChannel;
 		tolerance = 1e-6;
-		options.Input {mustBeMember(options.Input, ['cooperation', 'exhaustion', 'kkt', 'sca'])};
+		options.Distribution {mustBeMember(options.Distribution, ['cooperation', 'exhaustion', 'kkt', 'sca'])};
 		options.Threshold {mustBeMember(options.Threshold, ['smawk', 'dp', 'bisection', 'ml'])};
+		options.Beamforming {mustBeMember(options.Beamforming, 'pgd')};
 		options.Recovery {mustBeMember(options.Recovery, ['marginalization', 'decomposition', 'randomization'])};
 	end
 
 	% * Get data
-	nStates = nthroot(size(equivalentChannel, 1), nTags);
+	nInputs = size(equivalentChannel, 2);
+	nStates = nthroot(nInputs, nTags);
 
-	% * Initialize input distribution, transmit beamformer, and decision threshold
-	inputDistribution = ones(nTags, nStates) / nStates;
-	equivalentDistribution = prod(combination_distribution(inputDistribution), 1);
-	beamformer = sqrt(txPower) * ctranspose(equivalentDistribution * equivalentChannel) / norm(equivalentDistribution * equivalentChannel);
-	[threshold, dmtc] = threshold_ml(symbolRatio, equivalentChannel, noisePower, beamformer);
+	% * Initialize input distribution as uniform
+	distribution = normalize(ones(nStates, nTags), 'norm', 1);
+	equivalentDistribution = prod(tuple_tag(distribution), 2);
 
-	% * Iteratively update input distribution, tranmit beamformer, and decision threshold
-	weightedSumRate = 0;
+	% * Initialize beamforming vector as MRT to ergodic equivalent channel
+	beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+
+	% * Initialize decision threshold by maximum likelihood
+	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
+	snr = receivePower / noisePower;
+	threshold = threshold_ml(symbolRatio, receivePower);
+
+	% * Construct DMTC and recover i/o mapping
+	dmac = dmc_integration(symbolRatio, receivePower, threshold);
+	[~, sortIndex] = sort(receivePower);
+	dmac(:, sortIndex) = dmac;
+	% dmac = normalize(rand(size(dmac)), 2, 'norm', 1);
+
+	% * Block coordinate descent
+	wsr = 0;
 	isConverged = false;
 	while ~isConverged
-		weightedSumRate_ = weightedSumRate;
+		% * Update iteration index
+		wsr_ = wsr;
 
-		% * Input distribution design
-		switch options.Input
+		% * Input probability distribution
+		switch options.Distribution
 		case 'exhaustion'
-			[inputDistribution, equivalentDistribution] = input_distribution_exhaustion(weight, nTags, symbolRatio, equivalentChannel, noisePower, beamformer, dmtc);
+			[distribution, equivalentDistribution] = distribution_exhaustion(nTags, symbolRatio, weight, snr, dmac);
 		case 'kkt'
-			[inputDistribution, equivalentDistribution] = input_distribution_kkt(weight, nTags, symbolRatio, equivalentChannel, noisePower, beamformer, dmtc);
+			[distribution, equivalentDistribution] = distribution_kkt(nTags, symbolRatio, weight, snr, dmac);
 		case 'sca'
-			[inputDistribution, equivalentDistribution] = input_distribution_sca(weight, nTags, symbolRatio, equivalentChannel, noisePower, beamformer, dmtc, tolerance);
+			[distribution, equivalentDistribution] = distribution_sca(nTags, symbolRatio, weight, snr, dmac);
 		case 'cooperation'
-			[jointDistribution, equivalentDistribution] = input_distribution_cooperation(weight, nTags, symbolRatio, equivalentChannel, noisePower, beamformer, dmtc);
+			[jointDistribution, equivalentDistribution] = distribution_cooperation(nTags, symbolRatio, weight, snr, dmac);
 			if isfield(options, 'Recovery')
 				switch options.Recovery
 				case 'marginalization'
-					[inputDistribution, equivalentDistribution] = recovery_marginalization(weight, symbolRatio, equivalentChannel, noisePower, jointDistribution, beamformer, dmtc);
+					[distribution, equivalentDistribution] = recovery_marginalization(jointDistribution);
 				case 'decomposition'
-					[inputDistribution, equivalentDistribution] = recovery_decomposition(weight, symbolRatio, equivalentChannel, noisePower, jointDistribution, beamformer, dmtc);
+					[distribution, equivalentDistribution] = recovery_decomposition(jointDistribution);
 				case 'randomization'
-					[inputDistribution, equivalentDistribution] = recovery_randomization(weight, symbolRatio, equivalentChannel, noisePower, jointDistribution, beamformer, dmtc);
+					[distribution, equivalentDistribution] = recovery_randomization(symbolRatio, weight, snr, jointDistribution, dmac);
 				end
 			end
 		end
 
-		% * Beamforming design
-% 		beamformer = beamformer_sca_(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold, tolerance);
-% 		beamformer = beamformer_newton(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold, tolerance);
-% 		[beamformer, wsr] = beamformer_pgd(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold);
-		[beamformer1, wsr1] = beamformer_bpgd(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold);
-
-		% * Threshold design
-		switch options.Threshold
-		case 'smawk'
-			[threshold, dmtc] = threshold_smawk(symbolRatio, equivalentChannel, noisePower, nBins, equivalentDistribution, beamformer);
-		case 'dp'
-			[threshold, dmtc] = threshold_dp(symbolRatio, equivalentChannel, noisePower, nBins, equivalentDistribution, beamformer);
-		case 'bisection'
-			[threshold, dmtc] = threshold_bisection(symbolRatio, equivalentChannel, noisePower, nBins, equivalentDistribution, beamformer);
-		case 'ml'
-			[threshold, dmtc] = threshold_ml(symbolRatio, equivalentChannel, noisePower, beamformer);
+		% * Transmit beamforming
+		switch options.Beamforming
+		case 'pgd'
+			beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, equivalentDistribution, threshold);
 		end
 
+		% * Decision threshold
+		receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
+		snr = receivePower / noisePower;
+		quantizationSet = quantization_set(symbolRatio, receivePower);
+		binDmc = dmc_integration(symbolRatio, receivePower, quantizationSet);
+		switch options.Threshold
+		case 'smawk'
+			threshold = threshold_smawk(equivalentDistribution, quantizationSet, binDmc);
+		case 'dp'
+			threshold = threshold_dp(equivalentDistribution, quantizationSet, binDmc);
+		case 'bisection'
+			threshold = threshold_bisection(symbolRatio, receivePower, equivalentDistribution, quantizationSet, binDmc);
+		case 'ml'
+			threshold = threshold_ml(symbolRatio, receivePower);
+		end
+
+		% * Construct DMTC and recover i/o mapping
+		dmac = dmc_integration(symbolRatio, receivePower, threshold);
+		[~, sortIndex] = sort(receivePower);
+		dmac(:, sortIndex) = dmac;
+
 		% * Test convergence
-		[weightedSumRate, rate] = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, dmtc);
-		isConverged = abs(weightedSumRate - weightedSumRate_) <= tolerance;
+		[wsr, rate] = rate_weighted(symbolRatio, weight, snr, equivalentDistribution, dmac);
+		isConverged = abs(wsr - wsr_) <= tolerance;
 	end
 end

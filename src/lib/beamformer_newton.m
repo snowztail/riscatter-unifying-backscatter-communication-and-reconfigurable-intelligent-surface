@@ -1,4 +1,4 @@
-function [beamformer, dmtc, weightedSumRate] = beamformer_newton(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold, tolerance)
+function [beamformer, dmtc, weightedSumRate] = beamformer_newton(weight, symbolRatio, equivalentChannel, transmitPower, noisePower, equivalentDistribution, threshold, tolerance)
 
 
 	% * Declare default tolerance
@@ -6,7 +6,7 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_newton(weight, symbolR
 		weight;
 		symbolRatio;
 		equivalentChannel;
-		txPower;
+		transmitPower;
 		noisePower;
 		equivalentDistribution;
 		threshold;
@@ -21,7 +21,7 @@ function [beamformer, dmtc, weightedSumRate] = beamformer_newton(weight, symbolR
 	nTxs = size(equivalentChannel, 2);
 
 	% * Initialize beamformer
-	beamformer = sqrt(txPower) * ctranspose(equivalentDistribution * equivalentChannel) / norm(equivalentDistribution * equivalentChannel);
+	beamformer = sqrt(transmitPower) * ctranspose(equivalentDistribution * equivalentChannel) / norm(equivalentDistribution * equivalentChannel);
 % 	beamformer = conj(beamformer);
 	beamformer = rand(size(beamformer)) + 1i * rand(size(beamformer));
 	beamformerComponent_ = zeros(nTxs, 2);

@@ -1,12 +1,12 @@
-function [beamformer, weightedSumRate] = beamformer_bpgd(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold, tolerance, btls)
-
+function [beamformer, weightedSumRate] = beamformer_bpgd(weight, symbolRatio, equivalentChannel, transmitPower, noisePower, equivalentDistribution, threshold, tolerance, btls)
+% For large rho, MRT to equivalent channel is nearly optimal; this does not hold for small rho
 
 	% * Declare default tolerance
 	arguments
 		weight;
 		symbolRatio;
 		equivalentChannel;
-		txPower;
+		transmitPower;
 		noisePower;
 		equivalentDistribution;
 		threshold;
@@ -24,9 +24,9 @@ function [beamformer, weightedSumRate] = beamformer_bpgd(weight, symbolRatio, eq
 	nTxs = size(equivalentChannel, 2);
 
 	% * Initialize beamformer
-	beamformer = sqrt(txPower) * ctranspose(equivalentDistribution * equivalentChannel) / norm(equivalentDistribution * equivalentChannel);
+	beamformer = sqrt(transmitPower) * ctranspose(equivalentDistribution * equivalentChannel) / norm(equivalentDistribution * equivalentChannel);
 	a = rand(1, nTxs) + 1i * rand(1, nTxs);
-	beamformer = sqrt(txPower) * ctranspose(a) / norm(a);
+	beamformer = sqrt(transmitPower) * ctranspose(a) / norm(a);
 	weightedSumRate = weighted_sum_rate_local(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, threshold);
 
 	% * Projected gradient descent
@@ -43,13 +43,13 @@ function [beamformer, weightedSumRate] = beamformer_bpgd(weight, symbolRatio, eq
 		y1 = weighted_sum_rate_local(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, threshold);
 		t = 1;
 		beamformerCandidate = beamformer + t * gradient;
-		beamformerCandidate = sqrt(txPower) * beamformerCandidate / max(sqrt(txPower), norm(beamformerCandidate));
+		beamformerCandidate = sqrt(transmitPower) * beamformerCandidate / max(sqrt(transmitPower), norm(beamformerCandidate));
 		y2 = weighted_sum_rate_local(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformerCandidate, threshold);
 % 		while y2 > y1 + btls.Alpha * t * norm(gradient) ^ 2
 		while y2 < y1 + btls.Alpha * t * norm(gradient) ^ 2
 			t = btls.Beta * t;
 			beamformerCandidate = beamformer + t * gradient;
-			beamformerCandidate = sqrt(txPower) * beamformerCandidate / max(sqrt(txPower), norm(beamformerCandidate));
+			beamformerCandidate = sqrt(transmitPower) * beamformerCandidate / max(sqrt(transmitPower), norm(beamformerCandidate));
 			y2 = weighted_sum_rate_local(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformerCandidate, threshold);
 		end
 		beamformer = beamformerCandidate;
@@ -60,8 +60,8 @@ function [beamformer, weightedSumRate] = beamformer_bpgd(weight, symbolRatio, eq
 % 		beamformer = beamformer + step * gradient;
 
 % 		% * Project onto subspace (l2-norm ball)
-% % 		beamformer = sqrt(txPower) * beamformer / max(1, norm(beamformer));
-% 		beamformer = sqrt(txPower) * beamformer / max(sqrt(txPower), norm(beamformer));
+% % 		beamformer = sqrt(transmitPower) * beamformer / max(1, norm(beamformer));
+% 		beamformer = sqrt(transmitPower) * beamformer / max(sqrt(transmitPower), norm(beamformer));
 
 		% * Update weighted sum rate
 		weightedSumRate = weighted_sum_rate_local(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, threshold);

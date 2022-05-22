@@ -1,119 +1,119 @@
-function [inputDistribution, equivalentDistribution, weightedSumRate] = recovery_randomization(weight, symbolRatio, equivalentChannel, noisePower, jointDistribution, beamformer, dmtc, nKernels, nSamples, tolerance)
+function [distribution, equivalentDistribution] = recovery_randomization(symbolRatio, weight, snr, jointDistribution, dmac, nKernels, nInstances, tolerance)
 	% Function:
-	%	- extract a good tag input distribution (corresponding to no transmit cooperation) by randomization
+	%	- extract individual tag input distribution from joint input distribution by randomization
     %
     % Input:
-	%	- weight: the relative priority of the primary link
-	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
-	%	- noisePower: average noise power at the user
-	%	- jointDistribution [nStates * ... (nTags) ... * nStates]: the joint input distribution of all tags corresponding to the relaxed input optimization problem
-	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
-    %	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- nKernels: number of kernels used in the approximation (equals to the rank)
-	%	- nSamples: number of random samples to be generated in randomization
-	%	- tolerance: the maximum tolerable relative entropy between the original and approximated arrays
+	%	- symbolRatio: backscatter/primary symbol duration ratio
+	%	- weight: relative priority of primary link
+	%	- snr [nInputs x 1]: average receive signal-to-noise ratio per primary symbol for each tag state tuple
+	%	- jointDistribution [nStates x ... (nTags-dimensional) ... x nStates]: joint tag input distribution with full transmit cooperation
+	%	- dmac [nInputs x nOutputs]: discrete memoryless thresholding multiple access channel whose input and output are tag state tuple
+	%	- nKernels: number of kernels used in appriximate array (i.e. rank of approximate array)
+	%	- nInstances: number of random instances to generate for each tag
+	%	- tolerance: minimum reduce of tolerable relative entropy (between original and approximate arrays) per iteration
     %
     % Output:
-	%	- inputDistribution [nTags * nStates]: input probability distribution
-	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- weightedSumRate: weighted sum of primary rate and total backscatter rate
-	%		- primaryRate: the achievable rate for the primary link (nats per second per Hertz)
-	%		- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
+	%	- distribution [nStates x nTags]: tag input (i.e., state) probability distribution
+	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
     %
     % Comment:
-	%	- approximate any joint input distribution array by reduced-rank distribution
-    %	- generate random samples of candidate tag probability vectors whose outer product expectation equals to the joint input distribution array
-	%	- equivalent to a random search with guiduance on the correlation matrix of the distributions
-	%	- the number of kernels and random samples are designable (performance-complexity tradeoff)
-	%	- the candidates follows uniform distribution within a sphere bounded within the probability simplex
+	%	- approximate any joint input distribution array by rank-1 distribution in the mean sense
+	%	- first approximate joint input distirbution by convex combination of rank-one kernels under minimum divergence criterion
+    %	- then, for each kernel vector, generate random probability vectors whose mean equal to kernel vector
+    %	- then, generate random probability vector groups whose mean equal to kernel vectors
+	%	- select the probability vector group that maximizes weighted sum-rate
+	%	- equivalent to a random distribution search with guiduance on correlation matrix
+	%	- number of kernels and random samples are designable with performance-complexity tradeoff
+	%	- candidates follows uniform distribution within a sphere bounded by probability simplex
     %
     % Author & Date: Yang (i@snowztail.com), 22 Mar 03
 
+
 	% * Declare default tolerance
 	arguments
-		weight;
 		symbolRatio;
-		equivalentChannel;
-		noisePower;
+		weight;
+		snr;
 		jointDistribution;
-		beamformer;
-		dmtc;
+		dmac;
 		nKernels = 10;
-		nSamples = 5e2;
+		nInstances = 5e2;
 		tolerance = 1e-6;
 	end
 
 	% * Get data
+	nTags = dimension_number(jointDistribution);
 	nStates = size(jointDistribution, 1);
-	nTags = ndims_modified(jointDistribution);
 
-	% * Block coordinate descent
+	% * Initialize kernel vectors and relative entropy
+	kernelVector = normalize(ones(nStates, nTags, nKernels), 'norm', 1);
+	relativeEntropy = 1;
+
+	% * Block coordinate descent (kernel coefficients -> kernel vectors of tag 1 -> kernel vectors of tag 2 -> ...)
 	isConverged = false;
-	kernelBasis = rand_normalized([nStates, nTags, nKernels], 1);
 	while ~isConverged
+		% * Update iteration index
+		relativeEntropy_ = relativeEntropy;
+
 		% * Update kernel coefficients
 		cvx_begin
-			variable kernelCoefficient(nKernels, 1)
-			referenceDistribution = zeros(size(jointDistribution));
+			variable kernelCoefficient(nKernels, 1);
+			expression approximateDistribution(size(jointDistribution));
 			for iKernel = 1 : nKernels
-				referenceDistribution = referenceDistribution + kernelCoefficient(iKernel) * outer_product(kernelBasis(:, :, iKernel));
+				approximateDistribution = approximateDistribution + kernelCoefficient(iKernel) * outer_product(kernelVector(:, :, iKernel));
 			end
-			relativeEntropy = sum(vec(rel_entr(jointDistribution, referenceDistribution)));
+			relativeEntropy = sum(vec(rel_entr(jointDistribution, approximateDistribution)));
 			minimize relativeEntropy
 			subject to
 				kernelCoefficient == simplex(nKernels);
 		cvx_end
 
-		% * Update kernel bases
+		% * Update kernel vectors
 		for iTag = 1 : nTags
 			cvx_begin
-				variable newBasis(nStates, nKernels)
-				kernelBasis = cvx(kernelBasis);
-				kernelBasis(:, iTag, :) = newBasis;
-				referenceDistribution = zeros(size(jointDistribution));
+				variable newVector(nStates, nKernels);
+				expression approximateDistribution(size(jointDistribution));
+				kernelVector = cvx(kernelVector);
+				kernelVector(:, iTag, :) = newVector;
 				for iKernel = 1 : nKernels
-					referenceDistribution = referenceDistribution + kernelCoefficient(iKernel) * outer_product(kernelBasis(:, :, iKernel));
+					approximateDistribution = approximateDistribution + kernelCoefficient(iKernel) * outer_product(kernelVector(:, :, iKernel));
 				end
-				relativeEntropy = sum(vec(rel_entr(jointDistribution, referenceDistribution)));
+				relativeEntropy = sum(vec(rel_entr(jointDistribution, approximateDistribution)));
 				minimize relativeEntropy
 				subject to
 					for iKernel = 1 : nKernels
-						newBasis(:, iKernel) == simplex(nStates);
+						newVector(:, iKernel) == simplex(nStates);
 					end
 			cvx_end
 		end
-		isConverged = abs(relativeEntropy) <= tolerance;
+
+		% * Check convergence
+		isConverged = abs(relativeEntropy - relativeEntropy_) <= tolerance;
 	end
 
-	% * Generate random vectors with kernel bases as prescribed mean
-	weightedSumRate = 0;
+	% * Generate random probability vectors with mean equal to kernel vectors
+	wsr = 0;
 	for iKernel = 1 : nKernels
-		for iSample = 1 : round(kernelCoefficient(iKernel) * nSamples)
-			inputDistributionCandidate = zeros(nTags, nStates);
+		for iInstance = 1 : kernelCoefficient(iKernel) * nInstances
+			distributionInstance = zeros(nStates, nTags);
 			for iTag = 1 : nTags
-				% * Retrieve the radius of the uniform random vector whose boundary lies within the probability simplex
-				meanVector = kernelBasis(:, iTag, iKernel);
-				radiusBound = zeros(nStates + 1, 1);
-				for iState = 1 : nStates
-					radiusBound(iState) = abs(sum(meanVector(setdiff(1 : nStates, iState))) - 1) / sqrt(nStates - 1);
-				end
-				radiusBound(nStates + 1) = norm(meanVector) ^ 2;
-				radius = min(radiusBound);
-				% * Generate random vector uniformly distributed within the nStates-dimensional sphere
+				meanVector = kernelVector(:, iTag, iKernel);
+				radius = min([abs(sum(meanVector) - meanVector - 1) / sqrt(nStates - 1); norm(meanVector) ^ 2]);
+
+				% * Draw random vector uniformly within sphere
 				isValid = false;
 				while ~isValid
-					randomVector = 2 * radius * rand(nStates, 1) - radius + meanVector;
+					randomVector = rand(nStates, 1) * 2 * radius - radius + meanVector;
 					isValid = norm(randomVector - meanVector) <= radius;
 				end
-				inputDistributionCandidate(iTag, :) = transpose(randomVector + (1 - ones(1, nStates) * randomVector) / nStates * ones(nStates, 1));
+				distributionInstance(:, iTag) = randomVector + (1 - ones(1, nStates) * randomVector) / nStates * ones(nStates, 1);
 			end
-			equivalentDistributionCandidate = prod(combination_distribution(inputDistributionCandidate), 1);
-			weightedSumRateCandidate = rate_weighted_sum(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, dmtc);
-			if weightedSumRateCandidate > weightedSumRate
-				inputDistribution = inputDistributionCandidate;
-				equivalentDistribution = equivalentDistributionCandidate;
-				weightedSumRate = weightedSumRateCandidate;
+			equivalentDistributionInstance = prod(tuple_tag(distributionInstance), 2);
+			wsrInstance = equivalentDistributionInstance' * (weight * information_primary(symbolRatio, snr) + (1 - weight) * information_backscatter(equivalentDistributionInstance, dmac));
+			if wsrInstance > wsr
+				distribution = distributionInstance;
+				equivalentDistribution = equivalentDistributionInstance;
+				wsr = wsrInstance;
 			end
 		end
 	end
@@ -124,7 +124,7 @@ function [outerProduct] = outer_product(matrix)
 	nVectors = size(matrix, 2);
     outerProduct = matrix(:, 1);
 	for iVector = 2 : nVectors
-		vector = permute(matrix(:, iVector), circshift(1 : (ndims_modified(outerProduct) + 1), ndims_modified(outerProduct)));
+		vector = permute(matrix(:, iVector), circshift(1 : (dimension_number(outerProduct) + 1), dimension_number(outerProduct)));
 		outerProduct = repmat(outerProduct, size(vector)) .* repmat(vector, size(outerProduct));
 	end
 end

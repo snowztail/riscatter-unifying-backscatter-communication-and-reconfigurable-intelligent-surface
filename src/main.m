@@ -1,23 +1,15 @@
-setup; clear; cvx_clear; clc; close all; config;
+setup; clear; cvx_clear; cvx_begin; cvx_end; clc; close all; config;
 
 % * Generate channels
-directChannel = sqrt(0.5) * (randn(1, nTxs) + 1i * randn(1, nTxs));
-cascadedChannel = zeros(nTags, nTxs);
+directChannel = path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor, directAoa);
+cascadedChannel = zeros(nTxs, nTags);
 for iTag = 1 : nTags
-	cascadedChannel(iTag, :) = (sqrt(0.5) * (randn(1, nTxs) + 1i * randn(1, nTxs))) * (sqrt(0.5) * (randn + 1i * randn));
+	cascadedChannel(:, iTag) = path_loss(frequency, forwardDistance(iTag), forwardExponent) * fading_ricean(nTxs, 1, forwardFactor, forwardAoa(iTag)) * path_loss(frequency, backwardDistance(iTag), backwardExponent) * fading_ricean(1, 1, backwardFactor, backwardAoa(iTag));
 end
+equivalentChannel = directChannel + sqrt(scatterRatio) * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
-% * Obtain equivalent AP-user channels under all backscatter input combinations
-indexCombination = index_combination(nTags, nStates);
-inputCombination = transpose(constellation(indexCombination));
-equivalentChannel = zeros(nInputs, nTxs);
-for iInput = 1 : nInputs
-	equivalentChannel(iInput, :) = directChannel + sqrt(reflectRatio) * inputCombination(iInput, :) * cascadedChannel;
-end
-
-% * Evaluate rate regions
+% * Evaluate rate region
 rate = zeros(2, nWeights);
 for iWeight = 1 : nWeights
-	weight = weightSet(iWeight);
-	[rate, inputDistribution, threshold, beamformer] = block_coordinate_descent(weight, nTags, symbolRatio, equivalentChannel, txPower, noisePower, nBins, tolerance, 'Input', 'kkt', 'Threshold', 'smawk');
+	[rate, inputDistribution, threshold, beamformer] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weightSet(iWeight), equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
 end

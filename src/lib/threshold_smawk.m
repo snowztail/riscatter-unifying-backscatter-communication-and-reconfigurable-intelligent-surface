@@ -1,40 +1,38 @@
-function [threshold, dmtc, backscatterRate] = threshold_smawk(symbolRatio, equivalentChannel, noisePower, nBins, equivalentDistribution, beamformer)
+function [threshold] = threshold_smawk(equivalentDistribution, quantizationSet, binDmc)
 	% Function:
-	%	- group the received energy bins into convex decision regions by dynamic programming accelerated by SMAWK algorithm
+	%	- group received energy bins into convex adjoint decision regions by dynamic programming accelerated by SMAWK algorithm
     %
     % Input:
-	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
-	%	- noisePower: average noise power at the user
-	%	- nBins: number of discretization bins over received signal
-	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
+	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
+	%	- quantizationSet [1 x (nBins + 1)]: boundaries of quantized energy bins
+	%	- binDmc [nInputs x nBins]: discrete memoryless channel whose input is tag state tuple and output is (high-resolution) quantized energy bins
     %
     % Output:
-	%	- threshold [1 * (nOutputs + 1)]: boundaries of decision regions
-	%	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
+	%	- threshold [1 x (nOutputs + 1)]: boundaries of decision regions (including 0 and Inf)
     %
     % Comment:
-    %	- SWAWK algorithm requires the quantization cost function to satisfy the Quadrangle Inequality (QI)
+	%	- quantization cost function satisfies Quadrangle Inequality (QI) that enables SMAWK algorithm
+	%	- assume input and output alphabe size are same
     %
+	% Reference:
+	%	- X. He, K. Cai, W. Song, and Z. Mei, “Dynamic programming for sequential deterministic quantization of discrete memoryless channels,” IEEE Transactions on Communications, vol. 69, no. 6, pp. 3638–3651, 2021.
+	%
     % Author & Date: Yang (i@snowztail.com), 22 Feb 09
 
 
 	% * Get data
-	nOutputs = size(equivalentDistribution, 2);
+	[nInputs, nBins] = size(binDmc);
+	nOutputs = nInputs;
 
-	% * Obtain threshold candidates that delimit output into discrete bins
-	thresholdCandidate = threshold_candidate(symbolRatio, equivalentChannel, noisePower, nBins, beamformer);
-
-	% * Evaluate DMC over all bins
-	dmc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, thresholdCandidate);
+	% * Obtain relevant distributions
+	jointDistribution = equivalentDistribution .* binDmc;
+	outputDistribution = equivalentDistribution' * binDmc;
 
 	% * Initialize cost functions
 	dp = zeros(nBins, nOutputs);
 	sol = zeros(nBins, nOutputs);
 	for iBin = 1 : nBins
-		dp(iBin, 1) = quantization_cost(1 : iBin, equivalentDistribution, dmc);
+		dp(iBin, 1) = cost_quantization(1 : iBin, jointDistribution, outputDistribution);
 	end
 
 	% * Generate monotone matrix
@@ -43,9 +41,9 @@ function [threshold, dmtc, backscatterRate] = threshold_smawk(symbolRatio, equiv
 		for iRow = 1 : nBins - nOutputs + 1
 			for iColumn = 1 : nBins - nOutputs + 1
 				if iRow >= iColumn
-					D(iRow, iColumn) = dp(iColumn - 2 + iOutput, iOutput - 1) + quantization_cost(iColumn - 1 + iOutput : iRow - 1 + iOutput, equivalentDistribution, dmc);
+					D(iRow, iColumn) = dp(iColumn - 2 + iOutput, iOutput - 1) + cost_quantization(iColumn - 1 + iOutput : iRow - 1 + iOutput, jointDistribution, outputDistribution);
 				else
-					D(iRow, iColumn) = inf;
+					D(iRow, iColumn) = Inf;
 				end
 			end
 		end
@@ -55,28 +53,61 @@ function [threshold, dmtc, backscatterRate] = threshold_smawk(symbolRatio, equiv
 		[p] = smawk(D, r, c);
 
 		% * Get sol and dp
-		for iBin = nBins - nOutputs + iOutput : - 1 : iOutput
+		for iBin = nBins - nOutputs + iOutput : -1 : iOutput
 			sol(iBin, iOutput) = p(iBin - iOutput + 1) - 2 + iOutput;
-			dp(iBin, iOutput) = dp(sol(iBin, iOutput), iOutput - 1) + quantization_cost(sol(iBin, iOutput) + 1 : iBin, equivalentDistribution, dmc);
+			dp(iBin, iOutput) = dp(sol(iBin, iOutput), iOutput - 1) + cost_quantization(sol(iBin, iOutput) + 1 : iBin, jointDistribution, outputDistribution);
 		end
 	end
 
 	% * Recursively generate thresholds
 	index(nOutputs + 1, 1) = nBins;
-	for iOutput = nOutputs : - 1 : 1
+	for iOutput = nOutputs : -1 : 1
 		index(iOutput) = sol(index(iOutput + 1), iOutput);
 	end
-	threshold = thresholdCandidate(index + 1);
-
-	% * Construct DMTC and compute mutual information
-	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold);
-	backscatterRate = rate_backscatter(equivalentDistribution, dmtc);
+	threshold = quantizationSet(index + 1);
 end
 
 
-function [quantizationCost] = quantization_cost(binIndex, equivalentDistribution, dmc)
-	outputDistribution = equivalentDistribution * dmc;
-	jointDistribution = transpose(equivalentDistribution) .* dmc;
-	conditionalDistribution = sum(jointDistribution(:, binIndex), 2) / sum(outputDistribution(binIndex), 2);
-	quantizationCost = - sum(outputDistribution(binIndex)) * sum(conditionalDistribution .* log(conditionalDistribution));
+function [p] = smawk(matrix, r, c)
+	p = zeros(1, length(r));
+	[c] = reduce(matrix, r, c);
+	if length(r) == 1
+		p = c;
+	else
+		[p(2 : 2 : end)] = smawk(matrix, r(2 : 2 : end), c);
+		j = 1;
+		for i = 1 : 2 : length(r)
+			p(i) = c(j);
+			if i < length(r)
+				u = p(i + 1);
+			else
+				u = Inf;
+			end
+			while j <= length(r) && c(j) <= u
+				if matrix(r(i), c(j)) < matrix(r(i), p(i))
+					p(i) = c(j);
+				end
+				j = j + 1;
+			end
+			j = j - 1;
+		end
+	end
+end
+
+function [c] = reduce(matrix, r, c)
+	i = 1;
+	while length(r) < length(c)
+		if matrix(r(i), c(i)) <= matrix(r(i), c(i + 1))
+			if i < length(r)
+				i = i + 1;
+			elseif i == length(r)
+				c(i + 1) = [];
+			end
+		else
+			c(i) = [];
+			if i > 1
+				i = i - 1;
+			end
+		end
+	end
 end

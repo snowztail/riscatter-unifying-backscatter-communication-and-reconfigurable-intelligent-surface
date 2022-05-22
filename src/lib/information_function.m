@@ -5,7 +5,7 @@ function [informationFunction] = information_function(weight, symbolRatio, equiv
     % Input:
 	%	- weight: the relative priority of the primary link
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
+	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent primary channel under each tag input combination
 	%	- noisePower: average noise power at the user
 	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
 	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP

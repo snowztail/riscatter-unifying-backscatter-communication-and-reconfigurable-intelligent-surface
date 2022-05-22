@@ -11,7 +11,7 @@ function [p] = smawk(matrix, r, c)
 			if i < length(r)
 				u = p(i + 1);
 			else
-				u = inf;
+				u = Inf;
 			end
 			while j <= length(r) && c(j) <= u
 				if matrix(r(i), c(j)) < matrix(r(i), p(i))

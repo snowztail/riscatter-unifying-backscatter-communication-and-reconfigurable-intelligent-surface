@@ -1,133 +1,105 @@
-function [threshold, dmtc, backscatterRate] = threshold_bisection(symbolRatio, equivalentChannel, noisePower, nBins, equivalentDistribution, beamformer)
+function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalentDistribution, quantizationSet, binDmc, tolerance)
 	% Function:
-	%	- group the received energy bins into convex decision regions by bisection
+	%	- group received energy bins into convex adjoint decision regions by bisection
     %
     % Input:
-	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- equivalentChannel [(nStates ^ nTags) * nTxs]: equivalent AP-user channels under all backscatter input combinations
-	%	- noisePower: average noise power at the user
-	%	- nBins: number of discretization bins over received signal
-	%	- equivalentDistribution [1 * (nStates ^ nTags)]: equivalent input combination probability distribution
-	%	- beamformer [nTxs * 1]: transmit beamforming vector at the AP
+	%	- symbolRatio: backscatter/primary symbol duration ratio
+	%	- receivePower [nInputs x 1]: average receive power per primary symbol for each tag state tuple
+	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
+	%	- quantizationSet [1 x (nBins + 1)]: boundaries of quantized energy bins
+	%	- binDmc [nInputs x nBins]: discrete memoryless channel whose input is tag state tuple and output is (high-resolution) quantized energy bins
+    %	- tolerance: minimum rate gain per iteration
     %
     % Output:
-	%	- threshold [1 * (nOutputs + 1)]: boundaries of decision regions
-	%	- dmtc [(nStates ^ nTags) * nOutputs]: the transition probability matrix of the backscatter discrete memoryless thresholding MAC
-	%	- backscatterRate: the achievable sum rate for the backscatter link (nats per channel use)
+	%	- threshold [1 x (nOutputs + 1)]: boundaries of decision regions (including 0 and Inf)
     %
     % Comment:
-    %	- For a given t_0 and t_1, the optimal t_j for j = 2, ..., K - 1 can be uniquely determined by bisection
-	%	- Traverse all possible t_1 and choose the corresponding thresholding set that maximizes mutual information
+    %	- for a given t_0 and t_1, the optimal t_j for j = 2, ..., K - 1 can be uniquely determined by bisection
+	%	- traverse all possible t_1 and choose the threshold set that maximizes mutual information
     %
+	% Reference:
+	%	- T. Nguyen and T. Nguyen, “On thresholding quantizer design for mutual information maximization: Optimal Structures and algorithms,” 2020 IEEE 91st Vehicular Technology Conference (VTC2020-Spring), 2020.
+	%
     % Author & Date: Yang (i@snowztail.com), 22 Feb 18
-	% ! sort received power to match decision regions?
+
+	% * Set default tolerance
+	arguments
+		symbolRatio;
+		receivePower;
+		equivalentDistribution;
+		quantizationSet;
+		binDmc;
+		tolerance = 1e-6;
+	end
 
 	% * Get data
-	nOutputs = size(equivalentDistribution, 2);
-	nLevels = nBins + 1;
+	[nInputs, nBins] = size(binDmc);
+	nOutputs = nInputs;
 
-	% * Obtain threshold candidates that delimit output into discrete bins
-	thresholdCandidate = threshold_candidate(symbolRatio, equivalentChannel, noisePower, nBins, beamformer);
-
-	% * Evaluate DMC over all bins
-	dmc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, thresholdCandidate);
-
-	% * Optimal t_0 = 0 and t_K+1 = ∞, traverse all possible t_1
-	backscatterRateSet = zeros(nLevels, 1);
-	thresholdSet = cell(nLevels, 1);
-	for iLevel = 2 : nLevels - 1
-		threshold = zeros(1, nOutputs + 1);
-		threshold(end) = inf;
-		threshold(2) = thresholdCandidate(iLevel);
+	% * Optimal t_0 = 0 and t_{K+1} = ∞, traverse all possible t_1
+	rate = 0;
+	for iBin = 2 : nBins
+		thresholdBisection = zeros(1, nOutputs + 1);
+		[thresholdBisection(2), thresholdBisection(nOutputs + 1)] = deal(quantizationSet(iBin), Inf);
 
 		% * Update t_j for j = 2, ..., K - 1 consequently
 		isValid = true;
 		for iThreshold = 3 : nOutputs
-			% * Compute reference divergence
-			binIndex = find(thresholdCandidate == threshold(iThreshold - 2)) : find(thresholdCandidate == threshold(iThreshold - 1)) - 1;
-			thresholdDensity = threshold_density(symbolRatio, equivalentChannel, beamformer, threshold(iThreshold - 1));
-			divergence = backward_divergence(dmc, equivalentDistribution, binIndex, thresholdDensity);
+			% * Reference threshold pair and divergence
+			rtp = [thresholdBisection(iThreshold - 2), thresholdBisection(iThreshold - 1)];
+			referenceDivergence = divergence_backward(symbolRatio, receivePower, equivalentDistribution, rtp);
 
-			% * Initialize upper and lower bound of threshold
-			lowerThreshold = thresholdCandidate(find(thresholdCandidate == threshold(iThreshold - 1)) + 1);
-			upperThreshold = thresholdCandidate(end - 1);
+			% * Lower and upper threshold pairs and divergences
+			ltp = [thresholdBisection(iThreshold - 1), thresholdBisection(iThreshold - 1) + tolerance];
+			utp = [thresholdBisection(iThreshold - 1), quantizationSet(end - 1)];
+			lowerDivergence = divergence_backward(symbolRatio, receivePower, equivalentDistribution, ltp);
+			upperDivergence = divergence_backward(symbolRatio, receivePower, equivalentDistribution, utp);
 
-			lowerBinIndex = find(thresholdCandidate == threshold(iThreshold - 1)) : find(thresholdCandidate == lowerThreshold) - 1;
-			lowerDivergence = backward_divergence(dmc, equivalentDistribution, lowerBinIndex, thresholdDensity);
-			lowerDeviation = lowerDivergence - divergence;
-
-			upperBinIndex = find(thresholdCandidate == threshold(iThreshold - 1)) : find(thresholdCandidate == upperThreshold) - 1;
-			upperDivergence = backward_divergence(dmc, equivalentDistribution, upperBinIndex, thresholdDensity);
-			upperDeviation = upperDivergence - divergence;
-
-			if (lowerDeviation < 0 && upperDeviation < 0) || (lowerDeviation > 0 && upperDeviation > 0) || isnan(divergence)
+			% * Search next threshold by bisection
+			if sign(lowerDivergence - referenceDivergence) == sign(upperDivergence - referenceDivergence)
 				isValid = false;
-				threshold(iThreshold : end - 1) = nan;
 				break;
 			end
-
-			% * Bisection to guarantee (approximately) equal divergence
+			% assert(sign(lowerDivergence - referenceDivergence) ~= sign(upperDivergence - referenceDivergence));
 			while true
-				% * Tolerable deviation, exit loop and update threshold
-				if abs(lowerDeviation) <= tolerance || abs(upperDeviation) <= tolerance || find(thresholdCandidate == upperThreshold) - find(thresholdCandidate == lowerThreshold) <= 1
-					if abs(lowerDeviation) <= abs(upperDeviation)
-						threshold(iThreshold) = lowerThreshold;
-					else
-						threshold(iThreshold) = upperThreshold;
-					end
+				mtp = 0.5 * (ltp + utp);
+				middleDivergence = divergence_backward(symbolRatio, receivePower, equivalentDistribution, mtp);
+				if abs(middleDivergence - referenceDivergence) <= tolerance || (ltp(end) - utp(end)) <= tolerance
+					thresholdBisection(iThreshold) = mtp(end);
 					break;
 				end
-
-				% * Shrink search interval and update deviations
-				midThreshold = thresholdCandidate(round(mean([lowerBinIndex(end), upperBinIndex(end)])) + 1);
-				midBinIndex = find(thresholdCandidate == threshold(iThreshold - 1)) : find(thresholdCandidate == midThreshold) - 1;
-				midDivergence = backward_divergence(dmc, equivalentDistribution, midBinIndex, thresholdDensity);
-				midDeviation = midDivergence - divergence;
-				if midDeviation == 0
-					threshold(iThreshold) = midThreshold;
-					break;
-				elseif (lowerDeviation < 0 && midDeviation < 0 && upperDeviation > 0) || (lowerDeviation > 0 && midDeviation > 0 && upperDeviation < 0)
-					lowerThreshold = midThreshold;
-					lowerBinIndex = midBinIndex;
-					lowerDeviation = midDeviation;
-				elseif (lowerDeviation < 0 && midDeviation > 0 && upperDeviation > 0) || (lowerDeviation > 0 && midDeviation < 0 && upperDeviation < 0)
-					upperThreshold = midThreshold;
-					upperBinIndex = midBinIndex;
-					upperDeviation = midDeviation;
+				if sign(middleDivergence - referenceDivergence) == sign(lowerDivergence - referenceDivergence)
+					ltp = mtp;
+					lowerDivergence = middleDivergence;
+				else
+					utp = mtp;
+					upperDivergence = middleDivergence;
 				end
 			end
 		end
 
-		% * Construct DMTC and compute mutual information
+		% * Check optimality
 		if isValid
-			dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold);
-			backscatterRateSet(iLevel) = rate_backscatter(equivalentDistribution, dmtc);
-			thresholdSet{iLevel} = threshold;
-		else
-			backscatterRateSet(iLevel) = nan;
-			thresholdSet{iLevel} = threshold;
+			dmacBisection = dmc_integration(symbolRatio, receivePower, thresholdBisection);
+			rateBisection = sum(entr(equivalentDistribution' * dmacBisection) - equivalentDistribution' * entr(dmacBisection));
+			if rateBisection >= rate
+				threshold = thresholdBisection;
+				rate = rateBisection;
+			end
 		end
 	end
-	[backscatterRate, optimalLevel] = max(backscatterRateSet);
-	threshold = thresholdSet{optimalLevel};
-	dmtc = channel_discretization(symbolRatio, equivalentChannel, noisePower, beamformer, threshold);
 end
 
 
-function [divergence] = backward_divergence(dmc, equivalentDistribution, binIndex, thresholdDensity)
-	nInputs = size(equivalentDistribution, 2);
-	backwardThreshold = zeros(nInputs, 1);
-	backwardBin = zeros(nInputs, 1);
-	divergence = zeros(nInputs, 1);
-	for iInput = 1 : nInputs
-		backwardThreshold(iInput) = equivalentDistribution(iInput) * thresholdDensity(iInput) / (equivalentDistribution * thresholdDensity);
-		backwardBin(iInput) = equivalentDistribution(iInput) * sum(dmc(iInput, binIndex), 2) / (equivalentDistribution * sum(dmc(:, binIndex), 2));
-		divergence(iInput) = backwardThreshold(iInput) * log(backwardThreshold(iInput) / backwardBin(iInput));
-	end
-	divergence = sum(divergence, 1);
-end
+function [divergence] = divergence_backward(symbolRatio, receivePower, equivalentDistribution, thresholdPair)
+	% * Forward and backward bin probability
+	fbp = dmc_integration(symbolRatio, receivePower, thresholdPair);
+	bbp = equivalentDistribution .* fbp / (equivalentDistribution' * fbp);
 
-function [thresholdDensity] = threshold_density(symbolRatio, equivalentChannel, beamformer, threshold)
-	receivedPower = abs(equivalentChannel * beamformer) .^ 2 + noisePower;
-	thresholdDensity = (threshold .^ (symbolRatio - 1) .* exp(-threshold ./ receivedPower)) ./ (receivedPower .^ symbolRatio .* gamma(symbolRatio));
+	% * Forward and backward threshold probability
+	ftp = (thresholdPair(end) .^ (symbolRatio - 1) .* exp(-thresholdPair(end) ./ receivePower)) ./ (receivePower .^ symbolRatio .* gamma(symbolRatio));
+	btp = equivalentDistribution .* ftp / (equivalentDistribution' * ftp);
+
+	% * Divergence of backward probabilities
+	divergence = sum(rel_entr(btp, bbp));
 end

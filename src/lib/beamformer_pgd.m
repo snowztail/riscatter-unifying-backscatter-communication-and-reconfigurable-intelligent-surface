@@ -1,4 +1,4 @@
-function [beamformer, weightedSumRate] = beamformer_pgd(weight, symbolRatio, equivalentChannel, txPower, noisePower, equivalentDistribution, threshold, step, tolerance)
+function [beamformer, weightedSumRate] = beamformer_pgd(weight, symbolRatio, equivalentChannel, transmitPower, noisePower, equivalentDistribution, threshold, step, tolerance)
 
 
 	% * Declare default tolerance
@@ -6,7 +6,7 @@ function [beamformer, weightedSumRate] = beamformer_pgd(weight, symbolRatio, equ
 		weight;
 		symbolRatio;
 		equivalentChannel;
-		txPower;
+		transmitPower;
 		noisePower;
 		equivalentDistribution;
 		threshold;
@@ -22,9 +22,9 @@ function [beamformer, weightedSumRate] = beamformer_pgd(weight, symbolRatio, equ
 	nTxs = size(equivalentChannel, 2);
 
 	% * Initialize beamformer
-	beamformer = sqrt(txPower) * ctranspose(equivalentDistribution * equivalentChannel) / norm(equivalentDistribution * equivalentChannel);
+	beamformer = sqrt(transmitPower) * ctranspose(equivalentDistribution * equivalentChannel) / norm(equivalentDistribution * equivalentChannel);
 	a = rand(1, nTxs) + 1i * rand(1, nTxs);
-	beamformer = sqrt(txPower) * ctranspose(a) / norm(a);
+	beamformer = sqrt(transmitPower) * ctranspose(a) / norm(a);
 	weightedSumRate = weighted_sum_rate_local(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, threshold);
 
 	% * Projected gradient descent
@@ -52,8 +52,8 @@ function [beamformer, weightedSumRate] = beamformer_pgd(weight, symbolRatio, equ
 		beamformer = beamformer + step * gradient;
 
 		% * Project onto subspace (l2-norm ball)
-% 		beamformer = sqrt(txPower) * beamformer / max(1, norm(beamformer));
-		beamformer = sqrt(txPower) * beamformer / max(sqrt(txPower), norm(beamformer));
+% 		beamformer = sqrt(transmitPower) * beamformer / max(1, norm(beamformer));
+		beamformer = sqrt(transmitPower) * beamformer / max(sqrt(transmitPower), norm(beamformer));
 
 		% * Update weighted sum rate
 		weightedSumRate = weighted_sum_rate_local(weight, symbolRatio, equivalentChannel, noisePower, equivalentDistribution, beamformer, threshold);

@@ -378,7 +378,7 @@
 			\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
 			\label{eq:backscatter_modulation}
 		\end{equation}
-		where $\alpha \in [0,1]$ models the harvest-backscatter ratio at the direction of interest.
+		where $\alpha \in [0,1]$ models the amplitude scatter ratio at the direction of interest.
 
 		% When the \gls{csi} and reflection alphabet $\{\Gamma_1,\ldots,\Gamma_M\}$ are available at the reader, the tag can be successfully decoded based on the received signal.
 
@@ -421,7 +421,8 @@
 		In the secondary backscatter system, the \gls{ap} acts as the carrier emitter, the $K$ nearby single-antenna tags modulate their information over the reradiated \gls{rf} signals, and the user receives and decodes the backscatter messages.
 		Denote the \gls{ap}-\gls{ue} direct channel as $\boldsymbol{h}_{\mathrm{D}}^H \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-\gls{tg} $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, the \gls{tg} $k$-\gls{ue} backward channel as $h_{\mathrm{B},k}$, and define the cascaded channel of tag $k$ as $\boldsymbol{h}_{\mathrm{C},k}^H \triangleq h_{\mathrm{B},k} \boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$.
 		For simplicity, we consider a quasi-static block fading model where the channel response remain constant within each coherence interval and vary independently between consecutive blocks.
-		Since backscatter modulation involves load switching, tags typically transmit at much lower rate, and we assume the backscatter symbol period is $N \in \mathbb{Z}_{++}$ times the primary symbol period.
+		% Since backscatter modulation involves load switching, tags typically transmit at much lower rate, and we assume the backscatter symbol period is $N \in \mathbb{Z}_{++}$ times the primary symbol period.
+		Since backscatter modulation involves load switching, tags typically transmit at much lower rate, and we assume the backscatter symbol length is $N \in \mathbb{Z}_{++}$ times the primary symbol length.
 		We also assume the direct channel and all cascaded channels can be estimated and fed back to the \gls{ap}.
 		\begin{footnote}
 			Due to the lack of \gls{rf} chains at the passive tag, accurate and efficient \gls{csi} acquisition at the \gls{ap} can be challenging.
@@ -506,6 +507,7 @@
 
 		Once the tag input combination is successfully decoded, the backscatter uncertainty can be eliminated and the equivalent channel for primary transmission can be updated by \eqref{eq:equivalent_channel}.
 		Similar to above, the primary information function of input combination $x_{m_{\mathcal{K}}}$ is
+		% TODO notation
 		\begin{equation}
 			I_{\mathrm{P}}(x_{m_{\mathcal{K}}};\boldsymbol{y}) \triangleq N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right),
 			\label{eq:primary_information_function}

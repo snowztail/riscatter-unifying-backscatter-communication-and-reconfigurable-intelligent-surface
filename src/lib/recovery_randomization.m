@@ -60,7 +60,7 @@ function [distribution, equivalentDistribution] = recovery_randomization(symbolR
 			variable kernelCoefficient(nKernels, 1);
 			expression approximateDistribution(size(jointDistribution));
 			for iKernel = 1 : nKernels
-				approximateDistribution = approximateDistribution + kernelCoefficient(iKernel) * outer_product(kernelVector(:, :, iKernel));
+				approximateDistribution = approximateDistribution + kernelCoefficient(iKernel) * product_outer(kernelVector(:, :, iKernel));
 			end
 			relativeEntropy = sum(vec(rel_entr(jointDistribution, approximateDistribution)));
 			minimize relativeEntropy
@@ -76,7 +76,7 @@ function [distribution, equivalentDistribution] = recovery_randomization(symbolR
 				kernelVector = cvx(kernelVector);
 				kernelVector(:, iTag, :) = newVector;
 				for iKernel = 1 : nKernels
-					approximateDistribution = approximateDistribution + kernelCoefficient(iKernel) * outer_product(kernelVector(:, :, iKernel));
+					approximateDistribution = approximateDistribution + kernelCoefficient(iKernel) * product_outer(kernelVector(:, :, iKernel));
 				end
 				relativeEntropy = sum(vec(rel_entr(jointDistribution, approximateDistribution)));
 				minimize relativeEntropy
@@ -120,7 +120,7 @@ function [distribution, equivalentDistribution] = recovery_randomization(symbolR
 end
 
 
-function [outerProduct] = outer_product(matrix)
+function [outerProduct] = product_outer(matrix)
 	nVectors = size(matrix, 2);
     outerProduct = matrix(:, 1);
 	for iVector = 2 : nVectors

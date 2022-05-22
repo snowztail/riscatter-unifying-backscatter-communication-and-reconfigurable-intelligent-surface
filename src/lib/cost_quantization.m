@@ -3,6 +3,7 @@ function [quantizationCost] = cost_quantization(binIndex, jointDistribution, out
 	%	- compute quantization cost of grouping indexed energy bins into a decision region
     %
     % Input:
+	%	- binIndex: index of bins to be grouped into a decision region
 	%	- jointDistribution [nInputs x nBins]: joint probability distribution of input tag distribution tuples and output energy bins
 	%	- outputDistribution [1 x nBins]: probability distribution of output energy bins
     %

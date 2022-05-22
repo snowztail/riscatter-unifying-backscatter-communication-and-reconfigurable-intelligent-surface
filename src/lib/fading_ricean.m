@@ -10,6 +10,9 @@ function [fading] = fading_ricean(nTxs, nRxs, factor, aoa)
     %
     % Output:
 	%	- fading [nTxs x nRxs]: small-scale signal attenuation
+	%
+	% Comment:
+	%	- does not consider Doppler effect
     %
     % Author & Date: Yang (i@snowztail.com), 22 May 10
 

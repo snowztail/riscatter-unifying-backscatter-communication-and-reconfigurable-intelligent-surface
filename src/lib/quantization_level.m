@@ -1,6 +1,6 @@
-function [quantizationSet] = quantization_set(symbolRatio, receivePower, nBins, confidence)
+function [quantizationLevel] = quantization_level(symbolRatio, receivePower, nBins, confidence)
 	% Function:
-    %	- determine (high-resolution) quantization threshold set to quantize receive energy into numerous bins
+    %	- determine (high-resolution) quantization level set to quantize receive energy into numerous bins
     %
     % Input:
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
@@ -9,7 +9,7 @@ function [quantizationSet] = quantization_set(symbolRatio, receivePower, nBins, 
     %	- confidence: number of standard deviations from mean (i.e., parameter k in Chebyshev's inequality)
     %
     % Output:
-	%	- quantizationSet [1 x (nBins + 1)]: boundaries of quantized energy bins
+	%	- quantizationLevel [1 x (nBins + 1)]: boundaries of quantized energy bins
     %
     % Comment:
 	%	- quantized receive energy bins should be grouped to formulate decision regions
@@ -33,8 +33,8 @@ function [quantizationSet] = quantization_set(symbolRatio, receivePower, nBins, 
 
 	% * Ensure non-negative thresholds
 	if lowerBound <= 0
-		quantizationSet = [linspace(0, upperBound, nBins), Inf];
+		quantizationLevel = [linspace(0, upperBound, nBins), Inf];
 	else
-		quantizationSet = [0, linspace(lowerBound, upperBound, nBins - 1), Inf];
+		quantizationLevel = [0, linspace(lowerBound, upperBound, nBins - 1), Inf];
 	end
 end

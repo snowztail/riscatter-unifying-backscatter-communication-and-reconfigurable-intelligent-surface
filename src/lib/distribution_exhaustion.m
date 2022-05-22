@@ -9,7 +9,6 @@ function [distribution, equivalentDistribution] = distribution_exhaustion(nTags,
 	%	- snr [nInputs x 1]: average receive signal-to-noise ratio per primary symbol for each tag state tuple
 	%	- dmac [nInputs x nOutputs]: discrete memoryless thresholding multiple access channel whose input and output are tag state tuple
 	%	- resolution: gap between neighbor search levels
-    %	- tolerance: minimum rate gain per iteration
     %
     % Output:
 	%	- distribution [nStates x nTags]: tag input (i.e., state) probability distribution

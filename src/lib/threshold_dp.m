@@ -1,10 +1,10 @@
-function [threshold] = threshold_dp(equivalentDistribution, quantizationSet, binDmc)
+function [threshold] = threshold_dp(equivalentDistribution, quantizationLevel, binDmc)
 	% Function:
 	%	- group received energy bins into convex adjoint decision regions by dynamic programming
     %
     % Input:
 	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
-	%	- quantizationSet [1 x (nBins + 1)]: boundaries of quantized energy bins
+	%	- quantizationLevel [1 x (nBins + 1)]: boundaries of quantized energy bins
 	%	- binDmc [nInputs x nBins]: discrete memoryless channel whose input is tag state tuple and output is (high-resolution) quantized energy bins
     %
     % Output:
@@ -46,5 +46,5 @@ function [threshold] = threshold_dp(equivalentDistribution, quantizationSet, bin
 	for iOutput = nOutputs : -1 : 1
 		index(iOutput) = sol(index(iOutput + 1), iOutput);
 	end
-	threshold = quantizationSet(index + 1);
+	threshold = quantizationLevel(index + 1);
 end

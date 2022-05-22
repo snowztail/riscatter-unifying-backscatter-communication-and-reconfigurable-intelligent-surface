@@ -1,4 +1,4 @@
-function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalentDistribution, quantizationSet, binDmc, tolerance)
+function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalentDistribution, quantizationLevel, binDmc, tolerance)
 	% Function:
 	%	- group received energy bins into convex adjoint decision regions by bisection
     %
@@ -6,7 +6,7 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 	%	- symbolRatio: backscatter/primary symbol duration ratio
 	%	- receivePower [nInputs x 1]: average receive power per primary symbol for each tag state tuple
 	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
-	%	- quantizationSet [1 x (nBins + 1)]: boundaries of quantized energy bins
+	%	- quantizationLevel [1 x (nBins + 1)]: boundaries of quantized energy bins
 	%	- binDmc [nInputs x nBins]: discrete memoryless channel whose input is tag state tuple and output is (high-resolution) quantized energy bins
     %	- tolerance: minimum rate gain per iteration
     %
@@ -27,7 +27,7 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 		symbolRatio;
 		receivePower;
 		equivalentDistribution;
-		quantizationSet;
+		quantizationLevel;
 		binDmc;
 		tolerance = 1e-6;
 	end
@@ -40,7 +40,7 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 	rate = 0;
 	for iBin = 2 : nBins
 		thresholdBisection = zeros(1, nOutputs + 1);
-		[thresholdBisection(2), thresholdBisection(nOutputs + 1)] = deal(quantizationSet(iBin), Inf);
+		[thresholdBisection(2), thresholdBisection(nOutputs + 1)] = deal(quantizationLevel(iBin), Inf);
 
 		% * Update t_j for j = 2, ..., K - 1 consequently
 		isValid = true;
@@ -51,7 +51,7 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 
 			% * Lower and upper threshold pairs and divergences
 			ltp = [thresholdBisection(iThreshold - 1), thresholdBisection(iThreshold - 1) + tolerance];
-			utp = [thresholdBisection(iThreshold - 1), quantizationSet(end - 1)];
+			utp = [thresholdBisection(iThreshold - 1), quantizationLevel(end - 1)];
 			lowerDivergence = divergence_backward(symbolRatio, receivePower, equivalentDistribution, ltp);
 			upperDivergence = divergence_backward(symbolRatio, receivePower, equivalentDistribution, utp);
 

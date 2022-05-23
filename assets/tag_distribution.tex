@@ -1,0 +1,34 @@
+\begin{tikzpicture}
+    \begin{groupplot}
+        [group style = {%
+        rows = 3,
+        group name = plots,
+%         xlabels at = edge bottom,
+        x descriptions at = edge bottom,
+        y descriptions at = edge left,
+        vertical sep = 15
+        },
+        ybar,
+        xmin = 0,
+        xmax = 4,
+        xtick = data,
+        ymin = 0,
+        ymax = 1,
+        xlabel={Reflection State},
+        ylabel={Probability},
+        enlarge x limits = {value = 0.25, upper},
+        enlarge y limits = {value = 0.1, upper},
+        width = 10cm,
+        height = 4cm
+        ]
+        \nextgroupplot
+        \addplot[blue,fill=blue!30!white] coordinates {(1,0.25) (2,0.25) (3,0.25) (4,0.25)};
+        \legend{SR}
+        \nextgroupplot
+        \addplot[red,fill=red!30!white] coordinates {(1,0) (2,1) (3,0) (4,0)};
+        \legend{IRS}
+        \nextgroupplot
+        \addplot[brown!60!black!,fill=brown!30!white] coordinates {(1,0.2) (2,0.4) (3,0.3) (4,0.1)};
+        \legend{Metascatter}
+    \end{groupplot}
+\end{tikzpicture}

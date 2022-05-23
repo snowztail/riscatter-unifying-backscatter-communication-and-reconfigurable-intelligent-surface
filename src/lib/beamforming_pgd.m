@@ -38,9 +38,6 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		beta = 0.5;
 	end
 
-	% ! Use finite threshold to avoid precision issue of incomplete gamma function
-	threshold(end) = 10 * threshold(end - 1);
-
 	% * Initialize beamforming vector as MRT to ergodic equivalent channel
 	beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
 % 	beamforming = randn(size(beamforming)) + 1i * randn(size(beamforming));

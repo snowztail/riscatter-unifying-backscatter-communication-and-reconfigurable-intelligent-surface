@@ -1,11 +1,10 @@
-function [threshold] = threshold_smawk(equivalentDistribution, quantizationLevel, binDmc)
+function [threshold] = threshold_smawk(equivalentDistribution, thresholdDomain, binDmc)
 	% Function:
 	%	- group received energy bins into convex adjoint decision regions by dynamic programming accelerated by SMAWK algorithm
     %
     % Input:
 	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
-	%	- quantizationLevel [1 x (nBins + 1)]: boundaries of quantized energy bins
-	%	- binDmc [nInputs x nBins]: discrete memoryless channel whose input is tag state tuple and output is (high-resolution) quantized energy bins
+	%	- thresholdDomain [1 x (nBins + 1)]: boundaries of quantized energy bins as domain of decision thresholds	%	- binDmc [nInputs x nBins]: discrete memoryless channel whose input is tag state tuple and output is (high-resolution) quantized energy bins
     %
     % Output:
 	%	- threshold [1 x (nOutputs + 1)]: boundaries of decision regions (including 0 and Inf)
@@ -64,7 +63,7 @@ function [threshold] = threshold_smawk(equivalentDistribution, quantizationLevel
 	for iOutput = nOutputs : -1 : 1
 		index(iOutput) = sol(index(iOutput + 1), iOutput);
 	end
-	threshold = quantizationLevel(index + 1);
+	threshold = thresholdDomain(index + 1);
 end
 
 

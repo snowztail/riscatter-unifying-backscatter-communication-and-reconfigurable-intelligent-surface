@@ -17,10 +17,10 @@ symbolRatio = 10;
 constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
 % constellation = transpose(exp(1i * 2 * pi * (0 : nStates - 1) / nStates));
 % average transmit power
-% transmitPower = db2pow(6);
-transmitPower = 1e3;
+transmitPower = db2pow(6);
+% transmitPower = 1e3;
 % average noise power
-noisePower = db2pow(-160);
+noisePower = db2pow(-100);
 % path loss exponents
 directExponent = 2.6;
 forwardExponent = 2.4;
@@ -36,9 +36,13 @@ backwardFactor = 5;
 
 %% * Layout
 % coordinates
-ap = [5; 0];
+% ap = [5; 0];
+% user = [0; 0];
+% [tag(1, :), tag(2, :)] = pol2cart(2 * pi * rand(1, nTags), sqrt(1 * rand(1, nTags)));
+ap = [2; 0];
 user = [0; 0];
-[tag(1, :), tag(2, :)] = pol2cart(2 * pi * rand(1, nTags), sqrt(1 * rand(1, nTags)));
+tag(1, :) = ones(1, nTags);
+tag(2, :) = (1 : nTags) - mean(1 : nTags);
 % distances
 directDistance = norm(ap - user);
 forwardDistance = vecnorm(ap - tag);
@@ -46,6 +50,7 @@ backwardDistance = vecnorm(tag - user);
 
 %% * Algorithm
 % relative priority of primary link
-weightSet = 0 : 0.05 : 1;
+% weightSet = 0.1 : 0.05 : 1;
+weightSet = 0 : 1e-4 : 1;
 % number of weights on rate region boundary
 nWeights = length(weightSet);

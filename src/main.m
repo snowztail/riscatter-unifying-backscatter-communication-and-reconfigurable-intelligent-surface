@@ -10,6 +10,13 @@ equivalentChannel = directChannel + sqrt(scatterRatio) * cascadedChannel * trans
 
 % * Evaluate rate region
 rate = zeros(2, nWeights);
+distribution = zeros(nStates, nTags, nWeights);
+threshold = zeros(nWeights, nOutputs + 1);
+beamforming = zeros(nTxs, nWeights);
 for iWeight = 1 : nWeights
-	[rate, inputDistribution, threshold, beamformer] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weightSet(iWeight), equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
+	[rate(:, iWeight), distribution(:, :, iWeight), threshold(iWeight, :), beamforming(:, iWeight)] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weightSet(iWeight), equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
+	% TODO fine tune tolerance
+	if rate(2, iWeight) <= tolerance
+		break;
+	end
 end

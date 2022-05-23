@@ -61,7 +61,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	% dmac = normalize(rand(size(dmac)), 2, 'norm', 1);
 
 	% * Block coordinate descent
-	wsr = 0;
+	wsr = rate_weighted(symbolRatio, weight, snr, equivalentDistribution, dmac);
 	isConverged = false;
 	while ~isConverged
 		% * Update iteration index
@@ -98,15 +98,15 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		% * Decision threshold
 		receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
 		snr = receivePower / noisePower;
-		quantizationLevel = quantization_level(symbolRatio, receivePower);
-		binDmc = dmc_integration(symbolRatio, receivePower, quantizationLevel);
+		thresholdDomain = domain_threshold(symbolRatio, receivePower);
+		binDmc = dmc_integration(symbolRatio, receivePower, thresholdDomain);
 		switch options.Threshold
 		case 'smawk'
-			threshold = threshold_smawk(equivalentDistribution, quantizationLevel, binDmc);
+			threshold = threshold_smawk(equivalentDistribution, thresholdDomain, binDmc);
 		case 'dp'
-			threshold = threshold_dp(equivalentDistribution, quantizationLevel, binDmc);
+			threshold = threshold_dp(equivalentDistribution, thresholdDomain, binDmc);
 		case 'bisection'
-			threshold = threshold_bisection(symbolRatio, receivePower, equivalentDistribution, quantizationLevel, binDmc);
+			threshold = threshold_bisection(symbolRatio, receivePower, equivalentDistribution, thresholdDomain, binDmc);
 		case 'ml'
 			threshold = threshold_ml(symbolRatio, receivePower);
 		end

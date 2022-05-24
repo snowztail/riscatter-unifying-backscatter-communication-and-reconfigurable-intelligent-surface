@@ -38,7 +38,7 @@
 \listfiles
 \interdisplaylinepenalty=2500
 \pgfplotsset{compat=newest}
-\usepgfplotslibrary{patchplots}
+\usepgfplotslibrary{patchplots,groupplots}
 \newtheorem{proposition}{Proposition}
 \newtheorem{remark}{Remark}
 \newtheorem{theorem}{Theorem}
@@ -47,7 +47,7 @@
 \DeclareSIUnit{\beli}{Bi}
 \DeclareSIUnit{\dBi}{\deci\beli}
 \ctikzset{american}
-\usetikzlibrary{arrows,calc,matrix,patterns,positioning}
+\usetikzlibrary{arrows,calc,matrix,patterns,pgfplots.groupplots,plotmarks,positioning}
 
 \DeclarePairedDelimiterX{\infdivx}[2]{(}{)}{%
 	#1\;\delimsize\|\;#2%
@@ -383,6 +383,58 @@
 		% When the \gls{csi} and reflection alphabet $\{\Gamma_1,\ldots,\Gamma_M\}$ are available at the reader, the tag can be successfully decoded based on the received signal.
 
 
+		\begin{figure}[!t]
+			\centering
+			\resizebox{0.95\columnwidth}{!}{
+				\begin{tikzpicture}
+					\begin{groupplot}
+						[group style={%
+									rows=3,
+									group name=plots,
+									x descriptions at=edge bottom,
+									y descriptions at=edge left,
+									vertical sep=15
+								},
+							ybar,
+							xmin=0,
+							xmax=4,
+							xtick={1,2,3,4},
+							ymin=0,
+							ymax=1,
+							xlabel={Reflection State},
+							ylabel={Probability},
+							enlarge x limits={value=0.25,upper},
+							enlarge y limits={value=0.1,upper},
+							width=10cm,
+							height=4cm,
+							every axis plot/.append style={bar shift=0},
+							legend style={pattern=none}
+						]
+						\nextgroupplot
+						\addplot[blue,fill=blue!30!white] coordinates {(-1,-1)};
+						\addplot[blue,fill=blue!30!white,postaction={pattern=horizontal lines},pattern color=.] coordinates {(1,0.25)};
+						\addplot[blue,fill=blue!30!white,postaction={pattern=north west lines},pattern color=.] coordinates {(2,0.25)};
+						\addplot[blue,fill=blue!30!white,postaction={pattern=vertical lines},pattern color=.] coordinates {(3,0.25)};
+						\addplot[blue,fill=blue!30!white,postaction={pattern=north east lines},pattern color=.] coordinates {(4,0.25)};
+						\legend{SR}
+						\nextgroupplot
+						\addplot[red,fill=red!30!white] coordinates {(-1,-1)};
+						\addplot[red,fill=red!30!white,postaction={pattern=horizontal lines},pattern color=.] coordinates {(1,0)};
+						\addplot[red,fill=red!30!white,postaction={pattern=north west lines},pattern color=.] coordinates {(2,1)};
+						\addplot[red,fill=red!30!white,postaction={pattern=vertical lines},pattern color=.] coordinates {(3,0)};
+						\addplot[red,fill=red!30!white,postaction={pattern=north east lines},pattern color=.] coordinates {(4,0)};
+						\legend{IRS}
+						\nextgroupplot
+						\addplot[brown,fill=brown!30!white] coordinates {(-1,-1)};
+						\addplot[brown,fill=brown!30!white,postaction={pattern=horizontal lines},pattern color=.] coordinates {(1,0.2)};
+						\addplot[brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.] coordinates {(2,0.4)};
+						\addplot[brown,fill=brown!30!white,postaction={pattern=vertical lines},pattern color=.] coordinates {(3,0.3)};
+						\addplot[brown,fill=brown!30!white,postaction={pattern=north east lines},pattern color=.] coordinates {(4,0.1)};
+						\legend{Metascatter}
+					\end{groupplot}
+				\end{tikzpicture}
+			}
+		\end{figure}
 
 
 

@@ -1,0 +1,83 @@
+\begin{tikzpicture}
+	% SR
+	\draw [blue,fill=blue!30!white,postaction={pattern=north west lines},pattern color=.](0,0) rectangle ++(1,1);
+	\draw [blue,fill=blue!30!white,postaction={pattern=vertical lines},pattern color=.](1,0) rectangle ++(1,1);
+	\draw [blue,fill=blue!30!white,postaction={pattern=horizontal lines},pattern color=.](2,0) rectangle ++(1,1);
+	\draw [blue,fill=blue!30!white,postaction={pattern=north east lines},pattern color=.](3,0) rectangle ++(1,1);
+	\draw [blue,fill=blue!30!white,postaction={pattern=north east lines},pattern color=.](4,0) rectangle ++(1,1);
+	\draw [blue,fill=blue!30!white,postaction={pattern=vertical lines},pattern color=.](5,0) rectangle ++(1,1);
+	\draw [blue,fill=blue!30!white,postaction={pattern=horizontal lines},pattern color=.](6,0) rectangle ++(1,1);
+	\draw [blue,fill=blue!30!white,postaction={pattern=north west lines},pattern color=.](7,0) rectangle ++(1,1);
+	\node[font=\LARGE] at (-0.75,0.5) {$\cdots$};
+	\node[font=\LARGE] at (8.75,0.5) {$\cdots$};
+	\node[font=\LARGE] at (-3.75,0.5) {SR};
+
+	% IRS
+	\foreach \x in {0,...,7}{
+			\draw [red,fill=red!30!white,postaction={pattern=north west lines},pattern color=.](\x,-1.5) rectangle ++(1,1);
+		}
+	\node[font=\LARGE] at (-0.75,-1) {$\cdots$};
+	\node[font=\LARGE] at (8.75,-1) {$\cdots$};
+	\node[font=\LARGE] at (-3.75,-1) {IRS};
+
+
+	% SR
+	\draw [brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.](0,-3) rectangle ++(1,1);
+	\draw [brown,fill=brown!30!white,postaction={pattern=vertical lines},pattern color=.](1,-3) rectangle ++(1,1);
+	\draw [brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.](2,-3) rectangle ++(1,1);
+	\draw [brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.](3,-3) rectangle ++(1,1);
+	\draw [brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.](4,-3) rectangle ++(1,1);
+	\draw [brown,fill=brown!30!white,postaction={pattern=vertical lines},pattern color=.](5,-3) rectangle ++(1,1);
+	\draw [brown,fill=brown!30!white,postaction={pattern=horizontal lines},pattern color=.](6,-3) rectangle ++(1,1);
+	\draw [brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.](7,-3) rectangle ++(1,1);
+	\node[font=\LARGE] at (-0.75,-2.5) {$\cdots$};
+	\node[font=\LARGE] at (8.75,-2.5) {$\cdots$};
+	\node[font=\LARGE] at (-3.75,-2.5) {Metascatter};
+
+
+	\draw [pattern=horizontal lines](11,0.5) rectangle ++(0.5,0.5);
+	\draw [pattern=north west lines](11,-2/3) rectangle ++(0.5,0.5);
+	\draw [pattern=vertical lines](11,-11/6) rectangle ++(0.5,0.5);
+	\draw [pattern=north east lines](11,-3) rectangle ++(0.5,0.5);
+	\node[font=\Large,right] at (11.75,0.75){State 1};
+	\node[font=\Large,right] at (11.75,-5/12){State 2};
+	\node[font=\Large,right] at (11.75,-19/12){State 3};
+	\node[font=\Large,right] at (11.75,-2.75){State 4};
+
+% 	\draw [pattern=horizontal lines](11,0.5) rectangle ++(0.5,0.5);
+% 	\draw [pattern=north west lines](11,-0.625) rectangle ++(0.5,0.5);
+% 	\draw [pattern=vertical lines](11,-1.75) rectangle ++(0.5,0.5);
+% 	\draw [pattern=north east lines](11,-2.875) rectangle ++(0.5,0.5);
+% 	\node[font=\Large,right] at (11.75,0.75){State 1};
+% 	\node[font=\Large,right] at (11.75,-0.375){State 2};
+% 	\node[font=\Large,right] at (11.75,-1.5){State 3};
+% 	\node[font=\Large,right] at (11.75,-2.625){State 4};
+
+
+	% Time block
+	\foreach \x in {0,...,7}{
+			\draw (\x,1.75) rectangle ++(1,0.5);
+		}
+	\node[font=\LARGE] at (-0.75,2) {$\cdots$};
+	\node[font=\LARGE] at (8.75,2) {$\cdots$};
+	\node[font=\LARGE] at (-3.75,2) {Backscatter Block};
+% 	\path (3,1.75) rectangle ++(1,0.5) node[midway,font=\Large] {$T_c$};
+
+	\draw (11,1.875) rectangle ++(0.5,0.25);
+	\node[font=\Large,right] at (11.75,2){$T_c$};
+
+	\draw (11.125,3) rectangle ++(0.25,0.25);
+	\node[font=\Large,right] at (11.75,3.125){$T_s$};
+
+
+	\foreach \x in {0,...,31}{
+			\draw (0.25*\x,3) rectangle ++(0.25,0.25);
+		}
+	\node[font=\LARGE] at (-0.75,3.125) {$\cdots$};
+	\node[font=\LARGE] at (8.75,3.125) {$\cdots$};
+	\node[font=\LARGE] at (-3.75,3.125) {Primary Block};
+
+% 	\draw[dashed] (3.5,3.25) -- (3.25,3.5);
+% 	\draw[dashed] (3.75,3.25) -- (4,3.5);
+% 	\node[font=\Large,above] at (3.625,3.375){$T_s$};
+\end{tikzpicture}

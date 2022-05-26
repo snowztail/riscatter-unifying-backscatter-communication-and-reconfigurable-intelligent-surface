@@ -5,7 +5,7 @@
 					group name=plots,
 					x descriptions at=edge bottom,
 					y descriptions at=edge left,
-					vertical sep=15
+					vertical sep=10
 				},
 			ybar,
 			xmin=0,
@@ -14,13 +14,11 @@
 			ymin=0,
 			ymax=1,
 			xlabel={Reflection State},
-			ylabel={Probability},
 			enlarge x limits={value=0.25,upper},
 			enlarge y limits={value=0.1,upper},
 			width=10cm,
-			height=4cm,
-			every axis plot/.append style={bar shift=0},
-			legend style={pattern=none}
+			height=3cm,
+			every axis plot/.append style={bar shift=0}
 		]
 		\nextgroupplot
 		\addplot[blue,fill=blue!30!white] coordinates {(-1,-1)};
@@ -29,7 +27,7 @@
 		\addplot[blue,fill=blue!30!white,postaction={pattern=vertical lines},pattern color=.] coordinates {(3,0.25)};
 		\addplot[blue,fill=blue!30!white,postaction={pattern=north east lines},pattern color=.] coordinates {(4,0.25)};
 		\legend{SR}
-		\nextgroupplot
+		\nextgroupplot[ylabel={Probability Distribution}]
 		\addplot[red,fill=red!30!white] coordinates {(-1,-1)};
 		\addplot[red,fill=red!30!white,postaction={pattern=horizontal lines},pattern color=.] coordinates {(1,0)};
 		\addplot[red,fill=red!30!white,postaction={pattern=north west lines},pattern color=.] coordinates {(2,1)};

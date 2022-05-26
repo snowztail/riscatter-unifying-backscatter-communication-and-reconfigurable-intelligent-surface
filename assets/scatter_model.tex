@@ -1,0 +1,14 @@
+\begin{circuitikz}[transform shape]
+	\tikzstyle{every node}=[font=\Large]
+	\draw (0,0) node[bareantenna](bareantenna){};
+	\draw (bareantenna.west) ++(-1.5,0) node[waves](WI){};
+	\draw (WI.north east) ++(0.25,0) node[font=\Large]{$\vec{E}_{\mathrm{I}}$};
+	\draw (WI.south east) ++(0.25,0) node[font=\Large]{$\vec{H}_{\mathrm{I}}$};
+	\draw (bareantenna.east) ++(0.875,0) node[waves](WR){};
+	\draw (WR.north east) ++(0.35,0) node[font=\Large]{$\vec{E}_m$};
+	\draw (WR.south east) ++(0.35,0) node[font=\Large]{$\vec{H}_m$};
+	\draw (bareantenna)
+	to [R=$Z_{\mathrm{A}}$] ++(0,-1.5) node[rotary switch=4 in 90 wiper 30,anchor=ext center,rotate=270](SW){};
+	\draw (SW.cout 2) node[below=0.1cm,font=\Large]{$m$}
+	to [R=$Z_m$] ++(2,0) node[ground]{};
+\end{circuitikz}

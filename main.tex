@@ -135,8 +135,8 @@
 
 \begin{abstract}
 	Backscatter allows wireless nodes to harvest energy from, modulate information over, and reconfigure propagation of surrounding radio waves.
-	We introduce the concept of Metascatter, which adapts the input probability distribution of a finite-state backscatter device based on Channel State Information (CSI), to simultaneously act as parasitic source of Symbiotic Radio (SR) that conveys sensor data and reflecting element of Intelligent Reflecting Surface (IRS) that assists legacy transmission.
-	Using shared spectrum, energy, and infrastructures, fully cognitive networks can be built over Metascatter, and we consider a basic scenario where a multi-antenna Access Point (AP) and multiple Metascatter simultaneously transmit to a single-antenna user.
+	We uniquely introduce the concept of Metascatter, which adapts the input probability distribution of a finite-state backscatter device based on Channel State Information (CSI), to simultaneously act as parasitic source of Symbiotic Radio (SR) that conveys sensor data, and reflecting element of Intelligent Reflecting Surface (IRS) that assists legacy transmission.
+	Using shared spectrum, energy, and infrastructures, fully cognitive networks can be built over Metascatter, and we consider a fundamental scenario where a multi-antenna Access Point (AP) and multiple Metascatter simultaneously transmit to a single-antenna user.
 	Since tags involve load switching and the primary and backscatter messages are multiplied (instead of superposed) in the received signal, it is assumed the user employ joint energy detection on all tags, then model their reflection pattern within the equivalent CSI for primary decoding.
 	We characterize the achievable primary-(sum-)backscatter rate region through a joint optimization of transmit beamforming vector at the AP, input probability distribution at the tags, and energy detection regions at the user.
 	A suboptimal solution is provided by the Block Coordinate Descent (BCD) method, where the beamforming, input distribution, and decision thresholds are obtained by Successive Convex Approximation (SCA), Karush–Kuhn–Tucker (KKT), and Dynamic Programming (DP), respectively.
@@ -198,150 +198,25 @@
 \end{section}
 
 \begin{section}{Backscatter Principles}
-	% \begin{figure}[!t]
-	% 	\centering
-	% 	\resizebox{0.6\columnwidth}{!}{
-	% 		\begin{circuitikz}[transform shape]
-	% 			\coordinate (O) at (0,0);
-	% 			\node[block,from={O to $(O) + (6.375,3.25)$}](T){};
-	% 			\draw (0,1.75)
-	% 			to[short] ++(-0.875,0)
-	% 			to[short] ++(0,0.5) node[bareantenna](A){Bx};
-	% 			\draw (0,1.75)
-	% 			to[short,-*] ++(0.25,0) coordinate(J);
-	% 			\draw (J)
-	% 			to[short] ++(0,1)
-	% 			to[short] ++(0.5,0) coordinate(J1);
-	% 			\node[block,from={$(J1) + (0,-0.25)$ to $(J1) + (2.5,0.25)$}](R){Rectifier};
-	% 			\draw (J)
-	% 			to[short] ++(0.5,0) coordinate(J2);
-	% 			\node[block,from={$(J2) + (0,-0.25)$ to $(J2) + (2.5,0.25)$}](D){Demodulator};
-	% 			\draw (J)
-	% 			to[short] ++(0,-1)
-	% 			to[short] ++(0.5,0) coordinate(J3)
-	% 			to [vR,mirror,invert,/tikz/circuitikz/bipoles/length=1cm] ++(1.75,0) node[ground,rotate=90]{};
-	% 			\node[block,from={$(J3) + (0,-0.25)$ to $(J3) + (2.5,0.25)$},draw=none](M){};
-	% 			\draw ($(J3) + (0,-0.25)$) rectangle ($(J3) + (2.5,0.25)$);
-	% 			\draw ($(J3) + (1.25,-0.5)$) node[]{Modulator};
-	% 			\draw[dashed,-{Latex[length=2mm]}] (R.east) -- ++(0.75,0);
-	% 			\draw[-{Latex[length=2mm]}] (D.east) -- ++(0.75,0);
-	% 			\draw[{Latex[length=2mm]}-] (M.east) -- ++(0.75,0);
-	% 			\node[block,from={$(R.east) + (0.75,-0.25)$ to $(R.east) + (2.875,0.25)$}](P){Power buffer};
-	% 			\node[block,from={$(M.east) + (0.75,-0.25)$ to $(D.east) + (2.875,0.25)$}](S){Digital\\section};
-	% 			\draw[dashed,-{Latex[length=2mm]}] (P.south) to (S.north);
-	% 			\coordinate (F1) at ($(P.south)!0.5!(S.north)$);
-	% 			\coordinate (F2) at ($(D.east)!0.5!(S.west)$);
-	% 			\coordinate (F3) at ($(D.south)!0.5!(M.north)$);
-	% 			\draw[dashed] (F1) to (F1-|D.north);
-	% 			\draw[dashed,-{Latex[length=2mm]}] (F1-|D.north) to (D.north);
-	% 			\draw[dashed] (F1-|F2) to (F2|-F3) to (M|-F3);
-	% 			\draw[dashed,-{Latex[length=2mm]}] (M|-F3) to (M.north);
-	% 		\end{circuitikz}
-	% 	}
-	% 	\caption{The block diagram and equivalent circuit of a passive tag. The solid and dashed vectors represent signal and energy flows.}
-	% 	\label{fi:tag_block_diagram}
-	% \end{figure}
-
 	\begin{figure}[!t]
 		\centering
-		\subfloat[Block diagram]{
+		\subfloat[Block Diagram]{
 			\resizebox{0.6\columnwidth}{!}{
-				\begin{circuitikz}[transform shape]
-					\coordinate (O) at (0,0);
-					\node[block,from={O to $(O) + (6.375,3.25)$}](T){};
-					\draw (0,1.75)
-					to[short] ++(-0.875,0)
-					to[short] ++(0,0.5) node[bareantenna](A){Bx};
-					\draw (0,1.75)
-					to[short,-*] ++(0.25,0) coordinate(J);
-					\draw (J)
-					to[short] ++(0,1)
-					to[short] ++(0.5,0) coordinate(J1);
-					\node[block,from={$(J1) + (0,-0.25)$ to $(J1) + (2.5,0.25)$}](R){Rectifier};
-					\draw (J)
-					to[short] ++(0.5,0) coordinate(J2);
-					\node[block,from={$(J2) + (0,-0.25)$ to $(J2) + (2.5,0.25)$}](D){Demodulator};
-					\draw (J)
-					to[short] ++(0,-1)
-					to[short] ++(0.5,0) coordinate(J3)
-					to [vR,mirror,invert,/tikz/circuitikz/bipoles/length=1cm] ++(1.75,0) node[ground,rotate=90]{};
-					\node[block,from={$(J3) + (0,-0.25)$ to $(J3) + (2.5,0.25)$},draw=none](M){};
-					\draw ($(J3) + (0,-0.25)$) rectangle ($(J3) + (2.5,0.25)$);
-					\draw ($(J3) + (1.25,-0.5)$) node[]{Modulator};
-					\draw[dashed,-{Latex[length=2mm]}] (R.east) -- ++(0.75,0);
-					\draw[-{Latex[length=2mm]}] (D.east) -- ++(0.75,0);
-					\draw[{Latex[length=2mm]}-] (M.east) -- ++(0.75,0);
-					\node[block,from={$(R.east) + (0.75,-0.25)$ to $(R.east) + (2.875,0.25)$}](P){Power buffer};
-					\node[block,from={$(M.east) + (0.75,-0.25)$ to $(D.east) + (2.875,0.25)$}](S){Digital\\section};
-					\draw[dashed,-{Latex[length=2mm]}] (P.south) to (S.north);
-					\coordinate (F1) at ($(P.south)!0.5!(S.north)$);
-					\coordinate (F2) at ($(D.east)!0.5!(S.west)$);
-					\coordinate (F3) at ($(D.south)!0.5!(M.north)$);
-					\draw[dashed] (F1) to (F1-|D.north);
-					\draw[dashed,-{Latex[length=2mm]}] (F1-|D.north) to (D.north);
-					\draw[dashed] (F1-|F2) to (F2|-F3) to (M|-F3);
-					\draw[dashed,-{Latex[length=2mm]}] (M|-F3) to (M.north);
-				\end{circuitikz}
+				\input{assets/block_diagram.tex}
 			}
 			\label{fi:block_diagram}
 		}
 		\setcounter{subfigure}{2}%
-		\subfloat[Scatter model]{
+		\subfloat[Scatter Model]{
 			\resizebox{0.35\columnwidth}{!}{
-				\begin{circuitikz}[transform shape]
-					\tikzstyle{every node}=[font=\Large]
-					\draw (0,0) node[bareantenna](bareantenna){};
-					\draw (bareantenna.west) ++(-1.5,0) node[waves](WI){};
-					\draw (WI.north east) ++(0.25,0) node[font=\Large]{$\vec{E}_{\mathrm{I}}$};
-					\draw (WI.south east) ++(0.25,0) node[font=\Large]{$\vec{H}_{\mathrm{I}}$};
-					\draw (bareantenna.east) ++(0.875,0) node[waves](WR){};
-					\draw (WR.north east) ++(0.35,0) node[font=\Large]{$\vec{E}_m$};
-					\draw (WR.south east) ++(0.35,0) node[font=\Large]{$\vec{H}_m$};
-					\draw (bareantenna)
-					to [R=$Z_{\mathrm{A}}$] ++(0,-1.5) node[rotary switch=4 in 90 wiper 30,anchor=ext center,rotate=270](SW){};
-					\draw (SW.cout 2) node[below=0.1cm,font=\Large]{$m$}
-					to [R=$Z_m$] ++(2,0) node[ground]{};
-				\end{circuitikz}
+				\input{assets/scatter_model.tex}
 			}
 			\label{fi:scatter_model}
 		}
 		\setcounter{subfigure}{1}
-		\subfloat[Equivalent circuit]{
-			\resizebox{0.9\columnwidth}{!}{
-				\begin{circuitikz}[transform shape]
-					\tikzstyle{every node}=[font=\Large]
-					\draw (0,0) coordinate(O)
-					to [sV,l=$V_0$] ++(0,1.5)
-					to [L,l=$X_{\mathrm{A}}$] ++(0,1.5)
-					to [R=$R_{\mathrm{A}}$,-*] ++(3,0) coordinate(AM)
-					to [sI,l_=$I_0$,-*] ++(0,-3)
-					to [short] (O);
-					\draw (AM)
-					to [short] ++(0.5,0)
-					to [L,l=$X_m$,-*] ++(3,0) coordinate(M)
-					to [R=$R_m^{\mathrm{S}}$] ++(3,0) coordinate(MH);
-					\draw (M)
-					to [R=$R_m^{\mathrm{P}}$,-*] ++(0,-3);
-					\draw (MH)
-					to [D,-*] ++(1.5,0) coordinate(H)
-					to [C=$X_{\mathrm{H}}$,-*] ++(0,-3);
-					\draw (H)
-					to [short] ++(1.5,0)
-					to [R=$R_{\mathrm{H}}$] ++(0,-3)
-					to [short] (O);
-
-					\draw [blue,dashed] (-1.125,-0.5) rectangle (3.5,4);
-					\draw [yellow,dashed] (4,-0.5) rectangle (9,4);
-					\draw [red,dashed] (9.5,-0.5) rectangle (13.5,4);
-
-					\draw [blue] (1.125,4.25) node[]{Antenna};
-					\draw [yellow] (6.5,4.25) node[]{Modulator};
-					\draw [red] (11.5,4.25) node[]{Harvester + Chip};
-
-					\draw (3.375,2.675) to [short] (3.375,3.175) to [short] (3.25,3.175) to [short,i_=$Z_{\mathrm{A}}$] (3.125,3.175);
-					\draw (4.125,-0.125) to [short] (4.125,0.375) to [short] (4.25,0.375) to [short,i=$Z_m$] (4.375,0.375);
-					\draw (9.625,-0.125) to [short] (9.625,0.375) to [short] (9.75,0.375) to [short,i=$Z_{\mathrm{H}}$] (9.875,0.375);
-				\end{circuitikz}
+		\subfloat[Equivalent Circuit]{
+			\resizebox{0.95\columnwidth}{!}{
+				\input{assets/equivalent_circuit.tex}
 			}
 			\label{fi:equivalent_circuit}
 		}
@@ -385,55 +260,18 @@
 
 		\begin{figure}[!t]
 			\centering
-			\resizebox{0.95\columnwidth}{!}{
-				\begin{tikzpicture}
-					\begin{groupplot}
-						[group style={%
-									rows=3,
-									group name=plots,
-									x descriptions at=edge bottom,
-									y descriptions at=edge left,
-									vertical sep=15
-								},
-							ybar,
-							xmin=0,
-							xmax=4,
-							xtick={1,2,3,4},
-							ymin=0,
-							ymax=1,
-							xlabel={Reflection State},
-							ylabel={Probability},
-							enlarge x limits={value=0.25,upper},
-							enlarge y limits={value=0.1,upper},
-							width=10cm,
-							height=4cm,
-							every axis plot/.append style={bar shift=0},
-							legend style={pattern=none}
-						]
-						\nextgroupplot
-						\addplot[blue,fill=blue!30!white] coordinates {(-1,-1)};
-						\addplot[blue,fill=blue!30!white,postaction={pattern=horizontal lines},pattern color=.] coordinates {(1,0.25)};
-						\addplot[blue,fill=blue!30!white,postaction={pattern=north west lines},pattern color=.] coordinates {(2,0.25)};
-						\addplot[blue,fill=blue!30!white,postaction={pattern=vertical lines},pattern color=.] coordinates {(3,0.25)};
-						\addplot[blue,fill=blue!30!white,postaction={pattern=north east lines},pattern color=.] coordinates {(4,0.25)};
-						\legend{SR}
-						\nextgroupplot
-						\addplot[red,fill=red!30!white] coordinates {(-1,-1)};
-						\addplot[red,fill=red!30!white,postaction={pattern=horizontal lines},pattern color=.] coordinates {(1,0)};
-						\addplot[red,fill=red!30!white,postaction={pattern=north west lines},pattern color=.] coordinates {(2,1)};
-						\addplot[red,fill=red!30!white,postaction={pattern=vertical lines},pattern color=.] coordinates {(3,0)};
-						\addplot[red,fill=red!30!white,postaction={pattern=north east lines},pattern color=.] coordinates {(4,0)};
-						\legend{IRS}
-						\nextgroupplot
-						\addplot[brown,fill=brown!30!white] coordinates {(-1,-1)};
-						\addplot[brown,fill=brown!30!white,postaction={pattern=horizontal lines},pattern color=.] coordinates {(1,0.125)};
-						\addplot[brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.] coordinates {(2,0.625)};
-						\addplot[brown,fill=brown!30!white,postaction={pattern=vertical lines},pattern color=.] coordinates {(3,0.25)};
-						\addplot[brown,fill=brown!30!white,postaction={pattern=north east lines},pattern color=.] coordinates {(4,0)};
-						\legend{Metascatter}
-					\end{groupplot}
-				\end{tikzpicture}
+			\subfloat[Reflection State Distribution]{
+				\resizebox{0.95\columnwidth}{!}{
+					\input{assets/reflection_state_distribution.tex}
+				}
 			}
+			\\
+			\subfloat[Time Block Structure]{
+				\resizebox{0.95\columnwidth}{!}{
+					\input{assets/time_block_structure.tex}
+				}
+			}
+			\caption{Reflection state distribution and time block structure of \gls{sr}, \gls{irs}, and Metascatter. $T_s$ and $T_c$ denote the primary and backscatter symbol length, respectively. Based on \gls{csi}, Metascatter adapts the reflection state distribution to unify data transmission and channel reconfiguration.}
 		\end{figure}
 
 

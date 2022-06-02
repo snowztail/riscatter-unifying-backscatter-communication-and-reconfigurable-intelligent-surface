@@ -33,7 +33,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		equivalentChannel;
 		equivalentDistribution;
 		threshold;
-		tolerance = 1e-6;
+		tolerance = 1e-9;
 		alpha = 0.01;
 		beta = 0.5;
 	end
@@ -62,7 +62,6 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		snrPgd = receivePowerPgd / noisePower;
 		dmacPgd = dmc_integration(symbolRatio, receivePowerPgd, threshold);
 		wsrPgd = rate_weighted(symbolRatio, weight, snrPgd, equivalentDistribution, dmacPgd);
-% 		while wsrPgd < wsr + alpha * step * norm(gradient) ^ 2
 		while wsr > wsrPgd + alpha * step * norm(gradient) ^ 2
 			step = beta * step;
 			beamformingPgd = beamforming_projection(transmitPower, beamforming + step * gradient);
@@ -73,8 +72,8 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		end
 
 		% * Test convergence (gradient can be non-zero due to norm constraint)
-% 		isConverged = (wsrPgd - wsr) <= tolerance;
-		isConverged = norm(beamformingPgd - beamforming) <= tolerance;
+		isConverged = (wsrPgd - wsr) <= tolerance;
+% 		isConverged = norm(beamformingPgd - beamforming) <= tolerance;
 		beamforming = beamformingPgd;
 		wsr = wsrPgd;
 	end
@@ -88,13 +87,6 @@ function [gradient] = gradient_local(symbolRatio, weight, noisePower, equivalent
 
 	% * Evaluate expressions
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
-	% dmac = zeros(nInputs, nOutputs);
-	% for iInput = 1 : nInputs
-	% 	for iOutput = 1 : nOutputs
-	% 		dmac(iInput, iOutput) = exp(-threshold(iOutput) / receivePower(iInput)) * polyval(1 ./ factorial(symbolRatio - 1 : -1 : 0), threshold(iOutput) / receivePower(iInput)) ...
-	% 			- exp(-threshold(iOutput + 1) / receivePower(iInput)) * polyval(1 ./ factorial(symbolRatio - 1 : -1 : 0), threshold(iOutput + 1) / receivePower(iInput));
-	% 	end
-	% end
 	dmac = dmc_integration(symbolRatio, receivePower, threshold);
 
 	% * Compute derivative and gradient

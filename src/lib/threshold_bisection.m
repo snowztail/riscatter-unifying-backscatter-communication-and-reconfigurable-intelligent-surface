@@ -28,7 +28,7 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 		equivalentDistribution;
 		thresholdDomain;
 		binDmc;
-		tolerance = 1e-6;
+		tolerance = 1e-9;
 	end
 
 	% * Get data

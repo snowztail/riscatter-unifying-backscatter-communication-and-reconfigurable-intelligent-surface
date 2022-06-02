@@ -38,7 +38,7 @@ function [distribution, equivalentDistribution] = recovery_randomization(symbolR
 		dmac;
 		nKernels = 10;
 		nInstances = 5e2;
-		tolerance = 1e-6;
+		tolerance = 1e-9;
 	end
 
 	% * Get data

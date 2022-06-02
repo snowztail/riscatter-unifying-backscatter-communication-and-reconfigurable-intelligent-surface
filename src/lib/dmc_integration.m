@@ -19,17 +19,11 @@ function [dmc] = dmc_integration(symbolRatio, receivePower, threshold)
 	% * Get data
 	nInputs = size(receivePower, 1);
 	nOutputs = size(threshold, 2) - 1;
-	% [sortPower, sortIndex] = sort(receivePower);
 
 	% * Construct DMC based on conditional energy p.d.f. and decision thresholds
 	dmc = zeros(nInputs, nOutputs);
-	for iInput = 1 : nInputs
-		channelDistribution = @(z) (z .^ (symbolRatio - 1) .* exp(-z ./ receivePower(iInput))) ./ (receivePower(iInput) .^ symbolRatio .* gamma(symbolRatio));
-		for iOutput = 1 : nOutputs
-			dmc(iInput, iOutput) = integral(channelDistribution, threshold(iOutput), threshold(iOutput + 1));
-		end
+	channelDistribution = @(z) (z .^ (symbolRatio - 1) .* exp(-z ./ receivePower)) ./ (receivePower .^ symbolRatio .* gamma(symbolRatio));
+	for iOutput = 1 : nOutputs
+		dmc(:, iOutput) = integral(channelDistribution, threshold(iOutput), threshold(iOutput + 1), 'ArrayValued', true);
 	end
-
-	% % * Desort to recover i/o mapping
-	% dmc(:, sortIndex) = dmc;
 end

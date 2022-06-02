@@ -319,3 +319,6 @@ mendeleyBibFix
 
 # Draft code
 untitled*
+
+# Batch data
+src/data/

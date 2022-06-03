@@ -21,7 +21,7 @@ for iVariable = 1 : nVariables
 	threshold = zeros(nWeights, nStates ^ nTags + 1);
 	beamforming = zeros(nTxs, nWeights);
 	for iWeight = 1 : nWeights
-		[rate(:, iWeight), distribution(:, :, iWeight), threshold(iWeight, :), beamforming(:, iWeight, iVariable)] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weightSet(iWeight), equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
+		[rate(:, iWeight), distribution(:, :, iWeight), threshold(iWeight, :), beamforming(:, iWeight)] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weightSet(iWeight), equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
 	end
 	Result{iVariable} = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 end

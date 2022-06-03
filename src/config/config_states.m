@@ -2,7 +2,7 @@
 % number of transmit antennas
 nTxs = 4;
 % number of tags
-nTags = 5;
+nTags = 2;
 % % number of available states at tags (i.e., modulation order)
 % nStates = 2;
 % % constellation diagram at tags

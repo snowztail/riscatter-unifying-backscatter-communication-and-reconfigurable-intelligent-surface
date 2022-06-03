@@ -16,10 +16,8 @@ function [backscatterInformation] = information_backscatter(equivalentDistributi
 
 	% * Compute total backscatter information function
 	backscatterInformation = zeros(nInputs, nOutputs);
-	for iInput = 1 : nInputs
-		for iOutput = 1 : nOutputs
-			backscatterInformation(iInput, iOutput) = dmac(iInput, iOutput) * log(dmac(iInput, iOutput) / (equivalentDistribution' * dmac(:, iOutput)));
-		end
+	for iOutput = 1 : nOutputs
+		backscatterInformation(:, iOutput) = dmac(:, iOutput) .* log(dmac(:, iOutput) / (equivalentDistribution' * dmac(:, iOutput)));
 	end
 	backscatterInformation = sum(backscatterInformation, 2);
 end

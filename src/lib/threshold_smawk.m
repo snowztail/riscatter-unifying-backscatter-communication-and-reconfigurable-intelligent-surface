@@ -18,7 +18,6 @@ function [threshold] = threshold_smawk(equivalentDistribution, thresholdDomain, 
 	%
     % Author & Date: Yang (i@snowztail.com), 22 Feb 09
 
-
 	% * Get data
 	[nInputs, nBins] = size(binDmc);
 	nOutputs = nInputs;
@@ -27,34 +26,46 @@ function [threshold] = threshold_smawk(equivalentDistribution, thresholdDomain, 
 	jointDistribution = equivalentDistribution .* binDmc;
 	outputDistribution = equivalentDistribution' * binDmc;
 
+	% ! Pre-compute quantization cost to accelerate runtime
+	cost = zeros(nBins);
+	for iBin = 1 : nBins
+		for jBin = iBin : nBins
+			cost(iBin, jBin) = cost_quantization(iBin : jBin, jointDistribution, outputDistribution);
+		end
+	end
+
 	% * Initialize cost functions
 	dp = zeros(nBins, nOutputs);
 	sol = zeros(nBins, nOutputs);
 	for iBin = 1 : nBins
-		dp(iBin, 1) = cost_quantization(1 : iBin, jointDistribution, outputDistribution);
+		% dp(iBin, 1) = cost_quantization(1 : iBin, jointDistribution, outputDistribution);
+		dp(iBin, 1) = cost(1, iBin);
 	end
 
 	% * Generate monotone matrix
 	for iOutput = 2 : nOutputs
-		D = zeros(nBins - nOutputs + 1);
+		% d = Inf(nBins - nOutputs + 1);
+		% for iRow = 1 : nBins - nOutputs + 1
+		% 	for iColumn = 1 : iRow
+		% 		% d(iRow, iColumn) = dp(iColumn - 2 + iOutput, iOutput - 1) + cost_quantization(iColumn - 1 + iOutput : iRow - 1 + iOutput, jointDistribution, outputDistribution);
+		% 		d(iRow, iColumn) = dp(iColumn - 2 + iOutput, iOutput - 1) + cost(iColumn - 1 + iOutput, iRow - 1 + iOutput);
+		% 	end
+		% end
+
+		d = Inf(nBins - nOutputs + 1);
 		for iRow = 1 : nBins - nOutputs + 1
-			for iColumn = 1 : nBins - nOutputs + 1
-				if iRow >= iColumn
-					D(iRow, iColumn) = dp(iColumn - 2 + iOutput, iOutput - 1) + cost_quantization(iColumn - 1 + iOutput : iRow - 1 + iOutput, jointDistribution, outputDistribution);
-				else
-					D(iRow, iColumn) = Inf;
-				end
-			end
+			% d(iRow, 1 : iRow) = dp(1 - 2 + iOutput : iRow - 2 + iOutput, iOutput - 1) + cost(1 - 1 + iOutput : iRow - 1 + iOutput, iRow - 1 + iOutput);
+			d(iRow, 1 : iRow) = dp(-1 + iOutput : iRow - 2 + iOutput, iOutput - 1) + cost(iOutput : iRow - 1 + iOutput, iRow - 1 + iOutput);
 		end
 
 		% * Retrieve leftmost minima position by SMAWK
-		[r, c] = deal(1 : nBins - nOutputs + 1);
-		[p] = smawk(D, r, c);
+		[p] = smawk(d, 1 : nBins - nOutputs + 1, 1 : nBins - nOutputs + 1);
 
 		% * Get sol and dp
 		for iBin = nBins - nOutputs + iOutput : -1 : iOutput
 			sol(iBin, iOutput) = p(iBin - iOutput + 1) - 2 + iOutput;
-			dp(iBin, iOutput) = dp(sol(iBin, iOutput), iOutput - 1) + cost_quantization(sol(iBin, iOutput) + 1 : iBin, jointDistribution, outputDistribution);
+			% dp(iBin, iOutput) = dp(sol(iBin, iOutput), iOutput - 1) + cost_quantization(sol(iBin, iOutput) + 1 : iBin, jointDistribution, outputDistribution);
+			dp(iBin, iOutput) = dp(sol(iBin, iOutput), iOutput - 1) + cost(sol(iBin, iOutput) + 1, iBin);
 		end
 	end
 
@@ -67,13 +78,13 @@ function [threshold] = threshold_smawk(equivalentDistribution, thresholdDomain, 
 end
 
 
-function [p] = smawk(matrix, r, c)
+function [p] = smawk(d, r, c)
 	p = zeros(1, length(r));
-	[c] = reduce(matrix, r, c);
+	[c] = reduce(d, r, c);
 	if length(r) == 1
 		p = c;
 	else
-		[p(2 : 2 : end)] = smawk(matrix, r(2 : 2 : end), c);
+		[p(2 : 2 : end)] = smawk(d, r(2 : 2 : end), c);
 		j = 1;
 		for i = 1 : 2 : length(r)
 			p(i) = c(j);
@@ -83,7 +94,7 @@ function [p] = smawk(matrix, r, c)
 				u = Inf;
 			end
 			while j <= length(r) && c(j) <= u
-				if matrix(r(i), c(j)) < matrix(r(i), p(i))
+				if d(r(i), c(j)) < d(r(i), p(i))
 					p(i) = c(j);
 				end
 				j = j + 1;
@@ -93,10 +104,10 @@ function [p] = smawk(matrix, r, c)
 	end
 end
 
-function [c] = reduce(matrix, r, c)
+function [c] = reduce(d, r, c)
 	i = 1;
 	while length(r) < length(c)
-		if matrix(r(i), c(i)) <= matrix(r(i), c(i + 1))
+		if d(r(i), c(i)) <= d(r(i), c(i + 1))
 			if i < length(r)
 				i = i + 1;
 			elseif i == length(r)

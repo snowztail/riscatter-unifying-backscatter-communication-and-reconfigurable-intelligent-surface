@@ -89,12 +89,12 @@ function [gradient] = gradient_local(symbolRatio, weight, noisePower, equivalent
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
 	dmac = dmc_integration(symbolRatio, receivePower, threshold);
 
-	% * Compute derivative and gradient
-	dDmac = zeros(nTxs, nOutputs, nInputs);
+	% * Compute derivative and gradient (loops can be further optimized)
+	dDmac = zeros(nTxs, nInputs, nOutputs);
 	for iInput = 1 : nInputs
 		for iOutput = 1 : nOutputs
 			coefficient = ((symbolRatio - 1 : -1 : 1) - threshold(iOutput + 1) / receivePower(iInput)) ./ factorial(symbolRatio - 1 : -1 : 1);
-			dDmac(:, iOutput, iInput) = equivalentChannel(:, iInput) * equivalentChannel(:, iInput)' * beamforming / receivePower(iInput) ...
+			dDmac(:, iInput, iOutput) = equivalentChannel(:, iInput) * equivalentChannel(:, iInput)' * beamforming / receivePower(iInput) ...
 				* (threshold(iOutput + 1) * exp(-threshold(iOutput + 1) / receivePower(iInput)) * (polyval(coefficient, threshold(iOutput + 1) / receivePower(iInput)) - 1) ...
 					- threshold(iOutput) * exp(-threshold(iOutput) / receivePower(iInput)) * (polyval(coefficient, threshold(iOutput) / receivePower(iInput)) - 1));
 		end
@@ -103,8 +103,8 @@ function [gradient] = gradient_local(symbolRatio, weight, noisePower, equivalent
 	for iInput = 1 : nInputs
 		dWsr = dWsr + weight * symbolRatio * equivalentDistribution(iInput) * equivalentChannel(:, iInput) * equivalentChannel(:, iInput)' * beamforming / receivePower(iInput);
 		for iOutput = 1 : nOutputs
-			dWsr = dWsr + (1 - weight) * equivalentDistribution(iInput) * ((log(dmac(iInput, iOutput) / (equivalentDistribution' * dmac(:, iOutput))) + 1) * dDmac(:, iOutput, iInput) ...
-				- dmac(iInput, iOutput) * permute(dDmac(:, iOutput, :), [1 3 2]) * equivalentDistribution / (equivalentDistribution' * dmac(:, iOutput)));
+			dWsr = dWsr + (1 - weight) * equivalentDistribution(iInput) * ((log(dmac(iInput, iOutput) / (equivalentDistribution' * dmac(:, iOutput))) + 1) * dDmac(:, iInput, iOutput) ...
+				- dmac(iInput, iOutput) * dDmac(:, :, iOutput) * equivalentDistribution / (equivalentDistribution' * dmac(:, iOutput)));
 		end
 	end
 	gradient = 2 * dWsr;

@@ -105,10 +105,11 @@
 \newacronym{noma}{NOMA}{Non-Orthogonal Multiple Access}
 \newacronym{ofdm}{OFDM}{Orthogonal Frequency-Division Multiplexing}
 \newacronym{pdf}{PDF}{Probability Density Function}
+\newacronym{pgd}{PGD}{Projected Gradient Descent}
 \newacronym{psk}{PSK}{Phase Shift Keying}
 \newacronym{pin}{PIN}{Positive Intrinsic-Negative}
 \newacronym{qam}{QAM}{Quadrature Amplitude Modulation}
-\newacronym{rf}{RF}{Radio Frequency}
+\newacronym{rf}{RF}{Radio-Frequency}
 \newacronym{sc}{SC}{Superposition Coding}
 \newacronym{sic}{SIC}{Successive Interference Cancellation}
 \newacronym{simo}{SIMO}{Single-Input Multiple-Output}
@@ -134,50 +135,28 @@
 \maketitle
 
 \begin{abstract}
-	Backscatter allows wireless nodes to harvest energy from, modulate information over, and reconfigure propagation of surrounding radio waves.
-	% We uniquely introduce the concept of Metascatter, which adapts the input probability distribution of a finite-state backscatter device based on Channel State Information (CSI), to simultaneously act as parasitic source of Symbiotic Radio (SR) that conveys sensor data, and reflecting element of Intelligent Reflecting Surface (IRS) that assists legacy transmission.
-	% We uniquely introduce the concept of Metascatter, which adjusts the input probability distribution of a finite-state backscatter device based on Channel State Information (CSI), to simultaneously act as parasitic source of Symbiotic Radio (SR) that conveys sensor data, and reflecting element of Intelligent Reflecting Surface (IRS) that assists legacy transmission.
-	% We uniquely introduce the concept of Metascatter, which adjusts the input distribution of a finite-state backscatter device based on \gls{csi}, to \emph{simultaneously} encode its own data and assist ambient transmission.
-	% We uniquely introduce the concept of Metascatter, which \emph{simultaneously} encodes own message and assists ambient transmission, using adaptive input probability distribution based on \gls{csi}.
-	We uniquely introduce the concept of Metascatter, which adapts the input distribution of a finite-state backscatter device based on \gls{csi}, to \emph{simultaneously} encode self message and assist ambient transmission.
-	% Compared to existing strategies as modulation on IRS pattern
-	Compared to conventional \gls{irs}-empowered \gls{sr} that considers encoding and beamforming independently (overlay or parallel), Metascatter revisits backscatter principles and bridges parasitic source of \gls{sr} and reflecting element of \gls{irs} as extreme cases.
+	% Backscatter allows wireless nodes to harvest energy from, modulate information over, and reconfigure propagation of surrounding radio waves.
+	Passive backscatter nodes can harvest energy from, modulate information over, and reconfigure propagation of surrounding radio waves.
+	We uniquely introduce the concept of Metascatter, which adapts the input distribution of a finite-state backscatter tag based on \gls{csi}, to \emph{simultaneously} encode self message and assist legacy transmission while powered by ambient signal.
+	Compared to conventional \gls{irs}-empowered \gls{sr} that performs encoding and beamforming independently (overlay or parallel), Metascatter refines backscatter principles to bridge parasitic source of \gls{sr} and reflecting element of \gls{irs} as extreme cases.
+	Such an integrated distribution design not only yields universal modularity with reduced optimization cost, but also enables a flexible tradeoff between primary and backscatter links using shared spectrum, energy, and infrastructures.
+	To validate its benefits, we consider an application scenario where a multi-antenna \gls{ap} transmits to a single-antenna user surrounded by multiple Metascatters.
+	For simplicity, the user is assumed first decodes all Metascatters jointly by energy detection, then models their contribution within equivalent channel and decodes primary link.
+	We characterize the achievable primary-(sum-)backscatter rate region through a joint optimization of input distribution at the Metascatters, transmit beamforming at the AP, and decision thresholds at the user.
+	The problem is highly non-convex and we propose a suboptimal \gls{bcd} solution, where the input distribution satisfying the \gls{kkt} conditions is evaluated in closed form, the transmit beamforming is updated by \gls{pgd}, and the decision thresholds are optimized by \gls{dp}.
+	Simulation results demonstrate Metascatters can exploit additional backscatter paths to transmit and assist.
+	% the \gls{kkt} input distribution is
 
+	% KKT tag input probability distribution for maximizing weighted sum of primary and total backscatter rate
 
-
-	% It enables smoother primary-backscatter tradeoff
-
-	integrates \gls{irs} and \gls{sr} from backscatter principles
-
-	% treat backscatter modulation and passive beamforming independently (overlay or distinction), Metascatter
-
-
-
-	\gls{irs}-empowered \gls{sr} strategies that embed
-
-	by adaptive input distribution design based on \gls{csi}.
-
-
-	adjusts the input distribution of a finite-state backscatter device based on \gls{csi}, to \emph{simultaneously} encode its own data and assist ambient transmission.
-
-	% It not only generalizes SR and IRS
-
-	Compared to existing \gls{irs}-empowered \gls{sr},
-
-
-	A flexible input distribution design
-
-	Based on Channel State Information (CSI), the input distribution can be
-
-
-
-	KKT tag input probability distribution for maximizing weighted sum of primary and total backscatter rate
-
-	Using shared spectrum, energy, and infrastructures, fully cognitive networks can be built over Metascatter, and we consider a fundamental scenario where a multi-antenna Access Point (AP) and multiple Metascatter simultaneously transmit to a single-antenna user.
-	Since tags involve load switching and the primary and backscatter messages are multiplied (instead of superposed) in the received signal, it is assumed the user employ joint energy detection on all tags, then model their reflection pattern within the equivalent CSI for primary decoding.
-	We characterize the achievable primary-(sum-)backscatter rate region through a joint optimization of transmit beamforming vector at the AP, input probability distribution at the tags, and energy detection regions at the user.
-	A suboptimal solution is provided by the Block Coordinate Descent (BCD) method, where the beamforming, input distribution, and decision thresholds are obtained by Successive Convex Approximation (SCA), Karush–Kuhn–Tucker (KKT), and Dynamic Programming (DP), respectively.
-	Simulation results demonstrate Metascatter can exploit the additional backscatter path to transmit and assist.
+	% A suboptimal solution is provided by the Block Coordinate Descent (BCD) method, where the beamforming, input distribution, and decision thresholds are obtained by Successive Convex Approximation (SCA), Karush–Kuhn–Tucker (KKT), and Dynamic Programming (DP), respectively.
+	% Simulation results demonstrate Metascatter can exploit the additional backscatter path to transmit and assist.
+	% the user employ joint energy detection on all tags, then model their reflection pattern within the equivalent CSI for primary decoding.
+	% Using shared spectrum, energy, and infrastructures, fully cognitive networks can be built over Metascatter, and we consider a fundamental scenario where a multi-antenna Access Point (AP) and multiple Metascatter simultaneously transmit to a single-antenna user.
+	% Since tags involve load switching and the primary and backscatter messages are multiplied (instead of superposed) in the received signal, it is assumed the user employ joint energy detection on all tags, then model their reflection pattern within the equivalent CSI for primary decoding.
+	% We characterize the achievable primary-(sum-)backscatter rate region through a joint optimization of transmit beamforming vector at the AP, input probability distribution at the tags, and energy detection regions at the user.
+	% A suboptimal solution is provided by the Block Coordinate Descent (BCD) method, where the beamforming, input distribution, and decision thresholds are obtained by Successive Convex Approximation (SCA), Karush–Kuhn–Tucker (KKT), and Dynamic Programming (DP), respectively.
+	% Simulation results demonstrate Metascatter can exploit the additional backscatter path to transmit and assist.
 \end{abstract}
 
 \begin{section}{Introduction}
@@ -235,27 +214,53 @@
 \end{section}
 
 \begin{section}{Backscatter Principles}
+	% \begin{figure}[!t]
+	% 	\centering
+	% 	\subfloat[Block Diagram]{
+	% 		\resizebox{0.6\columnwidth}{!}{
+	% 			\input{assets/block_diagram.tex}
+	% 		}
+	% 		\label{fi:block_diagram}
+	% 	}
+	% 	\setcounter{subfigure}{2}%
+	% 	\subfloat[Scatter Model]{
+	% 		\resizebox{0.35\columnwidth}{!}{
+	% 			\input{assets/scatter_model.tex}
+	% 		}
+	% 		\label{fi:scatter_model}
+	% 	}
+	% 	\setcounter{subfigure}{1}
+	% 	\subfloat[Equivalent Circuit]{
+	% 		\resizebox{0.95\columnwidth}{!}{
+	% 			\input{assets/equivalent_circuit.tex}
+	% 		}
+	% 		\label{fi:equivalent_circuit}
+	% 	}
+	% 	\caption{Block diagram, equivalent circuit, and scatter model of a typical passive tag. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
+	% \end{figure}
+
+
 	\begin{figure}[!t]
 		\centering
 		\subfloat[Block Diagram]{
-			\resizebox{0.6\columnwidth}{!}{
+			\resizebox{0.8\columnwidth}{!}{
 				\input{assets/block_diagram.tex}
 			}
 			\label{fi:block_diagram}
 		}
-		\setcounter{subfigure}{2}%
-		\subfloat[Scatter Model]{
-			\resizebox{0.35\columnwidth}{!}{
-				\input{assets/scatter_model.tex}
-			}
-			\label{fi:scatter_model}
-		}
-		\setcounter{subfigure}{1}
+		\\
 		\subfloat[Equivalent Circuit]{
 			\resizebox{0.95\columnwidth}{!}{
 				\input{assets/equivalent_circuit.tex}
 			}
 			\label{fi:equivalent_circuit}
+		}
+		\\
+		\subfloat[Scatter Model]{
+			\resizebox{0.8\columnwidth}{!}{
+				\input{assets/scatter_model.tex}
+			}
+			\label{fi:scatter_model}
 		}
 		\caption{Block diagram, equivalent circuit, and scatter model of a typical passive tag. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
 	\end{figure}

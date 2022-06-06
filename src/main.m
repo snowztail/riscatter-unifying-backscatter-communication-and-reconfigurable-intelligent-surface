@@ -1,4 +1,4 @@
-setup; clear; cvx_begin; cvx_end; clc; close all; config;
+clear; setup; cvx_begin; cvx_end; clc; close all; config;
 
 % * Generate channels
 directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);

@@ -1,4 +1,4 @@
-setup; clear; cvx_begin; cvx_end; clc; close all; config_states;
+clear; setup; cvx_begin; cvx_end; clc; close all; config_states;
 
 Result = cell(nVariables, 1);
 % * Evaluate rate region for different number of states

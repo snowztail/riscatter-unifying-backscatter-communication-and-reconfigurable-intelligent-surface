@@ -1,4 +1,4 @@
-setup; clear; cvx_begin; cvx_end; clc; close all; config_txs;
+clear; setup; cvx_begin; cvx_end; clc; close all; config_txs;
 
 Result = cell(nVariables, 1);
 % * Evaluate rate region for different number of transmit antennas

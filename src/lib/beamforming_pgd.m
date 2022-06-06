@@ -62,7 +62,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		snrPgd = receivePowerPgd / noisePower;
 		dmacPgd = dmc_integration(symbolRatio, receivePowerPgd, threshold);
 		wsrPgd = rate_weighted(symbolRatio, weight, snrPgd, equivalentDistribution, dmacPgd);
-		while wsr > wsrPgd + alpha * step * norm(gradient) ^ 2
+		while wsr > wsrPgd + alpha * step * norm(gradient) ^ 2 && step > eps
 			step = beta * step;
 			beamformingPgd = beamforming_projection(transmitPower, beamforming + step * gradient);
 			receivePowerPgd = abs(equivalentChannel' * beamformingPgd) .^ 2 + noisePower;

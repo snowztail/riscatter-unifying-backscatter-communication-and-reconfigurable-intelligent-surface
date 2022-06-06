@@ -40,4 +40,4 @@ nWeights = length(weightSet);
 
 %% * Variable
 Variable.nTxs = 2 .^ (0 : 3);
-nVariables = length(Variable.nStates);
+nVariables = length(Variable.nTxs);

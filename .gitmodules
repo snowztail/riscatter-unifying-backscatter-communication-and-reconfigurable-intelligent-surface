@@ -7,3 +7,6 @@
 [submodule "src/toolbox/magnifyOnFigure"]
 	path = src/toolbox/magnifyOnFigure
 	url = https://github.com/hildogjr/magnifyOnFigure.git
+[submodule "src/toolbox/matlab2tikz"]
+	path = src/toolbox/matlab2tikz
+	url = https://github.com/matlab2tikz/matlab2tikz.git

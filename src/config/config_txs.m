@@ -41,3 +41,7 @@ nWeights = length(weightSet);
 %% * Variable
 Variable.nTxs = 2 .^ (0 : 3);
 nVariables = length(Variable.nTxs);
+
+
+%% * PBS
+nInstances = 3e2;

@@ -41,3 +41,7 @@ nWeights = length(weightSet);
 %% * Variable
 Variable.nStates = 2 .^ (1 : 4);
 nVariables = length(Variable.nStates);
+
+
+%% * PBS
+nInstances = 3e2;

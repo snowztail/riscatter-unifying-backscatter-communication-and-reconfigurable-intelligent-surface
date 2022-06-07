@@ -1,6 +1,8 @@
 clear; setup; cvx_begin; cvx_end; clc; close all; config_txs;
 
-Result = cell(nVariables, 1);
+% * Initialize struct
+Result(nVariables, 1) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
+
 % * Evaluate rate region for different number of transmit antennas
 for iVariable = 1 : nVariables
 	% * Select layout
@@ -22,8 +24,8 @@ for iVariable = 1 : nVariables
 	for iWeight = 1 : nWeights
 		[rate(:, iWeight), distribution(:, :, iWeight), threshold(iWeight, :), beamforming(:, iWeight)] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weightSet(iWeight), equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
 	end
-	Result{iVariable} = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
+	Result(iVariable) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 end
 
 directory = strcat('data/', mfilename, '/');
-savedata;
+data_save;

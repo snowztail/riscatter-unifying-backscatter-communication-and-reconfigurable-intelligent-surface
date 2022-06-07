@@ -1,11 +1,49 @@
+% \begin{circuitikz}[transform shape]
+% 	\tikzstyle{every node}=[font=\small]
+% 	\coordinate (O) at (0,0);
+% 	\node[block,from={O to $(O) + (6.375,3.25)$}](T){};
+% 	\draw (0,1.75)
+% 	to[short] ++(-0.875,0)
+% 	to[short] ++(0,0.5) node[bareantenna](A){Bx};
+% 	\draw (0,1.75)
+% 	to[short,-*] ++(0.25,0) coordinate(J);
+% 	\draw (J)
+% 	to[short] ++(0,1)
+% 	to[short] ++(0.5,0) coordinate(J1);
+% 	\node[block,from={$(J1) + (0,-0.25)$ to $(J1) + (2.5,0.25)$}](R){Rectifier};
+% 	\draw (J)
+% 	to[short] ++(0.5,0) coordinate(J2);
+% 	\node[block,from={$(J2) + (0,-0.25)$ to $(J2) + (2.5,0.25)$}](D){Demodulator};
+% 	\draw (J)
+% 	to[short] ++(0,-1)
+% 	to[short] ++(0.5,0) coordinate(J3)
+% 	to [vR,mirror,invert,/tikz/circuitikz/bipoles/length=1cm] ++(1.75,0) node[ground,rotate=90]{};
+% 	\node[block,from={$(J3) + (0,-0.25)$ to $(J3) + (2.5,0.25)$},draw=none](M){};
+% 	\draw ($(J3) + (0,-0.25)$) rectangle ($(J3) + (2.5,0.25)$);
+% 	\draw ($(J3) + (1.25,-0.5)$) node[]{Modulator};
+% 	\draw[dashed,-{Latex[length=2mm]}] (R.east) -- ++(0.75,0);
+% 	\draw[-{Latex[length=2mm]}] (D.east) -- ++(0.75,0);
+% 	\draw[{Latex[length=2mm]}-] (M.east) -- ++(0.75,0);
+% 	\node[block,from={$(R.east) + (0.75,-0.25)$ to $(R.east) + (2.875,0.25)$}](P){Power Buffer};
+% 	\node[block,from={$(M.east) + (0.75,-0.25)$ to $(D.east) + (2.875,0.25)$}](S){Digital\\Section};
+% 	\draw[dashed,-{Latex[length=2mm]}] (P.south) to (S.north);
+% 	\coordinate (F1) at ($(P.south)!0.5!(S.north)$);
+% 	\coordinate (F2) at ($(D.east)!0.5!(S.west)$);
+% 	\coordinate (F3) at ($(D.south)!0.5!(M.north)$);
+% 	\draw[dashed] (F1) to (F1-|D.north);
+% 	\draw[dashed,-{Latex[length=2mm]}] (F1-|D.north) to (D.north);
+% 	\draw[dashed] (F1-|F2) to (F2|-F3) to (M|-F3);
+% 	\draw[dashed,-{Latex[length=2mm]}] (M|-F3) to (M.north);
+% \end{circuitikz}
+
 \begin{circuitikz}[transform shape]
 	\tikzstyle{every node}=[font=\small]
 	\coordinate (O) at (0,0);
-	\node[block,from={O to $(O) + (6.375,3.25)$}](T){};
-	\draw (0,1.75)
+	\node[block,from={O to $(O) + (6.375,3)$}](T){};
+	\draw (0,1.5)
 	to[short] ++(-0.875,0)
 	to[short] ++(0,0.5) node[bareantenna](A){Bx};
-	\draw (0,1.75)
+	\draw (0,1.5)
 	to[short,-*] ++(0.25,0) coordinate(J);
 	\draw (J)
 	to[short] ++(0,1)
@@ -16,11 +54,8 @@
 	\node[block,from={$(J2) + (0,-0.25)$ to $(J2) + (2.5,0.25)$}](D){Demodulator};
 	\draw (J)
 	to[short] ++(0,-1)
-	to[short] ++(0.5,0) coordinate(J3)
-	to [vR,mirror,invert,/tikz/circuitikz/bipoles/length=1cm] ++(1.75,0) node[ground,rotate=90]{};
-	\node[block,from={$(J3) + (0,-0.25)$ to $(J3) + (2.5,0.25)$},draw=none](M){};
-	\draw ($(J3) + (0,-0.25)$) rectangle ($(J3) + (2.5,0.25)$);
-	\draw ($(J3) + (1.25,-0.5)$) node[]{Modulator};
+	to[short] ++(0.5,0) coordinate(J3);
+	\node[block,from={$(J3) + (0,-0.25)$ to $(J3) + (2.5,0.25)$}](M){Modulator};
 	\draw[dashed,-{Latex[length=2mm]}] (R.east) -- ++(0.75,0);
 	\draw[-{Latex[length=2mm]}] (D.east) -- ++(0.75,0);
 	\draw[{Latex[length=2mm]}-] (M.east) -- ++(0.75,0);

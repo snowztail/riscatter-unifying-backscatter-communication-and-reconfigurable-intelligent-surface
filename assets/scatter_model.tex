@@ -22,16 +22,16 @@
 	\draw (bareantenna.east) ++(0.875,0) node[waves](WR){};
 	\draw (WR.north east) ++(0.35,0) node{$\vec{E}_m$};
 	\draw (WR.south east) ++(0.35,0) node{$\vec{H}_m$};
-	\draw (bareantenna) to ++(0,-1.5) to [generic,l=$Z_{\mathrm{A}}$,/tikz/circuitikz/bipoles/length=0.75cm] ++(3.5,0) node[rotary switch=4 in 90 wiper 30,anchor=ext center,rotate=0](SW){};
-	\draw (SW.cout 1) to ++(0.625,+0.5) to [generic,/tikz/circuitikz/bipoles/length=0.75cm] ++(3,0) coordinate(E1);
-	\draw (SW.cout 2) node[above right]{$m$} to [generic,l=$Z_m$,/tikz/circuitikz/bipoles/length=0.75cm] ++(3,0) coordinate(E2);
-	\draw (SW.cout 3) to [generic,/tikz/circuitikz/bipoles/length=0.75cm] ++(3,0) coordinate(E3);
-	\draw (SW.cout 4) to ++(0.625,-0.5) to [generic,/tikz/circuitikz/bipoles/length=0.75cm] ++(3,0) coordinate(E4);
+	\draw (bareantenna) to ++(0,-1.5) to [generic,l=$Z_{\mathrm{A}}$,/tikz/circuitikz/bipoles/length=0.75cm] ++(3,0) node[rotary switch=4 in 90 wiper 30,anchor=ext center,rotate=0](SW){};
+	\draw (SW.cout 1) to ++(0.625,+0.5) to [generic,/tikz/circuitikz/bipoles/length=0.75cm] ++(2.5,0) coordinate(E1);
+	\draw (SW.cout 2) node[above right]{$m$} to [generic,l=$Z_m$,/tikz/circuitikz/bipoles/length=0.75cm] ++(2.5,0) coordinate(E2);
+	\draw (SW.cout 3) to [generic,/tikz/circuitikz/bipoles/length=0.75cm] ++(2.5,0) coordinate(E3);
+	\draw (SW.cout 4) to ++(0.625,-0.5) to [generic,/tikz/circuitikz/bipoles/length=0.75cm] ++(2.5,0) coordinate(E4);
 	% \coordinate (E) at ($(E2)! 0.5!(E3)$);
 	\draw (E1) to[short,-*] (E2);
 	\draw (E2) to[short,-*] (E3);
 	% \draw (E2) to[short,-*] (E);
 	% \draw (E) to[short,-*] (E3);
 	\draw (E3) to[short] (E4);
-	\draw (E2) to[short] ++(1,0) node[ground]{};
+	\draw (E2) to[short] ++(0.5,0) node[ground,rotate=90]{};
 \end{circuitikz}

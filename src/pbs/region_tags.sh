@@ -5,6 +5,6 @@ module load matlab/R2021a
 
 cd $PBS_O_WORKDIR/..
 # matlab -batch $(basename $BASH_SOURCE .sh)
-matlab -batch -singleCompThread "region_tags"
+matlab -singleCompThread -batch "region_tags"
 
 exit

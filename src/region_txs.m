@@ -1,11 +1,11 @@
-clear; setup; cvx_begin; cvx_end; clc; close all; config_txs;
+clear; setup; cvx_begin; cvx_end; clc; close all; run(strcat('config_', erase(mfilename, 'region_')));
 
 % * Initialize struct
 Result(nVariables, 1) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
 % * Evaluate rate region for different number of transmit antennas
 for iVariable = 1 : nVariables
-	% * Select layout
+	% * Set number of transmit antennas
 	nTxs = Variable.nTxs(iVariable);
 
 	% * Generate channels

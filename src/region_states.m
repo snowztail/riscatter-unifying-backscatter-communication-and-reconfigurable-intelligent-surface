@@ -1,11 +1,11 @@
-clear; setup; cvx_begin; cvx_end; clc; close all; config_states;
+clear; setup; cvx_begin; cvx_end; clc; close all; run(strcat('config_', erase(mfilename, 'region_')));
 
 % * Initialize struct
 Result(nVariables, 1) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
-% * Evaluate rate region for different number of states
+% * Evaluate rate region for different number of reflection states
 for iVariable = 1 : nVariables
-	% * Select constellation
+	% * Set constellation
 	nStates = Variable.nStates(iVariable);
 	constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
 

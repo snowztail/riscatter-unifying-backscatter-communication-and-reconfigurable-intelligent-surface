@@ -3,11 +3,10 @@ clear; setup; cvx_begin; cvx_end; clc; close all; run(strcat('config_', erase(mf
 % * Initialize struct
 Result(nVariables, 1) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
-% * Evaluate rate region for different number of tags
+% * Evaluate rate region for different number of transmit antennas
 for iVariable = 1 : nVariables
-	% * Set layout
-	nTags = Variable.nTags(iVariable);
-	[directDistance, forwardDistance, backwardDistance] = layout(nTags);
+	% * Set symbol duration ratio
+	symbolRatio = Variable.symbolRatio(iVariable);
 
 	% * Generate channels
 	directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);

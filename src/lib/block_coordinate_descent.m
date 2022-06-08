@@ -31,7 +31,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		noisePower;
 		weight;
 		equivalentChannel;
-		tolerance = 1e-8;
+		tolerance = 1e-9;
 		options.Distribution {mustBeMember(options.Distribution, ['cooperation', 'exhaustion', 'kkt', 'sca'])};
 		options.Threshold {mustBeMember(options.Threshold, ['smawk', 'dp', 'bisection', 'ml'])};
 		options.Beamforming {mustBeMember(options.Beamforming, 'pgd')};

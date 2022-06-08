@@ -44,4 +44,5 @@ nVariables = length(Variable.nStates);
 
 
 %% * PBS
+% number of instances
 nInstances = 3e2;

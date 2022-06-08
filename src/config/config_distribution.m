@@ -1,10 +1,10 @@
 %% * System
 % number of transmit antennas
 nTxs = 4;
-% % number of tags
-% nTags = 2;
+% number of tags
+nTags = 1;
 % number of available states at tags (i.e., modulation order)
-nStates = 2;
+nStates = 4;
 % constellation diagram at tags
 constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
 % carrier frequency
@@ -19,8 +19,8 @@ transmitPower = db2pow(6);
 noisePower = db2pow(-100);
 % antenna gain
 rxGain = db2pow(3);
-% % layout and distance
-% [directDistance, forwardDistance, backwardDistance] = layout(nTags);
+% layout and distance
+[directDistance, forwardDistance, backwardDistance] = layout(nTags);
 % path loss exponents
 directExponent = 2.6;
 forwardExponent = 2.4;
@@ -33,16 +33,6 @@ backwardFactor = 10;
 
 %% * Algorithm
 % relative priority of primary link
-weightSet = [0 : 1e-3 : 2e-2, 1];
+weightSet = [0, 2e-3, 5e-3, 1e-2, 1];
 % number of weights on rate region boundary
 nWeights = length(weightSet);
-
-
-%% * Variable
-Variable.nTags = 2 .^ (0 : 3);
-nVariables = length(Variable.nTags);
-
-
-%% * PBS
-% number of instances
-nInstances = 3e2;

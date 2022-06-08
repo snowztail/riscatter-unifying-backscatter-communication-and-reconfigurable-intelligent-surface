@@ -1,8 +1,8 @@
 %% * System
 % number of transmit antennas
 nTxs = 4;
-% % number of tags
-% nTags = 2;
+% number of tags
+nTags = 2;
 % number of available states at tags (i.e., modulation order)
 nStates = 2;
 % constellation diagram at tags
@@ -11,8 +11,8 @@ constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', I
 frequency = 9e8;
 % amplitude scatter ratio at tags
 scatterRatio = 0.5;
-% backscatter/primary symbol duration ratio
-symbolRatio = 10;
+% % backscatter/primary symbol duration ratio
+% symbolRatio = 10;
 % average transmit power
 transmitPower = db2pow(6);
 % average noise power
@@ -39,8 +39,8 @@ nWeights = length(weightSet);
 
 
 %% * Variable
-Variable.nTags = 2 .^ (0 : 3);
-nVariables = length(Variable.nTags);
+Variable.symbolRatio = 10 : 10 : 30;
+nVariables = length(Variable.symbolRatio);
 
 
 %% * PBS

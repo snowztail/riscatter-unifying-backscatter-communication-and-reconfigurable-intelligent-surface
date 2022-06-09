@@ -19,8 +19,8 @@ transmitPower = db2pow(6);
 noisePower = db2pow(-100);
 % antenna gain
 rxGain = db2pow(3);
-% % layout and distance
-% [directDistance, forwardDistance, backwardDistance] = layout(nTags);
+% layout and distance
+[directDistance, forwardDistance, backwardDistance] = layout(nTags);
 % path loss exponents
 directExponent = 2.6;
 forwardExponent = 2.4;

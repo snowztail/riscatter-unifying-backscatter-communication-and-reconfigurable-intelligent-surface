@@ -15,7 +15,7 @@ end
 save(strcat('../data/region_', erase(mfilename, 'plot_')));
 
 %% * Draw primary-(sum-)backscatter rate regions
-figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Number of Reflecting States', 'Position', [0, 0, 500, 400]);
+figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Number of Reflection States', 'Position', [0, 0, 500, 400]);
 object = gobjects(nVariables, 1);
 hold all;
 for iVariable = 1 : nVariables
@@ -23,7 +23,7 @@ for iVariable = 1 : nVariables
 end
 hold off; legend; grid on; box on; axis tight;
 xlabel('Primary Rate [nats/s/Hz]');
-ylabel('(Sum-)Backscatte Rate [$\mu$ nats/channel use]');
+ylabel('(Sum-)Backscatte Rate [$\mu$ nats/backscatter symbol duration]');
 xlim([13 14]);
 plot_style(object);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));

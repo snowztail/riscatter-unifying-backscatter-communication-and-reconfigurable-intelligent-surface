@@ -23,7 +23,7 @@ for iVariable = 1 : nVariables
 end
 hold off; legend; grid on; box on; axis tight;
 xlabel('Primary Rate [nats/s/Hz]');
-ylabel('(Sum-)Backscatte Rate [$\mu$ nats/channel use]');
+ylabel('(Sum-)Backscatte Rate [$\mu$ nats/backscatter symbol duration]');
 xlim([13.5, 14.25])
 plot_style(object);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));

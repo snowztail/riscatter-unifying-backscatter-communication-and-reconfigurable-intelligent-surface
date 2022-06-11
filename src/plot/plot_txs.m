@@ -24,7 +24,7 @@ end
 hold off; legend; grid on; box on; axis tight;
 xlabel('Primary Rate [nats/s/Hz]');
 ylabel('(Sum-)Backscatte Rate [$\mu$ nats/backscatter symbol duration]');
-xlim([9 18])
+xlim([9, Inf])
 plot_style(object);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
 matlab2tikz(strcat('../../assets/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', ['title style={font=\huge}, ' 'label style={font=\huge}, ' 'ticklabel style={font=\LARGE}, ' 'legend style={font=\LARGE}']);

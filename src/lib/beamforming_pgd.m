@@ -47,7 +47,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 	[~, sortIndex] = sort(receivePower);
 	dmac = dmc_integration(symbolRatio, receivePower, threshold);
 	dmac(:, sortIndex) = dmac;
-	wsr = rate_weighted(symbolRatio, weight, snr, equivalentDistribution, dmac);
+	wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
 
 	% * Projected gradient descent
 	isConverged = false;
@@ -61,14 +61,14 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		receivePowerPgd = abs(equivalentChannel' * beamformingPgd) .^ 2 + noisePower;
 		snrPgd = receivePowerPgd / noisePower;
 		dmacPgd = dmc_integration(symbolRatio, receivePowerPgd, threshold);
-		wsrPgd = rate_weighted(symbolRatio, weight, snrPgd, equivalentDistribution, dmacPgd);
-		while wsr > wsrPgd + alpha * step * norm(gradient) ^ 2 && step > eps
+		wsrPgd = rate_weighted(weight, snrPgd, equivalentDistribution, dmacPgd);
+		while wsr > wsrPgd + alpha * step * norm(gradient) ^ 2 && step > tolerance
 			step = beta * step;
 			beamformingPgd = beamforming_projection(transmitPower, beamforming + step * gradient);
 			receivePowerPgd = abs(equivalentChannel' * beamformingPgd) .^ 2 + noisePower;
 			snrPgd = receivePowerPgd / noisePower;
 			dmacPgd = dmc_integration(symbolRatio, receivePowerPgd, threshold);
-			wsrPgd = rate_weighted(symbolRatio, weight, snrPgd, equivalentDistribution, dmacPgd);
+			wsrPgd = rate_weighted(weight, snrPgd, equivalentDistribution, dmacPgd);
 		end
 
 		% * Test convergence (gradient can be non-zero due to norm constraint)
@@ -101,7 +101,7 @@ function [gradient] = gradient_local(symbolRatio, weight, noisePower, equivalent
 	end
 	dWsr = zeros(nTxs, 1);
 	for iInput = 1 : nInputs
-		dWsr = dWsr + weight * symbolRatio * equivalentDistribution(iInput) * equivalentChannel(:, iInput) * equivalentChannel(:, iInput)' * beamforming / receivePower(iInput);
+		dWsr = dWsr + weight * equivalentDistribution(iInput) * equivalentChannel(:, iInput) * equivalentChannel(:, iInput)' * beamforming / receivePower(iInput);
 		for iOutput = 1 : nOutputs
 			dWsr = dWsr + (1 - weight) * equivalentDistribution(iInput) * ((log(dmac(iInput, iOutput) / (equivalentDistribution' * dmac(:, iOutput))) + 1) * dDmac(:, iInput, iOutput) ...
 				- dmac(iInput, iOutput) * dDmac(:, :, iOutput) * equivalentDistribution / (equivalentDistribution' * dmac(:, iOutput)));

@@ -1,10 +1,9 @@
-function [distribution, equivalentDistribution] = distribution_exhaustion(nTags, symbolRatio, weight, snr, dmac, resolution)
+function [distribution, equivalentDistribution] = distribution_exhaustion(nTags, weight, snr, dmac, resolution)
 	% Function:
 	%	- exhaustively search tag input probability distribution for maximizing weighted sum of primary and total backscatter rate
     %
     % Input:
 	%	- nTags: number of tags
-	%	- symbolRatio: backscatter/primary symbol duration ratio
 	%	- weight: relative priority of primary link
 	%	- snr [nInputs x 1]: average receive signal-to-noise ratio per primary symbol for each tag state tuple
 	%	- dmac [nInputs x nOutputs]: discrete memoryless thresholding multiple access channel whose input and output are tag state tuple
@@ -19,7 +18,6 @@ function [distribution, equivalentDistribution] = distribution_exhaustion(nTags,
 	% * Set default resolution
 	arguments
 		nTags;
-		symbolRatio;
 		weight;
 		snr;
 		dmac;
@@ -40,7 +38,7 @@ function [distribution, equivalentDistribution] = distribution_exhaustion(nTags,
 	for iTuple = 1 : nTuples
 		distributionInstance = probabilitySimplex(:, candidateTuple(iTuple, :));
 		equivalentDistributionInstance = prod(tuple_tag(distributionInstance), 2);
-		wsrInstance = equivalentDistributionInstance' * (weight * information_primary(symbolRatio, snr) + (1 - weight) * information_backscatter(equivalentDistributionInstance, dmac));
+		wsrInstance = equivalentDistributionInstance' * (weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistributionInstance, dmac));
 		if wsrInstance > wsr
 			distribution = distributionInstance;
 			equivalentDistribution = equivalentDistributionInstance;

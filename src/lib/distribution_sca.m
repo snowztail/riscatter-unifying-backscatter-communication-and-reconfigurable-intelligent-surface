@@ -1,10 +1,9 @@
-function [distribution, equivalentDistribution] = distribution_sca(nTags, symbolRatio, weight, snr, dmac, tolerance)
+function [distribution, equivalentDistribution] = distribution_sca(nTags, weight, snr, dmac, tolerance)
 	% Function:
 	%	- optimize tag input probability distribution by successive convex approximation for maximizing weighted sum of primary and total backscatter rate
     %
     % Input:
 	%	- nTags: number of tags
-	%	- symbolRatio: backscatter/primary symbol duration ratio
 	%	- weight: relative priority of primary link
 	%	- snr [nInputs x 1]: average receive signal-to-noise ratio per primary symbol for each tag state tuple
 	%	- dmac [nInputs x nOutputs]: discrete memoryless thresholding multiple access channel whose input and output are tag state tuple
@@ -23,7 +22,6 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, symbol
 	% * Set default tolerance
 	arguments
 		nTags;
-		symbolRatio;
 		weight;
 		snr;
 		dmac;
@@ -40,7 +38,7 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, symbol
 	% * Initialize input distribution as uniform
 	distribution = normalize(ones(nStates, nTags), 'norm', 1);
 	equivalentDistribution = prod(tuple_tag(distribution), 2);
-	wsr = rate_weighted(symbolRatio, weight, snr, equivalentDistribution, dmac);
+	wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
 
 	% * Iteratively update input distribution by SCA
 	isConverged = false;
@@ -56,7 +54,7 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, symbol
 				end
 				equivalentDistributionSca(iInput) = equivalentDistributionSca(iInput) - (nTags - 1) * prod(distribution_(sub2ind(size(distribution_), stateTuple(iInput, :), 1 : nTags)), 2);
 			end
-			wsrSca = rate_weighted(symbolRatio, weight, snr, equivalentDistributionSca, dmac);
+			wsrSca = rate_weighted(weight, snr, equivalentDistributionSca, dmac);
 			maximize wsrSca
 			subject to
 				for iTag = 1 : nTags
@@ -66,7 +64,7 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, symbol
 
 		% * Compute actual weighted sum rate
 		equivalentDistribution = prod(tuple_tag(distribution), 2);
-		wsr = rate_weighted(symbolRatio, weight, snr, equivalentDistribution, dmac);
+		wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
 
 		% * Test convergence
 		isConverged = abs(wsr - wsr_) <= tolerance;

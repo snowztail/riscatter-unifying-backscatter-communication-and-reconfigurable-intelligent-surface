@@ -1,10 +1,9 @@
-function [jointDistribution, equivalentDistribution] = distribution_cooperation(nTags, symbolRatio, weight, snr, dmac, tolerance)
+function [jointDistribution, equivalentDistribution] = distribution_cooperation(nTags, weight, snr, dmac, tolerance)
 	% Function:
 	%	- obtain the optimal joint tag input distribution with full transmit cooperation for maximizing weighted sum of primary and total backscatter rate
     %
     % Input:
 	%	- nTags: number of tags
-	%	- symbolRatio: backscatter/primary symbol duration ratio
 	%	- weight: relative priority of primary link
 	%	- snr [nInputs x 1]: average receive signal-to-noise ratio per primary symbol for each tag state tuple
 	%	- dmac [nInputs x nOutputs]: discrete memoryless thresholding multiple access channel whose input and output are tag state tuple
@@ -23,7 +22,6 @@ function [jointDistribution, equivalentDistribution] = distribution_cooperation(
 	% * Set default tolerance
 	arguments
 		nTags;
-		symbolRatio;
 		weight;
 		snr;
 		dmac;
@@ -37,7 +35,7 @@ function [jointDistribution, equivalentDistribution] = distribution_cooperation(
 	% * Initialize input distribution as uniform distribution
 	distribution = normalize(ones(nStates, nTags), 'norm', 1);
 	equivalentDistribution = prod(tuple_tag(distribution), 2);
-	informationFunction = weight * information_primary(symbolRatio, snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
+	informationFunction = weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
 	wsr = equivalentDistribution' * informationFunction;
 
 	% * Iteratively update equivalent distribution, information function associated with each (joint) codeword, and weighted sum achievable rate
@@ -46,7 +44,7 @@ function [jointDistribution, equivalentDistribution] = distribution_cooperation(
 		wsr_ = wsr;
 		equivalentDistribution = equivalentDistribution .* exp(informationFunction) / (equivalentDistribution' * exp(informationFunction));
 		jointDistribution = permute(reshape(equivalentDistribution, nStates * ones(1, nTags)), nTags : -1 : 1);
-		informationFunction = weight * information_primary(symbolRatio, snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
+		informationFunction = weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
 		wsr = equivalentDistribution' * informationFunction;
 		isConverged = abs(wsr - wsr_) <= tolerance;
 	end

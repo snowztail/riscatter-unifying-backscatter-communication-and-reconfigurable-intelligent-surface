@@ -1,9 +1,8 @@
-function [distribution, equivalentDistribution] = recovery_randomization(symbolRatio, weight, snr, jointDistribution, dmac, nKernels, nInstances, tolerance)
+function [distribution, equivalentDistribution] = recovery_randomization(weight, snr, jointDistribution, dmac, nKernels, nInstances, tolerance)
 	% Function:
 	%	- extract individual tag input distribution from joint input distribution by randomization
     %
     % Input:
-	%	- symbolRatio: backscatter/primary symbol duration ratio
 	%	- weight: relative priority of primary link
 	%	- snr [nInputs x 1]: average receive signal-to-noise ratio per primary symbol for each tag state tuple
 	%	- jointDistribution [nStates x ... (nTags-dimensional) ... x nStates]: joint tag input distribution with full transmit cooperation
@@ -31,7 +30,6 @@ function [distribution, equivalentDistribution] = recovery_randomization(symbolR
 
 	% * Declare default tolerance
 	arguments
-		symbolRatio;
 		weight;
 		snr;
 		jointDistribution;
@@ -109,7 +107,7 @@ function [distribution, equivalentDistribution] = recovery_randomization(symbolR
 				distributionInstance(:, iTag) = randomVector + (1 - ones(1, nStates) * randomVector) / nStates * ones(nStates, 1);
 			end
 			equivalentDistributionInstance = prod(tuple_tag(distributionInstance), 2);
-			wsrInstance = equivalentDistributionInstance' * (weight * information_primary(symbolRatio, snr) + (1 - weight) * information_backscatter(equivalentDistributionInstance, dmac));
+			wsrInstance = equivalentDistributionInstance' * (weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistributionInstance, dmac));
 			if wsrInstance > wsr
 				distribution = distributionInstance;
 				equivalentDistribution = equivalentDistributionInstance;

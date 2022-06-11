@@ -1,10 +1,9 @@
-function [distribution, equivalentDistribution] = distribution_kkt(nTags, symbolRatio, weight, snr, dmac, tolerance)
+function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight, snr, dmac, tolerance)
 	% Function:
 	%	- obtain KKT tag input probability distribution for maximizing weighted sum of primary and total backscatter rate
     %
     % Input:
 	%	- nTags: number of tags
-	%	- symbolRatio: backscatter/primary symbol duration ratio
 	%	- weight: relative priority of primary link
 	%	- snr [nInputs x 1]: average receive signal-to-noise ratio per primary symbol for each tag state tuple
 	%	- dmac [nInputs x nOutputs]: discrete memoryless thresholding multiple access channel whose input and output are tag state tuple
@@ -24,7 +23,6 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, symbol
 	% * Set default tolerance
 	arguments
 		nTags;
-		symbolRatio;
 		weight;
 		snr;
 		dmac;
@@ -39,7 +37,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, symbol
 	distribution = normalize(ones(nStates, nTags), 'norm', 1);
 	distributionTuple = tuple_tag(distribution);
 	equivalentDistribution = prod(distributionTuple, 2);
-	informationFunction = weight * information_primary(symbolRatio, snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
+	informationFunction = weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
 	marginalInformation = marginal_information(distributionTuple, informationFunction);
 	wsr = equivalentDistribution' * informationFunction;
 
@@ -52,7 +50,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, symbol
 			distribution(:, iTag) = distribution(:, iTag) .* exp(marginalInformation(:, iTag)) ./ (distribution(:, iTag)' * exp(marginalInformation(:, iTag)));
 			distributionTuple = tuple_tag(distribution);
 			equivalentDistribution = prod(distributionTuple, 2);
-			informationFunction = weight * information_primary(symbolRatio, snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
+			informationFunction = weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
 			marginalInformation = marginal_information(distributionTuple, informationFunction);
 			wsr = equivalentDistribution' * informationFunction;
 		end

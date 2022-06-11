@@ -61,7 +61,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	% dmac = normalize(rand(size(dmac)), 2, 'norm', 1);
 
 	% * Block coordinate descent
-	wsr = rate_weighted(symbolRatio, weight, snr, equivalentDistribution, dmac);
+	wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
 	isConverged = false;
 	while ~isConverged
 		% * Update iteration index
@@ -70,13 +70,13 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		% * Input probability distribution
 		switch options.Distribution
 		case 'exhaustion'
-			[distribution, equivalentDistribution] = distribution_exhaustion(nTags, symbolRatio, weight, snr, dmac);
+			[distribution, equivalentDistribution] = distribution_exhaustion(nTags, weight, snr, dmac);
 		case 'kkt'
-			[distribution, equivalentDistribution] = distribution_kkt(nTags, symbolRatio, weight, snr, dmac);
+			[distribution, equivalentDistribution] = distribution_kkt(nTags, weight, snr, dmac);
 		case 'sca'
-			[distribution, equivalentDistribution] = distribution_sca(nTags, symbolRatio, weight, snr, dmac);
+			[distribution, equivalentDistribution] = distribution_sca(nTags, weight, snr, dmac);
 		case 'cooperation'
-			[jointDistribution, equivalentDistribution] = distribution_cooperation(nTags, symbolRatio, weight, snr, dmac);
+			[jointDistribution, equivalentDistribution] = distribution_cooperation(nTags, weight, snr, dmac);
 			if isfield(options, 'Recovery')
 				switch options.Recovery
 				case 'marginalization'
@@ -84,7 +84,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 				case 'decomposition'
 					[distribution, equivalentDistribution] = recovery_decomposition(jointDistribution);
 				case 'randomization'
-					[distribution, equivalentDistribution] = recovery_randomization(symbolRatio, weight, snr, jointDistribution, dmac);
+					[distribution, equivalentDistribution] = recovery_randomization(weight, snr, jointDistribution, dmac);
 				end
 			end
 		end
@@ -117,7 +117,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		dmac(:, sortIndex) = dmac;
 
 		% * Test convergence
-		[wsr, rate] = rate_weighted(symbolRatio, weight, snr, equivalentDistribution, dmac);
+		[wsr, rate] = rate_weighted(weight, snr, equivalentDistribution, dmac);
 		isConverged = abs(wsr - wsr_) <= tolerance;
 	end
 end

@@ -72,7 +72,7 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 					lowerDivergence = middleDivergence;
 				else
 					utp = mtp;
-					upperDivergence = middleDivergence;
+					% upperDivergence = middleDivergence;
 				end
 			end
 		end

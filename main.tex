@@ -202,32 +202,6 @@
 \end{section}
 
 \begin{section}{Backscatter Principles}
-	% \begin{figure}[!t]
-	% 	\centering
-	% 	\subfloat[Block Diagram]{
-	% 		\resizebox{0.6\columnwidth}{!}{
-	% 			\input{assets/block_diagram.tex}
-	% 		}
-	% 		\label{fi:block_diagram}
-	% 	}
-	% 	\setcounter{subfigure}{2}%
-	% 	\subfloat[Scatter Model]{
-	% 		\resizebox{0.35\columnwidth}{!}{
-	% 			\input{assets/scatter_model.tex}
-	% 		}
-	% 		\label{fi:scatter_model}
-	% 	}
-	% 	\setcounter{subfigure}{1}
-	% 	\subfloat[Equivalent Circuit]{
-	% 		\resizebox{0.95\columnwidth}{!}{
-	% 			\input{assets/equivalent_circuit.tex}
-	% 		}
-	% 		\label{fi:equivalent_circuit}
-	% 	}
-	% 	\caption{Block diagram, equivalent circuit, and scatter model of a typical passive tag. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
-	% \end{figure}
-
-
 	\begin{figure}[!t]
 		\centering
 		\subfloat[Block Diagram]{
@@ -252,8 +226,6 @@
 		}
 		\caption{Block diagram, equivalent circuit, and scatter model of a typical passive tag. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
 	\end{figure}
-	% In a bistatic backscatter system,
-	% Consider a bistatic backscatter system with an excitation source, multiple passive tags, and a backscatter reader.
 	Passive backscatter devices (a.k.a., tags) harvest energy from and modulate information over surrounding \gls{rf} signal.
 	As shown in Fig. \subref*{fi:block_diagram}, a typical passive tag consists of a scattering antenna, an energy harvester, an integrated receiver, a load-switching modulator, and on-chip components (e.g., micro-controller and sensors) \cite{Dobkin2012}. Its equivalent circuit is also given by Fig. \subref*{fi:equivalent_circuit}.
 	When illuminated, the tag absorbs a portion of the impinging wave and scatters the rest back to the space.
@@ -430,7 +402,7 @@
 		Similar to above, the primary information function of input combination $x_{m_{\mathcal{K}}}$ is
 		% TODO notation
 		\begin{equation}
-			I_{\mathrm{P}}(x_{m_{\mathcal{K}}};\boldsymbol{y}) \triangleq N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right),
+			I_{\mathrm{P}}(x_{m_{\mathcal{K}}};\boldsymbol{y}) \triangleq \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right),
 			\label{eq:primary_information_function}
 		\end{equation}
 		the primary marginal information function associated with letter $x_{m_k}$ of tag $k$ is
@@ -440,7 +412,7 @@
 		\end{equation}
 		and the primary (ergodic) mutual information is
 		\begin{equation}
-			I_{\mathrm{P}}(x_{\mathcal{K}};\boldsymbol{y}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right).
+			I_{\mathrm{P}}(x_{\mathcal{K}};\boldsymbol{y}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right).
 			\label{eq:primary_mutual_information}
 		\end{equation}
 
@@ -667,7 +639,7 @@
 			\hrule
 			\begin{align}
 				J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)
-				 & \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) N \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right)\nonumber                                                                                                                          \\
+				 & \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right)\nonumber                                                                                                                          \\
 				 & \quad + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})}.
 				\label{eq:intermediate_information_function}
 			\end{align}

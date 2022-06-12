@@ -46,8 +46,16 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	distribution = normalize(ones(nStates, nTags), 'norm', 1);
 	equivalentDistribution = prod(tuple_tag(distribution), 2);
 
-	% * Initialize beamforming vector as MRT to ergodic equivalent channel
-	beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+	% ! Initialize beamforming by previous solution
+	persistent initializer
+
+	% * No previous solution, use MRT initializer
+	if isempty(initializer)
+		initializer = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+	end
+
+	% * Apply initializer
+	beamforming = initializer;
 
 	% * Initialize decision threshold by maximum likelihood
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
@@ -120,4 +128,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		[wsr, rate] = rate_weighted(weight, snr, equivalentDistribution, dmac);
 		isConverged = abs(wsr - wsr_) <= tolerance;
 	end
+
+	% * Update initializer
+	initializer = beamforming;
 end

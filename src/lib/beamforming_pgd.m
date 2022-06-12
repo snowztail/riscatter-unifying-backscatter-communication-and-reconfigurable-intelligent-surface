@@ -38,8 +38,16 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		beta = 0.5;
 	end
 
-	% * Initialize beamforming vector as MRT to ergodic equivalent channel
-	beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+	% ! Initialize beamforming by previous solution
+	persistent initializer
+
+	% * No previous solution, use MRT initializer
+	if isempty(initializer)
+		initializer = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+	end
+
+	% * Apply initializer
+	beamforming = initializer;
 % 	beamforming = randn(size(beamforming)) + 1i * randn(size(beamforming));
 % 	beamforming = sqrt(transmitPower) * beamforming / norm(beamforming);
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
@@ -77,6 +85,9 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		beamforming = beamformingPgd;
 		wsr = wsrPgd;
 	end
+
+	% * Update initializer
+	initializer = beamforming;
 end
 
 

@@ -26,6 +26,9 @@ for iVariable = 1 : nVariables
 		[rate(:, iWeight), distribution(:, :, iWeight), threshold(iWeight, :), beamforming(:, iWeight)] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weightSet(iWeight), equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
 	end
 	Result(iVariable) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
+
+	% * Clear persistent variable
+	clear block_coordinate_descent beamforming_pgd;
 end
 
 directory = strcat('data/', mfilename, '/');

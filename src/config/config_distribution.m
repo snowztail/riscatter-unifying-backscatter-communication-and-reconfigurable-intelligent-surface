@@ -33,6 +33,6 @@ backwardFactor = 10;
 
 %% * Algorithm
 % relative priority of primary link
-weightSet = [0, 2e-3, 5e-3, 1e-2, 1];
+weightSet = [0, 2e-2, 5e-2, 1e-1, 1];
 % number of weights on rate region boundary
 nWeights = length(weightSet);

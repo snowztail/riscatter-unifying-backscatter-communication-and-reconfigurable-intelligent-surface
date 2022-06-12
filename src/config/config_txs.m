@@ -33,7 +33,7 @@ backwardFactor = 10;
 
 %% * Algorithm
 % relative priority of primary link
-weightSet = [0 : 1e-3 : 2e-2, 1];
+weightSet = flip([0 : 1e-2 : 5e-2, 1e-1 : 5e-2 : 2.5e-1, 3e-1 : 1e-1 : 1]);
 % number of weights on rate region boundary
 nWeights = length(weightSet);
 
@@ -45,4 +45,4 @@ nVariables = length(Variable.nTxs);
 
 %% * PBS
 % number of instances
-nInstances = 3e3;
+nInstances = 1e3;

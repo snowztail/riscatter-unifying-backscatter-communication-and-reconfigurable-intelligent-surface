@@ -325,3 +325,4 @@ src/data/
 
 # PBS log
 src/pbs/log/
+core.*

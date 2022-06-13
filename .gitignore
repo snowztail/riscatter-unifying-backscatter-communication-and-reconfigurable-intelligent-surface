@@ -322,3 +322,6 @@ untitled*
 
 # Batch data
 src/data/
+
+# PBS log
+src/pbs/log/

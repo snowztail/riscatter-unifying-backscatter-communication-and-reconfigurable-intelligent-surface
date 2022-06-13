@@ -25,7 +25,7 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, weight
 		weight;
 		snr;
 		dmac;
-		tolerance = 1e-9;
+		tolerance = 1e-12;
 	end
 
 	% * Get data

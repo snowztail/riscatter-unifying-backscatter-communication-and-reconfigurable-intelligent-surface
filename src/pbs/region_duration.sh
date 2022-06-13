@@ -3,7 +3,7 @@
 
 module load matlab/R2021a
 
-cd $PBS_O_WORKDIR/..
+cd $PBS_O_WORKDIR/../../
 # matlab -batch $(basename $BASH_SOURCE .sh)
 matlab -singleCompThread -batch "region_duration"
 

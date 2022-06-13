@@ -1,4 +1,4 @@
-clear; setup; cvx_begin; cvx_end; clc; close all; config;
+clear; clear block_coordinate_descent beamforming_pgd; setup; cvx_begin; cvx_end; clc; close all; config;
 
 % * Generate channels
 directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);

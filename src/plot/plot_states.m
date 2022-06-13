@@ -1,4 +1,4 @@
-clear; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc; close all;
+clear; clear block_coordinate_descent beamforming_pgd; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc; close all;
 
 %% * Load data
 directory = strcat('../data/region_', erase(mfilename, 'plot_'), '/');

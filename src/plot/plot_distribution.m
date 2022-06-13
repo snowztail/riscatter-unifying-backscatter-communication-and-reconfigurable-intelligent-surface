@@ -1,4 +1,4 @@
-clear; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc; close all;
+clear; clear block_coordinate_descent beamforming_pgd; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc; close all;
 
 %% * Load data
 distribution = permute(load(strcat('../data/trend_', erase(mfilename, 'plot_')), 'Result').Result.distribution, [1 3 2]);

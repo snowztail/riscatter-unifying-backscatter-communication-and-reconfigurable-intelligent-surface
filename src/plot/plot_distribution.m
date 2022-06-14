@@ -14,6 +14,6 @@ hold off; legend; grid minor; box on;
 xlabel('Reflection State');
 ylabel('Probability Distribution');
 xticks(1 : nStates);
-plot_style(object);
+style_plot(object);
 savefig(strcat('figures/trend_', erase(mfilename, 'plot_')));
 matlab2tikz(strcat('../../assets/trend_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', ['title style={font=\huge}, ' 'label style={font=\huge}, ' 'ticklabel style={font=\LARGE}, ' 'legend style={font=\LARGE}']);

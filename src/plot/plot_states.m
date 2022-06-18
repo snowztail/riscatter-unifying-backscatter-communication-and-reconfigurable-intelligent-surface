@@ -8,8 +8,10 @@ data_load;
 region = cell(nVariables, 1);
 for iVariable = 1 : nVariables
 	rate = zeros(2, nWeights + 3);
-	rate(:, 1 : nWeights) = mean(cat(3, Result(iVariable, :).rate), 3);
-	[rate(1, nWeights + 1), rate(2, nWeights + 2)] = deal(max(rate(1,:)), max(rate(2,:)));
+	for iWeight = 1 : nWeights
+		rate(:, iWeight) = mean(cat(2, Result(iVariable, iWeight, :).rate), 2);
+	end
+	[rate(1, nWeights + 1), rate(2, nWeights + 2)] = deal(max(rate(1, :)), max(rate(2, :)));
 	region{iVariable} = rate(:, convhull(transpose(rate)));
 end
 save(strcat('../data/region_', erase(mfilename, 'plot_')));

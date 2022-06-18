@@ -1,7 +1,7 @@
 clear; clear block_coordinate_descent beamforming_pgd; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc; close all;
 
 %% * Load data
-distribution = permute(load(strcat('../data/distribution_', erase(mfilename, 'plot_')), 'Result').Result.distribution, [1 3 2]);
+distribution = horzcat(load(strcat('../data/distribution_', erase(mfilename, 'plot_')), 'Result').Result.distribution);
 
 %% * Draw reflection state distributions
 figure('Name', 'Reflection State Distribution vs Weight', 'Position', [0, 0, 500, 400]);

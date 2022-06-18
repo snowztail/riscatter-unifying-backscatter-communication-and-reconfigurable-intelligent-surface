@@ -1,5 +1,8 @@
 clear; clear block_coordinate_descent beamforming_pgd; setup; cvx_begin; cvx_end; clc; close all; run(strcat('config_', erase(mfilename, 'distribution_')));
 
+% * Initialize struct
+Result(nWeights) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
+
 % * Generate channels
 directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);
 cascadedChannel = zeros(nTxs, nTags);
@@ -14,8 +17,8 @@ distribution = zeros(nStates, nTags, nWeights);
 threshold = zeros(nWeights, nStates ^ nTags + 1);
 beamforming = zeros(nTxs, nWeights);
 for iWeight = 1 : nWeights
-	[rate(:, iWeight), distribution(:, :, iWeight), threshold(iWeight, :), beamforming(:, iWeight)] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weightSet(iWeight), equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
+	[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weightSet(iWeight), equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
+	Result(iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 end
-Result = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 
 save(strcat('data/', mfilename));

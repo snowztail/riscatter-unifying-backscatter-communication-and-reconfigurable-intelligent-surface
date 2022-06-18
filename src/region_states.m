@@ -1,7 +1,7 @@
 clear; clear block_coordinate_descent beamforming_pgd; setup; cvx_begin; cvx_end; clc; close all; run(strcat('config_', erase(mfilename, 'region_')));
 
 % * Initialize struct
-Result(nVariables, 1) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
+Result(nVariables, nWeights) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
 % * Evaluate rate region for different number of reflection states
 for iVariable = 1 : nVariables
@@ -18,14 +18,11 @@ for iVariable = 1 : nVariables
 	equivalentChannel = directChannel + sqrt(scatterRatio) * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
 	% * Evaluate rate region
-	rate = zeros(2, nWeights);
-	distribution = zeros(nStates, nTags, nWeights);
-	threshold = zeros(nWeights, nStates ^ nTags + 1);
-	beamforming = zeros(nTxs, nWeights);
 	for iWeight = 1 : nWeights
-		[rate(:, iWeight), distribution(:, :, iWeight), threshold(iWeight, :), beamforming(:, iWeight)] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weightSet(iWeight), equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
+		weight = weightSet(iWeight);
+		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weight, equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
+		Result(iVariable, iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 	end
-	Result(iVariable) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 
 	% * Clear persistent variable
 	clear block_coordinate_descent beamforming_pgd;

@@ -3,18 +3,18 @@ clear; clear block_coordinate_descent beamforming_pgd; setup; cvx_begin; cvx_end
 % * Initialize struct
 Result(nVariables, nWeights) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
-% * Evaluate rate region for different number of transmit antennas
+% * Generate channels
+directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);
+cascadedChannel = zeros(nTxs, nTags);
+for iTag = 1 : nTags
+	cascadedChannel(:, iTag) = rxGain * path_loss(frequency, forwardDistance(iTag), forwardExponent) * fading_ricean(nTxs, 1, forwardFactor) * path_loss(frequency, backwardDistance(iTag), backwardExponent) * fading_ricean(1, 1, backwardFactor);
+end
+equivalentChannel = directChannel + sqrt(scatterRatio) * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
+
+% * Evaluate rate region for different backscatter/primary symbol duration ratio
 for iVariable = 1 : nVariables
 	% * Set symbol duration ratio
 	symbolRatio = Variable(iVariable).symbolRatio;
-
-	% * Generate channels
-	directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);
-	cascadedChannel = zeros(nTxs, nTags);
-	for iTag = 1 : nTags
-		cascadedChannel(:, iTag) = rxGain * path_loss(frequency, forwardDistance(iTag), forwardExponent) * fading_ricean(nTxs, 1, forwardFactor) * path_loss(frequency, backwardDistance(iTag), backwardExponent) * fading_ricean(1, 1, backwardFactor);
-	end
-	equivalentChannel = directChannel + sqrt(scatterRatio) * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
 	% * Evaluate rate region
 	for iWeight = 1 : nWeights

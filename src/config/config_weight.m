@@ -2,9 +2,9 @@
 % number of transmit antennas
 nTxs = 4;
 % number of tags
-nTags = 2;
+nTags = 1;
 % number of available states at tags (i.e., modulation order)
-nStates = 2;
+nStates = 4;
 % constellation diagram at tags
 constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
 % carrier frequency
@@ -32,6 +32,6 @@ backwardFactor = 10;
 
 %% * Algorithm
 % relative priority of primary link
-weightSet = flip([0 : 1e-2 : 5e-2, 1e-1 : 5e-2 : 2.5e-1, 3e-1 : 1e-1 : 1]);
+weightSet = [0, 2e-2, 5e-2, 1e-1, 1];
 % number of weights on rate region boundary
 nWeights = length(weightSet);

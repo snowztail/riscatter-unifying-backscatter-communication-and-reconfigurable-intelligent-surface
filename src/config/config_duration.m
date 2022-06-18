@@ -30,18 +30,15 @@ directFactor = 5;
 forwardFactor = 5;
 backwardFactor = 10;
 
-
 %% * Algorithm
 % relative priority of primary link
 weightSet = flip([0 : 1e-2 : 5e-2, 1e-1 : 5e-2 : 2.5e-1, 3e-1 : 1e-1 : 1]);
 % number of weights on rate region boundary
 nWeights = length(weightSet);
 
-
 %% * Variable
-Variable.symbolRatio = 10 : 10 : 30;
-nVariables = length(Variable.symbolRatio);
-
+Variable = struct('symbolRatio', num2cell(10 : 10 : 30));
+nVariables = length(Variable);
 
 %% * PBS
 % number of instances

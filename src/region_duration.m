@@ -6,7 +6,7 @@ Result(nVariables, 1) = struct('rate', [], 'distribution', [], 'threshold', [], 
 % * Evaluate rate region for different number of transmit antennas
 for iVariable = 1 : nVariables
 	% * Set symbol duration ratio
-	symbolRatio = Variable.symbolRatio(iVariable);
+	symbolRatio = Variable(iVariable).symbolRatio;
 
 	% * Generate channels
 	directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);

@@ -32,7 +32,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		weight;
 		equivalentChannel;
 		tolerance = 1e-9;
-		options.Distribution {mustBeMember(options.Distribution, ['cooperation', 'exhaustion', 'kkt', 'sca'])};
+		options.Distribution {mustBeMember(options.Distribution, ['exhaustion', 'kkt', 'sca', 'cooperation'])};
 		options.Threshold {mustBeMember(options.Threshold, ['smawk', 'dp', 'bisection', 'ml'])};
 		options.Beamforming {mustBeMember(options.Beamforming, 'pgd')};
 		options.Recovery {mustBeMember(options.Recovery, ['marginalization', 'decomposition', 'randomization'])};

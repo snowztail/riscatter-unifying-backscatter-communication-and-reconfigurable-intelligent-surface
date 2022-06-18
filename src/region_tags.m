@@ -6,7 +6,7 @@ Result(nVariables, 1) = struct('rate', [], 'distribution', [], 'threshold', [], 
 % * Evaluate rate region for different number of tags
 for iVariable = 1 : nVariables
 	% * Set layout
-	nTags = Variable.nTags(iVariable);
+	nTags = Variable(iVariable).nTags;
 	[directDistance, forwardDistance, backwardDistance] = layout(nTags);
 
 	% * Generate channels

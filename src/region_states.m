@@ -6,7 +6,7 @@ Result(nVariables, 1) = struct('rate', [], 'distribution', [], 'threshold', [], 
 % * Evaluate rate region for different number of reflection states
 for iVariable = 1 : nVariables
 	% * Set constellation
-	nStates = Variable.nStates(iVariable);
+	nStates = Variable(iVariable).nStates;
 	constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
 
 	% * Generate channels

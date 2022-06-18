@@ -19,7 +19,7 @@ figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Backscatter/Pri
 object = gobjects(nVariables, 1);
 hold all;
 for iVariable = 1 : nVariables
-	symbolRatio = Variable.symbolRatio(iVariable);
+	symbolRatio = Variable(iVariable).symbolRatio;
 	object(iVariable) = plot(region{iVariable}(1, :), 1e3 * region{iVariable}(2, :) / symbolRatio, 'DisplayName', strcat('$N = ', num2str(symbolRatio), '$'));
 end
 hold off; legend('Location', 'sw'); grid on; box on; axis tight;

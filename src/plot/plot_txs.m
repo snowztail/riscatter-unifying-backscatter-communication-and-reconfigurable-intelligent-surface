@@ -19,7 +19,7 @@ figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Number of Trans
 object = gobjects(nVariables, 1);
 hold all;
 for iVariable = 1 : nVariables
-	object(iVariable) = plot(region{iVariable}(1, :), 1e3 * region{iVariable}(2, :), 'DisplayName', strcat('$Q = ', num2str(Variable.nTxs(iVariable)), '$'));
+	object(iVariable) = plot(region{iVariable}(1, :), 1e3 * region{iVariable}(2, :), 'DisplayName', strcat('$Q = ', num2str(Variable(iVariable).nTxs), '$'));
 end
 hold off; legend; grid on; box on; axis tight;
 xlabel('Primary Rate [nats/s/Hz]');

@@ -19,7 +19,7 @@ figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Number of Metas
 object = gobjects(nVariables, 1);
 hold all;
 for iVariable = 1 : nVariables
-	object(iVariable) = plot(region{iVariable}(1, :), 1e3 * region{iVariable}(2, :), 'DisplayName', strcat('$K = ', num2str(Variable.nTags(iVariable)), '$'));
+	object(iVariable) = plot(region{iVariable}(1, :), 1e3 * region{iVariable}(2, :), 'DisplayName', strcat('$K = ', num2str(Variable(iVariable).nTags), '$'));
 end
 hold off; legend; grid on; box on; axis tight;
 xlabel('Primary Rate [nats/s/Hz]');

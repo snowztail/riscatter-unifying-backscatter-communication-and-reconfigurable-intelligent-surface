@@ -19,7 +19,7 @@ figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Number of Refle
 object = gobjects(nVariables, 1);
 hold all;
 for iVariable = 1 : nVariables
-	object(iVariable) = plot(region{iVariable}(1, :), 1e3 * region{iVariable}(2, :), 'DisplayName', strcat('$M = ', num2str(Variable.nStates(iVariable)), '$'));
+	object(iVariable) = plot(region{iVariable}(1, :), 1e3 * region{iVariable}(2, :), 'DisplayName', strcat('$M = ', num2str(Variable(iVariable).nStates), '$'));
 end
 hold off; legend('Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [nats/s/Hz]');

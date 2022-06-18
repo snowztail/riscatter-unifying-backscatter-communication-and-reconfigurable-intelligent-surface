@@ -1,0 +1,81 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44706,0.74118}%
+\definecolor{mycolor2}{rgb}{0.85098,0.32549,0.09804}%
+\definecolor{mycolor3}{rgb}{0.92941,0.69412,0.12549}%
+\definecolor{mycolor4}{rgb}{0.49412,0.18431,0.55686}%
+\definecolor{mycolor5}{rgb}{0.46667,0.67451,0.18824}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.036in,
+height=3.396in,
+at={(0.677in,0.458in)},
+scale only axis,
+xmin=1,
+xmax=4,
+xtick={1, 2, 3, 4},
+xlabel style={font=\color{white!15!black}},
+xlabel={Reflection State},
+ymin=0,
+ymax=1,
+ylabel style={font=\color{white!15!black}},
+ylabel={Probability Distribution},
+axis background/.style={fill=white},
+xminorgrids,
+yminorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black},
+title style={font=\huge}, label style={font=\huge}, ticklabel style={font=\LARGE}, legend style={font=\LARGE}
+]
+\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+1	0.249999734945382\\
+2	0.250000264528953\\
+3	0.25000026543652\\
+4	0.249999735089145\\
+};
+\addlegendentry{$\rho =0$}
+
+\addplot [color=mycolor2, dashed, line width=2.0pt, mark=+, mark options={solid, mycolor2}]
+  table[row sep=crcr]{%
+1	0.29621586579285\\
+2	0.376168737406121\\
+3	0.155469818621155\\
+4	0.172145578179874\\
+};
+\addlegendentry{$\rho =0.02$}
+
+\addplot [color=mycolor3, dotted, line width=2.0pt, mark=square, mark options={solid, mycolor3}]
+  table[row sep=crcr]{%
+1	0.262448276431783\\
+2	0.712350409003269\\
+3	0.00824022832841558\\
+4	0.0169610862365327\\
+};
+\addlegendentry{$\rho =0.05$}
+
+\addplot [color=mycolor4, dashdotted, line width=2.0pt, mark=x, mark options={solid, mycolor4}]
+  table[row sep=crcr]{%
+1	0.140066723576523\\
+2	0.859156695957714\\
+3	0.000133936954753823\\
+4	0.000642643511009231\\
+};
+\addlegendentry{$\rho =0.1$}
+
+\addplot [color=mycolor5, line width=2.0pt, mark=triangle, mark options={solid, mycolor5}]
+  table[row sep=crcr]{%
+1	0.00129716398391274\\
+2	0.998702836015253\\
+3	1.07370451326091e-15\\
+4	8.33074594560992e-13\\
+};
+\addlegendentry{$\rho =1$}
+
+\end{axis}
+\end{tikzpicture}%

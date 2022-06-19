@@ -33,8 +33,16 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 	nInputs = size(dmac, 1);
 	nStates = nthroot(nInputs, nTags);
 
-	% * Initialize input distribution as uniform
-	distribution = normalize(ones(nStates, nTags), 'norm', 1);
+	% ! Initialize distribution by previous solution
+	persistent initializer
+
+	% * No previous solution, use uniform initializer
+	if isempty(initializer)
+		initializer.distribution = normalize(ones(nStates, nTags), 'norm', 1);
+	end
+
+	% * Apply initializer
+	distribution = initializer.distribution;
 	distributionTuple = tuple_tag(distribution);
 	equivalentDistribution = prod(distributionTuple, 2);
 	informationFunction = weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
@@ -56,6 +64,9 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 		end
 		isConverged = abs(wsr - wsr_) <= tolerance;
 	end
+
+	% * Update initializer
+	initializer.distribution = distribution;
 end
 
 

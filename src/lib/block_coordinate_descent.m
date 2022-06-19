@@ -38,6 +38,9 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		options.Recovery {mustBeMember(options.Recovery, ['marginalization', 'decomposition', 'randomization'])};
 	end
 
+	% * Clear persistent variable for distribution
+	clear distribution_kkt distribution_cooperation;
+
 	% * Get data
 	nInputs = size(equivalentChannel, 2);
 	nStates = nthroot(nInputs, nTags);
@@ -51,11 +54,11 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 
 	% * No previous solution, use MRT initializer
 	if isempty(initializer)
-		initializer = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+		initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
 	end
 
 	% * Apply initializer
-	beamforming = initializer;
+	beamforming = initializer.beamforming;
 
 	% * Initialize decision threshold by maximum likelihood
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
@@ -130,5 +133,5 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	end
 
 	% * Update initializer
-	initializer = beamforming;
+	initializer.beamforming = beamforming;
 end

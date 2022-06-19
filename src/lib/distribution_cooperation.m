@@ -32,9 +32,16 @@ function [jointDistribution, equivalentDistribution] = distribution_cooperation(
 	nInputs = size(dmac, 1);
 	nStates = nthroot(nInputs, nTags);
 
-	% * Initialize input distribution as uniform distribution
-	distribution = normalize(ones(nStates, nTags), 'norm', 1);
-	equivalentDistribution = prod(tuple_tag(distribution), 2);
+	% ! Initialize distribution by previous solution
+	persistent initializer
+
+	% * No previous solution, use uniform initializer
+	if isempty(initializer)
+		initializer.equivalentDistribution = normalize(ones(nStates ^ nTags, 1), 'norm', 1);
+	end
+
+	% * Apply initializer
+	equivalentDistribution = initializer.equivalentDistribution;
 	informationFunction = weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
 	wsr = equivalentDistribution' * informationFunction;
 
@@ -48,4 +55,7 @@ function [jointDistribution, equivalentDistribution] = distribution_cooperation(
 		wsr = equivalentDistribution' * informationFunction;
 		isConverged = abs(wsr - wsr_) <= tolerance;
 	end
+
+	% * Update initializer
+	initializer.equivalentDistribution = equivalentDistribution;
 end

@@ -21,7 +21,7 @@ function [distribution, equivalentDistribution] = distribution_exhaustion(nTags,
 		weight;
 		snr;
 		dmac;
-		resolution = 5e-3;
+		resolution = 1e-3;
 	end
 
 	% * Get data

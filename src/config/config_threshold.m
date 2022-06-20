@@ -42,8 +42,7 @@ weightSet = flip([0, 1e-2, 2e-2, 5e-2, 1e-1, 1]);
 nWeights = length(weightSet);
 
 %% * Variable
-Variable = struct('Distribution', {'exhaustion', 'kkt', 'cooperation', 'cooperation', 'cooperation', 'cooperation'}, 'Recovery', {[], [], [], 'marginalization', 'decomposition', 'randomization'});
-% Variable = struct('Distribution', {'cooperation'}, 'Recovery', {'randomization'});
+Variable = struct('Threshold', {'smawk', 'dp', 'bisection', 'ml'});
 nVariables = length(Variable);
 
 %% * PBS

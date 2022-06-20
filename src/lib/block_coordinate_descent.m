@@ -1,4 +1,4 @@
-function [rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weight, equivalentChannel, tolerance, options)
+function [rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weight, equivalentChannel, tolerance, Options)
 	% Function:
 	%	- iteratively update the input distribution, detection threshold, and beamforming vector to maximize weighted sum rate
     %
@@ -10,7 +10,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	%	- weight: relative priority of primary link
 	%	- equivalentChannel [nTxs x nInputs]: equivalent primary channel for each tag state tuple
     %   - tolerance: minimum rate gain per iteration
-	%	- options: methods and algorithms
+	%	- Options: algorithm options as structure of name-value pairs
     %
     % Output:
 	%	- rate [2 x 1]: primary rate (nats/s/Hz) and total backscatter rate (nats/cu)
@@ -32,10 +32,10 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		weight;
 		equivalentChannel;
 		tolerance = 1e-9;
-		options.Distribution {mustBeMember(options.Distribution, ['exhaustion', 'kkt', 'sca', 'cooperation'])};
-		options.Threshold {mustBeMember(options.Threshold, ['smawk', 'dp', 'bisection', 'ml'])};
-		options.Beamforming {mustBeMember(options.Beamforming, 'pgd')};
-		options.Recovery {mustBeMember(options.Recovery, ['marginalization', 'decomposition', 'randomization'])};
+		Options.Distribution {mustBeMember(Options.Distribution, ['exhaustion', 'kkt', 'sca', 'cooperation'])};
+		Options.Threshold {mustBeMember(Options.Threshold, ['smawk', 'dp', 'bisection', 'ml'])};
+		Options.Beamforming {mustBeMember(Options.Beamforming, 'pgd')};
+		Options.Recovery {mustBeMember(Options.Recovery, ['marginalization', 'decomposition', 'randomization'])};
 	end
 
 	% * Clear persistent variable for distribution
@@ -79,7 +79,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		wsr_ = wsr;
 
 		% * Input probability distribution
-		switch options.Distribution
+		switch Options.Distribution
 		case 'exhaustion'
 			[distribution, equivalentDistribution] = distribution_exhaustion(nTags, weight, snr, dmac);
 		case 'kkt'
@@ -88,8 +88,8 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 			[distribution, equivalentDistribution] = distribution_sca(nTags, weight, snr, dmac);
 		case 'cooperation'
 			[jointDistribution, equivalentDistribution] = distribution_cooperation(nTags, weight, snr, dmac);
-			if isfield(options, 'Recovery')
-				switch options.Recovery
+			if ~isempty(Options.Recovery)
+				switch Options.Recovery
 				case 'marginalization'
 					[distribution, equivalentDistribution] = recovery_marginalization(jointDistribution);
 				case 'decomposition'
@@ -101,7 +101,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		end
 
 		% * Transmit beamforming
-		switch options.Beamforming
+		switch Options.Beamforming
 		case 'pgd'
 			beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, equivalentDistribution, threshold);
 		end
@@ -111,7 +111,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		snr = receivePower / noisePower;
 		thresholdDomain = domain_threshold(symbolRatio, receivePower);
 		binDmc = dmc_integration(symbolRatio, receivePower, thresholdDomain);
-		switch options.Threshold
+		switch Options.Threshold
 		case 'smawk'
 			threshold = threshold_smawk(equivalentDistribution, thresholdDomain, binDmc);
 		case 'dp'
@@ -129,7 +129,8 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 
 		% * Test convergence
 		[wsr, rate] = rate_weighted(weight, snr, equivalentDistribution, dmac);
-		isConverged = abs(wsr - wsr_) <= tolerance;
+% 		isConverged = abs(wsr - wsr_) <= tolerance;
+		isConverged = (wsr - wsr_) <= tolerance;
 	end
 
 	% * Update initializer

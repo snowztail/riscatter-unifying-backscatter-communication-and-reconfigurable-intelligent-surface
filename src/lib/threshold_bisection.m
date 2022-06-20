@@ -28,7 +28,7 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 		equivalentDistribution;
 		thresholdDomain;
 		binDmc;
-		tolerance = 1e-9;
+		tolerance = eps;
 	end
 
 	% * Get data
@@ -39,7 +39,7 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 	rate = 0;
 	for iBin = 2 : nBins
 		thresholdBisection = zeros(1, nOutputs + 1);
-		[thresholdBisection(2), thresholdBisection(nOutputs + 1)] = deal(thresholdDomain(iBin), Inf);
+		thresholdBisection(2) = thresholdDomain(iBin);
 
 		% * Update t_j for j = 2, ..., K - 1 consequently
 		isValid = true;
@@ -76,6 +76,8 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 				end
 			end
 		end
+		% * Replace infinity by critical threshold of confidence approaching 1
+		thresholdBisection(nOutputs + 1) = icdf('Gamma', 1 - tolerance, symbolRatio, max(receivePower));
 
 		% * Check optimality
 		if isValid

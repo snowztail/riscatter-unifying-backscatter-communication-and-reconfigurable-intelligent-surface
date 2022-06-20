@@ -12,7 +12,7 @@ frequency = 9e8;
 % amplitude scatter ratio at tags
 scatterRatio = 0.5;
 % % backscatter/primary symbol duration ratio
-% symbolRatio = 10;
+% symbolRatio = 20;
 % average transmit power
 transmitPower = db2pow(6);
 % average noise power

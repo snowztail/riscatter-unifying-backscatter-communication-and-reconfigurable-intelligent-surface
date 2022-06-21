@@ -1,11 +1,11 @@
-function [thresholdDomain] = domain_threshold(symbolRatio, receivePower, nBins, confidence, tolerance)
+function [thresholdDomain] = domain_threshold(symbolRatio, nBins, receivePower, confidence, tolerance)
 	% Function:
     %	- design (high-resolution) quantization set that act as domain of decision thresholds
     %
     % Input:
 	%	- symbolRatio: the ratio of the backscatter symbol period over the primary symbol period
-	%	- receivePower [nInputs x 1]: average receive power per primary symbol for each tag state tuple
 	%	- nBins: number of receive energy quantization bins
+	%	- receivePower [nInputs x 1]: average receive power per primary symbol for each tag state tuple
 	%	- confidence: confidence level for edge hypotheses
 	%	- tolerance: tail probability (i.e., 1 - confidence level) of replacing infinity by critical threshold
     %
@@ -24,8 +24,8 @@ function [thresholdDomain] = domain_threshold(symbolRatio, receivePower, nBins, 
 	% * Set default bin number, confidence level and tolerance
 	arguments
 		symbolRatio;
+		nBins;
 		receivePower;
-		nBins = 2 ^ 8;
 		confidence = 0.95;
 		tolerance = eps;
 	end

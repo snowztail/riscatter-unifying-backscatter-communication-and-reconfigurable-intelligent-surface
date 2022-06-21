@@ -11,15 +11,18 @@ for iTag = 1 : nTags
 end
 equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
-% * Evaluate rate region by different input distribution design
+% * Evaluate rate region vs number of output quantization bits
 for iVariable = 1 : nVariables
+	% * Set quantization bins
+	nBins = Variable(iVariable).nBins;
+
 	% * Clear persistent variable
 	clear block_coordinate_descent beamforming_pgd;
 
 	% * Evaluate rate region
 	for iWeight = 1 : nWeights
 		weight = weightSet(iWeight);
-		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, 'Distribution', Variable(iVariable).Distribution, 'Beamforming', 'pgd', 'Threshold', 'smawk', 'Recovery', Variable(iVariable).Recovery);
+		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
 		Result(iVariable, iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 	end
 end

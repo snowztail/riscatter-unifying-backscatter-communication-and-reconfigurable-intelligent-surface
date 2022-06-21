@@ -3,19 +3,21 @@ clear; setup; cvx_begin; cvx_end; clc; close all; run(strcat('config_', erase(mf
 % * Initialize struct
 Result(nVariables, nWeights) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
-% * Evaluate rate region for different number of tags
-for iVariable = 1 : nVariables
-	% * Set layout
-	nTags = Variable(iVariable).nTags;
-	[directDistance, forwardDistance, backwardDistance] = layout(nTags);
+% * Generate direct channel
+directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);
 
-	% * Generate channels
-	directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);
+% * Evaluate rate region vs number of Metascatters
+for iVariable = 1 : nVariables
+	% * Set number of tags and update layout
+	nTags = Variable(iVariable).nTags;
+	[forwardDistance, backwardDistance] = layout(directDistance, nTags, coverage);
+
+	% * Generate cascaded channels and update equivalent channel
 	cascadedChannel = zeros(nTxs, nTags);
 	for iTag = 1 : nTags
 		cascadedChannel(:, iTag) = rxGain * path_loss(frequency, forwardDistance(iTag), forwardExponent) * fading_ricean(nTxs, 1, forwardFactor) * path_loss(frequency, backwardDistance(iTag), backwardExponent) * fading_ricean(1, 1, backwardFactor);
 	end
-	equivalentChannel = directChannel + sqrt(scatterRatio) * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
+	equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
 	% * Clear persistent variable
 	clear block_coordinate_descent beamforming_pgd;
@@ -23,7 +25,7 @@ for iVariable = 1 : nVariables
 	% * Evaluate rate region
 	for iWeight = 1 : nWeights
 		weight = weightSet(iWeight);
-		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weight, equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
+		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
 		Result(iVariable, iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 	end
 end

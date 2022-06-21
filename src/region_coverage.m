@@ -3,13 +3,16 @@ clear; setup; cvx_begin; cvx_end; clc; close all; run(strcat('config_', erase(mf
 % * Initialize struct
 Result(nVariables, nWeights) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
-% * Evaluate rate region vs number of transmit antennas
-for iVariable = 1 : nVariables
-	% * Set number of transmit antennas
-	nTxs = Variable(iVariable).nTxs;
+% * Generate direct channel
+directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);
 
-	% * Generate channels
-	directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);
+% * Evaluate rate region vs maximum tag-user distance
+for iVariable = 1 : nVariables
+	% * Set layout
+	coverage = Variable(iVariable).coverage;
+	[forwardDistance, backwardDistance] = layout(directDistance, nTags, coverage);
+
+	% * Generate cascaded channels and update equivalent channel
 	cascadedChannel = zeros(nTxs, nTags);
 	for iTag = 1 : nTags
 		cascadedChannel(:, iTag) = rxGain * path_loss(frequency, forwardDistance(iTag), forwardExponent) * fading_ricean(nTxs, 1, forwardFactor) * path_loss(frequency, backwardDistance(iTag), backwardExponent) * fading_ricean(1, 1, backwardFactor);

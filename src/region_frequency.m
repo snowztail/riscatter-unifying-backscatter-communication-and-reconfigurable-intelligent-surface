@@ -3,10 +3,10 @@ clear; setup; cvx_begin; cvx_end; clc; close all; run(strcat('config_', erase(mf
 % * Initialize struct
 Result(nVariables, nWeights) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
-% * Evaluate rate region vs number of transmit antennas
+% * Evaluate rate region vs carrier frequency
 for iVariable = 1 : nVariables
-	% * Set number of transmit antennas
-	nTxs = Variable(iVariable).nTxs;
+	% * Set carrier frequency
+	frequency = Variable(iVariable).frequency;
 
 	% * Generate channels
 	directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);

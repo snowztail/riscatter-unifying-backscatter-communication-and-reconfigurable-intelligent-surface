@@ -4,11 +4,12 @@ clear; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc; 
 distribution = horzcat(load(strcat('../data/distribution_', erase(mfilename, 'plot_')), 'Result').Result.distribution);
 
 %% * Draw reflection state distributions
-figure('Name', 'Reflection State Distribution vs Weight', 'Position', [0, 0, 500, 400]);
+figure('Name', 'Tag Input Distribution vs Weight', 'Position', [0, 0, 500, 400]);
 object = gobjects(nWeights, 1);
 hold all;
 for iWeight = 1 : nWeights
-	object(iWeight) = plot(distribution(:, iWeight), 'DisplayName', strcat('$\rho = ', num2str(weightSet(iWeight)), '$'));
+	weight = weightSet(iWeight);
+	object(iWeight) = plot(distribution(:, iWeight), 'DisplayName', strcat('$\rho = ', num2str(weight), '$'));
 end
 hold off; legend; grid minor; box on;
 xlabel('Reflection State');

@@ -21,12 +21,13 @@ figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Number of Trans
 object = gobjects(nVariables, 1);
 hold all;
 for iVariable = 1 : nVariables
-	object(iVariable) = plot(region{iVariable}(1, :), 1e3 * region{iVariable}(2, :), 'DisplayName', strcat('$Q = ', num2str(Variable(iVariable).nTxs), '$'));
+	nTxs = Variable(iVariable).nTxs;
+	object(iVariable) = plot(region{iVariable}(1, :), 1e3 * region{iVariable}(2, :), 'DisplayName', strcat('$Q = ', num2str(nTxs), '$'));
 end
-hold off; legend; grid on; box on; axis tight;
+hold off; legend('Location', 'nw'); grid on; box on; axis tight;
 xlabel('Primary Rate [nats/s/Hz]');
 ylabel('(Sum-)Backscatte Rate [$\mu$ nats/backscatter symbol duration]');
-xlim([0.9, Inf]);
+xlim([5.5, Inf]);
 style_plot(object);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
 matlab2tikz(strcat('../../assets/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', ['title style={font=\huge}, ' 'label style={font=\huge}, ' 'ticklabel style={font=\LARGE}, ' 'legend style={font=\LARGE}']);

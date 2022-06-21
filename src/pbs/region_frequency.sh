@@ -5,6 +5,6 @@ module load matlab/R2021a
 
 cd $PBS_O_WORKDIR/../../
 # matlab -batch $(basename $BASH_SOURCE .sh)
-matlab -singleCompThread -batch "region_duration"
+matlab -singleCompThread -batch "region_frequency"
 
 exit

@@ -59,7 +59,9 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 
 	% * Projected gradient descent
 	isConverged = false;
+	iter = 0;
 	while ~isConverged
+		iter = iter + 1;
 		% * Compute local gradient
 		gradient = gradient_local(symbolRatio, weight, noisePower, equivalentChannel, equivalentDistribution, threshold, beamforming);
 
@@ -80,7 +82,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		end
 
 		% * Test convergence (gradient can be non-zero due to norm constraint)
-		isConverged = (wsrPgd - wsr) <= tolerance;
+		isConverged = (wsrPgd - wsr) <= tolerance || iter >= 1e2;
 % 		isConverged = norm(beamformingPgd - beamforming) <= tolerance;
 		beamforming = beamformingPgd;
 		wsr = wsrPgd;

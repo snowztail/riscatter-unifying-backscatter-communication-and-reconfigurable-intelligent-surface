@@ -1,4 +1,4 @@
-function [rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, weight, equivalentChannel, tolerance, Options)
+function [rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, tolerance, Options)
 	% Function:
 	%	- iteratively update the input distribution, detection threshold, and beamforming vector to maximize weighted sum rate
     %
@@ -7,6 +7,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	%	- symbolRatio: backscatter/primary symbol duration ratio
 	%	- transmitPower: average transmit power
 	%	- noisePower: average noise power
+	%	- nBins: number of receive energy quantization bins
 	%	- weight: relative priority of primary link
 	%	- equivalentChannel [nTxs x nInputs]: equivalent primary channel for each tag state tuple
     %   - tolerance: minimum rate gain per iteration
@@ -29,6 +30,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		symbolRatio;
 		transmitPower;
 		noisePower;
+		nBins;
 		weight;
 		equivalentChannel;
 		tolerance = 1e-9;
@@ -74,8 +76,10 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	% * Block coordinate descent
 	wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
 	isConverged = false;
+	iter = 0;
 	while ~isConverged
 		% * Update iteration index
+		iter = iter + 1;
 		wsr_ = wsr;
 
 		% * Input probability distribution
@@ -109,7 +113,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		% * Decision threshold
 		receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
 		snr = receivePower / noisePower;
-		thresholdDomain = domain_threshold(symbolRatio, receivePower);
+		thresholdDomain = domain_threshold(symbolRatio, nBins, receivePower);
 		binDmc = dmc_integration(symbolRatio, receivePower, thresholdDomain);
 		switch Options.Threshold
 		case 'smawk'
@@ -130,7 +134,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		% * Test convergence
 		[wsr, rate] = rate_weighted(weight, snr, equivalentDistribution, dmac);
 % 		isConverged = abs(wsr - wsr_) <= tolerance;
-		isConverged = (wsr - wsr_) <= tolerance;
+		isConverged = (wsr - wsr_) <= tolerance || iter >= 1e2;
 	end
 
 	% * Update initializer

@@ -49,8 +49,10 @@ function [distribution, equivalentDistribution] = recovery_randomization(weight,
 
 	% * Block coordinate descent (kernel coefficients -> kernel vectors of tag 1 -> kernel vectors of tag 2 -> ...)
 	isConverged = false;
+	iter = 0;
 	while ~isConverged
 		% * Update iteration index
+		iter = iter + 1;
 		relativeEntropy_ = relativeEntropy;
 
 		% * Update kernel coefficients
@@ -86,7 +88,7 @@ function [distribution, equivalentDistribution] = recovery_randomization(weight,
 		end
 
 		% * Check convergence
-		isConverged = abs(relativeEntropy - relativeEntropy_) <= tolerance;
+		isConverged = (relativeEntropy - relativeEntropy_) <= tolerance || iter >= 1e2;
 	end
 
 	% * Generate random probability vectors with mean equal to kernel vectors

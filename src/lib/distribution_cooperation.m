@@ -47,13 +47,15 @@ function [jointDistribution, equivalentDistribution] = distribution_cooperation(
 
 	% * Iteratively update equivalent distribution, information function associated with each (joint) codeword, and weighted sum achievable rate
 	isConverged = false;
+	iter = 0;
 	while ~isConverged
+		iter = iter + 1;
 		wsr_ = wsr;
 		equivalentDistribution = equivalentDistribution .* exp(informationFunction) / (equivalentDistribution' * exp(informationFunction));
 		jointDistribution = permute(reshape(equivalentDistribution, nStates * ones(1, nTags)), nTags : -1 : 1);
 		informationFunction = weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
 		wsr = equivalentDistribution' * informationFunction;
-		isConverged = abs(wsr - wsr_) <= tolerance;
+		isConverged = (wsr - wsr_) <= tolerance || iter >= 1e2;
 	end
 
 	% * Update initializer

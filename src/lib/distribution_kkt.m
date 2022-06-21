@@ -51,7 +51,9 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 
 	% * Iteratively update input distribution for all tags
 	isConverged = false;
+	iter = 0;
 	while ~isConverged
+		iter = iter + 1;
 		wsr_ = wsr;
 		% * Update input distribution, information functions associated with each codeword, marginal information of each codeword, and mutual information for each tag
 		for iTag = 1 : nTags
@@ -62,7 +64,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 			marginalInformation = marginal_information(distributionTuple, informationFunction);
 			wsr = equivalentDistribution' * informationFunction;
 		end
-		isConverged = abs(wsr - wsr_) <= tolerance;
+		isConverged = (wsr - wsr_) <= tolerance || iter >= 1e2;
 	end
 
 	% * Update initializer

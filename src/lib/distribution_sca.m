@@ -42,7 +42,9 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, weight
 
 	% * Iteratively update input distribution by SCA
 	isConverged = false;
+	iter = 0;
 	while ~isConverged
+		iter = iter + 1;
 		distribution_ = distribution;
 		wsr_ = wsr;
 		cvx_begin
@@ -67,6 +69,6 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, weight
 		wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
 
 		% * Test convergence
-		isConverged = abs(wsr - wsr_) <= tolerance;
+		isConverged = (wsr - wsr_) <= tolerance || iter >= 1e2;
 	end
 end

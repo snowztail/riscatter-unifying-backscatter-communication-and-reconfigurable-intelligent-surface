@@ -15,8 +15,8 @@ scatterRatio = 0.5;
 symbolRatio = 20;
 % average transmit power
 transmitPower = db2pow(6);
-% average noise power
-noisePower = db2pow(-100);
+% % average noise power
+% noisePower = db2pow(-100);
 % antenna gain
 rxGain = db2pow(3);
 % layout and distance
@@ -41,7 +41,7 @@ nWeights = length(weightSet);
 nBins = 2 ^ 6;
 
 %% * Variable
-Variable = struct('Distribution', {'exhaustion', 'kkt', 'cooperation', 'cooperation', 'cooperation', 'cooperation'}, 'Recovery', {[], [], [], 'marginalization', 'decomposition', 'randomization'});
+Variable = struct('noisePower', num2cell(db2pow(-60 : -20 : -120)));
 nVariables = length(Variable);
 
 %% * PBS

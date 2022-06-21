@@ -37,11 +37,11 @@ backwardFactor = 10;
 weightSet = [1, 0.25 : -0.025 : 0];
 % number of weights on rate region boundary
 nWeights = length(weightSet);
-% number of quantization bins
-nBins = 2 ^ 6;
+% % number of quantization bins
+% nBins = 2 ^ 6;
 
 %% * Variable
-Variable = struct('Distribution', {'exhaustion', 'kkt', 'cooperation', 'cooperation', 'cooperation', 'cooperation'}, 'Recovery', {[], [], [], 'marginalization', 'decomposition', 'randomization'});
+Variable = struct('nBins', num2cell(2 .^ (2 : 2 : 8)));
 nVariables = length(Variable);
 
 %% * PBS

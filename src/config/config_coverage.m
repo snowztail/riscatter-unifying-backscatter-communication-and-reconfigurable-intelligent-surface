@@ -21,8 +21,8 @@ noisePower = db2pow(-100);
 rxGain = db2pow(3);
 % layout and distance
 directDistance = 10;
-coverage = 1;
-[forwardDistance, backwardDistance] = layout(directDistance, nTags, coverage);
+% coverage = 1;
+% [forwardDistance, backwardDistance] = layout(directDistance, nTags, coverage);
 % path loss exponents
 directExponent = 2.6;
 forwardExponent = 2.4;
@@ -41,7 +41,7 @@ nWeights = length(weightSet);
 nBins = 2 ^ 6;
 
 %% * Variable
-Variable = struct('Distribution', {'exhaustion', 'kkt', 'cooperation', 'cooperation', 'cooperation', 'cooperation'}, 'Recovery', {[], [], [], 'marginalization', 'decomposition', 'randomization'});
+Variable = struct('coverage', num2cell(0.5 : 0.5 : 2));
 nVariables = length(Variable);
 
 %% * PBS

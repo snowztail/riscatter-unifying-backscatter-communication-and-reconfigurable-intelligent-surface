@@ -8,7 +8,7 @@ nStates = 2;
 % constellation diagram at tags
 constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
 % carrier frequency
-frequency = 9e8;
+frequency = 2e8;
 % amplitude scatter ratio at tags
 scatterRatio = 0.5;
 % backscatter/primary symbol duration ratio
@@ -19,8 +19,10 @@ transmitPower = db2pow(6);
 noisePower = db2pow(-100);
 % antenna gain
 rxGain = db2pow(3);
-% % layout and distance
-% [directDistance, forwardDistance, backwardDistance] = layout(nTags);
+% layout and distance
+directDistance = 10;
+coverage = 1;
+% [forwardDistance, backwardDistance] = layout(directDistance, nTags, coverage);
 % path loss exponents
 directExponent = 2.6;
 forwardExponent = 2.4;
@@ -32,12 +34,14 @@ backwardFactor = 10;
 
 %% * Algorithm
 % relative priority of primary link
-weightSet = flip([0 : 1e-2 : 5e-2, 1e-1 : 5e-2 : 2.5e-1, 3e-1 : 1e-1 : 1]);
+weightSet = [1, 0.25 : -0.025 : 0];
 % number of weights on rate region boundary
 nWeights = length(weightSet);
+% number of quantization bins
+nBins = 2 ^ 6;
 
 %% * Variable
-Variable = struct('nTags', num2cell(2 .^ (0 : 3)));
+Variable = struct('nTags', num2cell(2 .^ (0 : 2)));
 nVariables = length(Variable);
 
 %% * PBS

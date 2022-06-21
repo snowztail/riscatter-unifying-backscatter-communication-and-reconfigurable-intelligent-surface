@@ -8,7 +8,7 @@ nStates = 2;
 % constellation diagram at tags
 constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
 % carrier frequency
-frequency = 2e8;
+% frequency = 2e8;
 % amplitude scatter ratio at tags
 scatterRatio = 0.5;
 % backscatter/primary symbol duration ratio
@@ -41,7 +41,7 @@ nWeights = length(weightSet);
 nBins = 2 ^ 6;
 
 %% * Variable
-Variable = struct('Distribution', {'exhaustion', 'kkt', 'cooperation', 'cooperation', 'cooperation', 'cooperation'}, 'Recovery', {[], [], [], 'marginalization', 'decomposition', 'randomization'});
+Variable = struct('frequency', {2e8, 5e8, 9e8, 2.4e9});
 nVariables = length(Variable);
 
 %% * PBS

@@ -10,7 +10,7 @@ constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', I
 % carrier frequency
 frequency = 2e8;
 % amplitude scatter ratio at tags
-scatterRatio = 0.5;
+% scatterRatio = 0.5;
 % backscatter/primary symbol duration ratio
 symbolRatio = 20;
 % average transmit power
@@ -41,7 +41,7 @@ nWeights = length(weightSet);
 nBins = 2 ^ 6;
 
 %% * Variable
-Variable = struct('Distribution', {'exhaustion', 'kkt', 'cooperation', 'cooperation', 'cooperation', 'cooperation'}, 'Recovery', {[], [], [], 'marginalization', 'decomposition', 'randomization'});
+Variable = struct('scatterRatio', num2cell(0.25 : 0.25 : 1));
 nVariables = length(Variable);
 
 %% * PBS

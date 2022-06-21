@@ -1,0 +1,96 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44706,0.74118}%
+\definecolor{mycolor2}{rgb}{0.85098,0.32549,0.09804}%
+\definecolor{mycolor3}{rgb}{0.92941,0.69412,0.12549}%
+\definecolor{mycolor4}{rgb}{0.49412,0.18431,0.55686}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=3.972in,
+height=3.362in,
+at={(0.666in,0.454in)},
+scale only axis,
+xmin=0,
+xmax=11.1565438206223,
+xlabel style={font=\color{white!15!black}},
+xlabel={Primary Rate [nats/s/Hz]},
+ymin=0,
+ymax=1.2840317639064,
+ylabel style={font=\color{white!15!black}},
+ylabel={(Sum-)Backscatte Rate [$\mu$ nats/backscatter symbol duration]},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={at={(0.97,0.03)}, anchor=south east, legend cell align=left, align=left, draw=white!15!black},
+title style={font=\huge}, label style={font=\huge}, ticklabel style={font=\LARGE}, legend style={font=\LARGE}
+]
+\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+0.727550086495646	0.00012069544472193\\
+0.727234430118481	0.00439691431244893\\
+0	0.00439691431244893\\
+0	0\\
+0.727550086495646	0\\
+0.727550086495646	0.00012069544472193\\
+};
+\addlegendentry{$\sigma_n^2 =-30$ dBm}
+
+\addplot [color=mycolor2, dashed, line width=2.0pt, mark=+, mark options={solid, mycolor2}]
+  table[row sep=crcr]{%
+2.19743048589057	1.08602948856173e-06\\
+2.19741924511472	0.00348200583349945\\
+2.19676993521067	0.193432130000171\\
+2.19553047296277	0.496757850428464\\
+2.19430286420743	0.722101523125906\\
+2.19312572434856	0.870661206664014\\
+2.19198852944748	0.954057687931609\\
+2.19087913099388	0.981273613948119\\
+0	0.981273613948119\\
+0	0\\
+2.19743048589057	0\\
+2.19743048589057	1.08602948856173e-06\\
+};
+\addlegendentry{$\sigma_n^2 =-50$ dBm}
+
+\addplot [color=mycolor3, dotted, line width=2.0pt, mark=square, mark options={solid, mycolor3}]
+  table[row sep=crcr]{%
+6.55419738594034	8.61506921356892e-07\\
+6.55418375399071	0.0042863816734906\\
+6.55320085367684	0.293262138755856\\
+6.55160032300203	0.681163553329867\\
+6.55004274435016	0.962651905115297\\
+6.54854920063616	1.14701362056041\\
+6.54710758232431	1.24908587155115\\
+6.54570708437882	1.2803857617702\\
+0	1.2803857617702\\
+0	0\\
+6.55419738594034	0\\
+6.55419738594034	8.61506921356892e-07\\
+};
+\addlegendentry{$\sigma_n^2 =-70$ dBm}
+
+\addplot [color=mycolor4, dashdotted, line width=2.0pt, mark=x, mark options={solid, mycolor4}]
+  table[row sep=crcr]{%
+11.1565438206223	8.51866965856374e-07\\
+11.1565302288325	0.00427375017192366\\
+11.1555446230445	0.294047001730746\\
+11.1539394061896	0.683087687834261\\
+11.1523773881595	0.965377556102487\\
+11.1508795305802	1.15027338907808\\
+11.1494337676875	1.25264054240892\\
+11.1480292945387	1.2840317639064\\
+0	1.2840317639064\\
+0	0\\
+11.1565438206223	0\\
+11.1565438206223	8.51866965856374e-07\\
+};
+\addlegendentry{$\sigma_n^2 =-90$ dBm}
+
+\end{axis}
+\end{tikzpicture}%

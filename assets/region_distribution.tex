@@ -1,0 +1,137 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44706,0.74118}%
+\definecolor{mycolor2}{rgb}{0.85098,0.32549,0.09804}%
+\definecolor{mycolor3}{rgb}{0.92941,0.69412,0.12549}%
+\definecolor{mycolor4}{rgb}{0.49412,0.18431,0.55686}%
+\definecolor{mycolor5}{rgb}{0.46667,0.67451,0.18824}%
+\definecolor{mycolor6}{rgb}{0.30196,0.74510,0.93333}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=3.972in,
+height=3.362in,
+at={(0.666in,0.454in)},
+scale only axis,
+xmin=6.5,
+xlabel style={font=\color{white!15!black}},
+xlabel={Primary Rate [nats/s/Hz]},
+ymin=0,
+ymax=2.15891635234686,
+ylabel style={font=\color{white!15!black}},
+ylabel={(Sum-)Backscatte Rate [$\mu$ nats/backscatter symbol duration]},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={at={(0.03,0.03)}, anchor=south west, legend cell align=left, align=left, draw=white!15!black},
+title style={font=\huge}, label style={font=\huge}, ticklabel style={font=\LARGE}, legend style={font=\LARGE}
+]
+\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+6.55419739258241	0\\
+6.54862697920138	1.43523607169171\\
+6.54704140737139	1.67777648238543\\
+6.54555335235031	1.83651475129554\\
+6.54411740053988	1.93455283811822\\
+6.54259730771154	2.02647804690675\\
+6.53965931866504	2.13382177258953\\
+6.53751282470334	2.15891635234686\\
+0	2.15891635234686\\
+0	0\\
+6.55419739258241	0\\
+};
+\addlegendentry{Exhaustion}
+
+\addplot [color=mycolor2, dashed, line width=2.0pt, mark=+, mark options={solid, mycolor2}]
+  table[row sep=crcr]{%
+6.55419738594034	8.61506921356892e-07\\
+6.55418375399071	0.0042863816734906\\
+6.55320085367684	0.293262138755856\\
+6.55160032300203	0.681163553329867\\
+6.55004274435016	0.962651905115297\\
+6.54854920063616	1.14701362056041\\
+6.54710758232431	1.24908587155115\\
+6.54570708437882	1.2803857617702\\
+0	1.2803857617702\\
+0	0\\
+6.55419738594034	0\\
+6.55419738594034	8.61506921356892e-07\\
+};
+\addlegendentry{KKT}
+
+\addplot [color=mycolor3, dotted, line width=2.0pt, mark=square, mark options={solid, mycolor3}]
+  table[row sep=crcr]{%
+6.55419738598503	8.55644277653056e-07\\
+6.55230309815609	0.648504480975642\\
+6.55070050480759	1.06720513018727\\
+6.54917293617489	1.3561437656856\\
+6.54772289823872	1.53446547389463\\
+6.54633834812042	1.61957504476545\\
+6.54501747263044	1.62494656885898\\
+0	1.62494656885898\\
+0	0\\
+6.55419738598503	0\\
+6.55419738598503	8.55644277653056e-07\\
+};
+\addlegendentry{Cooperation}
+
+\addplot [color=mycolor4, dashdotted, line width=2.0pt, mark=x, mark options={solid, mycolor4}]
+  table[row sep=crcr]{%
+6.55419738598497	8.55651827169623e-07\\
+6.55222570723175	0.45676421946883\\
+6.55059714579061	0.747420772148621\\
+6.5489179352224	0.969256844196464\\
+6.54732800343918	1.10738177585729\\
+6.54581118451183	1.17260108216194\\
+6.54436501593707	1.17455518103271\\
+0	1.17455518103271\\
+0	0\\
+6.55419738598497	0\\
+6.55419738598497	8.55651827169623e-07\\
+};
+\addlegendentry{Marginalization}
+
+\addplot [color=mycolor5, line width=2.0pt, mark=triangle, mark options={solid, mycolor5}]
+  table[row sep=crcr]{%
+6.55419738597553	8.56954007755206e-07\\
+6.55419636472653	0.000313768370230338\\
+6.55417420179184	0.00684366006192816\\
+6.55374121916265	0.123781560708192\\
+6.5529227515726	0.321611668353816\\
+6.5518486281858	0.547531498791998\\
+6.54967248107562	0.901209110393042\\
+6.54374555196926	1.53540952642855\\
+6.53994041164402	1.70573293974968\\
+6.53722940574194	1.76752130221547\\
+0	1.76752130221547\\
+0	0\\
+6.55419738597553	0\\
+6.55419738597553	8.56954007755206e-07\\
+};
+\addlegendentry{Decomposition}
+
+\addplot [color=mycolor6, dashed, line width=2.0pt, mark=triangle, mark options={solid, rotate=180, mycolor6}]
+  table[row sep=crcr]{%
+6.55408221926041	0.0159828228785686\\
+6.55205623486105	0.529543169421887\\
+6.55104453523616	0.737207622707126\\
+6.55039630376179	0.858305036714246\\
+6.54734256192101	1.34370286248503\\
+6.5456664157962	1.54472244103254\\
+6.54183919874426	1.84312237712397\\
+6.53855296918923	1.96395936892785\\
+6.53687423352156	1.96564953463324\\
+0	1.96564953463324\\
+0	0\\
+6.55408221926041	0\\
+6.55408221926041	0.0159828228785686\\
+};
+\addlegendentry{Randomization}
+
+\end{axis}
+\end{tikzpicture}%

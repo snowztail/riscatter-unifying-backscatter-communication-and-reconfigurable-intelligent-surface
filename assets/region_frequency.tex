@@ -1,0 +1,122 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44706,0.74118}%
+\definecolor{mycolor2}{rgb}{0.85098,0.32549,0.09804}%
+\definecolor{mycolor3}{rgb}{0.92941,0.69412,0.12549}%
+\definecolor{mycolor4}{rgb}{0.49412,0.18431,0.55686}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=3.972in,
+height=3.362in,
+at={(0.666in,0.454in)},
+scale only axis,
+xmin=0,
+xmax=6.60135998077613,
+xlabel style={font=\color{white!15!black}},
+xlabel={Primary Rate [nats/s/Hz]},
+ymode=log,
+ymin=7.86271214803236e-10,
+ymax=0.021423421553642,
+yminorticks=true,
+ylabel style={font=\color{white!15!black}},
+ylabel={(Sum-)Backscatte Rate [$\mu$ nats/backscatter symbol duration]},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+yminorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black},
+title style={font=\huge}, label style={font=\huge}, ticklabel style={font=\LARGE}, legend style={font=\LARGE}
+]
+\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+6.60135998077613	7.86271214803236e-10\\
+6.56873401450484	0.0161995621339102\\
+6.56445035325599	0.0173145070833926\\
+6.56017037465165	0.0182970029920834\\
+6.55598477552613	0.0191253265054606\\
+6.55153217608832	0.0198881006990271\\
+6.54776730418742	0.0204018808305555\\
+6.54416350036479	0.0207880078770195\\
+6.54046765155712	0.0210977005295665\\
+6.53731805694666	0.0212756615691735\\
+6.53429676165413	0.0213845632570618\\
+6.53128726375549	0.021423421553642\\
+0	0.021423421553642\\
+0	0\\
+6.60135998077613	0\\
+6.60135998077613	7.86271214803236e-10\\
+};
+\addlegendentry{$f =200$ MHz}
+
+\addplot [color=mycolor2, dashed, line width=2.0pt, mark=+, mark options={solid, mycolor2}]
+  table[row sep=crcr]{%
+3.33170328573038	9.46136835544564e-10\\
+3.330540911472	0.000104114896145646\\
+3.32904643075846	0.000235108104978288\\
+3.32743505343158	0.000334781991578048\\
+3.3258638279509	0.000391313421974071\\
+3.3243823430071	0.00040914044813456\\
+0	0.00040914044813456\\
+0	0\\
+3.33170328573038	0\\
+3.33170328573038	9.46136835544564e-10\\
+};
+\addlegendentry{$f =500$ MHz}
+
+\addplot [color=mycolor3, dotted, line width=2.0pt, mark=square, mark options={solid, mycolor3}]
+  table[row sep=crcr]{%
+1.44976659340218	4.21110904758049e-08\\
+1.44957073249783	1.5738958766276e-06\\
+1.44954308647714	1.78525327523826e-06\\
+1.44951187757901	2.01248605558035e-06\\
+1.44947689948499	2.25063058656438e-06\\
+1.44943804673284	2.49232795351828e-06\\
+1.449395354928	2.72782251220516e-06\\
+1.4493490261141	2.94541017131777e-06\\
+1.44929947875701	3.13231143692083e-06\\
+1.44924732275316	3.27617937695424e-06\\
+1.44919334647595	3.36673203929494e-06\\
+1.44913844003202	3.3974436828843e-06\\
+0	3.3974436828843e-06\\
+0	0\\
+1.44976659340218	0\\
+1.44976659340218	4.21110904758049e-08\\
+};
+\addlegendentry{$f =900$ MHz}
+
+\addplot [color=mycolor4, dashdotted, line width=2.0pt, mark=x, mark options={solid, mycolor4}]
+  table[row sep=crcr]{%
+0.705460975393932	1.51028251016427e-09\\
+0.70546097535889	1.51028273220888e-09\\
+0	1.51028273220888e-09\\
+0	0\\
+0.705460975393932	0\\
+0.705460975393932	1.51028251016427e-09\\
+};
+\addlegendentry{$f =2400$ MHz}
+
+\end{axis}
+
+\begin{axis}[%
+width=5.125in,
+height=4.125in,
+at={(0in,0in)},
+scale only axis,
+xmin=0,
+xmax=1,
+ymin=0,
+ymax=1,
+axis line style={draw=none},
+ticks=none,
+axis x line*=bottom,
+axis y line*=left,
+title style={font=\huge}, label style={font=\huge}, ticklabel style={font=\LARGE}, legend style={font=\LARGE}
+]
+\end{axis}
+\end{tikzpicture}%

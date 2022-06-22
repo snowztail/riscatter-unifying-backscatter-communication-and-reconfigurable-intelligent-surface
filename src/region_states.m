@@ -24,7 +24,11 @@ for iVariable = 1 : nVariables
 	for iWeight = 1 : nWeights
 		weight = weightSet(iWeight);
 		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
-		Result(iVariable, iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
+		if any(isnan(rate))
+			return
+		else
+			Result(iVariable, iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
+		end
 	end
 end
 

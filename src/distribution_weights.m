@@ -17,7 +17,11 @@ clear block_coordinate_descent beamforming_pgd;
 % * Evaluate tag input distribution vs weight
 for iWeight = 1 : nWeights
 	[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weightSet(iWeight), equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
-	Result(iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
+	if any(isnan(rate))
+		return
+	else
+		Result(iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
+	end
 end
 
 save(strcat('data/', mfilename));

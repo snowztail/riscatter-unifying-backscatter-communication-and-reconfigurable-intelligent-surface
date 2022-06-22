@@ -10,7 +10,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 	%	- equivalentChannel [nTxs x nInputs]: equivalent primary channel for each tag state tuple
 	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
 	%	- threshold [1 x (nOutputs + 1)]: boundaries of quantization bins or decision regions (including 0 and Inf)
-    %	- tolerance: minimum rate gain per iteration
+    %	- tolerance: minimum rate gain ratio per iteration
 	%	- alpha: fraction of acceptable decrease predicted by linear extrapolation
 	%	- beta: ratio of step size reduction in backtracking line search
     %
@@ -33,8 +33,8 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		equivalentChannel;
 		equivalentDistribution;
 		threshold;
-		tolerance = 1e-9;
-		alpha = 0.01;
+		tolerance = 1e-6;
+		alpha = 1e-2;
 		beta = 0.5;
 	end
 
@@ -48,8 +48,6 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 
 	% * Apply initializer
 	beamforming = initializer;
-% 	beamforming = randn(size(beamforming)) + 1i * randn(size(beamforming));
-% 	beamforming = sqrt(transmitPower) * beamforming / norm(beamforming);
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
 	snr = receivePower / noisePower;
 	[~, sortIndex] = sort(receivePower);
@@ -59,9 +57,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 
 	% * Projected gradient descent
 	isConverged = false;
-	iter = 0;
 	while ~isConverged
-		iter = iter + 1;
 		% * Compute local gradient
 		gradient = gradient_local(symbolRatio, weight, noisePower, equivalentChannel, equivalentDistribution, threshold, beamforming);
 
@@ -72,7 +68,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		snrPgd = receivePowerPgd / noisePower;
 		dmacPgd = dmc_integration(symbolRatio, receivePowerPgd, threshold);
 		wsrPgd = rate_weighted(weight, snrPgd, equivalentDistribution, dmacPgd);
-		while wsr > wsrPgd + alpha * step * norm(gradient) ^ 2 && step > tolerance
+		while wsr > wsrPgd + alpha * step * norm(gradient) ^ 2 && step > eps
 			step = beta * step;
 			beamformingPgd = beamforming_projection(transmitPower, beamforming + step * gradient);
 			receivePowerPgd = abs(equivalentChannel' * beamformingPgd) .^ 2 + noisePower;
@@ -82,8 +78,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		end
 
 		% * Test convergence (gradient can be non-zero due to norm constraint)
-		isConverged = (wsrPgd - wsr) <= tolerance || iter >= 1e2;
-% 		isConverged = norm(beamformingPgd - beamforming) <= tolerance;
+		isConverged = (wsrPgd - wsr) / wsr <= tolerance || isnan(wsrPgd);
 		beamforming = beamformingPgd;
 		wsr = wsrPgd;
 	end

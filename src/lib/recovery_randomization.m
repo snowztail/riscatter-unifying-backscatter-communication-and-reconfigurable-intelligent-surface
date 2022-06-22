@@ -9,7 +9,7 @@ function [distribution, equivalentDistribution] = recovery_randomization(weight,
 	%	- dmac [nInputs x nOutputs]: discrete memoryless thresholding multiple access channel whose input and output are tag state tuple
 	%	- nKernels: number of kernels used in appriximate array (i.e. rank of approximate array)
 	%	- nInstances: number of random instances to generate for each tag
-	%	- tolerance: minimum reduce of tolerable relative entropy (between original and approximate arrays) per iteration
+	%	- tolerance: minimum reduction of tolerable relative entropy between original and approximate arrays per iteration
     %
     % Output:
 	%	- distribution [nStates x nTags]: tag input (i.e., state) probability distribution
@@ -49,10 +49,8 @@ function [distribution, equivalentDistribution] = recovery_randomization(weight,
 
 	% * Block coordinate descent (kernel coefficients -> kernel vectors of tag 1 -> kernel vectors of tag 2 -> ...)
 	isConverged = false;
-	iter = 0;
 	while ~isConverged
 		% * Update iteration index
-		iter = iter + 1;
 		relativeEntropy_ = relativeEntropy;
 
 		% * Update kernel coefficients
@@ -88,7 +86,7 @@ function [distribution, equivalentDistribution] = recovery_randomization(weight,
 		end
 
 		% * Check convergence
-		isConverged = (relativeEntropy - relativeEntropy_) <= tolerance || iter >= 1e2;
+		isConverged = (relativeEntropy - relativeEntropy_) <= tolerance || isnan(relativeEntropy);
 	end
 
 	% * Generate random probability vectors with mean equal to kernel vectors

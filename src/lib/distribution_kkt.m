@@ -7,7 +7,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 	%	- weight: relative priority of primary link
 	%	- snr [nInputs x 1]: average receive signal-to-noise ratio per primary symbol for each tag state tuple
 	%	- dmac [nInputs x nOutputs]: discrete memoryless thresholding multiple access channel whose input and output are tag state tuple
-    %	- tolerance: minimum rate gain per iteration
+    %	- tolerance: minimum rate gain ratio per iteration
     %
     % Output:
 	%	- distribution [nStates x nTags]: tag input (i.e., state) probability distribution
@@ -26,7 +26,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 		weight;
 		snr;
 		dmac;
-		tolerance = 1e-10;
+		tolerance = 1e-6;
 	end
 
 	% * Get data
@@ -51,9 +51,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 
 	% * Iteratively update input distribution for all tags
 	isConverged = false;
-	iter = 0;
 	while ~isConverged
-		iter = iter + 1;
 		wsr_ = wsr;
 		% * Update input distribution, information functions associated with each codeword, marginal information of each codeword, and mutual information for each tag
 		for iTag = 1 : nTags
@@ -64,7 +62,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 			marginalInformation = marginal_information(distributionTuple, informationFunction);
 			wsr = equivalentDistribution' * informationFunction;
 		end
-		isConverged = (wsr - wsr_) <= tolerance || iter >= 1e2;
+		isConverged = (wsr - wsr_) / wsr <= tolerance || isnan(wsr);
 	end
 
 	% * Update initializer

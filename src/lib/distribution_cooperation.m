@@ -7,7 +7,7 @@ function [jointDistribution, equivalentDistribution] = distribution_cooperation(
 	%	- weight: relative priority of primary link
 	%	- snr [nInputs x 1]: average receive signal-to-noise ratio per primary symbol for each tag state tuple
 	%	- dmac [nInputs x nOutputs]: discrete memoryless thresholding multiple access channel whose input and output are tag state tuple
-    %	- tolerance: minimum rate gain per iteration
+    %	- tolerance: minimum rate gain ratio per iteration
     %
     % Output:
 	%	- jointDistribution [nStates x ... (nTags-dimensional) ... x nStates]: joint tag input distribution with full transmit cooperation
@@ -25,7 +25,7 @@ function [jointDistribution, equivalentDistribution] = distribution_cooperation(
 		weight;
 		snr;
 		dmac;
-		tolerance = 1e-10;
+		tolerance = 1e-6;
 	end
 
 	% * Get data
@@ -47,15 +47,13 @@ function [jointDistribution, equivalentDistribution] = distribution_cooperation(
 
 	% * Iteratively update equivalent distribution, information function associated with each (joint) codeword, and weighted sum achievable rate
 	isConverged = false;
-	iter = 0;
 	while ~isConverged
-		iter = iter + 1;
 		wsr_ = wsr;
 		equivalentDistribution = equivalentDistribution .* exp(informationFunction) / (equivalentDistribution' * exp(informationFunction));
 		jointDistribution = permute(reshape(equivalentDistribution, nStates * ones(1, nTags)), nTags : -1 : 1);
 		informationFunction = weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
 		wsr = equivalentDistribution' * informationFunction;
-		isConverged = (wsr - wsr_) <= tolerance || iter >= 1e2;
+		isConverged = (wsr - wsr_) / wsr <= tolerance || isnan(wsr);
 	end
 
 	% * Update initializer

@@ -7,7 +7,7 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 	%	- receivePower [nInputs x 1]: average receive power per primary symbol for each tag state tuple
 	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
 	%	- thresholdDomain [1 x (nBins + 1)]: boundaries of quantized energy bins as domain of decision thresholds	%	- binDmc [nInputs x nBins]: discrete memoryless channel whose input is tag state tuple and output is (high-resolution) quantized energy bins
-    %	- tolerance: minimum rate gain per iteration
+    %	- tolerance: maximum tolerable threshold/divergence error, and tail probability (i.e., 1 - confidence level) of replacing infinity by critical threshold
     %
     % Output:
 	%	- threshold [1 x (nOutputs + 1)]: boundaries of decision regions (including 0 and Inf)

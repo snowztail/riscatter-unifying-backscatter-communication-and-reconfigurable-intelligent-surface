@@ -10,7 +10,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	%	- nBins: number of receive energy quantization bins
 	%	- weight: relative priority of primary link
 	%	- equivalentChannel [nTxs x nInputs]: equivalent primary channel for each tag state tuple
-    %   - tolerance: minimum rate gain per iteration
+    %   - tolerance: minimum rate gain ratio per iteration
 	%	- Options: algorithm options as structure of name-value pairs
     %
     % Output:
@@ -33,7 +33,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		nBins;
 		weight;
 		equivalentChannel;
-		tolerance = 1e-9;
+		tolerance = 1e-6;
 		Options.Distribution {mustBeMember(Options.Distribution, ['exhaustion', 'kkt', 'sca', 'cooperation'])};
 		Options.Threshold {mustBeMember(Options.Threshold, ['smawk', 'dp', 'bisection', 'ml'])};
 		Options.Beamforming {mustBeMember(Options.Beamforming, 'pgd')};
@@ -71,15 +71,12 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	dmac = dmc_integration(symbolRatio, receivePower, threshold);
 	[~, sortIndex] = sort(receivePower);
 	dmac(:, sortIndex) = dmac;
-	% dmac = normalize(rand(size(dmac)), 2, 'norm', 1);
 
 	% * Block coordinate descent
 	wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
 	isConverged = false;
-	iter = 0;
 	while ~isConverged
 		% * Update iteration index
-		iter = iter + 1;
 		wsr_ = wsr;
 
 		% * Input probability distribution
@@ -133,8 +130,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 
 		% * Test convergence
 		[wsr, rate] = rate_weighted(weight, snr, equivalentDistribution, dmac);
-% 		isConverged = abs(wsr - wsr_) <= tolerance;
-		isConverged = (wsr - wsr_) <= tolerance || iter >= 1e2;
+		isConverged = (wsr - wsr_) / wsr <= tolerance || isnan(wsr);
 	end
 
 	% * Update initializer

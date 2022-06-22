@@ -7,7 +7,7 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, weight
 	%	- weight: relative priority of primary link
 	%	- snr [nInputs x 1]: average receive signal-to-noise ratio per primary symbol for each tag state tuple
 	%	- dmac [nInputs x nOutputs]: discrete memoryless thresholding multiple access channel whose input and output are tag state tuple
-    %	- tolerance: minimum rate gain per iteration
+    %	- tolerance: minimum rate gain ratio per iteration
     %
     % Output:
 	%	- distribution [nStates x nTags]: tag input (i.e., state) probability distribution
@@ -25,7 +25,7 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, weight
 		weight;
 		snr;
 		dmac;
-		tolerance = 1e-12;
+		tolerance = 1e-6;
 	end
 
 	% * Get data
@@ -42,9 +42,7 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, weight
 
 	% * Iteratively update input distribution by SCA
 	isConverged = false;
-	iter = 0;
 	while ~isConverged
-		iter = iter + 1;
 		distribution_ = distribution;
 		wsr_ = wsr;
 		cvx_begin
@@ -69,6 +67,6 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, weight
 		wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
 
 		% * Test convergence
-		isConverged = (wsr - wsr_) <= tolerance || iter >= 1e2;
+		isConverged = (wsr - wsr_) / wsr <= tolerance || isnan(wsr);
 	end
 end

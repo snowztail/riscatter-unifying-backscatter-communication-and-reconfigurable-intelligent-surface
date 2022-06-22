@@ -9,7 +9,7 @@ region = cell(nVariables, 1);
 for iVariable = 1 : nVariables
 	rate = zeros(2, nWeights + 3);
 	for iWeight = 1 : nWeights
-		rate(:, iWeight) = mean(cat(2, Result(iVariable, iWeight, :).rate), 2);
+		rate(:, iWeight) = mean(cat(2, Result(iVariable, iWeight, :).rate), 2, 'omitnan');
 	end
 	[rate(1, nWeights + 1), rate(2, nWeights + 2)] = deal(max(rate(1, :)), max(rate(2, :)));
 	region{iVariable} = rate(:, convhull(transpose(rate)));
@@ -24,11 +24,11 @@ for iVariable = 1 : nVariables
 	frequency = Variable(iVariable).frequency;
 	object(iVariable) = plot(region{iVariable}(1, :), region{iVariable}(2, :), 'DisplayName', strcat('$f = ', num2str(frequency / 1e6), '$ MHz'));
 end
-hold off; legend; grid on; box on; axis tight;
+hold off; legend('Location', 'se'); grid on; box on; axis tight;
 set(gca, 'YScale', 'log');
-xlabel('Primary Rate [nats/s/Hz]');
-ylabel('(Sum-)Backscatte Rate [$\mu$ nats/backscatter symbol duration]');
-% xlim([0.9, Inf]);
+xlabel('Primary Rate [bits/s/Hz]');
+ylabel('Total Backscatte Rate [$\mu$ bits/backscatter symbol]');
+ylim([1e-7, 1e-1]);
 style_plot(object);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
 matlab2tikz(strcat('../../assets/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', ['title style={font=\huge}, ' 'label style={font=\huge}, ' 'ticklabel style={font=\LARGE}, ' 'legend style={font=\LARGE}']);

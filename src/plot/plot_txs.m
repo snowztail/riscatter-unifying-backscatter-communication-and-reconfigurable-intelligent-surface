@@ -9,7 +9,7 @@ region = cell(nVariables, 1);
 for iVariable = 1 : nVariables
 	rate = zeros(2, nWeights + 3);
 	for iWeight = 1 : nWeights
-		rate(:, iWeight) = mean(cat(2, Result(iVariable, iWeight, :).rate), 2, 'omitnan');
+		rate(:, iWeight) = mean(cat(2, Result(iVariable, iWeight, :).rate), 2);
 	end
 	[rate(1, nWeights + 1), rate(2, nWeights + 2)] = deal(max(rate(1, :)), max(rate(2, :)));
 	region{iVariable} = rate(:, convhull(transpose(rate)));

@@ -24,7 +24,7 @@ for iVariable = 1 : nVariables
 	nTags = Variable(iVariable).nTags;
 	object(iVariable) = plot(region{iVariable}(1, :) / log(2), 1e3 * region{iVariable}(2, :) / log(2), 'DisplayName', strcat('$K = ', num2str(nTags), '$'));
 end
-hold off; legend('Location', 'se'); grid on; box on; axis tight;
+hold off; legend('Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatte Rate [$\mu$ bits/backscatter symbol]');
 xlim([9, Inf])

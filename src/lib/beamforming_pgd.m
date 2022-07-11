@@ -1,4 +1,4 @@
-function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, backwardChannel, equivalentDistribution, threshold, tolerance, alpha, beta)
+function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold, tolerance, alpha, beta)
 	% Function:
 	%	- optimize beamforming vector by projected gradient descent with step size determined by backtracking line search
     %
@@ -31,7 +31,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		transmitPower;
 		noisePower;
 		equivalentChannel;
-		backwardChannel;
+		cascadedChannel;
 		equivalentDistribution;
 		threshold;
 		tolerance = 1e-3;
@@ -45,8 +45,8 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 	% * No previous solution, initialize randomly
 	if isempty(initializer)
 % 	if true
-% 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
-		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
+		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
+% 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
 % 		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);
 		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
 	end

@@ -1,4 +1,4 @@
-function [rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, backwardChannel, tolerance, Options)
+function [rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, tolerance, Options)
 	% Function:
 	%	- iteratively update the input distribution, detection threshold, and beamforming vector to maximize weighted sum rate
     %
@@ -33,7 +33,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		nBins;
 		weight;
 		equivalentChannel;
-		backwardChannel;
+		cascadedChannel;
 		tolerance = 1e-6;
 		Options.Distribution {mustBeMember(Options.Distribution, ['exhaustion', 'kkt', 'sca', 'cooperation'])};
 		Options.Threshold {mustBeMember(Options.Threshold, ['smawk', 'dp', 'bisection', 'ml'])};
@@ -42,7 +42,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	end
 
 	% * Clear persistent variable for distribution
-	clear distribution_kkt distribution_cooperation;
+% 	clear distribution_kkt distribution_cooperation;
 
 	% * Get data
 	nInputs = size(equivalentChannel, 2);
@@ -58,10 +58,9 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	% * No previous solution, initialize randomly
 	if isempty(initializer)
 		initializer.distribution = normalize(ones(nStates, nTags), 'norm', 1);
-% 	if true
-% 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
 		equivalentDistribution = prod(tuple_tag(initializer.distribution), 2);
-		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
+		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
+% 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
 % 		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);
 % 		ric = equivalentChannel * equivalentDistribution;
 		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
@@ -114,7 +113,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		% * Transmit beamforming
 		switch Options.Beamforming
 		case 'pgd'
-			beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, backwardChannel, equivalentDistribution, threshold);
+			beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold);
 		end
 
 		% * Decision threshold

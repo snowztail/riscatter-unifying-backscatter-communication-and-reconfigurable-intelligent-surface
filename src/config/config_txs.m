@@ -42,8 +42,8 @@ nWeights = length(weightSet);
 nBins = 2 ^ 6;
 
 %% * Variable
-% Variable = struct('nTxs', num2cell(2 .^ (0 : 3)));
-Variable = struct('nTxs', {3, 4, 8});
+Variable = struct('nTxs', num2cell(2 .^ (0 : 3)));
+% Variable = struct('nTxs', {3, 4, 8});
 nVariables = length(Variable);
 
 %% * PBS

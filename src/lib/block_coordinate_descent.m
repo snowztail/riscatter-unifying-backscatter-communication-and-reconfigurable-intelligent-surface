@@ -49,22 +49,27 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	nStates = nthroot(nInputs, nTags);
 
 	% * Initialize input distribution as uniform
-	distribution = normalize(ones(nStates, nTags), 'norm', 1);
-	equivalentDistribution = prod(tuple_tag(distribution), 2);
+% 	distribution = normalize(ones(nStates, nTags), 'norm', 1);
+% 	equivalentDistribution = prod(tuple_tag(distribution), 2);
 
 	% ! Initialize beamforming by previous solution
 	persistent initializer
 
 	% * No previous solution, initialize randomly
-% 	if isempty(initializer)
-	if true
+	if isempty(initializer)
+		initializer.distribution = normalize(ones(nStates, nTags), 'norm', 1);
+% 	if true
 % 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
-% 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
-		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);
+		equivalentDistribution = prod(tuple_tag(initializer.distribution), 2);
+		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
+% 		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);
+% 		ric = equivalentChannel * equivalentDistribution;
 		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
 	end
 
 	% * Apply initializer
+	distribution = initializer.distribution;
+	equivalentDistribution = prod(tuple_tag(distribution), 2);
 	beamforming = initializer.beamforming;
 
 	% * Initialize decision threshold by maximum likelihood
@@ -139,5 +144,6 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	end
 
 	% * Update initializer
+	initializer.distribution = distribution;
 	initializer.beamforming = beamforming;
 end

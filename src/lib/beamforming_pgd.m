@@ -44,7 +44,6 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 
 	% * No previous solution, initialize randomly
 	if isempty(initializer)
-% 	if true
 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
 % 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
 % 		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);

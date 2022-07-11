@@ -34,7 +34,8 @@ backwardFactor = 10;
 
 %% * Algorithm
 % relative priority of primary link
-weightSet = [1 : -0.1 : 0.5, 0.45 : -0.05 : 0.25, 0.2 : -0.025 : 0];
+% weightSet = flip([1 : -0.1 : 0.5, 0.45 : -0.05 : 0.25, 0.2 : -0.025 : 0]);
+weightSet = ([1 : -0.1 : 0.5, 0.45 : -0.05 : 0.25, 0.2 : -0.025 : 0]);
 % number of weights on rate region boundary
 nWeights = length(weightSet);
 % number of quantization bins
@@ -42,6 +43,7 @@ nBins = 2 ^ 6;
 
 %% * Variable
 Variable = struct('nTxs', num2cell(2 .^ (0 : 3)));
+% Variable = struct('nTxs', {3, 4, 8});
 nVariables = length(Variable);
 
 %% * PBS

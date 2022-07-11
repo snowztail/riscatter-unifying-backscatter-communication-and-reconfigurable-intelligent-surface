@@ -1,4 +1,4 @@
-function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, equivalentDistribution, threshold, tolerance, alpha, beta)
+function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, backwardChannel, equivalentDistribution, threshold, tolerance, alpha, beta)
 	% Function:
 	%	- optimize beamforming vector by projected gradient descent with step size determined by backtracking line search
     %
@@ -31,9 +31,10 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		transmitPower;
 		noisePower;
 		equivalentChannel;
+		backwardChannel;
 		equivalentDistribution;
 		threshold;
-		tolerance = 1e-6;
+		tolerance = 1e-3;
 		alpha = 1e-2;
 		beta = 0.5;
 	end
@@ -41,13 +42,19 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 	% ! Initialize beamforming by previous solution
 	persistent initializer
 
-	% * No previous solution, use MRT initializer
-	if isempty(initializer)
-		initializer = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+	% * No previous solution, initialize randomly
+% 	if isempty(initializer)
+	if true
+% 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
+		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
+% 		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);
+		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
 	end
 
 	% * Apply initializer
-	beamforming = initializer;
+	beamforming = initializer.beamforming;
+
+	% * Construct DMTC and recover i/o mapping
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
 	snr = receivePower / noisePower;
 	[~, sortIndex] = sort(receivePower);
@@ -78,13 +85,13 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		end
 
 		% * Test convergence (gradient can be non-zero due to norm constraint)
-		isConverged = (wsrPgd - wsr) / wsr <= tolerance || isnan(wsrPgd);
+		isConverged = (wsrPgd - wsr) / wsr <= tolerance || any(dmacPgd < tolerance, 'all') || isnan(wsrPgd);
 		beamforming = beamformingPgd;
 		wsr = wsrPgd;
 	end
 
 	% * Update initializer
-	initializer = beamforming;
+	initializer.beamforming = beamforming;
 end
 
 

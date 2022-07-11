@@ -1,4 +1,4 @@
-function [rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, tolerance, Options)
+function [rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, backwardChannel, tolerance, Options)
 	% Function:
 	%	- iteratively update the input distribution, detection threshold, and beamforming vector to maximize weighted sum rate
     %
@@ -33,6 +33,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		nBins;
 		weight;
 		equivalentChannel;
+		backwardChannel;
 		tolerance = 1e-6;
 		Options.Distribution {mustBeMember(Options.Distribution, ['exhaustion', 'kkt', 'sca', 'cooperation'])};
 		Options.Threshold {mustBeMember(Options.Threshold, ['smawk', 'dp', 'bisection', 'ml'])};
@@ -54,9 +55,13 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	% ! Initialize beamforming by previous solution
 	persistent initializer
 
-	% * No previous solution, use MRT initializer
-	if isempty(initializer)
-		initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+	% * No previous solution, initialize randomly
+% 	if isempty(initializer)
+	if true
+% 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
+% 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
+		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);
+		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
 	end
 
 	% * Apply initializer
@@ -104,7 +109,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		% * Transmit beamforming
 		switch Options.Beamforming
 		case 'pgd'
-			beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, equivalentDistribution, threshold);
+			beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, backwardChannel, equivalentDistribution, threshold);
 		end
 
 		% * Decision threshold

@@ -1,8 +1,9 @@
-clear; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc; close all;
+clear; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc;
 
 %% * Load data
 directory = strcat('../data/region_', erase(mfilename, 'plot_'), '/');
-data_load;
+% data_load;
+Result = load(strcat(directory, 'instance_0'), 'Result').Result;
 
 %% * Average over instances and retrieve rate regions
 region = cell(nVariables, 1);
@@ -14,7 +15,7 @@ for iVariable = 1 : nVariables
 	[rate(1, nWeights + 1), rate(2, nWeights + 2)] = deal(max(rate(1, :)), max(rate(2, :)));
 	region{iVariable} = rate(:, convhull(transpose(rate)));
 end
-save(strcat('../data/region_', erase(mfilename, 'plot_')));
+% save(strcat('../data/region_', erase(mfilename, 'plot_')));
 
 %% * Draw primary-(sum-)backscatter rate regions
 figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Number of Transmit Antennas', 'Position', [0, 0, 500, 400]);
@@ -29,5 +30,5 @@ xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatte Rate [$\mu$ bits/backscatter symbol]');
 xlim([7, Inf]);
 style_plot(object);
-savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
-matlab2tikz(strcat('../../assets/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', ['title style={font=\huge}, ' 'label style={font=\huge}, ' 'ticklabel style={font=\LARGE}, ' 'legend style={font=\LARGE}']);
+% savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
+% matlab2tikz(strcat('../../assets/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', ['title style={font=\huge}, ' 'label style={font=\huge}, ' 'ticklabel style={font=\LARGE}, ' 'legend style={font=\LARGE}']);

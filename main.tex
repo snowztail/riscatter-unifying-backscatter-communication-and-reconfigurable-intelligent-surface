@@ -85,8 +85,8 @@
 \newacronym{awgn}{AWGN}{Additive White Gaussian Noise}
 \newacronym{bcd}{BCD}{Block Coordinate Descent}
 \newacronym{bibo}{BIBO}{Binary-Input Binary-Output}
-\newacronym{bpcu}{\si{bpcu}}{bit per channel use}
-\newacronym{bpsphz}{\si{bps/Hz}}{bit per second per Hertz}
+\newacronym{bpcu}{\si{bpcu}}{bits per channel use}
+\newacronym{bpsphz}{\si{bps/Hz}}{bits per second per Hertz}
 \newacronym{cscg}{CSCG}{Circularly Symmetric Complex Gaussian}
 \newacronym{csi}{CSI}{Channel State Information}
 \newacronym{df}{DF}{Decode-and-Forward}
@@ -126,7 +126,7 @@
 \author{
 	\IEEEauthorblockN{
 		Yang~Zhao,~\IEEEmembership{Member,~IEEE,}
-		and~Bruno~Clerckx,~\IEEEmembership{Senior~Member,~IEEE}
+		and~Bruno~Clerckx,~\IEEEmembership{Fellow,~IEEE}
 	}
 	\thanks{
 		The authors are with the Department of Electrical and Electronic Engineering, Imperial College London, London SW7 2AZ, U.K. (e-mail: \{yang.zhao18, b.clerckx\}@imperial.ac.uk).
@@ -136,20 +136,35 @@
 
 \begin{abstract}
 	% Backscatter allows wireless nodes to harvest energy from, modulate information over, and reconfigure propagation of surrounding radio waves.
-	Passive backscatter nodes can harvest energy from, modulate information over, and reconfigure propagation of surrounding radio waves.
-	We uniquely introduce the concept of Metascatter, which adapts the input distribution of a finite-state backscatter tag based on \gls{csi}, to \emph{simultaneously} encode self message and assist legacy transmission while powered by ambient signal.
-	Compared to conventional \gls{irs}-empowered \gls{sr} that performs encoding and beamforming independently (overlay or parallel), Metascatter refines backscatter principles to bridge parasitic source of \gls{sr} and reflecting element of \gls{irs} as extreme cases.
-	Such an integrated distribution design not only yields universal modularity with reduced optimization cost, but also enables a flexible tradeoff between primary and backscatter links using shared spectrum, energy, and infrastructures.
-	To validate its benefits, we consider an application scenario where a multi-antenna \gls{ap} transmits to a single-antenna user surrounded by multiple Metascatters.
-	For simplicity, the user is assumed first decodes all Metascatters jointly by energy detection, then models their contribution within equivalent channel and decodes the primary link.
-	We characterize the achievable primary-(sum-)backscatter rate region through a joint optimization of input distribution at the Metascatters, transmit beamforming at the AP, and decision thresholds at the user.
-	The problem is highly non-convex and we propose a suboptimal \gls{bcd} solution, where the input distribution satisfying the \gls{kkt} conditions is evaluated in closed form, the transmit beamforming is updated by \gls{pgd}, and the decision thresholds are optimized by \gls{dp}.
-	Simulation results demonstrate Metascatters can exploit additional backscatter paths to coordinate transmit and assist via smart input design.
+	Backscatter nodes can harvest energy from, modulate information over, and reconfigure propagation of ambient signals.
+	% Backscatter nodes can harvest energy from, modulate information over, and reconfigure propagation of surrounding radio waves.
+	We uniquely introduce \emph{Metascatter} that adapts the input distribution of a finite-state passive backscatter node based on \gls{csi}, to \emph{simultaneously} encode self message and assist legacy transmission while powered by surrounding radio-frequency waves.
+	% Compared to conventional \gls{irs}-empowered \gls{sr} that encodes and precodes independently (e.g., overlay or parallel), Metascatter refines backscatter principles to bridge parasitic source of \gls{sr} and reflecting element of \gls{irs} as extreme cases.
+	Compared to existing \gls{irs}-empowered \gls{sr} that encodes and precodes independently using advanced architecture (e.g., overlay or parallel), Metascatter softly bridges and generalizes parasitic source of \gls{sr} and reflecting element of \gls{irs} via smart input design.
+	% Compared to \gls{irs}-empowered \gls{sr} that encodes and precodes independently (e.g., overlay or parallel), Metascatter refines backscatter principles to bridge parasitic source of \gls{sr} and reflecting element of \gls{irs} as extreme cases.
+	% Such an integrated distribution design not only yields universal modularity with reduced optimization cost, but also enables a flexible tradeoff between primary and backscatter links using shared spectrum, energy, and infrastructures.
+	It not only reduces hardware complexity and optimization cost, but also enables a flexible tradeoff between primary and backscatter links using shared spectrum, energy, and infrastructures.
+	Moreover, we consider an application scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple Metascatters.
+	For simplicity, it is assumed the user first jointly decodes all backscatter messages based on average received power, then models reflection patterns and backscatter paths within equivalent channel for primary decoding.
+	% Once modulation uncertainty of Metascatters are eliminated, models contributions from additional paths within equivalent channel
+	% decodes all Metascatters jointly by energy detection, then models their contribution within equivalent channel and decodes the primary link.
+	% For simplicity, the user is assumed first decodes all Metascatters jointly by energy detection, then models their contribution within equivalent channel and decodes the primary link.
+	We characterize achievable primary-(total-)backscatter rate regions by jointly design input distribution at Metascatters, active beamforming at AP, and decision regions at user.
+	% A suboptimal \gls{bcd} algorithm was proposed, where the input distribution satisfying the \gls{kkt} conditions is evaluated in closed form, the transmit beamforming is optimized by \gls{pgd}, and the decision thresholds are optimized by \gls{dp}.
+	A suboptimal \gls{bcd} algorithm was proposed, where the \gls{kkt} input distribution is evaluated in closed form, the active beamforming is optimized by \gls{pgd} with backtracking line search, and convex decision regions are refined by \gls{dp}.
+	% the decision regions are restricted as convex then optimized by \gls{dp}.
+	% A suboptimal \gls{bcd} algorithm was proposed, where the \gls{kkt} input distribution is evaluated in closed form, the active beamforming is optimized by \gls{pgd} with backtracking line search, and the decision thresholds are optimized by \gls{dp}.
+	Simulation results demonstrate Metascatters can exploit additional propagation paths to transmit and assist via input design.
 \end{abstract}
 
 \begin{section}{Introduction}
 	\IEEEPARstart{B}{ackscatter} is recently re-innovated as a promising approach to support low-power communications and control wireless propagation environments.
-	The concept of \gls{ambc} was first proposed in \cite{Liu2013b}, where each tag harvests energy from and modulates information over ambient \gls{rf} signals by periodically switching between different reflection patterns.
+	% The concept of \gls{ambc} was first proposed in \cite{Liu2013b}, where battery-free communication between passive nodes was established by
+	\gls{ambc} that enables battery-free communication between passive nodes was first proposed in \cite{Liu2013b}, where battery-free communication between passive nodes was established by
+
+	Battery-free communication between passive nodes was first by
+
+	each tag harvests energy from and modulates information over ambient \gls{rf} signals by periodically switching between different reflection patterns.
 	It enables battery-free communication between fully passive nodes, but the backscatter signal strength can be relatively weak and the decoding is subject to strong direct-link interference.
 	To solve this, \cite{Yang2018d} exploited the repeating structure of \gls{ofdm} symbol for interference cancellation based on backscatter channel strength.
 	Cooperative primary-backscatter decoding using co-located receiver, known as cooperative \gls{ambc}, was proposed in \cite{Yang2018}.
@@ -158,7 +173,7 @@
 	The authors of \cite{Guo2019b} classified \gls{sr} into commensal, parasitic, and competitive modes based on the relative link priority, then derived their instantaneous achievable rate and optimal power allocation.
 	The outage probability for those modes was later studied in \cite{Ding2020}.
 	On the other hand, it was concluded in \cite{Long2020a} that if the backscatter symbol period is much longer than the primary symbol period, then the non-coherent achievable rate of primary decoding would approach that of the coherent case.
-	The authors also considered the transmit precoder design for weighted sum-rate maximization and transmit power minimization problems.
+	The authors also considered the transmit precoder design for weighted total-rate maximization and transmit power minimization problems.
 	\cite{Zhou2019a} explored how the number of transmit antennas, receive antennas, and symbol period ratio asymptotically influence the ergodic rate of primary and backscatter links.
 	With multi-antenna at all ends, \cite{Wu2021a} optimized the transmit precoder to maximize the backscatter achievable rate under primary rate constraint.
 	However, those paper only considered single tag scenario and the optimal tag multiple access scheme remains unknown.
@@ -194,7 +209,7 @@
 	When the ratio of backscatter symbol period over primary symbol period is large enough, the randomness of primary source can be averaged out and the performance of non-coherent backscatter decoding can be greatly improved.
 	Since the primary and backscatter symbols are mixed by multiplication coding, the backscatter decoding can be viewed as part of primary channel training, which avoids non-coherent encoding at the transmitter and \gls{sic} at the receiver.
 
-	\emph{Third,} we characterize the achievable primary-(sum-)backscatter rate region by iteratively optimizing the tag input distribution, the backscatter decision threshold, and the transmit precoder.
+	\emph{Third,} we characterize the achievable primary-(total-)backscatter rate region by iteratively optimizing the tag input distribution, the backscatter decision threshold, and the transmit precoder.
 	For the input design, we propose a numerical method to evaluate the \gls{kkt} solutions by limits of sequences.
 	For the threshold design, we derive the minimum number of decision thresholds to maximize the total backscatter rate, and obtain the optimal thresholds by \gls{dp} accelerated by \gls{smawk} algorithm.
 	However, the optimal precoder design can be non-trivial and we may end up with a low-complexity suboptimal solution.
@@ -430,7 +445,7 @@
 \end{section}
 
 \begin{section}{Input, Threshold, and Precoder Design}
-	To characterize the achievable primary-(sum-)backscatter rate region of Metascatter, we aim to maximize the weighted sum mutual information with respect to tag input probability distribution $\{\boldsymbol{p}_k\}$, decision threshold vector $\boldsymbol{t}$, and transmit precoder $\boldsymbol{w}$
+	To characterize the achievable primary-(total-)backscatter rate region of Metascatter, we aim to maximize the weighted sum mutual information with respect to tag input probability distribution $\{\boldsymbol{p}_k\}$, decision threshold vector $\boldsymbol{t}$, and transmit precoder $\boldsymbol{w}$
 	\begin{maxi!}
 		{\scriptstyle{\{\boldsymbol{p}_k\},\boldsymbol{t},\boldsymbol{w}}}{I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
 		\addConstraint{\sum \nolimits_{m_k} P_k(x_{m_k})}{=1,}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
@@ -446,9 +461,9 @@
 			\addConstraint{\eqref{co:sum_probability},\eqref{co:nonnegative_probability},}
 		\end{maxi!}
 		which involves the product term $\prod_{k \in \mathcal{K}} P_k(x_{m_k})$ and is non-convex when $K > 1$.
-		Interestingly, the sum-rate optimal input design for general discrete memoryless \gls{mac} remains an open problem, and we instead propose a \gls{kkt} solution to problem \eqref{op:input_probability_distribution}.
+		Interestingly, the total-rate optimal input design for general discrete memoryless \gls{mac} remains an open problem, and we instead propose a \gls{kkt} solution to problem \eqref{op:input_probability_distribution}.
 		\begin{footnote}
-			As pointed out in \cite{Buhler2011}, \gls{kkt} conditions are only necessary for sum-rate optimality and these solutions may end up being saddle points.
+			As pointed out in \cite{Buhler2011}, \gls{kkt} conditions are only necessary for total-rate optimality and these solutions may end up being saddle points.
 		\end{footnote}
 		\begin{proposition}
 			The \gls{kkt} optimality conditions for problem \eqref{op:input_probability_distribution} are equivalent to, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$,
@@ -556,7 +571,7 @@
 
 	We believed threshold design has no impact on the primary achievable rate, because primary decoding acts on $\boldsymbol{y}$ while thresholding acts on $z$.
 	As such, the threshold that maximizes the total backscatter rate should also maximize the weighted sum rate.
-	Interestingly, this may not be the case because the \gls{smawk} and Bisection threshold designs, both maximizing the total backscatter rate, can be outperformed by the \gls{ml} when it comes to weighted sum primary-(sum-)backscatter rate.
+	Interestingly, this may not be the case because the \gls{smawk} and Bisection threshold designs, both maximizing the total backscatter rate, can be outperformed by the \gls{ml} when it comes to weighted sum primary-(total-)backscatter rate.
 	It may result from a precision issue, but inspires further research on threshold design for Metascatter.
 
 	\begin{figure}[!t]
@@ -639,7 +654,7 @@
 			\hrule
 			\begin{align}
 				J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)
-				 & \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right)\nonumber                                                                                                                          \\
+				 & \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \log_2 \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_w^2}\right)\nonumber                                                                                                                            \\
 				 & \quad + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})}.
 				\label{eq:intermediate_information_function}
 			\end{align}

@@ -326,3 +326,6 @@ src/data/
 # PBS log
 src/pbs/log/
 core.*
+
+# VS Code
+.vscode/

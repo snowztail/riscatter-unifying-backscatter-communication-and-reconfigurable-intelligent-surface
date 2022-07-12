@@ -47,6 +47,8 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
 % 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
 % 		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);
+% 		ric = equivalentChannel * equivalentDistribution;
+% 		ric = sum(cascadedChannel, 2);
 		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
 	end
 
@@ -68,7 +70,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		gradient = gradient_local(symbolRatio, weight, noisePower, equivalentChannel, equivalentDistribution, threshold, beamforming);
 
 		% * Optimize step size by backtracking line search
-		step = 1;
+		step = 1e9;
 		beamformingPgd = beamforming_projection(transmitPower, beamforming + step * gradient);
 		receivePowerPgd = abs(equivalentChannel' * beamformingPgd) .^ 2 + noisePower;
 		snrPgd = receivePowerPgd / noisePower;

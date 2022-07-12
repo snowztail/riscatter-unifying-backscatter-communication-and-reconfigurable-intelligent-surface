@@ -20,6 +20,7 @@ for iVariable = 1 : nVariables
 	% * Clear persistent variable
 	clear block_coordinate_descent beamforming_pgd;
 	clear distribution_kkt distribution_cooperation;
+% 	clear functions;
 
 	% * Evaluate rate region
 	for iWeight = 1 : nWeights

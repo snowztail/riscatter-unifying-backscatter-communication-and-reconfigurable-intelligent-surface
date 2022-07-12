@@ -75,6 +75,8 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 
 	% ! TODO
 	ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
+% 	ric = equivalentChannel * equivalentDistribution;
+% 	ric = sum(cascadedChannel, 2);
 	beamforming = sqrt(transmitPower) * ric / norm(ric);
 	
 	% * Initialize decision threshold by maximum likelihood

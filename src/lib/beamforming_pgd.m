@@ -34,7 +34,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		cascadedChannel;
 		equivalentDistribution;
 		threshold;
-		tolerance = 1e-3;
+		tolerance = 1e-6;
 		alpha = 1e-2;
 		beta = 0.5;
 	end

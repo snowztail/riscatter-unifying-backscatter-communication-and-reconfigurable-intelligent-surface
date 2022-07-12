@@ -10,4 +10,5 @@ set(groot, 'defaultstemlinewidth', 2);
 % PBS_ARRAY_INDEX is environment variable: 0 means local and positive integer means HPC instance index
 iInstance = str2double(getenv('PBS_ARRAY_INDEX'));
 disp(iInstance);
-rng(iInstance);
+% rng(iInstance);
+rng shuffle;

@@ -26,7 +26,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 		weight;
 		snr;
 		dmac;
-		tolerance = 1e-6;
+		tolerance = 1e-7;
 	end
 
 	% * Get data

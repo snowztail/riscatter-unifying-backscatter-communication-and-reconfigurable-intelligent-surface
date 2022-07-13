@@ -55,10 +55,9 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	% ! Initialize beamforming by previous solution
 	persistent initializer
 
-	% * No previous solution, initialize randomly
+	% * No previous solution, use MRT initializer
 	if isempty(initializer)
-		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);
-		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
+		initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
 	end
 
 	% * Apply initializer
@@ -110,7 +109,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		% * Transmit beamforming
 		switch Options.Beamforming
 		case 'pgd'
-			beamforming = beamforming_pgd(beamforming, symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold);
+			beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold);
 		end
 
 		% * Decision threshold
@@ -140,6 +139,5 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	end
 
 	% * Update initializer
-	initializer.distribution = distribution;
-% 	initializer.beamforming = beamforming;
+	initializer.beamforming = beamforming;
 end

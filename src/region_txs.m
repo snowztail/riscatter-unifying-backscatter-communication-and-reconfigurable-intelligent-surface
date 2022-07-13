@@ -27,7 +27,7 @@ for iVariable = 1 : nVariables
 		weight = weightSet(iWeight);
 		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
 		if any(isnan(rate))
-			return
+			error('PGD failed.');
 		else
 			Result(iVariable, iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 		end

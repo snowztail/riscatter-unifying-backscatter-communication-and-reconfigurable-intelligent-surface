@@ -42,43 +42,28 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	end
 
 	% * Clear persistent variable for distribution
-% 	clear distribution_kkt distribution_cooperation;
+	clear distribution_kkt distribution_cooperation;
 
 	% * Get data
 	nInputs = size(equivalentChannel, 2);
 	nStates = nthroot(nInputs, nTags);
 
 	% * Initialize input distribution as uniform
-% 	distribution = normalize(ones(nStates, nTags), 'norm', 1);
-% 	equivalentDistribution = prod(tuple_tag(distribution), 2);
+	distribution = normalize(ones(nStates, nTags), 'norm', 1);
+	equivalentDistribution = prod(tuple_tag(distribution), 2);
 
 	% ! Initialize beamforming by previous solution
 	persistent initializer
 
 	% * No previous solution, initialize randomly
-% 	if isempty(initializer)
-% 		initializer.distribution = normalize(ones(nStates, nTags), 'norm', 1);
-% 		equivalentDistribution = prod(tuple_tag(initializer.distribution), 2);
-% 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
-% % 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
-% % 		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);
-% % 		ric = equivalentChannel * equivalentDistribution;
-% 		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
-% 	end
 	if isempty(initializer)
-		initializer.distribution = normalize(ones(nStates, nTags), 'norm', 1);
+		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);
+		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
 	end
 
 	% * Apply initializer
-	distribution = initializer.distribution;
-	equivalentDistribution = prod(tuple_tag(initializer.distribution), 2);
+	beamforming = initializer.beamforming;
 
-	% ! TODO
-	ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
-% 	ric = equivalentChannel * equivalentDistribution;
-% 	ric = sum(cascadedChannel, 2);
-	beamforming = sqrt(transmitPower) * ric / norm(ric);
-	
 	% * Initialize decision threshold by maximum likelihood
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
 	snr = receivePower / noisePower;
@@ -95,9 +80,6 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	% * Block coordinate descent
 	wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
 	isConverged = false;
-
-	% * Clear persistent variable
-	clear beamforming_pgd;
 
 	while ~isConverged
 		% * Update iteration index
@@ -128,7 +110,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		% * Transmit beamforming
 		switch Options.Beamforming
 		case 'pgd'
-			beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold);
+			beamforming = beamforming_pgd(beamforming, symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold);
 		end
 
 		% * Decision threshold

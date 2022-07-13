@@ -1,4 +1,4 @@
-function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold, tolerance, alpha, beta)
+function [beamforming] = beamforming_pgd(beamforming, symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold, tolerance, alpha, beta)
 	% Function:
 	%	- optimize beamforming vector by projected gradient descent with step size determined by backtracking line search
     %
@@ -26,6 +26,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 
 	% * Set default tolerance and parameters of backtracking line search
 	arguments
+		beamforming;
 		symbolRatio;
 		weight;
 		transmitPower;
@@ -40,20 +41,20 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 	end
 
 	% ! Initialize beamforming by previous solution
-	persistent initializer
-
-	% * No previous solution, initialize randomly
-	if isempty(initializer)
-		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
-% 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
-% 		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);
-% 		ric = equivalentChannel * equivalentDistribution;
-% 		ric = sum(cascadedChannel, 2);
-		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
-	end
-
-	% * Apply initializer
-	beamforming = initializer.beamforming;
+% 	persistent initializer
+% 
+% 	% * No previous solution, initialize randomly
+% 	if isempty(initializer)
+% 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * sum(cascadedChannel, 2);
+% % 		ric = weight * equivalentChannel * equivalentDistribution + (1 - weight) * backwardChannel * equivalentDistribution;
+% % 		ric = rand(size(equivalentChannel, 1), 1) + 1i * rand(size(equivalentChannel, 1), 1);
+% % 		ric = equivalentChannel * equivalentDistribution;
+% % 		ric = sum(cascadedChannel, 2);
+% 		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
+% 	end
+% 
+% 	% * Apply initializer
+% 	beamforming = initializer.beamforming;
 
 	% * Construct DMTC and recover i/o mapping
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
@@ -92,7 +93,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 	end
 
 	% * Update initializer
-	initializer.beamforming = beamforming;
+% 	initializer.beamforming = beamforming;
 end
 
 

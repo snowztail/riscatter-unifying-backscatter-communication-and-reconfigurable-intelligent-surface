@@ -66,10 +66,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	% * Initialize decision threshold by maximum likelihood
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
 	snr = receivePower / noisePower;
-% 	threshold = threshold_ml(symbolRatio, receivePower);
-	thresholdDomain = domain_threshold(symbolRatio, nBins, receivePower);
-	binDmc = dmc_integration(symbolRatio, receivePower, thresholdDomain);
-	threshold = threshold_smawk(equivalentDistribution, thresholdDomain, binDmc);
+	threshold = threshold_ml(symbolRatio, receivePower);
 
 	% * Construct DMTC and recover i/o mapping
 	dmac = dmc_integration(symbolRatio, receivePower, threshold);

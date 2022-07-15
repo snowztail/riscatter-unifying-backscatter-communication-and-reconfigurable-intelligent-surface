@@ -46,7 +46,9 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 
 	% * No previous solution, use MRT initializer
 	if isempty(initializer)
-		initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+		ric = sum(cascadedChannel, 2);
+		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
+% 		initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
 	end
 
 	% * Apply initializer

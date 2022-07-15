@@ -57,7 +57,9 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 
 	% * No previous solution, use MRT initializer
 	if isempty(initializer)
-		initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+		ric = sum(cascadedChannel, 2);
+		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
+% 		initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
 	end
 
 	% * Apply initializer

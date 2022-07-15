@@ -46,4 +46,4 @@ nVariables = length(Variable);
 
 %% * PBS
 % number of instances
-nInstances = 3e2;
+nInstances = 1e4;

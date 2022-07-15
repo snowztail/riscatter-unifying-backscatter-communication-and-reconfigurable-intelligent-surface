@@ -83,7 +83,8 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		end
 
 		% * Test convergence (gradient can be non-zero due to norm constraint)
-		isConverged = (wsrPgd - wsr) / wsr <= tolerance || any(dmacPgd < tolerance, 'all') || isnan(wsrPgd);
+% 		isConverged = (wsrPgd - wsr) / wsr <= tolerance || any(dmacPgd < tolerance, 'all') || isnan(wsrPgd);
+		isConverged = norm(beamformingPgd - beamforming) <= tolerance || any(dmacPgd < tolerance, 'all') || isnan(wsrPgd);
 		beamforming = beamformingPgd;
 		wsr = wsrPgd;
 	end

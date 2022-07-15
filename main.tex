@@ -120,7 +120,9 @@
 \newacronym{tdma}{TDMA}{Time-Division Multiple Access}
 \newacronym{tg}{TG}{tag}
 \newacronym{ue}{UE}{user}
+\newacronym{wit}{WIT}{Wireless Information Transfer}
 \newacronym{wpcn}{WPCN}{Wireless Powered Communication Network}
+\newacronym{wpt}{WPT}{Wireless Power Transfer}
 
 
 \begin{document}
@@ -184,14 +186,19 @@
 	The authors thus proposed to decode the primary link under backscatter uncertainty, then perform \gls{sic} and decode the backscatter link.
 	% The authors also considered the transmit precoder design for weighted total-rate maximization and transmit power minimization problems.
 	% \cite{Zhou2019a} explored how the number of transmit antennas, receive antennas, and symbol period ratio asymptotically influence the ergodic rate of primary and backscatter links.
-	\cite{Zhou2019a} explored the impact of transmit antennas, receive antennas, and backscatter symbol period on the ergodic rate of primary and backscatter links.
-	For multi-antenna at all ends, \cite{Wu2021a} optimized transmit beamforming to maximize the backscatter achievable rate under primary rate constraint.
-	However, those paper only considered single backscatter node and backscatter multiple access remains an open issue.
-	In \cite{Xu2021a}, a \gls{noma}-based \gls{sr} was proposed and receive combining was investigated for \gls{sic} order in equivalent channel strength.
+	% For \gls{sr} with a single-antenna backscatter node,
+	\cite{Zhou2019a} also explored the asymptotic impact of transmit/receive antenna and backscatter symbol period on the ergodic rate of primary and backscatter links.
+	% When multi-antenna is available at the node, \cite{Wu2021a} proposed
+	For a \gls{mimo} \gls{sr} system with a multi-antenna backscatter node, \cite{Wu2021a} proposed a beamforming design to maximize the backscatter rate while guaranteeing the primary performance.
+	% For multi-antenna at all ends, \cite{Wu2021a} optimized transmit beamforming to maximize the backscatter achievable rate under primary rate constraint.
+	% For multi-antenna at all ends, \cite{Wu2021a} optimized transmit beamforming to maximize the backscatter achievable rate under primary rate constraint.
+	% For multi-antenna at all ends, \cite{Wu2021a} optimized transmit beamforming to enlarge the achievable rate region.
+	However, those paper only considered one backscatter node and backscatter multiple access remains an open issue.
+	In \cite{Xu2021a}, a \gls{noma}-based \gls{sr} was proposed and receive combining was investigated when \gls{sic} order follows equivalent channel strength.
 	% \cite{Xu2021a} proposed a \gls{noma}-based \gls{sr} and investigated receive beamforming when \gls{sic} order is determined by equivalent channel strength.
 	% \cite{Xu2021a} proposed a \gls{noma}-based \gls{sr} and studied the receive combiner design when the receiver decodes in the order of equivalent channel strength.
 	% A \gls{tdma}-based \gls{sr} with energy harvesting constraints was also presented in \cite{Yang2021a}, and energy efficiency maximization was considered with respect to transmit power, reflection efficiency, and time allocation design.
-	A \gls{tdma}-based \gls{sr} with energy harvesting constraints was also presented in \cite{Yang2021a}, where transmit power, reflection efficiency, and time allocation was optimized to maximize energy efficiency.
+	A \gls{tdma}-based \gls{sr} with energy harvesting constraints was also presented in \cite{Yang2021a}, where transmit power, reflection efficiency, and time allocation were jointly optimized to maximize energy efficiency.
 	% In \cite{Han2021}, random code-assisted backscatter multiple access was combined with \gls{sr}, and the authors evaluated the asymptotic \gls{sinr} performance using random matrix theory.
 	To reduce coordination between passive nodes, \cite{Han2021} proposed a random code-assisted multiple access for \gls{sr} and evaluated the asymptotic \gls{sinr} using random matrix theory.
 
@@ -199,40 +206,38 @@
 	% In practice, an \gls{irs} consists of multiple individual sub-wavelength reflecting elements to adjust the amplitude and phase of the incoming signal (i.e., passive beamforming).
 	% Different from relay, backscatter and frequency-selective surface \cite{Anwar2018}, \gls{irs} assists the primary transmission using passive components with much lower energy consumption and thermal noise, but is limited to frequency-dependent reflection.
 	% On the other hand, \gls{irs} consists of numerous sub-wavelength passive elements that alter propagation environment using adaptive backscatter pattern to assist existing networks. Extensive research has been devoted to optimizing the reflection coefficient
-	On the other hand, \gls{irs} consists of numerous sub-wavelength passive elements with adaptive amplitudes and/or phases that alter propagation environment to assist existing networks.
-	Extensive research has been devoted to optimizing the phases of \gls{irs} during whole channel block for different metrices, as TODO \cite{Wu2018,Wu2019a,Wu2019}.
+	% On the other hand, \gls{irs} consists of numerous sub-wavelength passive elements with adaptive amplitudes and/or phases that alter propagation environment to assist existing networks.
+	On the other hand, \gls{irs} alters propagation environment for legacy networks using numerous sub-wavelength passive elements with adaptive amplitudes and/or phases.
+	Extensive research has been devoted to optimizing the phase shifts for the whole channel block to improve communication, sensing, and power performances \cite{Wu2018,Zhang2019a,Lin2022,Liu2022,Feng2022,Zhao2022}.
 	% In contrast, dynamic passive beamforming that adjusts \gls{irs} within channel block was proposed in \cite{Yang2020} to create diversity for \gls{ofdm} systems.
 	% In contrast, dynamic passive beamforming that adjusts \gls{irs} over finer time slots was proposed in \cite{Yang2020} to create diversity for \gls{ofdm} systems.
-	Besides, dynamic passive beamforming that adjusts \gls{irs} over fine-grained slots within channel coherence time was proposed for \gls{ofdm} systems in \cite{Yang2020}.
+	Besides, \cite{Yang2020} proposed a dynamic passive beamforming that further adjusts \gls{irs} over fine-grained time slots for \gls{ofdm} systems to balance beamforming gain and multiuser diversity.
+	The idea was further applied to \gls{wpcn} to accommodate the downlink \gls{wpt} phase and uplink \gls{wit} phase of the ``harvest-then-transmit'' protocol \cite{Wu2021d,Hua2022a}.
+	% For multiuser \gls{wpt}, \cite{Qiu2022} also reported that despite \gls{irs} is restricted to single-beam reflection, dynamic beamforming can mimic multi-beam reflection in a time-division manner and reduce the phase extraction loss.
+	For multiuser \gls{wpt}, \cite{Qiu2022} also reported that dynamic beamforming can mimic multi-beam reflection in a time-division manner and reduce the phase extraction loss.
+	% However, dynamic passive beamforming demands additional computational complexity and control overhead, and the performance-cost tradeoff needs reconsideration especially when the number of \gls{irs} elements is large.
+	% Although dynamic passive beamforming can artificially create time-varying channels for flexible channel reconfiguration and resource allocation, it demands additional computational complexity and control overhead, and the performance-cost tradeoff deserves further attention.
+	% Although dynamic passive beamforming can artificially introduce temporal diversity for flexible channel reconfiguration and resource allocation, it demands additional computational complexity and control overhead, and the performance-cost tradeoff deserves further attention.
+	Although dynamic passive beamforming artificially creates temporal diversity for flexible channel reconfiguration and resource allocation, it demands additional computational cost and control overhead, and the tradeoff deserves further attention especially for large \gls{irs}.
+	In \cite{Chen2021,Zhang2021d}, \gls{irs} was also introduced to single- and multi-node \gls{sr} systems to reduce the total transmit power.
+	When joint transmitter-\gls{irs} encoding is possible, \cite{Karasik2019} proved using \gls{irs} only for passive beamforming is generally suboptimal in terms of achievable rate for finite input constellations.
+	% The capacity-achieving \gls{irs} strategy was found to
+	Recently, \gls{irs}-empowered \gls{sr} was introduced in \cite{Xu2020b,Hua2022,Hu2021a} where independent passive beamforming and backscatter encoding were combined using advanced architectures.
+	The authors of \cite{Xu2020b,Hua2022} proposed the \gls{irs} to modulate binary message over the whole phase shift matrix and the receiver to decodes from (non-coherent) primary to (coherent) backscatter link.
+	In contrast, \cite{Hu2021a} divided the \gls{irs} into reflection and information elements, and evaluated the error performance of non-coherent backscatter detection.
+	% Compared to existing \gls{irs}-empowered \gls{sr} that encodes and precodes independently using advanced architecture (e.g., overlay or parallel), Metascatter softly bridges and generalizes parasitic source of \gls{sr} and reflecting element of \gls{irs} via smart input design.
 
-	The idea was further applied to \gls{wpcn} to strike the
-
-	proactively generate favourable time-varying channels by properly designing the IRS phase-shift vectors over different time slots,
-	which thus enhances the multiuser diversity over time and also allows more flexible resource allocation.
-
-	mic IRS beamforming is actually beneficial for maximizing the throughput
-	of WPCNs
-	% The authors
-	% of [29] considered a novel dynamic passive beamforming for
-	% Orthogonal Frequency-Division Multiplexing (OFDM) systems,
-	% where the reflection coefficient is varied over consequent
-	% time slots to enable flexible resource allocation over timefrequency Resource Blocks (RBs).
-
-	further adjusted the IRS reflection pattern within channel coherence time to mimic multi-beam reflection in a time-division manner
-
-	\cite{Wu2018} proposed an \gls{irs}-assisted \gls{miso} system and jointly optimized the precoder and the phase shifts to minimize the transmit power.
-	The active and passive beamforming problem was then extended to the discrete phase shift case \cite{Wu2019a} and the multi-user case \cite{Wu2019}.
-	In \cite{Abeywickrama2020}, the authors investigated the impact of non-zero resistance on the reflection pattern and emphasized the coupling between reflection amplitude and phase shift in practice.
-	To estimate the cascaded link without \gls{rf}-chains at the \gls{irs}, practical protocols were developed based on element-wise on/off switching \cite{Nadeem2019}, training sequence and reflection pattern design \cite{You2019,Kang2020}, and compressed sensing \cite{Wang2020}.
-	\gls{irs} was also added to single-tag and multi-tag \gls{sr} systems to improve backscatter efficiency \cite{Chen2021,Zhang2021d}.
-	Recently, the idea of \gls{irs}-empowered \gls{sr} was proposed in \cite{Xu2020b,Hua2022}, where the reflection pattern can be decoupled as the multiplication of whole phase shift matrix and one backscatter symbol.
-	The idea was combined with spatial modulation to divide the \gls{irs} into reflection and information and elements, and the error performance of non-coherent backscatter detection was studied accordingly \cite{Hu2021a}.
-
-	To the best of our knowledge, most existing \gls{sr} systems \cite{Yang2018,Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a} assumed Gaussian codebook at the tags and employed \gls{sic} from primary to backscatter link.
-	It thus requires non-coherent primary encoding at the transmitter and involves re-encoding, precoding, and subtraction operations that may not be available to legacy receivers.
-	Besides, the primary and backscatter symbols in \gls{sr} are mixed by multiplication coding instead of superposition coding, and the backscatter symbol period can be much longer than the primary symbol period due to physical constraints.
-	Inspired by above, we propose a novel Metascatter network where multiple battery-free tags ride over a conventional point-to-point system and adapt their input probability distribution to simultaneously act as backscatter tags of \gls{sr} and reflecting elements of \gls{irs}.
-	To fully utilize the reflection pattern and signal structure, we also present a novel decoding strategy with minor modifications on existing receivers.
+	To the best of our knowledge, most existing \gls{sr} systems \cite{Yang2018,Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a} assumed Gaussian codebook at backscatter nodes, and considered \gls{sic} from primary to backscatter link.
+	% It thus requires non-coherent primary encoding at transmitters, and re-encoding, precoding, and subtraction operations that may not be available to legacy receivers.
+	It thus requires non-coherent encoding at the transmitter and re-encoding, precoding, and subtraction processes at the receiver.
+	Besides, the advantage of \gls{sic} is questionable because 1) the primary and backscatter symbols are mixed by multiplication instead of superposition, and 2) the backscatter symbol period is typically much longer under physical constraints.
+	% Motivated by above, we propose a novel Metascatter network where multiple battery-free tags ride over a conventional point-to-point system and adapt their input probability distribution to simultaneously act as backscatter tags of \gls{sr} and reflecting elements of \gls{irs}.
+	Motivated by those, we introduce Metascatter that adapts the input distribution of a finite-state passive backscatter node based on \gls{csi} to unify backscatter sources of \gls{sr} and reflecting elements of \gls{irs}.
+	% An application scenario was considered where multiple Metascatters are introduced to conventional point-to-point system and adapt their input probability distribution to simultaneously act as backscatter tags of \gls{sr} and reflecting elements of \gls{irs}.
+	% An application scenario was considered where multiple Metascatters ride over a point-to-point transmission and simultaneously perform backscatter encoding and passive beamforming.
+	An application scenario was considered where multiple Metascatters ride over a point-to-point transmission to simultaneously encode self message and perform passive beamforming.
+	To fully accommodate backscatter characteristics, we also propose a novel receiving strategy that first jointly decodes all Metascatter based on average received power, then models their reflection patterns and backscatter paths within equivalent channel for primary decoding.
+	% minor modifications on existing receivers, easy to perform, fits backscatter characteristics.
 	The contributions of this paper is summarized as follows.
 
 

@@ -329,3 +329,7 @@ core.*
 
 # VS Code
 .vscode/
+
+# GNU Plot
+*.gnuplot
+*.pgf-plot.table

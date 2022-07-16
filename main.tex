@@ -40,6 +40,8 @@
 \interdisplaylinepenalty=2500
 \pgfplotsset{compat=newest}
 \usepgfplotslibrary{patchplots,groupplots}
+\usetikzlibrary{decorations.pathreplacing,calligraphy}
+\usetikzlibrary{arrows,calc,matrix,plotmarks,patterns,positioning}
 \newtheorem{proposition}{Proposition}
 \newtheorem{remark}{Remark}
 \newtheorem{theorem}{Theorem}
@@ -233,30 +235,33 @@
 	It thus requires non-coherent encoding at the transmitter and re-encoding, precoding, and subtraction at the receiver.
 	Besides, the advantage of \gls{sic} is questionable because 1) the primary and backscatter symbols are mixed by multiplication instead of superposition, and 2) the backscatter symbol period is typically much longer under physical constraints.
 	% Motivated by above, we propose a novel Metascatter network where multiple battery-free tags ride over a conventional point-to-point system and adapt their input probability distribution to simultaneously act as backscatter tags of \gls{sr} and reflecting elements of \gls{irs}.
-	Motivated by those, we introduce Metascatter that adapts the input distribution of a passive backscatter node to generalize backscatter sources of \gls{sr} and reflecting elements of \gls{irs}.
+	Motivated by those, we propose the concept of Metascatter that adapts the input distribution of a passive backscatter node to generalize backscatter sources of \gls{sr} and reflecting elements of \gls{irs}.
 	% An application scenario was considered where multiple Metascatters are introduced to conventional point-to-point system and adapt their input probability distribution to simultaneously act as backscatter tags of \gls{sr} and reflecting elements of \gls{irs}.
 	% An application scenario was considered where multiple Metascatters ride over a point-to-point transmission and simultaneously perform backscatter encoding and passive beamforming.
-	An application scenario was considered where multiple Metascatters ride over a point-to-point transmission to simultaneously encode self message and perform passive beamforming.
-	To fully accommodate backscatter characteristics, we also propose a novel receiving strategy that first jointly decodes all Metascatter based on average received power, then models their reflection patterns and backscatter paths within equivalent channel for primary decoding.
+	% ! An application scenario was considered where multiple Metascatters ride over a point-to-point transmission to simultaneously encode self message and perform passive beamforming.
+	% To fully accommodate backscatter characteristics, we also propose a novel receiving strategy that first jointly decodes all Metascatter based on average received power, then models their reflection patterns and backscatter paths within equivalent channel for primary decoding.
 	% minor modifications on existing receivers, easy to perform, fits backscatter characteristics.
 	The contributions of this paper is summarized as follows.
 
-
 	\emph{First,} Metascatter adapts the input probability distribution of a finite-state passive backscatter device based on primary and (cascaded) backscatter \gls{csi} to unify and generalize parasitic source of \gls{sr} and reflecting elements of \gls{irs}.
-	The reflection pattern over time is no longer fully random or deterministic, but smartly distributed to simultaneously encode backscatter message and assist primary transmission.
-	% Instead of treating reflection as fully informative/random or fully auxiliary/deterministic,
-	One can adjust node input distribution for flexible primary-backscatter tradeoff.
-	When the primary link is absolutely prioritized, the tag input probability boils down to \num{1} at the state that maximizes the equivalent channel strength and \num{0} at other states, which is essentially the phase shift selection of an \gls{irs} element.
-	When we only care about the backscatter performance, the network boils down to a multi-tag \gls{ambc} and the input design can be simplified accordingly.
+	The reflection pattern over time is no longer fully random or deterministic, but can be flexibly distributed to balance backscatter encoding and passive beamforming.
+	For single-user scenario, when primary link is absolutely prioritized, the distribution falls on one state and Metascatter boils down to conventional \gls{irs}.
+	When only considering backscatter performance, the distribution involves the highest entropy and Metacatter is essentially an \gls{ambc} node.
 
-	\emph{Second,} we propose a novel receiving strategy where the backscatter symbol of all tags are first recovered by energy-based decoding, then modeled within equivalent \gls{csi} for primary decoding.
-	When the ratio of backscatter symbol period over primary symbol period is large enough, the randomness of primary source can be averaged out and the performance of non-coherent backscatter decoding can be greatly improved.
-	Since the primary and backscatter symbols are mixed by multiplication coding, the backscatter decoding can be viewed as part of primary channel training, which avoids non-coherent encoding at the transmitter and \gls{sic} at the receiver.
+	\emph{Second,} we consider an application scenario where multiple Metascatters ride over a point-to-point transmission, exploiting additional propagation paths to simultaneously transmit and assist.
+	To fully accommodate backscatter characteristics, we also propose a novel receiving strategy that first jointly decodes all Metascatter based on average received power, then models their reflection patterns and backscatter paths within equivalent channel for primary decoding.
+	Since backscatter message is modulated over primary signal, backscatter decoding is indeed part of primary channel training, and there is no need for operation-intensive \gls{sic} at the receiver.
 
-	\emph{Third,} we characterize the achievable primary-(total-)backscatter rate region by iteratively optimizing the tag input distribution, the backscatter decision threshold, and the transmit precoder.
-	For the input design, we propose a numerical method to evaluate the \gls{kkt} solutions by limits of sequences.
-	For the threshold design, we derive the minimum number of decision thresholds to maximize the total backscatter rate, and obtain the optimal thresholds by \gls{dp} accelerated by \gls{smawk} algorithm.
-	However, the optimal precoder design can be non-trivial and we may end up with a low-complexity suboptimal solution.
+	% \emph{Second,} we propose a novel receiving strategy where the backscatter symbol of all tags are first recovered by energy-based decoding, then modeled within equivalent \gls{csi} for primary decoding.
+	% When the ratio of backscatter symbol period over primary symbol period is large enough, the randomness of primary source can be averaged out and the performance of non-coherent backscatter decoding can be greatly improved.
+	% Since the primary and backscatter symbols are mixed by multiplication coding, the backscatter decoding can be viewed as part of primary channel training, which avoids non-coherent encoding at the transmitter and \gls{sic} at the receiver.
+
+	\emph{Third,} we evaluate the achievable primary-(total-)backscatter rate region by optimizing the input distribution at Metascatters, the active beamforming at the \gls{ap}, and the decision regions at the user. Since the original problem is highly non-convex, we consider a suboptimal \gls{bcd} algorithm where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is sequentially updated by \gls{pgd} accelerated by backtracking line search, and the decision regions are first restricted to convex, then refined by \gls{dp} and \gls{smawk} algorithm.
+
+	% \emph{Third,} we characterize the achievable primary-(total-)backscatter rate region by iteratively optimizing the tag input distribution, the backscatter decision threshold, and the transmit precoder.
+	% For the input design, we propose a numerical method to evaluate the \gls{kkt} solutions by limits of sequences.
+	% For the threshold design, we derive the minimum number of decision thresholds to maximize the total backscatter rate, and obtain the optimal thresholds by \gls{dp} accelerated by \gls{smawk} algorithm.
+	% However, the optimal precoder design can be non-trivial and we may end up with a low-complexity suboptimal solution.
 
 \end{section}
 
@@ -285,6 +290,31 @@
 		}
 		\caption{Block diagram, equivalent circuit, and scatter model of a typical passive tag. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
 	\end{figure}
+
+
+	% \begin{figure*}[!t]
+	% 	\centering
+	% 	\subfloat[Block Diagram]{
+	% 		\resizebox{0.3\linewidth}{!}{
+	% 			\input{assets/block_diagram.tex}
+	% 		}
+	% 		\label{fi:block_diagram}
+	% 	}
+	% 	\subfloat[Equivalent Circuit]{
+	% 		\resizebox{0.35\linewidth}{!}{
+	% 			\input{assets/equivalent_circuit.tex}
+	% 		}
+	% 		\label{fi:equivalent_circuit}
+	% 	}
+	% 	\subfloat[Scatter Model]{
+	% 		\resizebox{0.27\linewidth}{!}{
+	% 			\input{assets/scatter_model.tex}
+	% 		}
+	% 		\label{fi:scatter_model}
+	% 	}
+	% 	\caption{Block diagram, equivalent circuit, and scatter model of a typical passive tag. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
+	% \end{figure*}
+
 	Passive backscatter devices (a.k.a., tags) harvest energy from and modulate information over surrounding \gls{rf} signal.
 	As shown in Fig. \subref*{fi:block_diagram}, a typical passive tag consists of a scattering antenna, an energy harvester, an integrated receiver, a load-switching modulator, and on-chip components (e.g., micro-controller and sensors) \cite{Dobkin2012}. Its equivalent circuit is also given by Fig. \subref*{fi:equivalent_circuit}.
 	When illuminated, the tag absorbs a portion of the impinging wave and scatters the rest back to the space.
@@ -547,6 +577,14 @@
 
 
 	\begin{subsection}{Decision Threshold}
+		\begin{figure}[!t]
+			\centering
+			\resizebox{0.95\columnwidth}{!}{
+				\input{assets/energy_distribution.tex}
+			}
+			\caption{\gls{pdf} of Average Received Power Conditioned on Different Input Hypothesis. Example \gls{ml}.}
+		\end{figure}
+
 		For a given tag input distribution $\{\boldsymbol{p}_k\}$, we can formulate an equivalent information source with augmented alphabet of tag input combination.
 		This equivalent source transmits at the total backscatter rate, and the input distribution is given by $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k})$, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$.
 

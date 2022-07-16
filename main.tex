@@ -8,6 +8,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{array}
+\usepackage{bookmark}
 \usepackage{circuitikz}
 \usepackage{cite}
 \usepackage{colortbl}
@@ -227,12 +228,12 @@
 	In contrast, \cite{Hu2021a} divided the \gls{irs} into reflection and information elements, and evaluated the error performance of non-coherent backscatter detection.
 	% Compared to existing \gls{irs}-empowered \gls{sr} that encodes and precodes independently using advanced architecture (e.g., overlay or parallel), Metascatter softly bridges and generalizes parasitic source of \gls{sr} and reflecting element of \gls{irs} via smart input design.
 
-	To the best of our knowledge, most existing \gls{sr} systems \cite{Yang2018,Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a} assumed Gaussian codebook at backscatter nodes, and considered \gls{sic} from primary to backscatter link.
+	To the best of our knowledge, most existing \gls{sr} systems \cite{Yang2018,Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a} assumed Gaussian codebook at backscatter nodes and considered \gls{sic} from primary to backscatter link.
 	% It thus requires non-coherent primary encoding at transmitters, and re-encoding, precoding, and subtraction operations that may not be available to legacy receivers.
-	It thus requires non-coherent encoding at the transmitter and re-encoding, precoding, and subtraction processes at the receiver.
+	It thus requires non-coherent encoding at the transmitter and re-encoding, precoding, and subtraction at the receiver.
 	Besides, the advantage of \gls{sic} is questionable because 1) the primary and backscatter symbols are mixed by multiplication instead of superposition, and 2) the backscatter symbol period is typically much longer under physical constraints.
 	% Motivated by above, we propose a novel Metascatter network where multiple battery-free tags ride over a conventional point-to-point system and adapt their input probability distribution to simultaneously act as backscatter tags of \gls{sr} and reflecting elements of \gls{irs}.
-	Motivated by those, we introduce Metascatter that adapts the input distribution of a finite-state passive backscatter node based on \gls{csi} to unify backscatter sources of \gls{sr} and reflecting elements of \gls{irs}.
+	Motivated by those, we introduce Metascatter that adapts the input distribution of a passive backscatter node to generalize backscatter sources of \gls{sr} and reflecting elements of \gls{irs}.
 	% An application scenario was considered where multiple Metascatters are introduced to conventional point-to-point system and adapt their input probability distribution to simultaneously act as backscatter tags of \gls{sr} and reflecting elements of \gls{irs}.
 	% An application scenario was considered where multiple Metascatters ride over a point-to-point transmission and simultaneously perform backscatter encoding and passive beamforming.
 	An application scenario was considered where multiple Metascatters ride over a point-to-point transmission to simultaneously encode self message and perform passive beamforming.
@@ -241,8 +242,10 @@
 	The contributions of this paper is summarized as follows.
 
 
-	\emph{First,} Metascatter adapts the input probability distribution of a finite-state backscatter device based on the primary and backscatter \gls{csi}.
-	It generalizes the backscatter tags of \gls{sr} and reflecting elements of \gls{irs} to improve the primary-backscatter tradeoff in a flexible manner.
+	\emph{First,} Metascatter adapts the input probability distribution of a finite-state passive backscatter device based on primary and (cascaded) backscatter \gls{csi} to unify and generalize parasitic source of \gls{sr} and reflecting elements of \gls{irs}.
+	The reflection pattern over time is no longer fully random or deterministic, but smartly distributed to simultaneously encode backscatter message and assist primary transmission.
+	% Instead of treating reflection as fully informative/random or fully auxiliary/deterministic,
+	One can adjust node input distribution for flexible primary-backscatter tradeoff.
 	When the primary link is absolutely prioritized, the tag input probability boils down to \num{1} at the state that maximizes the equivalent channel strength and \num{0} at other states, which is essentially the phase shift selection of an \gls{irs} element.
 	When we only care about the backscatter performance, the network boils down to a multi-tag \gls{ambc} and the input design can be simplified accordingly.
 

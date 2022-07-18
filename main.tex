@@ -263,7 +263,7 @@
 	% For the threshold design, we derive the minimum number of decision thresholds to maximize the total backscatter rate, and obtain the optimal thresholds by \gls{dp} accelerated by \gls{smawk} algorithm.
 	% However, the optimal precoder design can be non-trivial and we may end up with a low-complexity suboptimal solution.
 
-	\emph{Notations:} Scalars, vectors and matrices are denoted respectively by italic, bold lower-case, and bold upper-case letters.
+	\emph{Notations:} Scalars, vectors and matrices are respectively denoted by italic, bold lower-case, and bold upper-case letters.
 	$j$ represents the imaginary unit.
 	% $\boldsymbol{0}$ and $\boldsymbol{1}$ denote respectively zero and one vector or matrix.
 	% $\boldsymbol{I}$ represents the identity matrix.
@@ -331,13 +331,17 @@
 		\caption{Block diagram, equivalent circuit, and scatter model of a passive backscatter node. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
 	\end{figure*}
 
-	Passive backscatter nodes harvest energy from and modulate information over surrounding \gls{rf} signal.
-	As shown in Fig. \subref*{fi:block_diagram}, a typical passive node consists of a scattering antenna, an energy harvester, an integrated receiver, a load-switching modulator, and on-chip components (e.g., microcontroller and sensors) \cite{Dobkin2012}.
+	Passive backscatter nodes harvest energy from and modulate information over surrounding \gls{rf} signals.
+	As shown in Fig. \subref*{fi:block_diagram}, a typical passive node consists of a scattering antenna, an energy harvester, an integrated receiver, a load-switching modulator, and on-chip components (e.g., micro-controller and sensors) \cite{Dobkin2012}.
 	Its equivalent circuit is presented in Fig. \subref*{fi:equivalent_circuit}.
-	When illuminated, the node absorbs a portion of the impinging wave for information decoding and energy harvesting \cite{Kim2021a}, and scatters the remaining to the space. The scattered signal is further decomposed into the \emph{structural} and \emph{antenna} mode components \cite{Hansen1989}.
-	Depending on structure, shape and material of general objects, structural scattering consistently contributes to environment multipath and is covered by channel estimation \cite{Boyer2014}.
-	In contrast, antenna scattering models radiation pattern from antenna-load impedance mismatch and can be used for backscatter modulation \cite{Boyer2012} and/or channel reconfiguration \cite{Wu2021b}.
-	Fig. \subref*{fi:scatter_model} illustrates the scatter model of a node with $M$ reflection states, where the reflection coefficient of state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$ is defined as%
+	% When illuminated, the node absorbs a portion of the impinging wave for information decoding and energy harvesting \cite{Kim2021a}, while scatters the remaining back to the space. The scattered signal is further decomposed into the \emph{structural} component that consistently contributes to environment multipath and covered by channel estimation \cite{Boyer2014}, and the
+	When illuminated, the node absorbs a portion of the impinging wave for information decoding and/or energy harvesting \cite{Kim2021a}, and backscatters the remaining as \emph{structural} and \emph{antenna} components.
+	% The scattered signal is further decomposed into the \emph{structural} component that consistently contributes to environment multipath and covered by channel estimation \cite{Boyer2014}, and the \emph{antenna} mode component that
+	% and \emph{antenna} mode components \cite{Hansen1989}.
+	The former consistently contributes to environment multipath and can be modelled by channel estimation \cite{Boyer2014}, while the latter depends on antenna-load impedance mismatch and can be used for backscatter modulation \cite{Boyer2012} and/or channel reconfiguration \cite{Wu2021b}.
+	% Depending on structure, shape and material of general objects, structural scattering consistently contributes to environment multipath and is covered by channel estimation \cite{Boyer2014}.
+	% In contrast, antenna scattering models radiation pattern from antenna-load impedance mismatch and can be used for backscatter modulation \cite{Boyer2012} and/or channel reconfiguration \cite{Wu2021b}.
+	Fig. \subref*{fi:scatter_model} illustrates the scatter model of a node with $M$ states, where the reflection coefficient of state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$ is defined as%
 	\footnote{It corresponds to a linear backscatter model where the reflection coefficient is irrelevant to incident electromagnetic field strength.}
 	\begin{equation}
 		\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
@@ -345,50 +349,28 @@
 	\end{equation}
 	where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
 
-	\begin{subsection}{Backscatter Modulation}
-		% In backscatter modulation, the tag \emph{periodically varies} the reflection coefficient to embed its own information.
-		% To perform backscatter modulation, nodes encode message within distribution of reflection states.%
-		% To perform backscatter modulation, nodes encode message within distribution of reflection states.%
-		Backscatter nodes encode message by frequently change its reflection state.
-
-		% Although most backscatter and \gls{sr} literatures assumed equiprobable state distribution at nodes, the
-
-		within distribution of reflection states and
-
-		% In backscatter modulation, the tag \emph{periodically varies} the reflection coefficient to embed its own information.
-		% As such, there exists a mapping from the alphabet to the set.
-		For $M$-ary \gls{qam}, the complex constellation point $c_m$ maps to the corresponding reflection coefficient by \cite{Thomas2012a}
+	\begin{subsection}{SR: Backscatter Modulation}
+		% Backscatter sources encode self message by \emph{randomly changing reflection states.} For $M$-ary \gls{qam}, reflection coefficient $\Gamma_m$ maps to the corresponding complex constellation point $c_m$ by \cite{Thomas2012a}
+		Backscatter sources encode self message by \emph{random reflection states variation.} For $M$-ary \gls{qam}, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{complex constellation point $c_m$} by \cite{Thomas2012a}
 		\begin{equation}
 			\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
 			\label{eq:backscatter_modulation}
 		\end{equation}
-		where $\alpha \in [0,1]$ models the amplitude scatter ratio at the direction of interest.
-
-		% When the \gls{csi} and reflection alphabet $\{\Gamma_1,\ldots,\Gamma_M\}$ are available at the reader, the tag can be successfully decoded based on the received signal.
-
-
-		\begin{figure}[!t]
-			\centering
-			\subfloat[Reflection State Distribution]{
-				\resizebox{0.95\columnwidth}{!}{
-					\input{assets/reflection_state_distribution.tex}
-				}
-			}
-			\\
-			\subfloat[Time Block Structure]{
-				\resizebox{0.95\columnwidth}{!}{
-					\input{assets/time_block_structure.tex}
-				}
-			}
-			\caption{Reflection state distribution and time block structure of \gls{sr}, \gls{irs}, and Metascatter. $T_s$ and $T_c$ denote the primary and backscatter symbol length, respectively. Based on \gls{csi}, Metascatter adapts the reflection state distribution to unify data transmission and channel reconfiguration.}
-		\end{figure}
-
-		When the \gls{csi} and reflection alphabet $\{\Gamma_1,\ldots,\Gamma_M\}$ are available at the reader, it can decode the tag message from the observed scattered signal.
+		where $\alpha \in [0,1]$ is the amplitude reflect ratio that controls the harvest-scatter tradeoff at the direction of interest.
+		% When the \gls{csi} and reflection alphabet $\{\Gamma_1,\ldots,\Gamma_M\}$ are available at the reader, it can decode the tag message from the observed scattered signal.
+		% ! Use larger alpha in simulation: for high-order QAM, some constellation point may harvests more power than others
 
 	\end{subsection}
 
-	\begin{subsection}{Channel Reconfiguration}
-		2
+	\begin{subsection}{IRS: Channel Reconfiguration}
+		% \gls{irs} elements assist legacy transmission by \emph{deterministically choosing phase shifts} based on relevant \gls{csi}. For a reflecting element with $M$ candidate states, reflection coefficient $\Gamma_m$ maps to the corresponding phase shift $\theta_m$ by \cite{Wu2018}
+		\gls{irs} elements assist legacy transmission by \emph{deterministic phase shifts selection} based on relevant \gls{csi}.
+		For a reflecting element with $M$ candidate states, reflection coefficient $\Gamma_m$ relates to the corresponding \emph{phase shift $\theta_m$} by \cite{Wu2018}
+		\begin{equation}
+			\Gamma_m = \beta_m \exp(j \theta_m),
+		\end{equation}
+		where $\beta_m \in [0,1]$ is overall amplitude reflect ratio of state $m$.
+		% Based on relevant \gls{csi}
 	\end{subsection}
 	% Tags periodically switch between different states to perform backscatter modulation.
 	% For $M$-ary \gls{qam}, the complex constellation point $c_m \in \mathcal{C}$ maps to the reflection coefficient by \cite{Thomas2012a}
@@ -397,55 +379,100 @@
 	% 	\label{eq:backscatter_modulation}
 	% \end{equation}
 	% where $\alpha \in [0,1]$ models the harvest-backscatter ratio at the direction of interest.
-	For passive tags, $\alpha \ll 1$ is commonly assumed as the majority of the incident wave can be harvested to support tag modules \cite{Thomas2012a}.
-	% ! Use larger alpha in simulation: for high-order QAM, some constellation point may harvests more power than others
+	% For passive tags, $\alpha \ll 1$ is commonly assumed as the majority of the incident wave can be harvested to support tag modules \cite{Thomas2012a}.
 
-	\begin{remark}
-		By choosing proper load impedance, it is possible to implement any signal constellation or think beyond modulation.
-		For example, perfect matching enables maximum power transfer to the tag, while perfect mismatch leads to complete reflection as desired by ideal \gls{irs}.
-		It inspires Metascatter to design a smart reflection and unify wireless power transfer, backscatter modulation, and passive beamforming.
-	\end{remark}
+	\begin{subsection}{Metascatter: Bridge and Generalization}
+		\begin{figure}[!t]
+			\centering
+			\subfloat[Reflection State Distribution]{
+				\resizebox{0.8\columnwidth}{!}{
+					\input{assets/reflection_state_distribution.tex}
+				}
+			}
+			\\
+			\subfloat[Time Slot Structure]{
+				\resizebox{0.8\columnwidth}{!}{
+					\input{assets/time_block_structure.tex}
+				}
+			}
+			\caption{
+				Reflection state distribution and time block structure of \gls{sr}, \gls{irs}, and Metascatter.
+				$T_s$ and $T_c$ respectively denote the primary and backscatter symbol period.
+				Within channel coherence time, Metascatter semi-randomly selects reflection state for each backscatter block, with guidance from input probability distribution.
+			}
+			\label{fi:metascatter}
+		\end{figure}
+		% For a passive node with finite states, is it possible to unify backscatter modulation and channel reconfiguration by proper selection of reflection coefficient?
+		Metascatters simultaneously transmit and assist by \emph{adaptive input distribution design} based on primary and (cascaded) backscatter \gls{csi}.
+		% The reflection pattern is neither fully random nor fully deterministic, but flexibly distributed to balance backscatter encoding and passive beamforming.
+		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:metascatter}, Metascatter flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
+		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:metascatter}, Metascatter semi-randomly selects reflection state for each backscatter block with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
+		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:metascatter}, Metascatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.} In other words, it flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming. \gls{sr} and \gls{irs} can be regarded as extreme cases of Metascatter, where node input distribution boils down to uniform and deterministically biased, respectively.
+		Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:metascatter}, Metascatter semi-randomly selects reflection state for each backscatter block, with \emph{guidance of input probability $P(\Gamma_m)$} for state $m$. In other words, it flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming. \gls{sr} and \gls{irs} can be regarded as extreme cases of Metascatter, where node input distribution boils down to uniform and deterministic, respectively.
+		% flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
+		% Metascatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
+		% % Based on \gls{csi}, Metascatter adapts the reflection state distribution to unify data transmission and channel reconfiguration.
+		% \gls{sr} and \gls{irs} can be regarded as its extreme cases, where node input distribution boils down to uniform and deterministically biased, respectively.
+		% Within channel coherence time, Metascatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
+		\begin{remark}
+			Compared to conventional \gls{irs} literatures that optimize phase shifts under unit-module constraint, Metascatter starts from predefined reflection coefficients and designs their input distribution under sum-probability constraint to achieve flexible primary-backscatter tradeoff.
+		\end{remark}
+		% Next, we will discuss the input design in a Metascatter-enabled network.
+		% consider a Metascatter-aided system to evaluate
+	\end{subsection}
 \end{section}
 
-\begin{section}{Metascatter}
+\begin{section}{Metascatter-Enabled Network}
 	\begin{subsection}{System Model}
 		\begin{figure}[!t]
 			\centering
-			\def\svgwidth{0.9\columnwidth}
-			\import{assets/}{metascatter_system.eps_tex}
-			\caption{The proposed Metascatter system.}
-			\label{fi:metascatter_system}
+			\def\svgwidth{0.8\columnwidth}
+			\footnotesize{
+				\import{assets/}{metascatter_network.eps_tex}
+			}
+			\caption{A Metascatter-enabled single-user multi-node network.}
+			\label{fi:metascatter_network}
 		\end{figure}
-		As shown in Fig. \ref{fi:metascatter_system}, we propose a single-\gls{ue} multi-\gls{tg} symbiotic radio network where the \gls{rf} signal generated by the $Q$-antenna \gls{ap} is shared by two coexisting systems.
-		In the primary point-to-point system, the \gls{ap} transmits information to the single-antenna user.
-		In the secondary backscatter system, the \gls{ap} acts as the carrier emitter, the $K$ nearby single-antenna tags modulate their information over the reradiated \gls{rf} signals, and the user receives and decodes the backscatter messages.
-		Denote the \gls{ap}-\gls{ue} direct channel as $\boldsymbol{h}_{\mathrm{D}}^H \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-\gls{tg} $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, the \gls{tg} $k$-\gls{ue} backward channel as $h_{\mathrm{B},k}$, and define the cascaded channel of tag $k$ as $\boldsymbol{h}_{\mathrm{C},k}^H \triangleq h_{\mathrm{B},k} \boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$.
-		For simplicity, we consider a quasi-static block fading model where the channel response remain constant within each coherence interval and vary independently between consecutive blocks.
+		% As shown in Fig. \ref{fi:metascatter_network}, we propose a Metascatter-enabled single-user multi-node network where the spectrum, energy and infrastructures are shared by two coexisting systems.
+		As shown in Fig. \ref{fi:metascatter_network}, we propose a Metascatter-enabled single-user multi-node network where two coexisting systems share spectrum, energy and infrastructures.
+		% In the primary point-to-point system, the \gls{ap} transmits information to the single-antenna user.
+		% In the primary point-to-point system, a $Q$-antenna \gls{ap} transmit to a single-antenna user while assisted by $K$ nearby single-antenna Metascatters.
+		The primary point-to-point transmission from a $Q$-antenna \gls{ap} to a single-antenna user is assisted by $K$ nearby single-antenna Metascatters.
+		In the secondary backscatter \gls{mac} system, the \gls{ap} serves as the carrier emitter, $K$ nearby single-antenna Metascatters modulate information over reradiated \gls{rf} signals, and the user decodes their messages.
+		For simplicity, we consider a quasi-static block fading model where channels remain constant within coherence interval while vary independently between consecutive blocks.
 		% Since backscatter modulation involves load switching, tags typically transmit at much lower rate, and we assume the backscatter symbol period is $N \in \mathbb{Z}_{++}$ times the primary symbol period.
-		Since backscatter modulation involves load switching, tags typically transmit at much lower rate, and we assume the backscatter symbol length is $N \in \mathbb{Z}_{++}$ times the primary symbol length.
-		We also assume the direct channel and all cascaded channels can be estimated and fed back to the \gls{ap}.
-		\begin{footnote}
+		Due to physical constraints on load switching, we assume the backscatter symbol period is $N \gg 1$ times longer than primary and consider integer $N$ without loss of generality.
+		We also assume the direct channel and all cascaded channels can be estimated and fed back to the \gls{ap}.%
+		\footnote{
 			Due to the lack of \gls{rf} chains at the passive tag, accurate and efficient \gls{csi} acquisition at the \gls{ap} can be challenging.
-			One possible approach is that the \gls{ap} sends pre-defined pilots, the tags respond in well-designed manners, and the user performs least-square estimation with feedbacks \cite{Bharadia2015,Yang2015b,Guo2019g}.
-		\end{footnote}
+			One possibility is the \gls{ap} sends training pilots, the tags respond in predefined manners, and the user performs least-square estimation with feedbacks \cite{Bharadia2015,Yang2015b,Guo2019g}.
+		}
+		Besides, we omit the signal reflected by two or more times\cite{Wu2019} and ignore the time difference of arrival from different paths\cite{Guo2019b}.
 
-		Consider the signal model during one backscatter symbol period.
-		We assume the primary symbol follows standard \gls{cscg} distribution and the backscatter symbol of all tags employs $M$-\gls{qam}.
-		Under perfect synchronization, the signal received by the user at primary symbol block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
-		\begin{footnote}
-			We omit the signal reflected by two or more times\cite{Wu2019} and assume the time difference of arrival from different paths are negligible\cite{Guo2019b}.
-		\end{footnote}
+
+		Denote the \gls{ap}-user direct channel as $\boldsymbol{h}_{\mathrm{D}}^H \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-node $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, and the node $k$-user backward channel as $h_{\mathrm{B},k}$. Also, define the cascaded channel of tag $k$ as $\boldsymbol{h}_{\mathrm{C},k}^H \triangleq h_{\mathrm{B},k} \boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$.
+		Consider the signal model during one backscatter block (i.e., $N$ primary blocks).
+		% We assume the primary symbol follows standard \gls{cscg} distribution and the backscatter symbol of all tags employs $M$-\gls{qam}.
+		Under perfect synchronization, the signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
 		\begin{equation}
-			y[n] = \left(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k\right) \boldsymbol{w} s[n] + w[n],
+			y[n] = \left(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k\right) \boldsymbol{w} s[n] + v[n],
 			\label{eq:received_signal}
 		\end{equation}
-		where $\alpha_k$ and $x_k$ denote respectively the harvest-backscatter efficiency and backscatter symbol of tag $k$, $s[n]$ and $w[n] \sim \mathcal{CN}(0,\sigma_w^2)$ denote respectively the primary symbol and \gls{awgn} at block $n$, and $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the transmit precoder satisfying power constraint $\lVert \boldsymbol{w} \rVert^2 \le P$.
-		For the ease of notation, we define $x_{\mathcal{K}} \triangleq \{x_k : k \in \mathcal{K}\}$ as the tag input combination, and $\boldsymbol{y} \triangleq \left[y[1],\ldots,y[N]\right]^T \in \mathbb{C}^{N \times 1}$ as the received signal per backscatter symbol period.
-		For primary transmission, the equivalent channel is subject to backscatter modulation uncertainty as
+		where $\alpha_k$ is the amplitude reflect ratio of Metascatter $k$, $x_k \in \mathcal{X} \triangleq \{\Gamma_1,\ldots,\Gamma_M\}$ is the backscatter symbol of Metascatter $k$, $s \sim \mathcal{CN}(0,1)$ is the primary symbol, $v \sim \mathcal{CN}(0,\sigma_v^2)$ is the \gls{awgn}, $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the active beamforming vector satisfying the average power constraint $\lVert \boldsymbol{w} \rVert^2 \le P$.
+		The equivalent channel for primary link is subject to backscatter uncertainty
 		\begin{equation}
-			\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k.
+			\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k,
 			\label{eq:equivalent_channel}
 		\end{equation}
+		where $x_{\mathcal{K}} \triangleq \{x_k : k \in \mathcal{K}\}$.
+
+		% where $\alpha_k$ and $x_k$ denote respectively the harvest-backscatter efficiency and backscatter symbol of tag $k$, $s[n]$ and $w[n] \sim \mathcal{CN}(0,\sigma_w^2)$ denote respectively the primary symbol and \gls{awgn} at block $n$, and $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the transmit precoder satisfying power constraint $\lVert \boldsymbol{w} \rVert^2 \le P$.
+		% For the ease of notation, we define $x_{\mathcal{K}} \triangleq \{x_k : k \in \mathcal{K}\}$ as the tag input combination, and $\boldsymbol{y} \triangleq \left[y[1],\ldots,y[N]\right]^T \in \mathbb{C}^{N \times 1}$ as the received signal per backscatter symbol period.
+		% For primary transmission, the equivalent channel is subject to backscatter modulation uncertainty as
+		% \begin{equation}
+		% 	\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k.
+		% 	\label{eq:equivalent_channel}
+		% \end{equation}
 
 		\begin{remark}
 			Metascatter involves an unconventional \gls{mac} where the primary and backscatter symbols of different duration are mixed by \gls{mc} instead of \gls{sc}.

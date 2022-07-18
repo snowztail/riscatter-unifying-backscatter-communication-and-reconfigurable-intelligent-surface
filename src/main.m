@@ -1,4 +1,4 @@
-clear; setup; cvx_begin; cvx_end; clc; close all; config;
+clear; setup; cvx_begin; cvx_end; clc; config;
 
 % * Initialize struct
 Result(nWeights) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
@@ -11,8 +11,8 @@ for iTag = 1 : nTags
 end
 equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
-% * Clear persistent variable
-clear block_coordinate_descent beamforming_pgd;
+% * Clear persistent variables
+clear block_coordinate_descent;
 
 % * Evaluate rate region
 for iWeight = 1 : nWeights

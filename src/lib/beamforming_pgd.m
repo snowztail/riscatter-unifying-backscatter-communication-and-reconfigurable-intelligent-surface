@@ -8,6 +8,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 	%	- transmitPower: average transmit power
 	%	- noisePower: average noise power
 	%	- equivalentChannel [nTxs x nInputs]: equivalent primary channel for each tag state tuple
+	%	- cascadedChannel [nTxs x nTags]: cascaded forward-backward channel of all tags
 	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
 	%	- threshold [1 x (nOutputs + 1)]: boundaries of quantization bins or decision regions (including 0 and Inf)
     %	- tolerance: minimum rate gain ratio per iteration

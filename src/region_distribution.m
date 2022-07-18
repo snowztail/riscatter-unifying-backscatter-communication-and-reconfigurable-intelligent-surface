@@ -1,4 +1,4 @@
-clear; setup; cvx_begin; cvx_end; clc; close all; run(strcat('config_', erase(mfilename, 'region_')));
+clear; setup; cvx_begin; cvx_end; clc; run(strcat('config_', erase(mfilename, 'region_')));
 
 % * Initialize struct
 Result(nVariables, nWeights) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
@@ -13,15 +13,15 @@ equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(c
 
 % * Evaluate rate region by different input distribution design
 for iVariable = 1 : nVariables
-	% * Clear persistent variable
-	clear block_coordinate_descent beamforming_pgd;
+	% * Clear persistent variables
+	clear block_coordinate_descent;
 
 	% * Evaluate rate region
 	for iWeight = 1 : nWeights
 		weight = weightSet(iWeight);
-		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, 'Distribution', Variable(iVariable).Distribution, 'Beamforming', 'pgd', 'Threshold', 'smawk', 'Recovery', Variable(iVariable).Recovery);
+		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, 'Distribution', Variable(iVariable).Distribution, 'Beamforming', 'pgd', 'Threshold', 'smawk', 'Recovery', Variable(iVariable).Recovery);
 		if any(isnan(rate))
-			return
+			error('PGD failed. Please ensure DMAC entries are not approaching zero.');
 		else
 			Result(iVariable, iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 		end

@@ -10,6 +10,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	%	- nBins: number of receive energy quantization bins
 	%	- weight: relative priority of primary link
 	%	- equivalentChannel [nTxs x nInputs]: equivalent primary channel for each tag state tuple
+	%	- cascadedChannel [nTxs x nTags]: cascaded forward-backward channel of all tags
     %   - tolerance: minimum rate gain ratio per iteration
 	%	- Options: algorithm options as structure of name-value pairs
     %
@@ -41,8 +42,8 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		Options.Recovery {mustBeMember(Options.Recovery, ['marginalization', 'decomposition', 'randomization'])};
 	end
 
-	% * Clear persistent variable for distribution
-	clear distribution_kkt distribution_cooperation;
+	% * Clear persistent variables for distribution
+	clear distribution_kkt distribution_cooperation beamforming_pgd;
 
 	% * Get data
 	nInputs = size(equivalentChannel, 2);

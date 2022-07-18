@@ -14,20 +14,17 @@ for iVariable = 1 : nVariables
 	for iTag = 1 : nTags
 		cascadedChannel(:, iTag) = rxGain * path_loss(frequency, forwardDistance(iTag), forwardExponent) * fading_ricean(nTxs, 1, forwardFactor) * path_loss(frequency, backwardDistance(iTag), backwardExponent) * fading_ricean(1, 1, backwardFactor);
 	end
-	backscatterChannel = scatterRatio * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
-	equivalentChannel = directChannel + backscatterChannel;
+	equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
-	% * Clear persistent variable
-	clear block_coordinate_descent beamforming_pgd;
-	clear distribution_kkt distribution_cooperation;
-% 	clear functions;
+	% * Clear persistent variables
+	clear block_coordinate_descent;
 
 	% * Evaluate rate region
 	for iWeight = 1 : nWeights
 		weight = weightSet(iWeight);
 		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
 		if any(isnan(rate))
-			error('PGD failed.');
+			error('PGD failed. Please ensure DMAC entries are not approaching zero.');
 		else
 			Result(iVariable, iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 		end

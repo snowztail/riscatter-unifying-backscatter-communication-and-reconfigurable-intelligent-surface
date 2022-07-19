@@ -333,3 +333,4 @@ core.*
 # GNU Plot
 *.gnuplot
 *.pgf-plot.table
+*-pics.pdf

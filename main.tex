@@ -36,6 +36,8 @@
 \usepackage[short]{optidef}
 \usepackage[subtle]{savetrees}
 
+\usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
+
 \listfiles
 \interdisplaylinepenalty=2500
 \pgfplotsset{compat=newest}
@@ -97,6 +99,7 @@
 \newacronym{dmc}{DMC}{Discrete Memoryless Channel}
 \newacronym{dmtc}{DMTC}{Discrete Memoryless Thresholding Channel}
 \newacronym{dmtmac}{DMTMAC}{Discrete Memoryless Thresholding Multiple Access Channel}
+\newacronym{dtmac}{DTMAC}{Discrete Thresholding Multiple Access Channel}
 \newacronym{dp}{DP}{Dynamic Programming}
 \newacronym{iid}{i.i.d.}{independent and identically distributed}
 \newacronym{irs}{IRS}{Intelligent Reflecting Surface}
@@ -152,7 +155,7 @@
 	% Such an integrated distribution design not only yields universal modularity with reduced optimization cost, but also enables a flexible tradeoff between primary and backscatter links using shared spectrum, energy, and infrastructures.
 	This not only reduces hardware complexity and optimization cost, but also enables a flexible tradeoff between primary (legacy) and backscatter links using shared spectrum, energy, and infrastructures.
 	Moreover, we consider a specific scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple Metascatters.
-	For simplicity, it is assumed the user first jointly decodes all backscatter messages based on average received power, then models reflection patterns and backscatter paths within equivalent channel for primary decoding.
+	For simplicity, it is assumed the user first jointly decodes all backscatter messages from accumulated energy, then models reflection patterns and backscatter paths within equivalent channel for primary decoding.
 	% Once modulation uncertainty of Metascatters are eliminated, models contributions from additional paths within equivalent channel
 	% decodes all Metascatters jointly by energy detection, then models their contribution within equivalent channel and decodes the primary link.
 	% For simplicity, the user is assumed first decodes all Metascatters jointly by energy detection, then models their contribution within equivalent channel and decodes the primary link.
@@ -239,7 +242,7 @@
 	% An application scenario was considered where multiple Metascatters are introduced to conventional point-to-point system and adapt their input probability distribution to simultaneously act as backscatter tags of \gls{sr} and reflecting elements of \gls{irs}.
 	% An application scenario was considered where multiple Metascatters ride over a point-to-point transmission and simultaneously perform backscatter encoding and passive beamforming.
 	% ! An application scenario was considered where multiple Metascatters ride over a point-to-point transmission to simultaneously encode self message and perform passive beamforming.
-	% To fully accommodate backscatter characteristics, we also propose a novel receiving strategy that first jointly decodes all Metascatter based on average received power, then models their reflection patterns and backscatter paths within equivalent channel for primary decoding.
+	% To fully accommodate backscatter characteristics, we also propose a novel receiving strategy that first jointly decodes all Metascatter from accumulated energy, then models their reflection patterns and backscatter paths within equivalent channel for primary decoding.
 	% minor modifications on existing receivers, easy to perform, fits backscatter characteristics.
 	The contributions of this paper is summarized as follows.
 
@@ -249,7 +252,7 @@
 	When only considering backscatter performance, the distribution involves the highest entropy and Metascatter is essentially an \gls{ambc} node.
 
 	\emph{Second,} we consider an application scenario where multiple Metascatters ride over a point-to-point transmission, exploiting additional propagation paths to simultaneously transmit and assist.
-	To fully accommodate backscatter characteristics, we also propose a novel receiving strategy that first jointly decodes all Metascatter based on average received power, then models their reflection patterns and backscatter paths within equivalent channel for primary decoding.
+	To fully accommodate backscatter characteristics, we also propose a novel receiving strategy that first jointly decodes all Metascatter from accumulated energy, then models their reflection patterns and backscatter paths within equivalent channel for primary decoding.
 	Since backscatter message is modulated over primary signal, backscatter decoding is indeed part of primary channel training, and there is no need for operation-intensive \gls{sic} at the receiver.
 
 	% \emph{Second,} we propose a novel receiving strategy where the backscatter symbol of all tags are first recovered by energy-based decoding, then modeled within equivalent \gls{csi} for primary decoding.
@@ -450,21 +453,31 @@
 		Besides, we omit the signal reflected by two or more times\cite{Wu2019} and ignore the time difference of arrival from different paths\cite{Guo2019b}.
 
 
-		Denote the \gls{ap}-user direct channel as $\boldsymbol{h}_{\mathrm{D}}^H \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-node $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, and the node $k$-user backward channel as $h_{\mathrm{B},k}$. Also, define the cascaded channel of tag $k$ as $\boldsymbol{h}_{\mathrm{C},k}^H \triangleq h_{\mathrm{B},k} \boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$.
+		Denote the \gls{ap}-user direct channel as $\boldsymbol{h}_{\mathrm{D}}^H \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-node $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, and the node $k$-user backward channel as $h_{\mathrm{B},k}$. Also, define the cascaded channel of tag $k$ as $\boldsymbol{h}_{\mathrm{C},k}^H \triangleq h_{\mathrm{B},k} \boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, and $\boldsymbol{H}_{\mathrm{C}} \triangleq [\boldsymbol{h}_{\mathrm{C},1},\ldots,\boldsymbol{h}_{\mathrm{C},K}]^H \in \mathbb{C}^{K \times Q}$.
+		Let $x_{\mathcal{K}} \triangleq \{x_k : k \in \mathcal{K}\}$ be the backscatter symbols of all Metascatters.
 		Consider the signal model during one backscatter block (i.e., $N$ primary blocks).
 		% We assume the primary symbol follows standard \gls{cscg} distribution and the backscatter symbol of all tags employs $M$-\gls{qam}.
-		Under perfect synchronization, the signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
-		\begin{equation}
-			y[n] = \left(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k\right) \boldsymbol{w} s[n] + v[n],
-			\label{eq:received_signal}
-		\end{equation}
-		where $\alpha_k$ is the amplitude reflect ratio of Metascatter $k$, $x_k \in \mathcal{X} \triangleq \{\Gamma_1,\ldots,\Gamma_M\}$ is the backscatter symbol of Metascatter $k$, $s \sim \mathcal{CN}(0,1)$ is the primary symbol, $v \sim \mathcal{CN}(0,\sigma_v^2)$ is the \gls{awgn}, $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the active beamforming vector satisfying the average power constraint $\lVert \boldsymbol{w} \rVert^2 \le P$.
-		The equivalent channel for primary link is subject to backscatter uncertainty
-		\begin{equation}
-			\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k,
+		Under perfect synchronization, the equivalent primary channel is a function of backscatter symbols
+		\begin{subequations}
+			\begin{align}
+				\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}})
+				 & \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k \\
+				 & = \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}},
+			\end{align}
 			\label{eq:equivalent_channel}
+		\end{subequations}
+		where $\alpha_k$ is the amplitude reflect ratio of Metascatter $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{R}_+^{K \times 1}$, $x_k \in \mathcal{X} \triangleq \{\Gamma_1,\ldots,\Gamma_M\}$ is the backscatter symbol of Metascatter $k$, and $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathbb{C}^{K \times 1}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
+		\begin{equation}
+			y[n] = \boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \boldsymbol{w} s[n] + v[n],
 		\end{equation}
-		where $x_{\mathcal{K}} \triangleq \{x_k : k \in \mathcal{K}\}$.
+		where $s \sim \mathcal{CN}(0,1)$ is the primary symbol, $v \sim \mathcal{CN}(0,\sigma_v^2)$ is the \gls{awgn}, and $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the active beamforming vector with average power constraint $\lVert \boldsymbol{w} \rVert^2 \le P$.
+		% The equivalent channel for primary link is subject to backscatter uncertainty
+		% The equivalent primary channel is a function of backscatter symbols  as
+		% \begin{equation}
+		% 	% \boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k.
+		% 	\boldsymbol{h}_{\mathrm{E}}^H(\boldsymbol{x}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}}.
+		% 	\label{eq:equivalent_channel}
+		% \end{equation}
 
 		% where $\alpha_k$ and $x_k$ denote respectively the harvest-backscatter efficiency and backscatter symbol of tag $k$, $s[n]$ and $w[n] \sim \mathcal{CN}(0,\sigma_w^2)$ denote respectively the primary symbol and \gls{awgn} at block $n$, and $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the transmit precoder satisfying power constraint $\lVert \boldsymbol{w} \rVert^2 \le P$.
 		% For the ease of notation, we define $x_{\mathcal{K}} \triangleq \{x_k : k \in \mathcal{K}\}$ as the tag input combination, and $\boldsymbol{y} \triangleq \left[y[1],\ldots,y[N]\right]^T \in \mathbb{C}^{N \times 1}$ as the received signal per backscatter symbol period.
@@ -475,40 +488,124 @@
 		% \end{equation}
 
 		\begin{remark}
-			Metascatter involves an unconventional \gls{mac} where the primary and backscatter symbols of different duration are mixed by \gls{mc} instead of \gls{sc}.
-			For each tag, the reflection coefficient not only encodes the backscatter message but also influences the equivalent primary channel \eqref{eq:equivalent_channel}.
-			As such, novel receiving strategy other than \gls{sic} should be tailored to signal characteristics to unveil how reflection pattern potentially influences the primary-backscatter tradeoff.
+			Metascatter involves a symbiotic \gls{mac} where the primary and backscatter symbols of different duration are mixed by \gls{mc} instead of \gls{sc}.
+			For each node, the reflection coefficient not only encodes the backscatter message, but also influences the equivalent primary channel \eqref{eq:equivalent_channel}.
+			% As such, novel receiving strategy other than \gls{sic} should be tailored to signal characteristics to unveil how reflection pattern potentially influences the primary-backscatter tradeoff.
+			To accommodate such signal characteristics, novel receiving strategy apart from \gls{sic} is desired to better utilize the reflection pattern and boost the primary-backscatter tradeoff.
 		\end{remark}
 	\end{subsection}
 
 	\begin{subsection}{Receiving Strategy}
-		We propose a novel receiving strategy where the backscatter symbol of all tags are first jointly identified by non-coherent energy detection, then modeled within equivalent channel \eqref{eq:equivalent_channel} as if passive beamforming.
-		Compared with conventional schemes as joint decoding and \gls{sic}, the Metascatter receiver may not achieve as high data rate for one tag, but it avoids non-coherent primary encoding and enables tag multiple access in a practical and low-complexity manner.
-		Therefore, we believe it can be compatible to and readily implemented over legacy point-to-point systems.
+		We propose a Metascatter receiver where the backscatter symbols of all Metascatters are first jointly and semi-coherently detected using total received energy per backscatter block, then modeled within equivalent channel \eqref{eq:equivalent_channel} as dynamic passive beamforming.
+		% identified by non-coherent energy detection, then
+		% Compared with conventional schemes as joint decoding and \gls{sic}, the Metascatter receiver may not achieve as high data rate for one tag, but it avoids non-coherent primary encoding and enables tag multiple access in a practical and low-complexity manner.
+		% Therefore, we believe it can be compatible to and readily implemented over legacy point-to-point systems.
+		Compared with \gls{ml} and \gls{sic}, Metascatter receiver allows practical and low-complexity node multiple access with minor adjustment over legacy equipments.
 
-		Define $m_k \in \mathcal{M}$ as the modulation index of tag $k$, and $m_{\mathcal{K}} \triangleq \{m_k: k \in \mathcal{K}\}$ as the modulation index combination of all tags.
-		Recall that $x_k$ and $x_{\mathcal{K}}$ are random variables representing the backscatter symbol of tag $k$ and the symbol combination of all tags, respectively.
-		Their instances are denoted by modulation index (combination) as $x_{m_k}$ and $x_{m_\mathcal{K}}$.
-		Since any backscatter combination $x_{m_\mathcal{K}}$ remains unchanged over $N$ primary symbol duration, the received signal at symbol block $n$ is only subject to the variation of $s[n]$ and $w[n]$, and follows zero-mean \gls{cscg} distribution with variance
+		At a specific backscatter block, denote $m_k \in \mathcal{M}$ as the state index of Metascatter $k$, and let $m_{\mathcal{K}} \triangleq \{m_k: k \in \mathcal{K}\}$ collect the state indexes of all Metascatters.
+		% The received signal at primary block $n$ is subject to the variation of $s[n]$ and $v[n]$, and thus distributed as $y[n] \sim \mathcal{CN}(0,\sigma_v^2)$
+		Conditioned on $m_{\mathcal{K}}$, the received signal at primary block $n$ is subject to the variation of $s[n]$ and $v[n]$, distributed as $y[n] \sim \mathcal{CN}(0,\sigma_{m_{\mathcal{K}}}^2)$ with
 		\begin{equation}
-			\sigma_{m_{\mathcal{K}}}^2 = \Bigl\lvert \underbrace{\bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_{m_k}\bigr)}_{\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})} \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2.
+			% \sigma_{m_{\mathcal{K}}}^2 = \Bigl\lvert \underbrace{\bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_{m_k}\bigr)}_{\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})} \boldsymbol{w} \Bigr\rvert^2 + \sigma_v^2,
+			\sigma_{m_{\mathcal{K}}}^2 = \lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2 + \sigma_v^2,
 			\label{eq:receive_variance}
 		\end{equation}
-
-		Besides, we denote the total received energy as $z \triangleq \lVert \boldsymbol{y} \rVert^2$ and the hypothesis of modulation index combination $m_{\mathcal{K}}$ as $\mathcal{H}_{m_{\mathcal{K}}}$.
-		Since $z$ is the sum of $N$ \gls{iid} exponential variables, its conditional \gls{pdf} under $\mathcal{H}_{m_{\mathcal{K}}}$ follows Erlang distribution with shape $N$ and scale $\sigma_{m_{\mathcal{K}}}^2$ as
+		where $x_{m_k}$ and $x_{m_\mathcal{K}}$ are the symbol and symbol set associated with state $m_k$ and state set $m_{\mathcal{K}}$, respectively.%
+		\footnote{
+			$x_k$ and $x_{\mathcal{K}}$ are random variables, while $x_{m_k}$ and $x_{m_{\mathcal{K}}}$ are their instances indexed by $m_k$ and $m_{\mathcal{K}}$.
+		}
+		Also, denote the total received energy within backscatter block as $z=\sum_{n=1}^N \lvert y[n] \rvert^2$.
+		% As the sum of $N$ \gls{iid} exponential variables, conditioned on $m_{\mathcal{K}}$, its \gls{pdf} follows Erlang distribution
+		As the sum of $N$ \gls{iid} exponential variables, the \gls{pdf} of $z$ conditioned on $m_{\mathcal{K}}$ follows Erlang distribution
 		\begin{equation}
-			f(z \mid \mathcal{H}_{m_{\mathcal{K}}}) = \frac{z^{N-1} e^{-z/\sigma_{m_{\mathcal{K}}}^2}}{\sigma_{m_{\mathcal{K}}}^{2N} (N-1)!}.
+			f(z \mid \mathcal{H}_{m_{\mathcal{K}}}) = \frac{z^{N-1} e^{-z/\sigma_{m_{\mathcal{K}}}^2}}{\sigma_{m_{\mathcal{K}}}^{2N} (N-1)!},
 			\label{eq:energy_distribution}
 		\end{equation}
-
-		Energy-based backscatter detection essentially formulates a discrete-input continuous-output memoryless \gls{mac}.
-		To further reduce decoding complexity, we divide the continuous output $z$ into disjoint decision regions to construct a \gls{dmtmac}, where the transition probability from tag input combination $x_{m_{\mathcal{K}}}$ to detector output combination $\hat{x}_{m_{\mathcal{K}}'}$ is
+		where $\mathcal{H}_{m_{\mathcal{K}}}$ denotes hypothesis $m_{\mathcal{K}}$.
+		% To accommodate backscatter characteristics and reduce decoding complexity, we consider a joint semi-coherent energy detection for all Metascatters based on disjoint decision regions over accumulated energy $z$.
+		To accommodate backscatter characteristics and reduce decoding complexity, we consider a joint semi-coherent detection for all Metascatters over accumulated energy $z$.
+		% To reduce decoding complexity, we consider a joint semi-coherent energy detection for all Metascatters based on disjoint decision regions over accumulated energy $z$.
+		\begin{figure}[!t]
+			\centering
+			\resizebox{0.95\columnwidth}{!}{
+				\input{assets/energy_distribution.tex}
+			}
+			% \caption{\gls{pdf} of Average Received Power Conditioned on Different Input Hypothesis. Example \gls{ml}.}
+			\caption{
+				\gls{pdf} of total received energy per backscatter block, conditioned on different input hypothesis.
+				% This \gls{ml} decision consists of convex regions and is generally rate-suboptimal except for equiprobable inputs.}
+				Here, the convex \gls{ml} decision regions are generally rate-suboptimal except for equiprobable inputs.
+			}
+			\label{fi:energy_distribution}
+		\end{figure}
+		% The idea is presented in Fig. \ref{fi:energy_distribution}.
+		% As illustrated in Fig. \ref{fi:energy_distribution}, o
+		Once disjoint energy decision regions are determined, we can construct a \gls{dtmac} and formulate the transition probability from input $x_{m_{\mathcal{K}}}$ to output $\hat{x}_{m_{\mathcal{K}}'}$ as
+		% it essentially formulates a \gls{dtmac}, and the transition probability from input $x_{m_{\mathcal{K}}}$ to output $\hat{x}_{m_{\mathcal{K}}'}$ is
 		\begin{equation}
 			P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) = \int_{\mathcal{R}_{m_{\mathcal{K}}'}} f(z \mid \mathcal{H}_{m_{\mathcal{K}}}) \dd z,
-			\label{eq:dmtmac}
+			\label{eq:dtmac}
 		\end{equation}
-		where $\mathcal{R}_{m_{\mathcal{K}}'}$ is the decision region over $z$ for hypothesis $\mathcal{H}_{m_{\mathcal{K}}'}$.
+		where $\mathcal{R}_{m_{\mathcal{K}}'}$ is the decision region of hypothesis $\mathcal{H}_{m_{\mathcal{K}}'}$. An example of \gls{ml} energy decision is illustrated in Fig. \ref{fi:energy_distribution}.
+
+		\begin{remark}
+			% For a general input distribution, not only the optimal decision thresholds
+			The rate-optimal thresholding channel design remains under-investigated, and some attempts were made for single source with binary inputs in \cite{Qian2019b,Nguyen2021b}.
+			% The question was only answered for single source with binary inputs in \cite{Qian2019b,Nguyen2021b}.
+			% Some attempts for single source with binary inputs were presented in \cite{Qian2019b,Nguyen2021b}.
+			For non-binary inputs with general distribution, the optimal decision region for each letter can be non-convex (i.e., with non-adjacent partitions) and the optimal number of thresholds is still unknown.
+			% Next, we will restrict the design over convex decision regions.
+			Next, we will constrain the decision regions to convex and consider suboptimal threshold design accordingly.
+			% Hence,
+			% threshold design papers are constrained to convex quantizer, we may end up using a similar assumption.
+			% decision region design to convex
+
+			% design over convex decision regions.
+
+			% decision regions are first restricted to convex
+
+			% The question was answered in \cite{Qian2019b,Nguyen2021b} only for single source with binary inputs.
+
+
+			% Even for a single source with non-binary inputs,
+
+
+			% For a general input distribution, not only the rate-optimal decision thresholds
+			% % Interestingly, the optimal threshold design to maximize the mutual information for a general \gls{dmtc} with a fixed number of output letters remains an open issue.
+			% % The reason is that each decision region may contain more than one disjoint partitions (i.e., non-convex) and the number of thresholds are unknown.
+			% % Fortunately, for the proposed energy detection, we proved that the \gls{dmtc} capacity can be achieved using only convex decision regions.
+			% not only the capacity-achieving thresholding design remains an open problem, but also the optimal number of thresholds for general non-binary-input channels remains unknown.
+		\end{remark}
+
+		% divide the accumulated energy $z$ into disjoint decision regions.
+		% where $x_{m_k}$ is the backscatter symbol associated with state $m_k$ and $x_{m_\mathcal{K}}$ is
+		% and $x_{m_\mathcal{K}}$ are the backscatter symbols associated with state $m_k$ and $m_{\mathcal{K}}$, respectively.
+
+		% At primary block $n$, the received signal
+
+		% Define $m_k \in \mathcal{M}$ as the modulation index of tag $k$, and $m_{\mathcal{K}} \triangleq \{m_k: k \in \mathcal{K}\}$ as the modulation index combination of all tags.
+		% Recall that $x_k$ and $x_{\mathcal{K}}$ are random variables representing the backscatter symbol of tag $k$ and the symbol combination of all tags, respectively.
+		% Their instances are denoted by modulation index (combination) as $x_{m_k}$ and $x_{m_\mathcal{K}}$.
+		% Since any backscatter combination $x_{m_\mathcal{K}}$ remains unchanged over $N$ primary symbol duration, the received signal at symbol block $n$ is only subject to the variation of $s[n]$ and $w[n]$, and follows zero-mean \gls{cscg} distribution with variance
+		% \begin{equation}
+		% 	\sigma_{m_{\mathcal{K}}}^2 = \Bigl\lvert \underbrace{\bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_{m_k}\bigr)}_{\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})} \boldsymbol{w} \Bigr\rvert^2 + \sigma_w^2.
+		% 	\label{eq:receive_variance}
+		% \end{equation}
+
+		% Besides, we denote the total received energy as $z \triangleq \lVert \boldsymbol{y} \rVert^2$ and the hypothesis of modulation index combination $m_{\mathcal{K}}$ as $\mathcal{H}_{m_{\mathcal{K}}}$.
+		% Since $z$ is the sum of $N$ \gls{iid} exponential variables, its conditional \gls{pdf} under $\mathcal{H}_{m_{\mathcal{K}}}$ follows Erlang distribution with shape $N$ and scale $\sigma_{m_{\mathcal{K}}}^2$ as
+		% \begin{equation}
+		% 	f(z \mid \mathcal{H}_{m_{\mathcal{K}}}) = \frac{z^{N-1} e^{-z/\sigma_{m_{\mathcal{K}}}^2}}{\sigma_{m_{\mathcal{K}}}^{2N} (N-1)!}.
+		% 	\label{eq:energy_distribution}
+		% \end{equation}
+
+		% Energy-based backscatter detection essentially formulates a discrete-input continuous-output memoryless \gls{mac}.
+		% To further reduce decoding complexity, we divide the continuous output $z$ into disjoint decision regions to construct a \gls{dtmac}, where the transition probability from tag input combination $x_{m_{\mathcal{K}}}$ to detector output combination $\hat{x}_{m_{\mathcal{K}}'}$ is
+		% \begin{equation}
+		% 	P(\hat{x}_{m_{\mathcal{K}}'} \mid x_{m_{\mathcal{K}}}) = \int_{\mathcal{R}_{m_{\mathcal{K}}'}} f(z \mid \mathcal{H}_{m_{\mathcal{K}}}) \dd z,
+		% 	\label{eq:dtmac}
+		% \end{equation}
+		% where $\mathcal{R}_{m_{\mathcal{K}}'}$ is the decision region over $z$ for hypothesis $\mathcal{H}_{m_{\mathcal{K}}'}$.
 	\end{subsection}
 
 	\begin{subsection}{Achievable Rates}
@@ -574,7 +671,7 @@
 	Since problem \eqref{op:weighted_sum_rate} is not jointly convex, we propose a \gls{bcd} algorithm that iteratively updates $\{\boldsymbol{p}_k\}$, $\boldsymbol{t}$ and $\boldsymbol{w}$ until convergence.
 
 	\begin{subsection}{Input Probability Distribution}
-		For any fixed decision boundary $\boldsymbol{t}$ and transmit precoder $\boldsymbol{w}$, the equivalent \gls{dmtmac} can be formulated by \eqref{eq:dmtmac} and problem \eqref{op:weighted_sum_rate} boils down to
+		For any fixed decision boundary $\boldsymbol{t}$ and transmit precoder $\boldsymbol{w}$, the equivalent \gls{dtmac} can be formulated by \eqref{eq:dtmac} and problem \eqref{op:weighted_sum_rate} boils down to
 		\begin{maxi!}
 			{\scriptstyle{\{\boldsymbol{p}_k\}}}{I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})}{\label{op:input_probability_distribution}}{}
 			\addConstraint{\eqref{co:sum_probability},\eqref{co:nonnegative_probability},}
@@ -622,19 +719,12 @@
 
 
 	\begin{subsection}{Decision Threshold}
-		\begin{figure}[!t]
-			\centering
-			\resizebox{0.95\columnwidth}{!}{
-				\input{assets/energy_distribution.tex}
-			}
-			\caption{\gls{pdf} of Average Received Power Conditioned on Different Input Hypothesis. Example \gls{ml}.}
-		\end{figure}
 
 		For a given tag input distribution $\{\boldsymbol{p}_k\}$, we can formulate an equivalent information source with augmented alphabet of tag input combination.
 		This equivalent source transmits at the total backscatter rate, and the input distribution is given by $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k})$, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$.
 
 		\begin{remark}
-			Since the equivalent source transmits at the total backscatter rate, the \gls{dmtmac} \eqref{eq:dmtmac} is essentially a point-to-point \gls{dmtc} and we can simplify the decision threshold design accordingly.
+			Since the equivalent source transmits at the total backscatter rate, the \gls{dtmac} \eqref{eq:dtmac} is essentially a point-to-point \gls{dmtc} and we can simplify the decision threshold design accordingly.
 			\label{re:input_combination}
 		\end{remark}
 

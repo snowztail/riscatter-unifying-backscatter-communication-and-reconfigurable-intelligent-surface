@@ -83,8 +83,11 @@
 \algrenewcommand{\algorithmicend}{\textbf{End}}
 \algrenewcommand{\algorithmicrepeat}{\textbf{Repeat}}
 \algrenewcommand{\algorithmicuntil}{\textbf{Until}}
+\algrenewcommand{\algorithmicdo}{}
 
-% \floatname{algorithm}{Procedure}
+% \algrenewcommand\algorithmicdo{}
+% \renewcommand\algorithmicdo{}
+
 \algrenewcommand{\algorithmicrequire}{\textbf{Input:}}
 \algrenewcommand{\algorithmicensure}{\textbf{Output:}}
 
@@ -464,7 +467,7 @@
 		Let $x_{\mathcal{K}} \triangleq (x_1,\ldots,x_K)$ be the backscatter symbol tuple of all Metascatters.
 		Consider the signal model during one backscatter block (i.e., $N$ primary blocks).
 		% We assume the primary symbol follows standard \gls{cscg} distribution and the backscatter symbol of all tags employs $M$-\gls{qam}.
-		Under perfect synchronization, the equivalent primary channel is a function of backscatter symbols
+		Under perfect synchronization, the equivalent primary channel is a function of \emph{coded} backscatter symbols
 		\begin{subequations}
 			\label{eq:equivalent_channel}
 			\begin{align}
@@ -473,7 +476,7 @@
 				 & = \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}},
 			\end{align}
 		\end{subequations}
-		where $\alpha_k$ is the amplitude reflect ratio of Metascatter $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{R}_+^{K \times 1}$, $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ is the backscatter symbol of Metascatter $k$, and $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathbb{C}^{K \times 1}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
+		where $\alpha_k$ is the amplitude reflect ratio of Metascatter $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{R}_+^{K \times 1}$, $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ is the coded backscatter symbol of Metascatter $k$, and $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathbb{C}^{K \times 1}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
 		\begin{equation}
 			y[n] = \boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \boldsymbol{w} s[n] + v[n],
 		\end{equation}
@@ -503,7 +506,7 @@
 	\end{subsection}
 
 	\begin{subsection}{Receiving Strategy}
-		We propose a Metascatter receiver where the backscatter symbols of all Metascatters are first jointly and semi-coherently detected using total received energy per backscatter block, then modeled within equivalent channel \eqref{eq:equivalent_channel} as dynamic passive beamforming.
+		We propose a Metascatter receiver where the backscatter messages of all Metascatters are first jointly and semi-coherently detected using total received energy per backscatter block, then modeled within equivalent channel \eqref{eq:equivalent_channel} as dynamic passive beamforming.
 		% identified by non-coherent energy detection, then
 		% Compared with conventional schemes as joint decoding and \gls{sic}, the Metascatter receiver may not achieve as high data rate for one tag, but it avoids non-coherent primary encoding and enables tag multiple access in a practical and low-complexity manner.
 		% Therefore, we believe it can be compatible to and readily implemented over legacy point-to-point systems.
@@ -570,11 +573,15 @@
 			% % Fortunately, for the proposed energy detection, we proved that the \gls{dmtc} capacity can be achieved using only convex decision regions.
 			% not only the capacity-achieving thresholding design remains an open problem, but also the optimal number of thresholds for general non-binary-input channels remains unknown.
 		\end{remark}
-		In the following context, we restrict all decision regions to convex and optimize decision thresholds accordingly. That is, for any bijective mapping $f : m_{\mathcal{K}} \to \mathcal{L} \triangleq \{1,\ldots,M^K\}$, the decision region of letter $l \in \mathcal{L}$ is defined as $\mathcal{R}_l \triangleq [t_{l-1},t_l)$, where $t_{l-1}<t_l$. We also define the decision threshold vector as $\boldsymbol{t} \triangleq [t_0,\ldots,t_L]^T \in \mathbb{R}_+^{(L+1) \times 1}$.
+		In the following context, we restrict all decision regions to convex and optimize decision thresholds accordingly. That is, for any bijective mapping $f : m_{\mathcal{K}} \to \mathcal{L} \triangleq \{1,\ldots,M^K\}$, the decision region of letter $l \in \mathcal{L}$ is defined as $\mathcal{R}_l \triangleq [t_{l-1},t_l)$, where $t_{l-1} \le t_l$. We also define the decision threshold vector as $\boldsymbol{t} \triangleq [t_0,\ldots,t_L]^T \in \mathbb{R}_+^{(L+1) \times 1}$.
 	\end{subsection}
 
 	\begin{subsection}{Achievable Rates}
-		Denote the input probability of state $m_k$ of Metascatter node $k$ as $P_k(x_{m_k})$, and define the input probability distribution vector of node $k$ as $\boldsymbol{p}_k \triangleq [P_k(c_1),\ldots,P_k(c_M)]^T \in \mathbb{R}^{M \times 1}$. With independent encoding at all nodes, the probability of backscatter symbol tuple $x_{m_{\mathcal{K}}}$ is $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k})$.
+		Denote the input probability of state $m_k$ of Metascatter node $k$ as $P_k(x_{m_k})$, and define the input probability distribution vector of node $k$ as $\boldsymbol{p}_k \triangleq [P_k(c_1),\ldots,P_k(c_M)]^T \in \mathbb{R}^{M \times 1}$. With independent encoding at all nodes, the probability of backscatter symbol tuple $x_{m_{\mathcal{K}}}$ is
+		\begin{equation}
+			P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k}).
+			\label{eq:equivalent_distribution}
+		\end{equation}
 		% Denote the input probability distribution vector of tag $k$ as $\boldsymbol{p}_k \triangleq [P_k(x_1),\ldots,P_k(x_M)]^T \in \mathbb{R}^{M \times 1}$, where $P_k(x_{m_k})$ is the probability at state $m_k$.
 		% Consider independent encoding at all tags such that the probability of input combination $x_{m_{\mathcal{K}}}$ is $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k})$.
 		% The backscatter information function of input combination $x_{m_{\mathcal{K}}}$ is defined as
@@ -600,7 +607,10 @@
 		\end{equation}
 
 		% Once the tag input combination is successfully decoded, the backscatter uncertainty can be eliminated and the equivalent channel for primary transmission can be updated by \eqref{eq:equivalent_channel}.
-		Once backscatter symbols are successfully decoded, we can eliminate modulation uncertainty and retrieve equivalent primary channel by \eqref{eq:equivalent_channel}. We define the primary information function conditioned on backscatter symbol tuple $x_{m_{\mathcal{K}}}$ as
+
+		% eliminate modulation uncertainty
+		Once backscatter messages are successfully decoded, we can re-encode to determine $x_{\mathcal{K}}$ and retrieve equivalent primary channel by \eqref{eq:equivalent_channel}. We define the primary information function conditioned on backscatter symbol tuple $x_{m_{\mathcal{K}}}$ as
+		% Once backscatter symbols are successfully decoded, we can eliminate modulation uncertainty and retrieve equivalent primary channel by \eqref{eq:equivalent_channel}. We define the primary information function conditioned on backscatter symbol tuple $x_{m_{\mathcal{K}}}$ as
 		% \begin{equation}
 		% 	I_{\mathrm{P}}(x_{m_{\mathcal{K}}};\boldsymbol{y}) \triangleq \log \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\right),
 		% 	\label{eq:primary_information_function}
@@ -652,12 +662,13 @@
 \begin{section}{Input Distribution, Active Beamforming, and Decision Threshold, Design}
 	To characterize the achievable primary-(total-)backscatter rate region of the proposed Metascatter-enabled network, we aim to maximize the weighted sum mutual information with respect to node input distributions $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, active beamforming vector $\boldsymbol{w}$, and decision threshold vector $\boldsymbol{t}$ as
 	\begin{maxi!}
-		{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{w},\boldsymbol{t}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
+		{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{w},\boldsymbol{t}\in\mathbb{R}_+^{L+1}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
 		% \addConstraint{\sum \nolimits_{m_k} P_k(x_{m_k})}{=1,}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
 		\addConstraint{\sum \nolimits_{m_k} P_k(x_{m_k})}{=1,}{\quad \forall k}{\label{co:sum_probability}}
 		% \addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k \in \mathcal{K}, \ \forall m_k \in \mathcal{M}}{\label{co:nonnegative_probability}}
 		\addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k,m_k}{\label{co:nonnegative_probability}}
-		\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.}{\label{co:transmit_power}}
+		\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P}{\label{co:transmit_power}}
+		\addConstraint{t_{l-1}}{\le t_l,}{\quad \forall l.}{\label{co:decision_threshold}}
 	\end{maxi!}
 	% \begin{maxi!}
 	% 	{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{t},\boldsymbol{w}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
@@ -725,46 +736,32 @@
 			\label{pf:input_kkt_solution}
 		\end{proof}
 
-		At each iteration, the input distribution of node $k$ is evaluated over updated input distribution of node $1$ to $k-1$, together with previous input distribution of node $k+1$ to $K$. The \gls{kkt} input distribution design is summarized in Algorithm TODO.
+		At each iteration, the input distribution of node $k$ is evaluated over updated input distribution of node $1$ to $k-1$, together with previous input distribution of node $k+1$ to $K$. The \gls{kkt} input distribution design is summarized in Algorithm \ref{al:input_distribution}.
 
 		\begin{algorithm}[!t]
-			% \caption{Evaluate \gls{kkt} Input Distribution by Limits}
 			\caption{Numerical Evaluation of \gls{kkt} Input Distribution}
 			\label{al:input_distribution}
 			\begin{algorithmic}[1]
-				% % \State \textbf{Input:} $K$, $N$, $\boldsymbol{h}_{\mathrm{D}}^H$, $\boldsymbol{H}_{\mathrm{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $\sigma_v^2$, $\rho$, $\boldsymbol{w}$, $\boldsymbol{t}$, $\epsilon$
 				\Require $K$, $N$, $\boldsymbol{h}_{\mathrm{D}}^H$, $\boldsymbol{H}_{\mathrm{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $\sigma_v^2$, $\rho$, $\boldsymbol{w}$, $\boldsymbol{t}$, $\epsilon$
 				\Ensure $\{\boldsymbol{p}_k^\star\}_{k \in \mathcal{K}}$
 				\State Set $\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_channel}
 				\State \phantom{Set} $\sigma^2_{m_{\mathcal{K}}}$, $\forall m_{\mathcal{K}}$ by \eqref{eq:receive_variance}
 				\State \phantom{Set} $f(z|\mathcal{H}_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:energy_distribution}
 				\State \phantom{Set} $P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}, m_{\mathcal{K}}'$ by \eqref{eq:dtmac}
-				% \State \textbf{Initialize} $r \gets 0$, $\boldsymbol{p}_k > \boldsymbol{0}$, $\forall k$
 				\State Initialize $r \gets 0$
 				\State \phantom{Initialize} $\boldsymbol{p}_k^{(0)} > \boldsymbol{0}$, $\forall k$
-				\State \phantom{Initialize} $I^{(0)}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:backscatter_information_function}, \eqref{eq:primary_information_function}, \eqref{eq:weighted_sum_information_function}
-				\State \phantom{Initialize} $I^{(0)}_k(x_{m_k})$, $\forall k,m_k$ by \eqref{eq:backscatter_marginal_information}, \eqref{eq:primary_marginal_information}, \eqref{eq:weighted_sum_marginal_information}
-				\State \phantom{Initialize} $I^{(0)}(x_{\mathcal{K}})$ by \eqref{eq:backscatter_mutual_information}, \eqref{eq:primary_mutual_information}, \eqref{eq:weighted_sum_mutual_information}
+				\State Get $P_{\mathcal{K}}^{(0)}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_distribution}
+				\State \phantom{Get} $I^{(0)}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:backscatter_information_function}, \eqref{eq:primary_information_function}, \eqref{eq:weighted_sum_information_function}
+				\State \phantom{Get} $I^{(0)}_k(x_{m_k})$, $\forall k,m_k$ by \eqref{eq:backscatter_marginal_information}, \eqref{eq:primary_marginal_information}, \eqref{eq:weighted_sum_marginal_information}
+				\State \phantom{Get} $I^{(0)}(x_{\mathcal{K}})$ by \eqref{eq:backscatter_mutual_information}, \eqref{eq:primary_mutual_information}, \eqref{eq:weighted_sum_mutual_information}
 				\Repeat
 					\State Update $r \gets r+1$
 					\State \phantom{Update} $\boldsymbol{p}_k^{(r)}$, $\forall k$ by \eqref{eq:input_kkt_solution}
-					\State \phantom{Update} $I^{(r)}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:backscatter_information_function}, \eqref{eq:primary_information_function}, \eqref{eq:weighted_sum_information_function}
-					\State \phantom{Update} $I^{(r)}_k(x_{m_k})$, $\forall k,m_k$ by \eqref{eq:backscatter_marginal_information}, \eqref{eq:primary_marginal_information}, \eqref{eq:weighted_sum_marginal_information}
-					\State \phantom{Update} $I^{(r)}(x_{\mathcal{K}})$ by \eqref{eq:backscatter_mutual_information}, \eqref{eq:primary_mutual_information}, \eqref{eq:weighted_sum_mutual_information}
+					\State Get $P_{\mathcal{K}}^{(r)}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_distribution}
+					\State \phantom{Get} $I^{(r)}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:backscatter_information_function}, \eqref{eq:primary_information_function}, \eqref{eq:weighted_sum_information_function}
+					\State \phantom{Get} $I^{(r)}_k(x_{m_k})$, $\forall k,m_k$ by \eqref{eq:backscatter_marginal_information}, \eqref{eq:primary_marginal_information}, \eqref{eq:weighted_sum_marginal_information}
+					\State \phantom{Get} $I^{(r)}(x_{\mathcal{K}})$ by \eqref{eq:backscatter_mutual_information}, \eqref{eq:primary_mutual_information}, \eqref{eq:weighted_sum_mutual_information}
 				\Until $I^{(r)}(x_{\mathcal{K}}) - I^{(r-1)}(x_{\mathcal{K}}) \le \epsilon$
-				% \State \textbf{Initialize} $i \gets 0$, $\boldsymbol{\Phi}^{(0)}$
-				% \State Set $t_{\mathrm{I/P},k}^{(0)}$, $\forall k$ by \eqref{eq:t_k}
-				% \State Compute $z^{(0)}$ by \eqref{eq:z_irs}
-				% \Repeat
-				% 	\State $i \gets i + 1$
-				% 	\State Get $\boldsymbol{\Phi}^{(i)}$ by solving \eqref{ob:irs}--\eqref{co:irs_sd}
-				% 	\State Update $t_{\mathrm{I/P},k}^{(i)}$, $\forall k$ by \eqref{eq:t_k}
-				% 	\State Compute $z^{(i)}$ by \eqref{eq:z_irs}
-				% \Until $\lvert z^{(i)}-z^{(i-1)} \rvert \le \epsilon$
-				% \State Set $\boldsymbol{\Phi}^{\star} \gets \boldsymbol{\Phi}^{(i)}$
-				% \State Get $\hat{\boldsymbol{\phi}}^\star$ by eigen decomposition, $\boldsymbol{\Phi}^{\star}=\hat{\boldsymbol{\phi}}^\star(\hat{\boldsymbol{\phi}}^\star)^H$
-				% \State Set $\boldsymbol{\phi}^{\star} \gets e^{j \arg\left([\hat{\boldsymbol{\phi}}^\star]_{(1:L)} \middle/ [\hat{\boldsymbol{\phi}}^\star]_{(L+1)}\right)}$
-				% \State \textbf{Output} $\boldsymbol{\phi}^{\star}$
 			\end{algorithmic}
 		\end{algorithm}
 	\end{subsection}
@@ -788,7 +785,7 @@
 			Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) = \frac{\int_{{t_{l-1}}/{\sigma_{m_{\mathcal{K}}}^2}}^{{t_l}/{\sigma_{m_{\mathcal{K}}}^2}} z^{N-1} \exp(-z) \dd z}{(N-1)!}
 			\label{eq:regularized_incomplete_gamma}
 		\end{equation}
-		is the regularized incomplete Gamma function that explicitly substitutes the \gls{dtmac} transition probability \eqref{eq:dtmac}.
+		is the regularized incomplete Gamma function that substitutes the \gls{dtmac} transition probability \eqref{eq:dtmac}.
 		Its series representation is given by \cite[Theorem~3]{Jameson2016}
 		\begin{align}
 			Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)
@@ -796,7 +793,7 @@
 			 & \quad - \exp \Bigl(-\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\Bigl(\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)^n}{n!}.
 			\label{eq:regularized_incomplete_gamma_series}
 		\end{align}
-		We further write the gradient of \eqref{eq:regularized_incomplete_gamma_series} and \eqref{eq:weighted_sum_mutual_information_explicit} w.r.t. $\boldsymbol{w}^*$ as \eqref{eq:regularized_incomplete_gamma_gradient} and TODO at the end of page \pageref{eq:regularized_incomplete_gamma_gradient} and TODO, respectively.
+		Next, we derive the gradients of \eqref{eq:regularized_incomplete_gamma_series} and \eqref{eq:weighted_sum_mutual_information_explicit} w.r.t. $\boldsymbol{w}^*$ as \eqref{eq:regularized_incomplete_gamma_gradient} and \eqref{eq:weighted_sum_mutual_information_gradient} at the end of page \pageref{eq:regularized_incomplete_gamma_gradient} and \pageref{eq:weighted_sum_mutual_information_gradient}, respectively.
 		\begin{figure*}[!b]
 			\begin{align}
 				\nabla_{\boldsymbol{w}^*} Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)
@@ -807,24 +804,75 @@
 			\end{align}
 		\end{figure*}
 		\begin{figure*}[!b]
+			\hrule
 			\begin{align}
 				\nabla_{\boldsymbol{w}^*} I(x_{\mathcal{K}})
-				 & = \sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\frac{\boldsymbol{h}_{\mathrm{E}}(x_{m_{\mathcal{K}}})\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}+(1-\rho)\sum_l\biggl(\log\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}+1\biggr)\nonumber \\
+				 & = \sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\frac{\boldsymbol{h}_{\mathrm{E}}(x_{m_{\mathcal{K}}})\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}+(1-\rho)\sum_l\biggl(\log\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}+1\biggr)\nonumber   \\
 				 & \qquad \times \nabla_{\boldsymbol{w}^*} Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)-\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})\nabla_{\boldsymbol{w}^*}Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}\Biggr)
+				\label{eq:weighted_sum_mutual_information_gradient}
 			\end{align}
 		\end{figure*}
-		% The optimal precoder design is highly non-convex that involves integration, entropy term, and variable on exponential.
-		% We may propose a suboptimal precoder based on linear combination of equivalent and cascaded channels, or consider single transmit antenna instead.
+		% Next, we express the gradient of \eqref{eq:regularized_incomplete_gamma_series} and \eqref{eq:weighted_sum_mutual_information_explicit} w.r.t. $\boldsymbol{w}^*$ as \eqref{eq:regularized_incomplete_gamma_gradient} and \eqref{eq:weighted_sum_mutual_information_gradient} at the end of page \pageref{eq:regularized_incomplete_gamma_gradient},
+		It allows problem \eqref{op:active_beamforming} to be solved by the \gls{pgd} method, where any unregulated beamforming vector $\bar{\boldsymbol{w}}$ can be projected onto the feasible domain of average transmit power constraint \eqref{co:transmit_power} by
+		% the projection function associated with average transmit power constraint \eqref{co:transmit_power} is
+		\begin{equation}
+			\boldsymbol{w} = \sqrt{P} \frac{\bar{\boldsymbol{w}}}{\max\bigl(\sqrt{P},\lVert\bar{\boldsymbol{w}}\rVert\bigr)}.
+			\label{eq:beamforming_projection}
+		\end{equation}
+		We present the iterative active beamforming design accelerated by backtracking line search in Algorithm \ref{al:active_beamforming}.
+		\begin{algorithm}[!t]
+			\caption{Iterative Active Beamforming Design by \gls{pgd} with Backtracking Line Search}
+			\label{al:active_beamforming}
+			\begin{algorithmic}[1]
+				\Require $Q$, $N$, $\boldsymbol{h}_{\mathrm{D}}^H$, $\boldsymbol{H}_{\mathrm{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $P$, $\sigma_v^2$, $\rho$, $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{t}$, $\alpha$, $\beta$, $\gamma$, $\epsilon$
+				\Ensure $\boldsymbol{w}^\star$
+				\State Set $\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_channel}
+				\State \phantom{Set} $P_{\mathcal{K}}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_distribution}
+				\State Initialize $r \gets 0$
+				\State \phantom{Initialize} $\boldsymbol{w}^{(0)}$, $\lVert\boldsymbol{w}^{(0)}\rVert^2 \le P$
+				\State Get $(\sigma_{m_{\mathcal{K}}}^{(0)})^2$, $\forall m_{\mathcal{K}}$ by \eqref{eq:receive_variance}
+				\State \phantom{Get} $Q^{(0)}\bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)$, $\forall m_{\mathcal{K}},l$ by \eqref{eq:regularized_incomplete_gamma} or \eqref{eq:regularized_incomplete_gamma_series}
+				\State \phantom{Get} $I^{(0)}(x_{\mathcal{K}})$ by \eqref{eq:weighted_sum_mutual_information_explicit}
+				\State \phantom{Get} $\nabla_{\boldsymbol{w}^*} Q^{(0)}\bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)$, $\forall m_{\mathcal{K}},l$ by \eqref{eq:regularized_incomplete_gamma_gradient}
+				\State \phantom{Get} $\nabla_{\boldsymbol{w}^*} I^{(0)}(x_{\mathcal{K}})$ by \eqref{eq:weighted_sum_mutual_information_gradient}
+				\Repeat
+					\State Update $r \gets r+1$
+					\State \phantom{Update} $\bar{\boldsymbol{w}}^{(r)} \gets \boldsymbol{w}^{(r-1)}+\gamma\nabla_{\boldsymbol{w}^*} I^{(r-1)}(x_{\mathcal{K}})$ \label{st:gradient_descent_begin}
+					\State \phantom{Update} $\boldsymbol{w}^{(r)}$ by \eqref{eq:beamforming_projection}
+					\State \phantom{Update} $(\sigma_{m_{\mathcal{K}}}^{(r)})^2$, $\forall m_{\mathcal{K}}$ by \eqref{eq:receive_variance}
+					\State \phantom{Update} $Q^{(r)}\bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)$, $\forall m_{\mathcal{K}},l$ by \eqref{eq:regularized_incomplete_gamma} or \eqref{eq:regularized_incomplete_gamma_series}
+					\State \phantom{Update} $I^{(r)}(x_{\mathcal{K}})$ by \eqref{eq:weighted_sum_mutual_information_explicit} \label{st:gradient_descent_end}
+					% \While{$I^{(r-1)}(x_{\mathcal{K}})>I^{(r)}(x_{\mathcal{K}})+\alpha\gamma\lVert\nabla_{\boldsymbol{w}^*}I^{(r-1)}(x_{\mathcal{K}})\rVert$}
+					\While{$I^{(r)}(x_{\mathcal{K}})<I^{(r-1)}(x_{\mathcal{K}})-\alpha\gamma\lVert\nabla_{\boldsymbol{w}^*}I^{(r-1)}(x_{\mathcal{K}})\rVert^2$}
+						\State Set $\gamma\gets\beta\gamma$
+						\State Redo Step \ref{st:gradient_descent_begin}--\ref{st:gradient_descent_end}
+					\EndWhile
+				\Until $\lVert\boldsymbol{w}^{(r)}-\boldsymbol{w}^{(r-1)}\rVert \le \epsilon$
+			\end{algorithmic}
+		\end{algorithm}
 	\end{subsection}
 
 	\begin{subsection}{Decision Threshold}
-
-		For a given tag input distribution $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, we can formulate an equivalent information source with augmented alphabet of tag input combination.
-		This equivalent source transmits at the total backscatter rate, and the input distribution is given by $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k})$, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$.
+		% Once node input distribution $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$ and active beamforming vector $\boldsymbol{w}$ are obtained, problem \eqref{op:weighted_sum_rate}
+		For any given $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$ and $\boldsymbol{w}$, problem \eqref{op:weighted_sum_rate} reduces to
+		\begin{maxi!}
+			{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{w},\boldsymbol{t}\in\mathbb{R}_+^{L+1}}}{I(x_{\mathcal{K}})}{\label{op:decision_threshold}}{\label{ob:decision_threshold}}
+			\addConstraint{\eqref{co:decision_threshold}.}
+		\end{maxi!}
 
 		\begin{remark}
-			Since the equivalent source transmits at the total backscatter rate, the \gls{dtmac} \eqref{eq:dtmac} is essentially a point-to-point \gls{dmtc} and we can simplify the decision threshold design accordingly.
-			\label{re:input_combination}
+			Ideally, backscatter detection (and decision design) has no impact on primary achievable rate.
+			When nodes transmit at non-zero total rate, the user can re-encode backscatter messages to recover coded backscatter symbol $x_{\mathcal{K}}$ at each block. Otherwise, $x_{\mathcal{K}}$ can be deterministic and known to the user.
+			% Decision threshold only influences backscatter rate instead of primary rate.
+		\end{remark}
+
+		\begin{remark}
+			% With input distribution of all nodes, we can formulate an equivalent information source with augmented alphabet of tag input combination.
+			% In terms of total backscatter rate, we can formulate an equivalent information source with augmented alphabet of tag input combination.
+			% When input distribution of all nodes are available, we can formulate an equivalent information source in terms of total backscatter rate.
+			% When input distribution of all nodes are available, we can think an equivalent information source with augmented alphabet of state tuple, in terms of total backscatter rate.
+			In terms of total backscatter rate, we can regard all nodes as an equivalent information source with augmented alphabet of node state tuple $x_{m_{\mathcal{K}}}$.
+			As such, the \gls{dtmac} \eqref{eq:dtmac} is essentially a \gls{dmtc}, and decision threshold design can be simplified accordingly.
 		\end{remark}
 
 		Interestingly, the optimal threshold design to maximize the mutual information for a general \gls{dmtc} with a fixed number of output letters remains an open issue.
@@ -848,11 +896,11 @@
 			We may need to tailor threshold design for Metascatter as threshold design has potential impact on primary achievable rate, as implied by some simulation results.
 		\end{tcolorbox}
 	\end{subsection}
-
-
 \end{section}
 
-\begin{section}{Preliminary Results}
+\begin{section}{Simulation Results}
+	In this section, we provide numerical results to evaluate the proposed input distribution, active beamforming and decision threshold designs over the Metascatter-enabled network in Fig. \ref{fi:metascatter_network}.
+
 	\begin{table}[t!]
 		\centering
 		\caption{Parameters in simulation}

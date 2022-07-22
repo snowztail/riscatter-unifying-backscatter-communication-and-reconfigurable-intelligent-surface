@@ -622,7 +622,7 @@
 	\end{subsection}
 \end{section}
 
-\begin{section}{Input Distribution, Active Beamforming, and Decision Threshold, Design}
+\begin{section}{Input Distribution, Active Beamforming, and Decision Threshold Design}
 	To characterize the achievable primary-(total-)backscatter rate region of the proposed Metascatter-enabled network, we aim to maximize the weighted sum mutual information with respect to node input distributions $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, active beamforming vector $\boldsymbol{w}$, and decision threshold vector $\boldsymbol{t}$ as
 	\begin{maxi!}
 		{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{w},\boldsymbol{t}\in\mathbb{R}_+^{L+1}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
@@ -839,8 +839,6 @@
 			\label{re:backscatter_detection}
 		\end{remark}
 
-
-
 		Remark \ref{re:backscatter_detection} suggests any $\boldsymbol{t}$ maximizes total backscatter mutual information $I^{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}})$ is also optimal for problem \eqref{op:decision_threshold}.
 
 		\begin{remark}
@@ -887,9 +885,46 @@
 \end{section}
 
 \begin{section}{Simulation Results}
-	In this section, we provide numerical results to evaluate the proposed input distribution, active beamforming and decision threshold designs over the Metascatter-enabled network in Fig. \ref{fi:metascatter_network}.
-	The parameters remain fixed unless specified.
+	In this section, we provide numerical results to evaluate the proposed input, beamforming and decision design over a single-user multi-node Metascatter-enabled network.
+	We assume the distance between \gls{ap} and user is \SI{10}{\meter}, and $K=2$ Metascatters are uniformly dropped within a disk of radius \SI{1}{\meter} centered at the user.
+	% The carrier frequency is $f=\SI{200}{\MHz}$, and we consider \gls{iid} Ricean fading for all channels.
+	The carrier frequency is $f=\SI{200}{\MHz}$, and we consider \gls{iid} Ricean fading between all terminals.
+	For direct, forward and backward links, the path loss exponents are \num{2.6}, \num{2.4} and \num{2}, while the Ricean factor are \num{5}, \num{5} and \num{10}, respectively.
+	% For direct, forward and backward links, we choose path loss exponents \num{2.6}, \num{2.4} and \num{2}, and Ricean factor \num{5}, \num{5} and \num{10}, respectively.
+	% and the path loss exponents for direct, forward and backward links are \num{2.6}, \num{2.4} and \num{2}, respectively.
+	% We consider \gls{iid} Ricean fading for all channels with Ricean factor set to \num{5}, \num{5} and \num{10}
+	The \gls{ap} has $Q=4$ antennas with maximum average transmit power $P=\SI{36}{\dBm}$.
+	All node perform \gls{qam} with $M=2$ input states, the amplitude reflect ratio is $\alpha=0.5$, and the symbol period ratio is $N=20$.
+	% and we consider amplitude reflect ratio $\alpha=0.5$ and symbol period ratio $N=20$.
+	% The user has a receive antenna gain of \SI{3}{\dBi} and average noise power
+	The user is with average noise power $\sigma_v^2=\SI{70}{\dBm}$ and receive antenna gain \SI{3}{\dBi}.
+	All rate regions are averaged over \num{1000} instances.
+	% Each node has $M=2$ candidate input states with amplitude reflect ratio $\alpha=0.5$.
+	The parameters remain fixed unless otherwise specified.
 
+	\begin{figure}[!t]
+		\centering
+		\subfloat[Instance 1]{
+			\resizebox{0.48\columnwidth}{!}{
+				\input{assets/simulation/distribution_weights_1.tex}
+			}
+		}
+		\subfloat[Instance 2]{
+			\resizebox{0.48\columnwidth}{!}{
+				\input{assets/simulation/distribution_weights_2.tex}
+			}
+		}
+		\caption{Input distribution vs weight $\rho$.}
+	\end{figure}
+
+	% \begin{figure}[!t]
+	% 	\centering
+	% 	\resizebox{0.8\columnwidth}{!}{
+	% 		\input{assets/simulation/distribution_weights.tex}
+	% 	}
+	% 	\caption{1}
+	% 	% \caption{Average primary-(total-)backscatter rate region.}
+	% \end{figure}
 	% \begin{table}[t!]
 	% 	\centering
 	% 	\caption{Parameters in simulation}

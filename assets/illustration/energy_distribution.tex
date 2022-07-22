@@ -1,5 +1,5 @@
 \begin{tikzpicture}
-	\begin{axis}[%
+	\begin{axis}[
 			height=5cm,
 			width=9cm,
 			xlabel = $z$,
@@ -9,11 +9,11 @@
 			xmin=0,
 			ymin=0,
 			xmax=70,
-			%     ticks=none,
 			xtick={0,12.78,20.28,29.62,70},
 			xticklabels={$t_0$,$t_1$,$t_2$,$t_3$,$t_4$},
 			yticklabels={},
-			samples = 200]
+			samples = 200
+		]
 
 		\addplot+[thick] gnuplot[raw gnuplot] {%
 				isint(x) = (int(x)==x);

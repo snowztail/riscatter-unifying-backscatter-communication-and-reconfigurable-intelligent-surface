@@ -17,4 +17,4 @@ ylabel('Probability Distribution');
 xticks(1 : nStates);
 style_plot(object);
 savefig(strcat('figures/distribution_', erase(mfilename, 'plot_')));
-matlab2tikz(strcat('../../assets/distribution_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', ['title style={font=\huge}, ' 'label style={font=\huge}, ' 'ticklabel style={font=\LARGE}, ' 'legend style={font=\LARGE}']);
+matlab2tikz(strcat('../../assets/simulation/distribution_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', ['title style={font=\huge}, ' 'label style={font=\huge}, ' 'ticklabel style={font=\LARGE}, ' 'legend style={font=\LARGE}']);

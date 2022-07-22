@@ -34,7 +34,7 @@ backwardFactor = 10;
 
 %% * Algorithm
 % relative priority of primary link
-weightSet = [1, 0.15 : -0.05 : 0];
+weightSet = [0 : 0.1 : 0.3, 1];
 % number of weights on rate region boundary
 nWeights = length(weightSet);
 % number of quantization bins

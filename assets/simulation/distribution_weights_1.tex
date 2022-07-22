@@ -13,9 +13,9 @@
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=4.036in,
-height=3.396in,
-at={(0.677in,0.458in)},
+width=3.907in,
+height=3.328in,
+at={(0.655in,0.449in)},
 scale only axis,
 xmin=1,
 xmax=4,
@@ -27,55 +27,57 @@ ymax=1,
 ylabel style={font=\color{white!15!black}},
 ylabel={Probability Distribution},
 axis background/.style={fill=white},
+xmajorgrids,
 xminorgrids,
+ymajorgrids,
 yminorgrids,
-legend style={legend cell align=left, align=left, draw=white!15!black},
+legend style={at={(0.03,0.97)}, anchor=north west, legend cell align=left, align=left, draw=white!15!black},
 title style={font=\huge}, label style={font=\huge}, ticklabel style={font=\LARGE}, legend style={font=\LARGE}
 ]
 \addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}]
   table[row sep=crcr]{%
-1	2.62331519807269e-06\\
-2	0.999997376684802\\
-3	4.89949641833056e-30\\
-4	2.6174774451771e-24\\
+1	1.34887442178325e-06\\
+2	0.401147907621958\\
+3	0.346863819336987\\
+4	0.251986924166634\\
 };
-\addlegendentry{$\rho =1$}
+\addlegendentry{$\rho =0$}
 
 \addplot [color=mycolor2, dashed, line width=2.0pt, mark=+, mark options={solid, mycolor2}]
   table[row sep=crcr]{%
-1	9.21083675347438e-06\\
-2	0.812542727242104\\
-3	0.187445044005617\\
-4	3.01791552545155e-06\\
-};
-\addlegendentry{$\rho =0.15$}
-
-\addplot [color=mycolor3, dotted, line width=2.0pt, mark=square, mark options={solid, mycolor3}]
-  table[row sep=crcr]{%
-1	1.56711271328569e-05\\
-2	0.695664383940126\\
-3	0.304312342609931\\
-4	7.60232280996882e-06\\
+1	2.43160039284684e-06\\
+2	0.373071655693474\\
+3	0.387092084568394\\
+4	0.239833828137739\\
 };
 \addlegendentry{$\rho =0.1$}
 
+\addplot [color=mycolor3, dotted, line width=2.0pt, mark=square, mark options={solid, mycolor3}]
+  table[row sep=crcr]{%
+1	1.27356787994262e-05\\
+2	0.337563209241624\\
+3	0.428718130958926\\
+4	0.23370592412065\\
+};
+\addlegendentry{$\rho =0.2$}
+
 \addplot [color=mycolor4, dashdotted, line width=2.0pt, mark=x, mark options={solid, mycolor4}]
   table[row sep=crcr]{%
-1	1.79207354228568e-05\\
-2	0.591606048367841\\
-3	0.408364572353122\\
-4	1.14585436146039e-05\\
+1	2.82495749022891e-05\\
+2	0.293114805811411\\
+3	0.479872318504251\\
+4	0.226984626109436\\
 };
-\addlegendentry{$\rho =0.05$}
+\addlegendentry{$\rho =0.3$}
 
 \addplot [color=mycolor5, line width=2.0pt, mark=triangle, mark options={solid, mycolor5}]
   table[row sep=crcr]{%
-1	2.61368383798461e-05\\
-2	0.497964372118738\\
-3	0.501988384568931\\
-4	2.11064739508265e-05\\
+1	6.85130791403468e-06\\
+2	8.96232761727522e-19\\
+3	0.999993126219272\\
+4	2.24728139461691e-08\\
 };
-\addlegendentry{$\rho =0$}
+\addlegendentry{$\rho =1$}
 
 \end{axis}
 \end{tikzpicture}%

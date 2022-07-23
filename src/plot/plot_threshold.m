@@ -27,6 +27,7 @@ hold off; legend({'SMAWK', 'DP', 'Bisection', 'ML'}, 'Location', 'sw'); grid on;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatte Rate [bits/BSP]');
 xlim([9, inf]);
+yticks(0 : 0.01 : 0.05);
 style_plot(object);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
 matlab2tikz(strcat('../../assets/simulation/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', {'title style={font=\huge}', 'label style={font=\huge}', 'ticklabel style={font=\LARGE}', 'legend style={font=\LARGE}', 'scaled y ticks=false', 'y tick label style={/pgf/number format/.cd, fixed, precision=2}'});

@@ -12,7 +12,7 @@ for iVariable = 1 : nVariables
 		rate(:, iWeight) = mean(cat(2, Result(iVariable, iWeight, :).rate), 2);
 	end
 	[rate(1, nWeights + 1), rate(2, nWeights + 2)] = deal(max(rate(1, :)), max(rate(2, :)));
-	rate(2, nWeights + 1) = eps;
+	[rate(2, nWeights + 1), rate(2, nWeights + 3)] = deal(eps);
 	region{iVariable} = rate(:, convhull(transpose(rate)));
 end
 save(strcat('../data/region_', erase(mfilename, 'plot_')));

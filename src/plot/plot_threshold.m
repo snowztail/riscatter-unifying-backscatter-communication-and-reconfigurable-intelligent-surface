@@ -21,12 +21,12 @@ figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region by Different Decis
 object = gobjects(nVariables, 1);
 hold all;
 for iVariable = 1 : nVariables
-	object(iVariable) = plot(region{iVariable}(1, :) / log(2), 1e3 * region{iVariable}(2, :) / log(2));
+	object(iVariable) = plot(region{iVariable}(1, :) / log(2), region{iVariable}(2, :) / log(2));
 end
 hold off; legend({'SMAWK', 'DP', 'Bisection', 'ML'}, 'Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
-ylabel('Total Backscatte Rate [$\mu$ bits/backscatter symbol]');
+ylabel('Total Backscatte Rate [bits/BSP]');
 xlim([9, inf]);
 style_plot(object);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
-matlab2tikz(strcat('../../assets/simulation/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', ['title style={font=\huge}, ' 'label style={font=\huge}, ' 'ticklabel style={font=\LARGE}, ' 'legend style={font=\LARGE}']);
+matlab2tikz(strcat('../../assets/simulation/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', {'title style={font=\huge}', 'label style={font=\huge}', 'ticklabel style={font=\LARGE}', 'legend style={font=\LARGE}', 'scaled y ticks=false', 'y tick label style={/pgf/number format/.cd, fixed, precision=2}'});

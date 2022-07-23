@@ -64,6 +64,7 @@
 \newacronym{bibo}{BIBO}{Binary-Input Binary-Output}
 \newacronym{bpcu}{\si{bpcu}}{bits per channel use}
 \newacronym{bpsphz}{\si{bps/Hz}}{bits per second per Hertz}
+\newacronym{cp}{CP}{Canonical Polyadic}
 \newacronym{cr}{CR}{Cognitive Radio}
 \newacronym{cscg}{CSCG}{Circularly Symmetric Complex Gaussian}
 \newacronym{csi}{CSI}{Channel State Information}
@@ -885,38 +886,172 @@
 \end{section}
 
 \begin{section}{Simulation Results}
+	% TODO add distribution to initializer to smooth curves?
+	% TODO compare PGD and primary-MRT beamformers
 	In this section, we provide numerical results to evaluate the proposed input, beamforming and decision design over a single-user multi-node Metascatter-enabled network.
-	We assume the distance between \gls{ap} and user is \SI{10}{\meter}, and $K=2$ Metascatters are uniformly dropped within a disk of radius \SI{1}{\meter} centered at the user.
+	We assume the distance between \gls{ap} and user is \SI{10}{\meter}, and $K=2$ Metascatters are uniformly dropped within a disk centered at the user of radius \SI{1}{\meter}.
 	% The carrier frequency is $f=\SI{200}{\MHz}$, and we consider \gls{iid} Ricean fading for all channels.
 	The carrier frequency is $f=\SI{200}{\MHz}$, and we consider \gls{iid} Ricean fading between all terminals.
-	For direct, forward and backward links, the path loss exponents are \num{2.6}, \num{2.4} and \num{2}, while the Ricean factor are \num{5}, \num{5} and \num{10}, respectively.
+	For direct, forward and backward links, we set the path loss exponents to \num{2.6}, \num{2.4} and \num{2}, and the Ricean factor to \num{5}, \num{5} and \num{10}, respectively.
 	% For direct, forward and backward links, we choose path loss exponents \num{2.6}, \num{2.4} and \num{2}, and Ricean factor \num{5}, \num{5} and \num{10}, respectively.
 	% and the path loss exponents for direct, forward and backward links are \num{2.6}, \num{2.4} and \num{2}, respectively.
 	% We consider \gls{iid} Ricean fading for all channels with Ricean factor set to \num{5}, \num{5} and \num{10}
 	The \gls{ap} has $Q=4$ antennas with maximum average transmit power $P=\SI{36}{\dBm}$.
-	All node perform \gls{qam} with $M=2$ input states, the amplitude reflect ratio is $\alpha=0.5$, and the symbol period ratio is $N=20$.
+	All nodes have amplitude reflect ratio $\alpha=0.5$, symbol period ratio $N=20$, and perform \gls{qam} with $M=2$ input states.
 	% and we consider amplitude reflect ratio $\alpha=0.5$ and symbol period ratio $N=20$.
 	% The user has a receive antenna gain of \SI{3}{\dBi} and average noise power
 	The user is with average noise power $\sigma_v^2=\SI{70}{\dBm}$ and receive antenna gain \SI{3}{\dBi}.
-	All rate regions are averaged over \num{1000} instances.
-	% Each node has $M=2$ candidate input states with amplitude reflect ratio $\alpha=0.5$.
+	All rate regions are averaged over at least \num{1000} instances, where ``PSP'' and ``BSP'' means primary and backscatter symbol periods, respectively.
+	We choose decision design by \gls{smawk} \cite{He2021} as reference, and select discretize boundaries uniformly over the \qty{95}{\percent} confidence region of edge hypotheses.
 	The parameters remain fixed unless otherwise specified.
 
-	\begin{figure}[!t]
-		\centering
-		\subfloat[Instance 1]{
-			\resizebox{0.48\columnwidth}{!}{
-				\input{assets/simulation/distribution_weights_1.tex}
+	\begin{subsection}{Input Distribution vs. Weight}
+		\begin{figure}[!t]
+			\centering
+			\subfloat[Instance 1\label{fi:distribution_weights_1}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/distribution_weights_1.tex}
+				}
 			}
-		}
-		\subfloat[Instance 2]{
-			\resizebox{0.48\columnwidth}{!}{
-				\input{assets/simulation/distribution_weights_2.tex}
+			\subfloat[Instance 2\label{fi:distribution_weights_2}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/distribution_weights_2.tex}
+				}
 			}
-		}
-		\caption{Input distribution vs weight $\rho$.}
-	\end{figure}
+			\caption{Typical input distributions vs. weight $\rho$ for a Metascatter with $M=4$ inputs.}
+			\label{fi:distribution_weights}
+		\end{figure}
+		% We consider a single Metascatter with $M=4$ inputs in this case of study.
+		In Fig. \ref{fi:distribution_weights}, we present typical input distributions of a single Metascatter with $M=4$ inputs under different weight $\rho$.
+		Fig. \subref*{fi:distribution_weights_1} and \subref*{fi:distribution_weights_2} are obtained from \gls{iid} drop and channel realizations.
+		We note that even for $\rho=0$ (i.e., best backscatter performance), the optimal input distribution is not equiprobable like \gls{sr}, and adaptive channel coding can further increase total backscatter rate based on \gls{csi}.
+		On the other hand, the optimal input distribution becomes fully deterministic at $\rho=1$ (i.e., best primary performance), where the state maximizes equivalent primary channel \eqref{eq:equivalent_channel} strength is chosen with probability \num{1}.
+		In this case, Metascatter boils down to an \gls{irs} element with $M$ discrete states.
+		As $\rho$ moves from \num{0} to \num{1}, the optimal input distribution becomes gradually biased to one state and flexibly balances the primary-backscatter tradeoff.
+	\end{subsection}
 
+	\begin{subsection}{Rate Region vs. Input, Beamforming, and Decision Schemes}
+		\begin{figure}[!t]
+			\centering
+			\subfloat[Input Distribution\label{fi:region_distribution}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_distribution.tex}
+				}
+			}
+			\subfloat[Decision Threshold\label{fi:region_threshold}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_threshold.tex}
+				}
+			}
+			\caption{Average primary-(total-)backscatter rate regions for different input distribution and decision threshold schemes.}
+		\end{figure}
+		Fig. \subref*{fi:region_distribution} compares the achievable rate regions by following input designs.
+		\begin{itemize}
+			% \item ``Exhaustion'' means $K$-dimensional grid search over probability simplex;
+			% \item ``\gls{kkt}'' corresponds to Algorithm \ref{al:input_distribution};
+			% \item ``Cooperation'' assumes backscatter cooperation/joint encoding at all Metascatters, and employs Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} to determine \emph{tuple} input distribution;
+			\item \textbf{Exhaustion:} $K$-dimensional grid search over probability simplex;
+			\item \textbf{\gls{kkt}:} results of Algorithm \ref{al:input_distribution};
+					% \item \textbf{Cooperation:} with backscatter cooperation/joint encoding at all Metascatters, Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} for \emph{tuple} input distribution;
+					% \item \textbf{Cooperation:} backscatter cooperation/joint encoding at all Metascatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
+					% \item \textbf{Cooperation:} with backscatter cooperation (i.e., joint encoding) at all Metascatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
+			\item \textbf{Cooperation:} backscatter cooperation/joint encoding at all Metascatters, tuple input distribution/joint probability array optimization by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
+					% with backscatter cooperation (i.e., joint encoding) at all Metascatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
+			\item \textbf{Marginalization:} marginal distributions of joint probability array;
+			\item \textbf{Decomposition:} normalized tensors of rank-1 \gls{cp} decomposition of joint probability array;
+			\item \textbf{Randomization:} Gaussian recovery from joint probability array \cite{Calvo2010}.
+		\end{itemize}
+
+		We notice adaptive joint encoding at all Metascatters provides the outer bound of rate region.
+		However, it involves arbitrarily dependent codewords, and backscatter cooperation between passive nodes is generally unaffordable.
+		In contrast, the rate region of \gls{kkt} input design in Algorithm \ref{al:input_distribution} approaches that of exhaustive search, and the loss is negligible for $K=2$.
+		% Although the randomization method \cite{Calvo2010} achieves similar performance, the computational complexity is much higher as it involves solving $K+1$ linear programming problems
+		Although the randomization method \cite{Calvo2010} returns similar rate region, it requires solving $K+1$ linear programming problems before applying Gaussian recovery.
+		The marginal distribution is slightly worse than \gls{kkt} despite having the same computational complexity, while the approximation from \gls{cp} decomposition is unsatisfying.
+
+		% TODO: beamforming
+
+		Fig. \subref*{fi:region_threshold} compares the achievable rate region by following threshold schemes.
+		\begin{itemize}
+			\item \textbf{\gls{dp}:} sequential quantizer grouping by dynamic programming \cite{He2021};
+			\item \textbf{\gls{smawk}:} above accelerated by \gls{smawk} algorithm;
+			\item \textbf{Bisection:} sequential bisection threshold design \cite{Nguyen2020a};
+			\item \textbf{\gls{ml}:} maximum likelihood decision \eqref{eq:detection_threshold_maximum_likelihood} \cite{Qian2019}.
+		\end{itemize}
+
+		We observe that input-adaptive threshold designs achieve higher total backscatter rate than \gls{ml}.
+		This is because the decision regions can be flexibly adjusted to enhance the capacity of \gls{dtmac} \eqref{eq:dtmac}.
+		For example, the tuples with negligible input probability should have narrower decision regions than those frequently employed, in order to improve detection performance.
+		It emphasizes the importance of joint input distribution and decision region design.
+
+		% We note that ideal joint adaptive encoding at all Metascatters can further boost the total backscatter rate.
+		% However, this ideal upper bound requires real-time feedback
+		% ``Exhaustion'' means $K$-dimensional grid search over probability simplex, ``KKT'' corresponds to Algorithm \ref{ap:input_kkt_solution}, ``Cooperation'' assumes full backscatter cooperation and joint encoding at all Metascatters
+	\end{subsection}
+
+
+	\begin{subsection}{Rate Region vs. System Configuration}
+		\begin{figure}[!t]
+			\centering
+			\subfloat[Metscatter Nodes\label{fi:region_tags}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_tags.tex}
+				}
+			}
+			\subfloat[Input States\label{fi:region_states}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_states.tex}
+				}
+			}
+			\\
+			\subfloat[Transmit Antennas\label{fi:region_txs}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_txs.tex}
+				}
+			}
+			\subfloat[Scatter Ratio\label{fi:region_scatter}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_scatter.tex}
+				}
+			}
+			\caption{Average primary-(total-)backscatter rate regions.}
+			\label{fi:region_config_1}
+		\end{figure}
+
+		% Fig. \ref{fi:region_config_1} reveals the impact of Metascatter nodes, input states, transmit antennas and scatter ratio on the achievable rate region.
+		We present in \ref{fi:region_config_1} the impact of Metascatter nodes, input states, transmit antennas and scatter ratio on the achievable rate region.
+		For the specified scenario, Fig. \subref*{fi:region_tags} shows the total backscatter rate almost scales proportionally with the number of Metascatter nodes, and the decrease of individual backscatter rate is unobvious.
+		Besides, we conclude from \subref*{fi:region_states} that increasing the reflection states has a marginal effect on both primary and backscatter rates.
+		Those two facts motivates the use of numerous elementary/uncomplicated backscatter nodes, instead of high-order transponders or programmable high-resolution surfaces.
+		Figs. \subref*{fi:region_txs} and \subref*{fi:region_scatter} also prove increasing transmit antennas or scatter ratio can improve both primary and backscatter performance.
+
+		\begin{figure}[!t]
+			\centering
+			\subfloat[User Coverage\label{fi:region_coverage}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_coverage.tex}
+				}
+			}
+			\subfloat[Symbol Period Ratio\label{fi:region_duration}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_duration.tex}
+				}
+			}
+			\\
+			\subfloat[Carrier Frequency\label{fi:region_frequency}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_frequency.tex}
+				}
+			}
+			\subfloat[Average Noise Power\label{fi:region_noise}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_noise.tex}
+				}
+			}
+			\caption{Average primary-(total-)backscatter rate regions.}
+			\label{fi:region_config_2}
+		\end{figure}
+	\end{subsection}
 	% \begin{figure}[!t]
 	% 	\centering
 	% 	\resizebox{0.8\columnwidth}{!}{

@@ -25,13 +25,16 @@ ymin=1e-07,
 ymax=0.1,
 yminorticks=true,
 ylabel style={font=\color{white!15!black}},
-ylabel={Total Backscatte Rate [$\mu$ bits/backscatter symbol]},
+ylabel={Total Backscatte Rate [bits/BSP]},
 axis background/.style={fill=white},
 xmajorgrids,
 ymajorgrids,
 yminorgrids,
 legend style={at={(0.97,0.03)}, anchor=south east, legend cell align=left, align=left, draw=white!15!black},
-title style={font=\huge}, label style={font=\huge}, ticklabel style={font=\LARGE}, legend style={font=\LARGE}
+title style={font=\huge},
+label style={font=\huge},
+ticklabel style={font=\LARGE},
+legend style={font=\LARGE}
 ]
 \addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}]
   table[row sep=crcr]{%
@@ -55,8 +58,8 @@ title style={font=\huge}, label style={font=\huge}, ticklabel style={font=\LARGE
 6.72311260651646	0.0847234858664356\\
 6.72050707001005	0.0847808170769585\\
 0	0.0847808170769585\\
-0	0\\
-6.82556065421089	0\\
+0	2.22044604925031e-16\\
+6.82556065421089	2.22044604925031e-16\\
 6.82556065421089	5.48971666556927e-05\\
 };
 \addlegendentry{$f =200$ MHz}
@@ -82,8 +85,8 @@ title style={font=\huge}, label style={font=\huge}, ticklabel style={font=\LARGE
 3.10190371576943	0.00814641097397457\\
 3.10157491004278	0.00815240116479005\\
 0	0.00815240116479005\\
-0	0\\
-3.11852478347644	0\\
+0	2.22044604925031e-16\\
+3.11852478347644	2.22044604925031e-16\\
 3.11852478347644	2.89042000936882e-05\\
 };
 \addlegendentry{$f =500$ MHz}
@@ -108,8 +111,8 @@ title style={font=\huge}, label style={font=\huge}, ticklabel style={font=\LARGE
 1.38653749785258	0.00127291112947696\\
 1.38650592362738	0.00127349793289419\\
 0	0.00127349793289419\\
-0	0\\
-1.38918186660734	0\\
+0	2.22044604925031e-16\\
+1.38918186660734	2.22044604925031e-16\\
 1.38918186660734	1.47577353036444e-05\\
 };
 \addlegendentry{$f =900$ MHz}
@@ -137,8 +140,8 @@ title style={font=\huge}, label style={font=\huge}, ticklabel style={font=\LARGE
 0.712272865805758	1.09285163872864e-06\\
 0.712272864166451	1.09285217940502e-06\\
 0	1.09285217940502e-06\\
-0	0\\
-0.712283142909342	0\\
+0	2.22044604925031e-16\\
+0.712283142909342	2.22044604925031e-16\\
 0.712283142909342	9.54118200087523e-08\\
 };
 \addlegendentry{$f =2400$ MHz}

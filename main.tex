@@ -138,7 +138,7 @@
 	% A suboptimal \gls{bcd} algorithm was proposed with the \gls{kkt} input distribution evaluated in closed form, the active beamforming updated by \gls{pgd}, and the decision regions restricted to convex then refined by \gls{dp}.
 	% the decision regions are restricted as convex then optimized by \gls{dp}.
 	% A suboptimal \gls{bcd} algorithm was proposed, where the \gls{kkt} input distribution is evaluated in closed form, the active beamforming is optimized by \gls{pgd} with backtracking line search, and the decision thresholds are optimized by \gls{dp}.
-	Simulation results demonstrate Metascatters can exploit additional propagation paths to transmit and assist via input design.
+	Simulation results demonstrate Metascatters can exploit additional propagation paths to transmit and assist via adaptive input design.
 \end{abstract}
 
 \begin{section}{Introduction}
@@ -889,18 +889,18 @@
 	% TODO add distribution to initializer to smooth curves?
 	% TODO compare PGD and primary-MRT beamformers
 	In this section, we provide numerical results to evaluate the proposed input, beamforming and decision design over a single-user multi-node Metascatter-enabled network.
-	We assume the distance between \gls{ap} and user is \SI{10}{\meter}, and $K=2$ Metascatters are uniformly dropped within a disk centered at the user of radius \SI{1}{\meter}.
-	% The carrier frequency is $f=\SI{200}{\MHz}$, and we consider \gls{iid} Ricean fading for all channels.
-	The carrier frequency is $f=\SI{200}{\MHz}$, and we consider \gls{iid} Ricean fading between all terminals.
+	We assume the distance between \gls{ap} and user is \qty{10}{\meter}, and $K=2$ Metascatters are uniformly dropped within a disk centered at the user of radius \qty{1}{\meter}.
+	% The carrier frequency is $f=\qty{200}{\MHz}$, and we consider \gls{iid} Ricean fading for all channels.
+	The carrier frequency is $f=\qty{200}{\MHz}$, and we consider \gls{iid} Ricean fading between all terminals.
 	For direct, forward and backward links, we set the path loss exponents to \num{2.6}, \num{2.4} and \num{2}, and the Ricean factor to \num{5}, \num{5} and \num{10}, respectively.
 	% For direct, forward and backward links, we choose path loss exponents \num{2.6}, \num{2.4} and \num{2}, and Ricean factor \num{5}, \num{5} and \num{10}, respectively.
 	% and the path loss exponents for direct, forward and backward links are \num{2.6}, \num{2.4} and \num{2}, respectively.
 	% We consider \gls{iid} Ricean fading for all channels with Ricean factor set to \num{5}, \num{5} and \num{10}
-	The \gls{ap} has $Q=4$ antennas with maximum average transmit power $P=\SI{36}{\dBm}$.
+	The \gls{ap} has $Q=4$ antennas with maximum average transmit power $P=\qty{36}{\dBm}$.
 	All nodes have amplitude reflect ratio $\alpha=0.5$, symbol period ratio $N=20$, and perform \gls{qam} with $M=2$ input states.
 	% and we consider amplitude reflect ratio $\alpha=0.5$ and symbol period ratio $N=20$.
-	% The user has a receive antenna gain of \SI{3}{\dBi} and average noise power
-	The user is with average noise power $\sigma_v^2=\SI{70}{\dBm}$ and receive antenna gain \SI{3}{\dBi}.
+	% The user has a receive antenna gain of \qty{3}{\dBi} and average noise power
+	The user is with average noise power $\sigma_v^2=\qty{70}{\dBm}$ and receive antenna gain \qty{3}{\dBi}.
 	All rate regions are averaged over at least \num{1000} instances, where ``PSP'' and ``BSP'' means primary and backscatter symbol periods, respectively.
 	We choose decision design by \gls{smawk} \cite{He2021} as reference, and select discretize boundaries uniformly over the \qty{95}{\percent} confidence region of edge hypotheses.
 	The parameters remain fixed unless otherwise specified.
@@ -1027,7 +1027,7 @@
 
 		\begin{figure}[!t]
 			\centering
-			\subfloat[User Coverage\label{fi:region_coverage}]{
+			\subfloat[Node Coverage\label{fi:region_coverage}]{
 				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_coverage.tex}
 				}
@@ -1051,60 +1051,26 @@
 			\caption{Average primary-(total-)backscatter rate regions.}
 			\label{fi:region_config_2}
 		\end{figure}
+
+		Fig. \subref*{fi:region_coverage} shows the tradeoff between coverage disk radius $r$ and achievable rate region.
+		When nodes are far from the user, both primary and backscatter rates decrease due to the product pass loss of forward and backward channels.
+		Under the assumption of ideal backscatter decoding and re-encoding, Fig. \subref*{fi:region_duration} suggests using lower symbol period ratio $N$ can boost total backscatter rate per primary symbol.
+		However, it requires more frequent detection and re-encoding at the user to maintain the primary rate.
+		When $N$ becomes sufficiently large, total backscatter rate approaches \num{0} and Metascatters boil down to conventional \gls{irs} elements with fixed reflection patterns during whole channel block.
+		In Fig. \subref*{fi:region_frequency}, we observe that passive Metascatter achieves higher backscatter rate at lower carrier frequency because of preferable propagation loss.
+		Finally, \subref*{fi:region_noise} prove the performance of energy detection is robust for a wide range of noise power.
 	\end{subsection}
-	% \begin{figure}[!t]
-	% 	\centering
-	% 	\resizebox{0.8\columnwidth}{!}{
-	% 		\input{assets/simulation/distribution_weights.tex}
-	% 	}
-	% 	\caption{1}
-	% 	% \caption{Average primary-(total-)backscatter rate region.}
-	% \end{figure}
-	% \begin{table}[t!]
-	% 	\centering
-	% 	\caption{Parameters in simulation}
-	% 	\begin{tabular}{ll}
-	% 		Transmit antenna $Q$     & 1   \\
-	% 		Tags $K$                 & 2   \\
-	% 		States $M$               & 2   \\
-	% 		Reflect ratio $\alpha$   & 0.5 \\
-	% 		Duration ratio $N$       & 10  \\
-	% 		Noise power $\sigma_v^2$ & 1   \\
-	% 		Discretization bins      & 256
-	% 	\end{tabular}
-	% 	\label{ta:parameters}
-	% \end{table}
-	% Table \ref{ta:parameters} shows the parameters used in simulation.
-	% We assume all links are in standard \gls{cscg} distribution and evaluated the rate regions on two instances.
-	% For the input design, ``Cooperation'' assumes full transmit cooperation at all tags (i.e., joint encoding), ``Exhaustion'' runs exhaustive search on all possible input distributions, ``\gls{kkt}'' is proposed \gls{kkt} input design \eqref{eq:input_kkt_solution}, and ``Marginalization'' marginalizes the joint input array by ``Cooperation'' to obtain independent tag input distribution.
-	% For the threshold design, ``\gls{smawk}'' refers to the \gls{dp}-based quantization proposed in \cite{He2021}, ``Bisection'' sequentially optimizes each threshold by bisection \cite{Nguyen2020a}, and ``\gls{ml}'' is the \gls{ml} detector that requires no knowledge of input distribution.
+\end{section}
 
-	% Figs. \ref{fi:rate_region_1} and \ref{fi:rate_region_2} show two typical scenarios where joint encoding can be helpful and unnecessary, respectively.
-	% Although the proposed \gls{kkt} input design converges to the optimal solutions in both examples, it may be trapped at saddle points under poor initialization, especially when the number of tags increases.
+\begin{section}{Conclusion}
+	This paper introduced Metascatter that adapts input distribution of passive backscatter nodes to simultaneously transmit and assist over existing wireless systems.
+	Starting from backscatter principles, we showed how Metascatters bridges and generalizes parasitic source of \gls{sr} and reflecting element of \gls{irs} via smart input design.
+	An application scenario was considered where multiple Metascatters ride over a point-to-point transmission to simultaneously encode self message and perform passive beamforming.
+	To characterize achievable primary-backscatter rate region, we proposed a \gls{bcd} algorithm that evaluates \gls{kkt} input distribution in closed form, optimizes active beamforming by \gls{pgd}, and refines decision regions by existing methods.
+	Numerical results demonstrated the advantage of adaptive node input distribution design for both primary and backscatter subsystems.
 
-	% We believed threshold design has no impact on the primary achievable rate, because primary decoding acts on $\boldsymbol{y}$ while thresholding acts on $z$.
-	% As such, the threshold that maximizes the total backscatter rate should also maximize the weighted sum rate.
-	% Interestingly, this may not be the case because the \gls{smawk} and Bisection threshold designs, both maximizing the total backscatter rate, can be outperformed by the \gls{ml} when it comes to weighted sum primary-(total-)backscatter rate.
-	% It may result from a precision issue, but inspires further research on threshold design for Metascatter.
-
-	% \begin{figure}[!t]
-	% 	\centering
-	% 	\resizebox{\columnwidth}{!}{
-	% 		\includegraphics{assets/illustration/rate_region_1.eps}
-	% 	}
-	% 	\caption{Achievable rate regions by input-threshold design: Case I.}
-	% 	\label{fi:rate_region_1}
-	% \end{figure}
-
-	% \begin{figure}[!t]
-	% 	\centering
-	% 	\resizebox{\columnwidth}{!}{
-	% 		\includegraphics{assets/illustration/rate_region_2.eps}
-	% 	}
-	% 	\caption{Achievable rate regions by input-threshold design: Case II.}
-	% 	\label{fi:rate_region_2}
-	% \end{figure}
-	% The parameters remain fixed unless specified.
+	One particular interesting question is how to design Metascatters in a multi-user system.
+	If one node can contribute to and be decoded by multiple users, its input distribution may be further adjusted to mimic multi-beam gain of dynamic beamforming \cite{Qiu2022}.
 \end{section}
 
 \begin{appendix}

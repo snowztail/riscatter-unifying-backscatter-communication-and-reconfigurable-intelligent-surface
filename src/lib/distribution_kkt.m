@@ -26,7 +26,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 		weight;
 		snr;
 		dmac;
-		tolerance = 1e-7;
+		tolerance = 1e-9;
 	end
 
 	% * Get data
@@ -34,15 +34,15 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 	nStates = nthroot(nInputs, nTags);
 
 	% ! Initialize distribution by previous solution
-	persistent initializer
+	persistent Initializer
 
 	% * No previous solution, use uniform initializer
-	if isempty(initializer)
-		initializer.distribution = normalize(ones(nStates, nTags), 'norm', 1);
+	if isempty(Initializer)
+		Initializer.distribution = normalize(ones(nStates, nTags), 'norm', 1);
 	end
 
 	% * Apply initializer
-	distribution = initializer.distribution;
+	distribution = Initializer.distribution;
 	distributionTuple = tuple_tag(distribution);
 	equivalentDistribution = prod(distributionTuple, 2);
 	informationFunction = weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
@@ -66,7 +66,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 	end
 
 	% * Update initializer
-	initializer.distribution = distribution;
+	Initializer.distribution = distribution;
 end
 
 

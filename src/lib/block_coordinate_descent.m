@@ -54,17 +54,17 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	equivalentDistribution = prod(tuple_tag(distribution), 2);
 
 	% ! Initialize beamforming by previous solution
-	persistent initializer
+	persistent Initializer
 
 	% * No previous solution, use MRT initializer
-	if isempty(initializer)
+	if isempty(Initializer)
 		ric = sum(cascadedChannel, 2);
-		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
-% 		initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+		Initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
+% 		Initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
 	end
 
 	% * Apply initializer
-	beamforming = initializer.beamforming;
+	beamforming = Initializer.beamforming;
 
 	% * Initialize decision threshold by maximum likelihood
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
@@ -139,5 +139,5 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	end
 
 	% * Update initializer
-	initializer.beamforming = beamforming;
+	Initializer.beamforming = beamforming;
 end

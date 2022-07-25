@@ -33,15 +33,15 @@ function [jointDistribution, equivalentDistribution] = distribution_cooperation(
 	nStates = nthroot(nInputs, nTags);
 
 	% ! Initialize distribution by previous solution
-	persistent initializer
+	persistent Initializer
 
 	% * No previous solution, use uniform initializer
-	if isempty(initializer)
-		initializer.equivalentDistribution = normalize(ones(nStates ^ nTags, 1), 'norm', 1);
+	if isempty(Initializer)
+		Initializer.equivalentDistribution = normalize(ones(nStates ^ nTags, 1), 'norm', 1);
 	end
 
 	% * Apply initializer
-	equivalentDistribution = initializer.equivalentDistribution;
+	equivalentDistribution = Initializer.equivalentDistribution;
 	informationFunction = weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
 	wsr = equivalentDistribution' * informationFunction;
 
@@ -57,5 +57,5 @@ function [jointDistribution, equivalentDistribution] = distribution_cooperation(
 	end
 
 	% * Update initializer
-	initializer.equivalentDistribution = equivalentDistribution;
+	Initializer.equivalentDistribution = equivalentDistribution;
 end

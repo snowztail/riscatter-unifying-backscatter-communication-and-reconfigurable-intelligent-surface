@@ -11,18 +11,15 @@ for iTag = 1 : nTags
 end
 equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
-% * Evaluate rate region vs backscatter/primary symbol duration ratio
+% * Evaluate rate region by different decision threshold design
 for iVariable = 1 : nVariables
-	% * Set symbol duration ratio
-	symbolRatio = Variable(iVariable).symbolRatio;
-
 	% * Clear persistent variables
 	clear block_coordinate_descent distribution_kkt distribution_cooperation beamforming_pgd;
 
 	% * Evaluate rate region
 	for iWeight = 1 : nWeights
 		weight = weightSet(iWeight);
-		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
+		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, 'Distribution', 'kkt', 'Beamforming', Variable(iVariable).Beamforming, 'Threshold', 'smawk');
 		Result(iVariable, iWeight) = struct('weight', weight, 'rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 	end
 end

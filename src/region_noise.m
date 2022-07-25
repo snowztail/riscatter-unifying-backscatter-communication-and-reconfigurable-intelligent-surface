@@ -1,7 +1,7 @@
 clear; setup; cvx_begin; cvx_end; clc; run(strcat('config_', erase(mfilename, 'region_')));
 
 % * Initialize struct
-Result(nVariables, nWeights) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
+Result(nVariables, nWeights) = struct('weight', [], 'rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
 % * Generate channels
 directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);
@@ -17,13 +17,13 @@ for iVariable = 1 : nVariables
 	noisePower = Variable(iVariable).noisePower;
 
 	% * Clear persistent variables
-	clear block_coordinate_descent;
+	clear block_coordinate_descent distribution_kkt distribution_cooperation beamforming_pgd;
 
 	% * Evaluate rate region
 	for iWeight = 1 : nWeights
 		weight = weightSet(iWeight);
 		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
-		Result(iVariable, iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
+		Result(iVariable, iWeight) = struct('weight', weight, 'rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 	end
 end
 

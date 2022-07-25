@@ -810,7 +810,7 @@
 					% \State \phantom{Update} $Q^{(r)}\bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)$, $\forall m_{\mathcal{K}},l$ by \eqref{eq:regularized_incomplete_gamma} or \eqref{eq:regularized_incomplete_gamma_series}
 					% \State \phantom{Update} $I^{(r)}(x_{\mathcal{K}})$ by \eqref{eq:weighted_sum_mutual_information_explicit} \label{st:backtracking_line_search_end}
 					% \While{$I^{(r-1)}(x_{\mathcal{K}})>I^{(r)}(x_{\mathcal{K}})+\alpha\gamma\lVert\nabla_{\boldsymbol{w}^*}I^{(r-1)}(x_{\mathcal{K}})\rVert$}
-					\While{$I^{(r)}(x_{\mathcal{K}})<I^{(r-1)}(x_{\mathcal{K}})-\alpha\gamma\lVert\nabla_{\boldsymbol{w}^*}I^{(r-1)}(x_{\mathcal{K}})\rVert^2$}
+					\While{$I^{(r)}(x_{\mathcal{K}})<I^{(r-1)}(x_{\mathcal{K}})+\alpha\gamma\lVert\nabla_{\boldsymbol{w}^*}I^{(r-1)}(x_{\mathcal{K}})\rVert^2$}
 						\State Set $\gamma^{(r)}\gets\beta\gamma^{(r)}$
 						\State Redo step \ref{st:backtracking_line_search_begin}--\ref{st:backtracking_line_search_end}
 					\EndWhile

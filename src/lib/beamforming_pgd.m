@@ -36,24 +36,24 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		cascadedChannel;
 		equivalentDistribution;
 		threshold;
-		tolerance = 1e-6;
-		maxStep = 1e9;
-		alpha = 1e-2;
+		tolerance = 1e-3;
+		maxStep = 1e3;
+		alpha = 1e-3;
 		beta = 0.5;
 	end
 
 	% ! Initialize beamforming by previous solution
-	persistent initializer
+	persistent Initializer
 
 	% * No previous solution, use MRT initializer
-	if isempty(initializer)
+	if isempty(Initializer)
 		ric = sum(cascadedChannel, 2);
-		initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
-% 		initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+		Initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
+% 		Initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
 	end
 
 	% * Apply initializer
-	beamforming = initializer.beamforming;
+	beamforming = Initializer.beamforming;
 
 	% * Construct DMTC and recover i/o mapping
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
@@ -76,7 +76,8 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		snrPgd = receivePowerPgd / noisePower;
 		dmacPgd = dmc_integration(symbolRatio, receivePowerPgd, threshold);
 		wsrPgd = rate_weighted(weight, snrPgd, equivalentDistribution, dmacPgd);
-		while wsr > wsrPgd + alpha * step * norm(gradient) ^ 2 && step > eps
+% 		while wsr > wsrPgd + alpha * step * norm(gradient) ^ 2 && step > eps
+		while wsrPgd < wsr + alpha * step * norm(gradient) ^ 2 && step > eps
 			step = beta * step;
 			beamformingPgd = beamforming_projection(transmitPower, beamforming + step * gradient);
 			receivePowerPgd = abs(equivalentChannel' * beamformingPgd) .^ 2 + noisePower;
@@ -87,13 +88,19 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 
 		% * Test convergence (gradient can be non-zero due to norm constraint)
 % 		isConverged = (wsrPgd - wsr) / wsr <= tolerance || any(dmacPgd < tolerance, 'all') || isnan(wsrPgd);
-		isConverged = norm(beamformingPgd - beamforming) <= tolerance || any(dmacPgd < tolerance, 'all') || isnan(wsrPgd);
-		beamforming = beamformingPgd;
-		wsr = wsrPgd;
+		% isConverged = norm(beamformingPgd - beamforming) <= tolerance || any(dmacPgd < tolerance, 'all') || isnan(wsrPgd);
+		if ~isnan(wsrPgd)
+			isConverged = norm(beamformingPgd - beamforming) <= tolerance || norm(beamformingPgd + beamforming) <= tolerance || any(dmacPgd < tolerance, 'all');
+			beamforming = beamformingPgd;
+			wsr = wsrPgd;
+		else
+			error('PGD failed. Is any DMAC entry approaching 0?');
+		end
+
 	end
 
 	% * Update initializer
-	initializer.beamforming = beamforming;
+	Initializer.beamforming = beamforming;
 end
 
 

@@ -42,34 +42,41 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		Options.Recovery {mustBeMember(Options.Recovery, ['marginalization', 'decomposition', 'randomization'])};
 	end
 
-	% * Clear persistent variables for distribution
-	clear distribution_kkt distribution_cooperation beamforming_pgd;
-
 	% * Get data
 	nInputs = size(equivalentChannel, 2);
 	nStates = nthroot(nInputs, nTags);
 
-	% * Initialize input distribution as uniform
-	distribution = normalize(ones(nStates, nTags), 'norm', 1);
-	equivalentDistribution = prod(tuple_tag(distribution), 2);
-
-	% ! Initialize beamforming by previous solution
+	% ! Initialize distribution and beamforming by previous solutions
 	persistent Initializer
 
 	% * No previous solution, use MRT initializer
 	if isempty(Initializer)
 		ric = sum(cascadedChannel, 2);
-		Initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
+		Initializer.distribution = normalize(ones(nStates, nTags), 'norm', 1);
 % 		Initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+		Initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
 	end
 
 	% * Apply initializer
+	distribution = Initializer.distribution;
 	beamforming = Initializer.beamforming;
+	equivalentDistribution = prod(tuple_tag(distribution), 2);
 
-	% * Initialize decision threshold by maximum likelihood
+	% * Initialize decision threshold
 	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
 	snr = receivePower / noisePower;
-	threshold = threshold_ml(symbolRatio, receivePower);
+	thresholdDomain = domain_threshold(symbolRatio, nBins, receivePower);
+	binDmc = dmc_integration(symbolRatio, receivePower, thresholdDomain);
+	switch Options.Threshold
+	case 'smawk'
+		threshold = threshold_smawk(equivalentDistribution, thresholdDomain, binDmc);
+	case 'dp'
+		threshold = threshold_dp(equivalentDistribution, thresholdDomain, binDmc);
+	case 'bisection'
+		threshold = threshold_bisection(symbolRatio, receivePower, equivalentDistribution, thresholdDomain, binDmc);
+	case 'ml'
+		threshold = threshold_ml(symbolRatio, receivePower);
+	end
 
 	% * Construct DMTC and recover i/o mapping
 	dmac = dmc_integration(symbolRatio, receivePower, threshold);
@@ -139,5 +146,6 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	end
 
 	% * Update initializer
+	Initializer.distribution = distribution;
 	Initializer.beamforming = beamforming;
 end

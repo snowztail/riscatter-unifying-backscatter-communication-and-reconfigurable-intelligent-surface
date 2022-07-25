@@ -1,7 +1,7 @@
 clear; setup; cvx_begin; cvx_end; clc; config;
 
 % * Initialize struct
-Result(nWeights) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
+Result(nWeights) = struct('weight', [], 'rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
 % * Generate channels
 directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);
@@ -16,10 +16,24 @@ clear block_coordinate_descent;
 
 % * Evaluate rate region
 for iWeight = 1 : nWeights
-	[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weightSet(iWeight), equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
-	if any(isnan(rate))
-		return
-	else
-		Result(iWeight) = struct('rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
-	end
+	weight = weightSet(iWeight);
+	[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
+	Result(iWeight) = struct('weight', weight, 'rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 end
+
+%% * Retrieve rate region
+rate = zeros(2, nWeights + 3);
+for iWeight = 1 : nWeights
+	rate(:, iWeight) = Result(iWeight).rate;
+end
+[rate(1, nWeights + 1), rate(2, nWeights + 2)] = deal(max(rate(1, :)), max(rate(2, :)));
+region = rate(:, convhull(transpose(rate)));
+
+%% * Plot rate region
+figure('Name', 'Example Primary-(Sum-)Backscatter Rate Region', 'Position', [0, 0, 500, 400]);
+object = plot(region(1, :) / log(2), region(2, :) / log(2), 'DisplayName', strcat('Example'));
+hold off; legend('Location', 'sw'); grid on; box on; axis tight;
+xlabel('Primary Rate [bits/s/Hz]');
+ylabel('Total Backscatte Rate [bits/BSP]');
+xlim([5, inf]);
+style_plot(object);

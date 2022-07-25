@@ -25,7 +25,7 @@ function [jointDistribution, equivalentDistribution] = distribution_cooperation(
 		weight;
 		snr;
 		dmac;
-		tolerance = 1e-6;
+		tolerance = eps;
 	end
 
 	% * Get data

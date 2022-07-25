@@ -23,7 +23,7 @@ hold all;
 for iVariable = 1 : nVariables
 	object(iVariable) = plot(region{iVariable}(1, :) / log(2), region{iVariable}(2, :) / log(2));
 end
-hold off; legend({'SMAWK', 'DP', 'Bisection', 'ML'}, 'Location', 'sw'); grid on; box on; axis tight;
+hold off; legend({'DP', 'SMAWK', 'Bisection', 'ML'}, 'Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatte Rate [bits/BSP]');
 xlim([9, inf]);

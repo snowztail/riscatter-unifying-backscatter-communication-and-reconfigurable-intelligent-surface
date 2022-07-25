@@ -16,7 +16,7 @@ symbolRatio = 20;
 % average transmit power
 transmitPower = db2pow(6);
 % average noise power
-noisePower = db2pow(-100);
+noisePower = db2pow(-90);
 % antenna gain
 rxGain = db2pow(3);
 % layout and distance
@@ -38,4 +38,4 @@ weightSet = [0 : 0.1 : 0.3, 1];
 % number of weights on rate region boundary
 nWeights = length(weightSet);
 % number of quantization bins
-nBins = 2 ^ 6;
+nBins = 2 ^ 8;

@@ -16,7 +16,7 @@ symbolRatio = 20;
 % average transmit power
 transmitPower = db2pow(6);
 % average noise power
-noisePower = db2pow(-100);
+noisePower = db2pow(-90);
 % antenna gain
 rxGain = db2pow(3);
 % layout and distance
@@ -34,16 +34,16 @@ backwardFactor = 10;
 
 %% * Algorithm
 % relative priority of primary link
-weightSet = [1 : -0.1 : 0.5, 0.45 : -0.05 : 0.25, 0.2 : -0.025 : 0];
+weightSet = [0 : 0.01 : 0.05, 0.075, 0.1 : 0.05 : 0.25, 0.3 : 0.1 : 0.5, 0.75, 1];
 % number of weights on rate region boundary
 nWeights = length(weightSet);
 % number of quantization bins
-nBins = 2 ^ 6;
+nBins = 2 ^ 8;
 
 %% * Variable
-Variable = struct('nTags', num2cell(2 .^ (0 : 2)));
+Variable = struct('nTags', num2cell(2 .^ (0 : 3)));
 nVariables = length(Variable);
 
 %% * PBS
 % number of instances
-nInstances = 3e2;
+nInstances = 3e3;

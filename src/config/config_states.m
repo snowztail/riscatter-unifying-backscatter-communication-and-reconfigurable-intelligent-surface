@@ -2,7 +2,7 @@
 % number of transmit antennas
 nTxs = 4;
 % number of tags
-nTags = 2;
+nTags = 1;
 % % number of available states at tags (i.e., modulation order)
 % nStates = 4;
 % % constellation diagram at tags
@@ -41,7 +41,7 @@ nWeights = length(weightSet);
 nBins = 2 ^ 8;
 
 %% * Variable
-Variable = struct('nStates', num2cell(2 .^ (1 : 3)));
+Variable = struct('nStates', {2, 4, 16, 32});
 nVariables = length(Variable);
 
 %% * PBS

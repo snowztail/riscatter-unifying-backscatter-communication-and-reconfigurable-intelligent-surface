@@ -27,4 +27,7 @@ function [dmc] = dmc_integration(symbolRatio, receivePower, threshold)
 	% 	dmc(:, iOutput) = integral(channelDistribution, threshold(iOutput), threshold(iOutput + 1), 'ArrayValued', true);
 	% end
 	dmc = diff(cdf('Gamma', threshold, symbolRatio, receivePower), [], 2);
+
+	% TODO
+	dmc(dmc < eps) = eps;
 end

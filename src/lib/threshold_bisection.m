@@ -35,6 +35,9 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 	[nInputs, nBins] = size(binDmc);
 	nOutputs = nInputs;
 
+	% ! Fall back to initializer when underflow (backscatter rate approaching 0)
+	persistent Initializer
+
 	% * Optimal t_0 = 0 and t_{K+1} = ∞, traverse all possible t_1
 	rate = 0;
 	for iBin = 2 : nBins
@@ -50,7 +53,7 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 
 			% * Lower and upper threshold pairs and divergences
 			ltp = [thresholdBisection(iThreshold - 1), thresholdBisection(iThreshold - 1) + tolerance];
-			utp = [thresholdBisection(iThreshold - 1), thresholdDomain(end - 1)];
+			utp = [thresholdBisection(iThreshold - 1), thresholdDomain(end)];
 			lowerDivergence = divergence_backward(symbolRatio, receivePower, equivalentDistribution, ltp);
 			upperDivergence = divergence_backward(symbolRatio, receivePower, equivalentDistribution, utp);
 
@@ -63,7 +66,7 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 			while true
 				mtp = 0.5 * (ltp + utp);
 				middleDivergence = divergence_backward(symbolRatio, receivePower, equivalentDistribution, mtp);
-				if abs(middleDivergence - referenceDivergence) <= tolerance || (ltp(end) - utp(end)) <= tolerance
+				if abs(middleDivergence - referenceDivergence) <= tolerance || (utp(end) - ltp(end)) <= tolerance
 					thresholdBisection(iThreshold) = mtp(end);
 					break;
 				end
@@ -79,8 +82,8 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 		% * Replace infinity by critical threshold of confidence approaching 1
 		thresholdBisection(nOutputs + 1) = icdf('Gamma', 1 - tolerance, symbolRatio, max(receivePower));
 
-		% * Check optimality
 		if isValid
+			% * Valid threshold
 			dmacBisection = dmc_integration(symbolRatio, receivePower, thresholdBisection);
 			rateBisection = sum(entr(equivalentDistribution' * dmacBisection) - equivalentDistribution' * entr(dmacBisection));
 			if rateBisection >= rate
@@ -88,6 +91,14 @@ function [threshold] = threshold_bisection(symbolRatio, receivePower, equivalent
 				rate = rateBisection;
 			end
 		end
+	end
+
+	if exist('threshold', 'var')
+		% * Store for fallback
+		Initializer.threshold = threshold;
+	else
+		% * Invalid threshold (divergence approching 0), use previous result
+		threshold = Initializer.threshold;
 	end
 end
 

@@ -14,7 +14,7 @@ equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(c
 % * Evaluate rate region by different input distribution design
 for iVariable = 1 : nVariables
 	% * Clear persistent variables
-	clear block_coordinate_descent distribution_kkt distribution_cooperation beamforming_pgd;
+	clear block_coordinate_descent distribution_kkt distribution_cooperation beamforming_pgd threshold_bisection;
 
 	% * Evaluate rate region
 	for iWeight = 1 : nWeights

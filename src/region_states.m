@@ -18,7 +18,7 @@ for iVariable = 1 : nVariables
 	equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
 	% * Clear persistent variables
-	clear block_coordinate_descent distribution_kkt distribution_cooperation beamforming_pgd;
+	clear block_coordinate_descent distribution_kkt distribution_cooperation beamforming_pgd threshold_bisection;
 
 	% * Evaluate rate region
 	for iWeight = 1 : nWeights

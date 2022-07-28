@@ -2,8 +2,8 @@ clear; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc; 
 
 %% * Load data
 directory = strcat('../data/region_', erase(mfilename, 'plot_'), '/');
-% data_load;
-Result = load(strcat(directory, 'instance_0'), 'Result').Result;
+data_load;
+% Result = load(strcat(directory, 'instance_0'), 'Result').Result;
 
 %% * Average over instances and retrieve rate regions
 region = cell(nVariables, 1);
@@ -27,7 +27,7 @@ end
 hold off; legend({'PGD', 'MRT'}, 'Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatte Rate [bits/BSP]');
-xlim([6, inf]);
+% xlim([6, inf]);
 % yticks(0 : 0.01 : 0.05);
 style_plot(object);
 % savefig(strcat('figures/region_', erase(mfilename, 'plot_')));

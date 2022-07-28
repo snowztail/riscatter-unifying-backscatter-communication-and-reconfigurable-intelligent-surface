@@ -3,6 +3,7 @@ clear; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc; 
 %% * Load data
 directory = strcat('../data/region_', erase(mfilename, 'plot_'), '/');
 data_load;
+% Result = load(strcat(directory, 'instance_0'), 'Result').Result;
 
 %% * Average over instances and retrieve rate regions
 region = cell(nVariables, 1);
@@ -14,7 +15,7 @@ for iVariable = 1 : nVariables
 	[rate(1, nWeights + 1), rate(2, nWeights + 2)] = deal(max(rate(1, :)), max(rate(2, :)));
 	region{iVariable} = rate(:, convhull(transpose(rate)));
 end
-save(strcat('../data/region_', erase(mfilename, 'plot_')));
+% save(strcat('../data/region_', erase(mfilename, 'plot_')));
 
 %% * Draw primary-(sum-)backscatter rate regions
 figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region by Different Decision Threshold Design', 'Position', [0, 0, 500, 400]);
@@ -26,8 +27,8 @@ end
 hold off; legend({'DP', 'SMAWK', 'Bisection', 'ML'}, 'Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatte Rate [bits/BSP]');
-xlim([9, inf]);
-yticks(0 : 0.01 : 0.05);
+% xlim([9, inf]);
+% yticks(0 : 0.01 : 0.05);
 style_plot(object);
-savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
-matlab2tikz(strcat('../../assets/simulation/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', {'title style={font=\huge}', 'label style={font=\huge}', 'ticklabel style={font=\LARGE}', 'legend style={font=\LARGE}', 'scaled y ticks=false', 'y tick label style={/pgf/number format/.cd, fixed, precision=2}'});
+% savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
+% matlab2tikz(strcat('../../assets/simulation/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', {'title style={font=\huge}', 'label style={font=\huge}', 'ticklabel style={font=\LARGE}', 'legend style={font=\LARGE}', 'scaled y ticks=false', 'y tick label style={/pgf/number format/.cd, fixed, precision=2}'});

@@ -1,4 +1,4 @@
-Result(nVariables, nWeights, nInstances) = struct('rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
+Result(nVariables, nWeights, nInstances) = struct('weight', [], 'rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
 instanceSet = 1 : nInstances;
 for iInstance = 1 : nInstances

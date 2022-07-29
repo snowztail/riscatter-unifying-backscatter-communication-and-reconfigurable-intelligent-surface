@@ -1,5 +1,6 @@
 \begin{circuitikz}[transform shape]
 	\tikzstyle{every node}=[font=\large]
+	\ctikzset{multipoles/rotary/arrow=both}
 	\draw (0,0) node[bareantenna](bareantenna){};
 	\draw (bareantenna.west) ++(-1,0) node[waves](WI){};
 	\draw (WI.north east) ++(0.25,0) node{$\vec{E}_{\mathrm{I}}$};

@@ -4,7 +4,7 @@ nTxs = 4;
 % number of tags
 nTags = 2;
 % number of available states at tags (i.e., modulation order)
-nStates = 2;
+nStates = 4;
 % constellation diagram at tags
 constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
 % carrier frequency

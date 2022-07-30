@@ -27,7 +27,7 @@ end
 hold off; legend({'PGD', 'MRT'}, 'Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatte Rate [bits/BSP]');
-% xlim([6, inf]);
+xlim([6, inf]);
 % yticks(0 : 0.01 : 0.05);
 style_plot(object);
 % savefig(strcat('figures/region_', erase(mfilename, 'plot_')));

@@ -25,7 +25,7 @@
 \usepackage{tikz}
 \usepackage{xcolor}
 
-% \usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
+\usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
 
 % amsthm
 \newtheorem{proposition}{Proposition}
@@ -61,6 +61,7 @@
 \newacronym{ap}{AP}{Access Point}
 \newacronym{awgn}{AWGN}{Additive White Gaussian Noise}
 \newacronym{bcd}{BCD}{Block Coordinate Descent}
+\newacronym{bc}{BackCom}{Backscatter Communications}
 \newacronym{bibo}{BIBO}{Binary-Input Binary-Output}
 \newacronym{bpcu}{\si{bpcu}}{bits per channel use}
 \newacronym{bpsphz}{\si{bps/Hz}}{bits per second per Hertz}
@@ -75,7 +76,7 @@
 \newacronym{dtmac}{DTMAC}{Discrete Thresholding Multiple Access Channel}
 \newacronym{dp}{DP}{Dynamic Programming}
 \newacronym{iid}{i.i.d.}{independent and identically distributed}
-\newacronym{kkt}{KKT}{Karush–Kuhn–Tucker}
+\newacronym{kkt}{KKT}{Karush-Kuhn-Tucker}
 \newacronym{mac}{MAC}{Multiple Access Channel}
 \newacronym{mc}{MC}{Multiplication Coding}
 \newacronym{miso}{MISO}{Multiple-Input Single-Output}
@@ -104,7 +105,10 @@
 
 \begin{document}
 % \title{UniScatter: Unifying Backscatter Communication, Reconfigurable Intelligent Surface, and Symbiotic Radio}
-\title{UniScatter: Unifying Symbiotic Radio and Reconfigurable Intelligent Surface}
+% \title{UniScatter:\\Unifying Backscatter Communication, Reconfigurable Intelligent Surface, and Symbiotic Radio}
+\title{UniScatter: Unifying\\Backscatter Communications, Reconfigurable Intelligent Surface, and Symbiotic Radio}
+% \title{UniScatter: Unifying Symbiotic Radio, Reconfigurable Intelligent Surface, and Wireless Sensor Network}
+% \title{UniScatter: Unifying Symbiotic Radio and Reconfigurable Intelligent Surface}
 \author{
 	\IEEEauthorblockN{
 		Yang~Zhao,~\IEEEmembership{Member,~IEEE,}
@@ -117,40 +121,118 @@
 \maketitle
 
 \begin{abstract}
-	% Backscatter allows wireless nodes to harvest energy from, modulate information over, and reconfigure propagation of surrounding radio waves.
-	% Backscatter nodes can harvest energy from, modulate information over, and reconfigure propagation of ambient signals.
-	% Backscatter nodes can harvest energy from, modulate information over, and reconfigure propagation of surrounding radio waves.
-	% Scattering/reflection elements to
-	% An RIS is a thin surface composed of N elements, each being a reconfigurable scatterer: a small antenna that receives and re-radiates without amplification, but with a configurable time delay [3]. For narrowband signals, this delay corresponds to a phase shift.
 
-	Scatterers can harvest energy from, modulate information over, and reconfigure propagation of ambient radio waves.
-	In backscatter communication,
+	% Space-division multiple access (SDMA) utilizes linear precoding to separate users in the spatial domain and relies on fully treating any residual multi-user interference as noise. Non-orthogonal multiple access (NOMA) uses linearly precoded superposition coding with successive interference cancellation (SIC) to superpose users in the power domain and relies on user grouping and ordering to enforce some users to fully decode and cancel interference created by other users. In this paper, we argue that to efficiently cope with the high throughput, heterogeneity of quality of service (QoS), and massive connectivity requirements of future multi-antenna wireless networks, multiple access design needs to depart from those two extreme interference management strategies, namely fully treat interference as noise (as in SDMA) and fully decode interference (as in NOMA). Considering a multiple-input single-output broadcast channel, we develop a novel multiple access framework, called rate-splitting multiple access (RSMA). RSMA is a more general and more powerful multiple access for downlink multi-antenna systems that contains SDMA and NOMA as special cases. RSMA relies on linearly precoded rate-splitting with SIC to decode part of the interference and treat the remaining part of the interference as noise. This capability of RSMA to partially decode interference and partially treat interference as noise enables to softly bridge the two extremes of fully decoding interference and treating interference as noise and provides room for rate and QoS enhancements and complexity reduction. The three multiple access schemes are compared, and extensive numerical results show that RSMA provides a smooth transition between SDMA and NOMA and outperforms them both in a wide range of network loads (underloaded and overloaded regimes) and user deployments (with a diversity of channel directions, channel strengths, and qualities of channel state information at the transmitter). Moreover, RSMA provides rate and QoS enhancements over NOMA at a lower computational complexity for the transmit scheduler and the receivers (number of SIC layers).
+
+	% In the past few years, a large body of literature has been created on downlink Non-Orthogonal Multiple Access (NOMA), employing superposition coding and Successive Interference Cancellation (SIC), in multi-antenna wireless networks. Furthermore, the benefits of NOMA over Orthogonal Multiple Access (OMA) have been highlighted. In this paper, we take a critical and fresh look at the downlink Next Generation Multiple Access (NGMA) literature. Instead of contrasting NOMA with OMA, we contrast NOMA with two other multiple access baselines. The first is conventional Multi-User Linear Precoding (MU–LP), as used in Space-Division Multiple Access (SDMA) and multi-user Multiple-Input MultipleOutput (MIMO) in 4G and 5G. The second, called Rate-Splitting Multiple Access (RSMA), is based on multi-antenna Rate-Splitting (RS). It is also a non-orthogonal transmission strategy relying on SIC developed in the past few years in parallel and independently from NOMA. We show that there is some confusion about the benefits of NOMA, and we dispel the associated misconceptions. First, we highlight why NOMA is inefficient in multi-antenna settings based on basic multiplexing gain analysis. We stress that the issue lies in how the NOMA literature, originally developed for single-antenna setups, has been hastily applied to multi-antenna setups, resulting in a misuse of spatial dimensions and therefore loss in multiplexing gains and rate. Second, we show that NOMA incurs a severe multiplexing gain loss despite an increased receiver complexity due to an inefficient use of SIC receivers. Third, we emphasize that much of the merits of NOMA are due to the constant comparison to OMA instead of comparing it to MU–LP and RS baselines. We then expose the pivotal design constraint that multi-antenna NOMA requires one user to fully decode the messages of the other users. This design constraint is responsible for the multiplexing gain erosion, rate and spectral efficiency loss, ineffectiveness to serve a large number of users, and inefficient use of SIC receivers in multi-antenna settings. Our analysis and simulation results confirm that NOMA should not be applied blindly to multi-antenna settings, highlight the scenarios where MU–LP outperforms NOMA and vice versa, and demonstrate the inefficiency, performance loss, and complexity disadvantages of NOMA compared to RSMA. The first takeaway message is that, while NOMA is suited for single-antenna settings (as originally intended), it is not efficient in most multi-antenna deployments. The second takeaway message is that another non-orthogonal transmission framework, based on RSMA, exists which fully exploits the multiplexing gain and the benefits of SIC to boost the rate and the number of users to serve in multi-antenna settings and outperforms both NOMA and MU–LP. Indeed, RSMA achieves higher multiplexing gains and rates, serves a larger number of users, is more robust to user deployments, network loads and inaccurate channel state information and has a lower receiver complexity than NOMA. Consequently, RSMA is a promising technology for NGMA and future networks such as 6G and beyond.
+
+
+	Scatterers can harvest energy from, modulate information over, and influence propagation of surrounding radio waves.
+	% Conventional literatures treat backscatter communication,
+	% \gls{ris} employs scattering antennas or programmable metamaterial to control wireless channel of legacy networks.
+	% \gls{bc} varies the input impedance of physical objects to manipulate the magnitude, phase, and/or frequency of scattered signal to communicate within range.
+	\gls{bc} varies object impedance to manipulate the magnitude, phase, and/or frequency of scattered signal to encode information and deliver within coverage.
+	% \gls{bc} changes the magnitude, phase, and/or frequency of scattered signal of ph
+	% varies the input impedance of physical objects to manipulate the magnitude, phase, and/or frequency of the scattered signal to encode self information.
+	% a tag af- fixed to objects [1]. The information on EPC-tagged objects
+	% By varying the antenna impedance, a RFID tag can encode digital (typically binary) symbols onto the uplink signal, which is then decoded by the RFID reader.
+	% changes the scattered signal
+	\gls{ris} adapts scattering antennas or programmable metamaterial to control propagation environment and enhance signal strength in the desired direction.
+	% Conventional \gls{ris} and \gls{sr} appeared as
+	% \gls{sr} integrates scatter nodes into legacy systems to reuse
+	% Different from CR that uses power-consuming active RF chains at both PTx and STx shown in Fig. 1(b), the SR uses backscattering radio technology to support the secondary transmission from STx to SRx, which greatly reduces the power consumption. In particular, STx transmits its messages to SRx over the RF signals received from PTx by varying the reflection coefficients, thus the secondary system shares the spectrum, energy, and infrastructure of the primary system with high spectrum- and power-efficiency.
+	\gls{sr} incorporates scatter nodes into active wireless networks and utilize recycled signal to transmit self information and enhance legacy multipath to the cooperative receiver.
+	% In this paper, we introduce UniScatter as a novel paradigm that bridges and generalizes those concepts to support the high throughput, ultralow power, and ubiquitous connectivity of future wireless networks.
+	In this paper, we introduce UniScatter as a novel paradigm that bridges and generalizes those three concepts to support the high throughput, ultralow power, and ubiquitous connectivity of future wireless networks using shared spectrum, energy, and infrastructures.
+	% Based on \gls{csi} and link priority, UniScatter nodes adapt input probability distribution of reflection states
+	% Based on \gls{csi}, each UniScatter node adapts probability distribution of reflection states to flexibly balance information encoding and passive beamforming in a mutualistic manner.
+	Based on \gls{csi}, each UniScatter node adapts probability distribution of reflection states to balance information encoding and passive beamforming in a mutualistic and flexible manner.
+	The scatter source of \gls{bc}/\gls{sr} and reflecting element of \gls{ris} can be regarded as extreme cases of UniScatter node, where the input distribution boils down to equiprobable and degenerate, respectively.
+	% Existing \gls{ris}-based \gls{bc}
+	% UniScatter unifies \gls{bc}, \gls{ris} and \gls{sr} f
+	% To evaluate the benefits of UniScatter, we consider
+	% To accommodate signal characteristics, the receiver first jointly and semi-coherently decodes all UniScatter nodes over accumulated energy, then re-encodes to retrieve
+	To accommodate signal characteristics, we propose a practical receiver that first semi-coherently decodes all nodes from accumulated energy, then re-encodes and determines the equivalent channel for primary decoding.
+	% It not only avoids high complexity of joint \gls{ml} and \gls{sic}, but also preserves the benefits of passive beamforming on primary link.
+	It reduces the complexity of cooperative decoding and preserves the benefit of passive beamforming on primary link.
+	Moreover, we consider a scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple UniScatter nodes, and characterize the achievable primary-(total-)backscatter rate region by optimizing input distribution at nodes, active beamforming at the \gls{ap}, and decision regions at the user.
+	Simulation results demonstrate UniScatter can unify \gls{bc}, \gls{ris} and \gls{sr} to flexibly control transmit-assist tradeoff via smart input distribution design.
+	% Simulation results demonstrate Metascatters can exploit additional propagation paths to transmit and assist via adaptive input design.
+
+
+
+	% characterize the achievable primary-(total-)backscatter rate region for a single-antenna user surrounded by multiple UniScatter nodes,
+
+
+
+	% Since UniScatter nodes ride over legacy signal and , backscatter decoding can be viewed as part of primary channel training
+
+	% To fully accommodate backscatter characteristics, we also propose a novel receiving strategy that first jointly decodes all Metascatter from accumulated energy, then models their reflection patterns and backscatter paths within equivalent channel for primary decoding.
+	% Since backscatter message is modulated over primary signal, backscatter decoding is indeed part of primary channel training, and there is no need for operation-intensive \gls{sic} at the receiver.
+	% To accommodate backscatter characteristics and reduce decoding complexity, we consider a joint semi-coherent detection for all Metascatters over accumulated energy $z$.
+
+	% Moreover, we consider a specific scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple Metascatters.
+	% For simplicity, it is assumed the user first jointly decodes all backscatter messages from accumulated energy, then models reflection patterns and backscatter paths within equivalent channel for primary decoding.
+	% % Once modulation uncertainty of Metascatters are eliminated, models contributions from additional paths within equivalent channel
+	% % decodes all Metascatters jointly by energy detection, then models their contribution within equivalent channel and decodes the primary link.
+	% % For simplicity, the user is assumed first decodes all Metascatters jointly by energy detection, then models their contribution within equivalent channel and decodes the primary link.
+	% We characterize the achievable primary-(total-)backscatter rate region by optimizing the input distribution at Metascatters, the active beamforming at the AP, and the decision regions at the user.
+	% % A suboptimal \gls{bcd} algorithm was proposed, where the input distribution satisfying the \gls{kkt} conditions is evaluated in closed form, the transmit beamforming is optimized by \gls{pgd}, and the decision thresholds are optimized by \gls{dp}.
+	% % A suboptimal \gls{bcd} algorithm is proposed, where the \gls{kkt} input distribution is numerically evaluated in closed form, the active beamforming is iteratively updated by \gls{pgd}, and the decision regions are restricted to convex and opty
+	% % We then propose a suboptimal \gls{bcd} algorithm that numerically evaluates the \gls{kkt} input distribution in closed form, iteratively updates the active beamforming by \gls{pgd}, and employs existing thresholding schemes to refine suboptimal convex decision regions.
+	% A suboptimal \gls{bcd} algorithm is proposed, which numerically evaluates the \gls{kkt} input distribution in closed form, iteratively updates the active beamforming by \gls{pgd}, and employs existing thresholding schemes for suboptimal convex decision regions.
+	% % A suboptimal \gls{bcd} algorithm was proposed with the \gls{kkt} input distribution evaluated in closed form, the active beamforming updated by \gls{pgd}, and the decision regions restricted to convex then refined by \gls{dp}.
+	% % the decision regions are restricted as convex then optimized by \gls{dp}.
+	% % A suboptimal \gls{bcd} algorithm was proposed, where the \gls{kkt} input distribution is evaluated in closed form, the active beamforming is optimized by \gls{pgd} with backtracking line search, and the decision thresholds are optimized by \gls{dp}.
+	% Simulation results demonstrate Metascatters can exploit additional propagation paths to transmit and assist via adaptive input design.
+
+
+
 	% ! Φ(c[n]) vs P
-
-	% TODO
-	back comms, symbiotic radio and RIS have appeared as three different and somewhat unrelated wireless technologies, explaining the key feature of each of them. Then I would say we introduce metascatter as a new paradigm that unifies and generalizes those three ...., explain the key feature of metascatter.
+	% In this paper, we argue that to efficiently cope with the high throughput, heterogeneity of quality of service (QoS), and massive connectivity requirements of future multi-antenna wireless networks, multiple access design needs to depart from those two extreme interference management strategies, namely fully treat interference as noise (as in SDMA) and fully decode interference (as in NOMA). Considering a multiple-input single-output broadcast channel, we develop a novel multiple access framework, called rate-splitting multiple access (RSMA). RSMA is a more general and more powerful multiple access for downlink multi-antenna systems that contains SDMA and NOMA as special cases. RSMA relies on linearly precoded rate-splitting with SIC to decode part of the interference and treat the remaining part of the interference as noise. This capability of RSMA to partially decode interference and partially treat interference as noise enables to softly bridge the two extremes of fully decoding interference and treating interference as noise and provides room for rate and QoS enhancements and complexity reduction. The three multiple access schemes are compared, and extensive numerical results show that RSMA provides a smooth transition between SDMA and NOMA and outperforms them both in a wide range of network loads (underloaded and overloaded regimes) and user deployments (with a diversity of channel directions, channel strengths, and qualities of channel state information at the transmitter). Moreover, RSMA provides rate and QoS enhancements over NOMA at a lower computational complexity for the transmit scheduler and the receivers (number of SIC layers).
 
 
-	We uniquely introduce \emph{Metascatter} that adapts the input distribution of a finite-state passive backscatter node based on \gls{csi}, to \emph{simultaneously} encode self message and assist legacy transmission while powered by surrounding waves.
-	% Compared to conventional \gls{ris}-empowered \gls{sr} that encodes and precodes independently (e.g., overlay or parallel), Metascatter refines backscatter principles to bridge parasitic source of \gls{sr} and reflecting element of \gls{ris} as extreme cases.
-	Compared to existing \gls{ris}-empowered \gls{sr} that encodes and precodes independently using advanced architecture (e.g., overlay or parallel), Metascatter softly bridges and generalizes parasitic source of \gls{sr} and reflecting element of \gls{ris} via smart input design.
-	% Compared to \gls{ris}-empowered \gls{sr} that encodes and precodes independently (e.g., overlay or parallel), Metascatter refines backscatter principles to bridge parasitic source of \gls{sr} and reflecting element of \gls{ris} as extreme cases.
-	% Such an integrated distribution design not only yields universal modularity with reduced optimization cost, but also enables a flexible tradeoff between primary and backscatter links using shared spectrum, energy, and infrastructures.
-	This not only reduces hardware complexity and optimization cost, but also enables a flexible tradeoff between primary (legacy) and backscatter links using shared spectrum, energy, and infrastructures.
-	Moreover, we consider a specific scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple Metascatters.
-	For simplicity, it is assumed the user first jointly decodes all backscatter messages from accumulated energy, then models reflection patterns and backscatter paths within equivalent channel for primary decoding.
-	% Once modulation uncertainty of Metascatters are eliminated, models contributions from additional paths within equivalent channel
-	% decodes all Metascatters jointly by energy detection, then models their contribution within equivalent channel and decodes the primary link.
-	% For simplicity, the user is assumed first decodes all Metascatters jointly by energy detection, then models their contribution within equivalent channel and decodes the primary link.
-	We characterize the achievable primary-(total-)backscatter rate region by optimizing the input distribution at Metascatters, the active beamforming at the AP, and the decision regions at the user.
-	% A suboptimal \gls{bcd} algorithm was proposed, where the input distribution satisfying the \gls{kkt} conditions is evaluated in closed form, the transmit beamforming is optimized by \gls{pgd}, and the decision thresholds are optimized by \gls{dp}.
-	% A suboptimal \gls{bcd} algorithm is proposed, where the \gls{kkt} input distribution is numerically evaluated in closed form, the active beamforming is iteratively updated by \gls{pgd}, and the decision regions are restricted to convex and opty
-	% We then propose a suboptimal \gls{bcd} algorithm that numerically evaluates the \gls{kkt} input distribution in closed form, iteratively updates the active beamforming by \gls{pgd}, and employs existing thresholding schemes to refine suboptimal convex decision regions.
-	A suboptimal \gls{bcd} algorithm is proposed, which numerically evaluates the \gls{kkt} input distribution in closed form, iteratively updates the active beamforming by \gls{pgd}, and employs existing thresholding schemes for suboptimal convex decision regions.
-	% A suboptimal \gls{bcd} algorithm was proposed with the \gls{kkt} input distribution evaluated in closed form, the active beamforming updated by \gls{pgd}, and the decision regions restricted to convex then refined by \gls{dp}.
-	% the decision regions are restricted as convex then optimized by \gls{dp}.
-	% A suboptimal \gls{bcd} algorithm was proposed, where the \gls{kkt} input distribution is evaluated in closed form, the active beamforming is optimized by \gls{pgd} with backtracking line search, and the decision thresholds are optimized by \gls{dp}.
-	Simulation results demonstrate Metascatters can exploit additional propagation paths to transmit and assist via adaptive input design.
+	% We uniquely introduce \emph{Metascatter} that adapts the input distribution of a finite-state passive backscatter node based on \gls{csi}, to \emph{simultaneously} encode self message and assist legacy transmission while powered by surrounding waves.
+	% % Compared to conventional \gls{ris}-empowered \gls{sr} that encodes and precodes independently (e.g., overlay or parallel), Metascatter refines backscatter principles to bridge parasitic source of \gls{sr} and reflecting element of \gls{ris} as extreme cases.
+	% Compared to existing \gls{ris}-empowered \gls{sr} that encodes and precodes independently using advanced architecture (e.g., overlay or parallel), Metascatter softly bridges and generalizes parasitic source of \gls{sr} and reflecting element of \gls{ris} via smart input design.
+	% % Compared to \gls{ris}-empowered \gls{sr} that encodes and precodes independently (e.g., overlay or parallel), Metascatter refines backscatter principles to bridge parasitic source of \gls{sr} and reflecting element of \gls{ris} as extreme cases.
+	% % Such an integrated distribution design not only yields universal modularity with reduced optimization cost, but also enables a flexible tradeoff between primary and backscatter links using shared spectrum, energy, and infrastructures.
+	% This not only reduces hardware complexity and optimization cost, but also enables a flexible tradeoff between primary (legacy) and backscatter links using shared spectrum, energy, and infrastructures.
+	% Moreover, we consider a specific scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple Metascatters.
+	% For simplicity, it is assumed the user first jointly decodes all backscatter messages from accumulated energy, then models reflection patterns and backscatter paths within equivalent channel for primary decoding.
+	% % Once modulation uncertainty of Metascatters are eliminated, models contributions from additional paths within equivalent channel
+	% % decodes all Metascatters jointly by energy detection, then models their contribution within equivalent channel and decodes the primary link.
+	% % For simplicity, the user is assumed first decodes all Metascatters jointly by energy detection, then models their contribution within equivalent channel and decodes the primary link.
+	% We characterize the achievable primary-(total-)backscatter rate region by optimizing the input distribution at Metascatters, the active beamforming at the AP, and the decision regions at the user.
+	% % A suboptimal \gls{bcd} algorithm was proposed, where the input distribution satisfying the \gls{kkt} conditions is evaluated in closed form, the transmit beamforming is optimized by \gls{pgd}, and the decision thresholds are optimized by \gls{dp}.
+	% % A suboptimal \gls{bcd} algorithm is proposed, where the \gls{kkt} input distribution is numerically evaluated in closed form, the active beamforming is iteratively updated by \gls{pgd}, and the decision regions are restricted to convex and opty
+	% % We then propose a suboptimal \gls{bcd} algorithm that numerically evaluates the \gls{kkt} input distribution in closed form, iteratively updates the active beamforming by \gls{pgd}, and employs existing thresholding schemes to refine suboptimal convex decision regions.
+	% A suboptimal \gls{bcd} algorithm is proposed, which numerically evaluates the \gls{kkt} input distribution in closed form, iteratively updates the active beamforming by \gls{pgd}, and employs existing thresholding schemes for suboptimal convex decision regions.
+	% % A suboptimal \gls{bcd} algorithm was proposed with the \gls{kkt} input distribution evaluated in closed form, the active beamforming updated by \gls{pgd}, and the decision regions restricted to convex then refined by \gls{dp}.
+	% % the decision regions are restricted as convex then optimized by \gls{dp}.
+	% % A suboptimal \gls{bcd} algorithm was proposed, where the \gls{kkt} input distribution is evaluated in closed form, the active beamforming is optimized by \gls{pgd} with backtracking line search, and the decision thresholds are optimized by \gls{dp}.
+	% Simulation results demonstrate Metascatters can exploit additional propagation paths to transmit and assist via adaptive input design.
+
+	% Symbiotic radio has emerged as a promising technology for spectrum- and energy-efficient wireless communications, where the passive secondary backscatter devices (BDs) reuse not only the spectrum but also the power of the active primary users to transmit their own information. In return, the primary communication links can be enhanced by the additional multipaths created by the BDs. This is known as the mutualism relationship of symbiotic radio.
+
+	% Symbiotic radio has emerged as a new paradigm to achieve both spectrum-efficient and energy-efficient wireless communications, for which the secondary user modulates its information over the radio frequency (RF) signals received from primary transmitter (PT) [1]–[3]. As such, the secondary backscatter device (BD) in symbiotic radio systems leverages not only the spectrum as in the extensively studied cognitive radio systems [4]–[6], but also the energy of the primary signals via passive backscattering technology for its own information transmission
+
+	% Specifically, the passive secondary backscatter device (BD) in symbiotic radio systems reuses not only the spectrum of the active primary communication as in traditional CR systems, but also its power via passive backscattering technology [25].
+
+	% Recently, mutualistic spectrum sharing has been observed in cognitive backscatter communication (CBC) systems [5], in which the active transmission achieves multipath diversity with the help of the backscatter transmission, while the backscatter device gains the transmission opportunity using the RF source and radio spectrum of the active transmission. Such mutualism advocates the coexistence of cellular and Internet-of-Things (IoT) networks in the same spectrum [6].
+
+	% To be specific, there are two types of transmissions in SR: the primary transmission and the secondary transmission. In the primary transmission, a primary transmitter (PTx) transmits messages to its receiver by using the traditional active radio technology, while in the secondary transmission, a secondary transmitter (STx), operating as a passive device, pe- riodically switches its load impedance to change the amplitude and/or phase of its backscattered signal, thereby modulating its information bits over a signal received from PTx [6]. The receiver in SR receives two types of signals: a direct link signal from PTx and a backscatter link signal from STx. Due to the use of backscatter, the backscatter link signal contains information from both PTx and STx. When the secondary transmission rate is much lower than the primary transmission rate, the backscatter link can be seen as an additional path for the primary transmission with a slow channel variation introduced by the changing of load impedance at STx. In this case, the secondary system obtains the transmission op- portunity without requiring additional spectrum and power- consuming active components, and in return the secondary transmission provides multipath gain instead of interference to the primary transmission, thereby yielding mutual benefits.
+
+	% opportunistically
+	% \gls{sr} introduces scatter nodes modulate over active legacy transmission
+
+	% \gls{sr} incorporates scatter nodes into active wireless systems to transmit over sh
+	% \gls{sr} incorporates scatter nodes into active wireless systems to operate over recycled radio wave and transmit self information and enhance legacy multipath to the cooperative receiver.
+	% In \gls{sr}, the scatter nodes are integrated with existing networks that transmit to legacy receiver
+
+	% the passive secondary backscatter devices (BDs) reuse not only the spectrum but also the power of the active primary users to transmit their own information. In return, the primary communication links can be enhanced by the additional multipaths created by the BDs. This is known as the mutualism relationship of symbiotic radio.
+
+	% to transmit to
 \end{abstract}
 
 \begin{section}{Introduction}

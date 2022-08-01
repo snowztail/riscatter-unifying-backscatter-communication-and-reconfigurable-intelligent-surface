@@ -137,26 +137,30 @@
 	% a tag af- fixed to objects [1]. The information on EPC-tagged objects
 	% By varying the antenna impedance, a RFID tag can encode digital (typically binary) symbols onto the uplink signal, which is then decoded by the RFID reader.
 	% changes the scattered signal
-	\gls{ris} adapts scattering antennas or programmable metamaterial to control propagation environment and enhance signal strength in the desired direction.
+	\gls{ris} adapts scattering antennas or programmable metamaterial to control propagation environment and boost signal strength in desired direction.
 	% Conventional \gls{ris} and \gls{sr} appeared as
 	% \gls{sr} integrates scatter nodes into legacy systems to reuse
 	% Different from CR that uses power-consuming active RF chains at both PTx and STx shown in Fig. 1(b), the SR uses backscattering radio technology to support the secondary transmission from STx to SRx, which greatly reduces the power consumption. In particular, STx transmits its messages to SRx over the RF signals received from PTx by varying the reflection coefficients, thus the secondary system shares the spectrum, energy, and infrastructure of the primary system with high spectrum- and power-efficiency.
-	\gls{sr} incorporates scatter nodes into active wireless networks and utilize recycled signal to transmit self information and enhance legacy multipath to the cooperative receiver.
+	\gls{sr} incorporates scatter nodes into active networks, which recycle ambient signal to transmit self information and enhance legacy multipath to the cooperative receiver.
 	% In this paper, we introduce UniScatter as a novel paradigm that bridges and generalizes those concepts to support the high throughput, ultralow power, and ubiquitous connectivity of future wireless networks.
-	In this paper, we introduce UniScatter as a novel paradigm that bridges and generalizes those three concepts to support the high throughput, ultralow power, and ubiquitous connectivity of future wireless networks using shared spectrum, energy, and infrastructures.
+	In this paper, we introduce UniScatter as a novel paradigm that bridges and generalizes those three concepts to support the high throughput, ultralow power, and ubiquitous connectivity of future wireless networks.
 	% Based on \gls{csi} and link priority, UniScatter nodes adapt input probability distribution of reflection states
 	% Based on \gls{csi}, each UniScatter node adapts probability distribution of reflection states to flexibly balance information encoding and passive beamforming in a mutualistic manner.
-	Based on \gls{csi}, each UniScatter node adapts probability distribution of reflection states to balance information encoding and passive beamforming in a mutualistic and flexible manner.
-	The scatter source of \gls{bc}/\gls{sr} and reflecting element of \gls{ris} can be regarded as extreme cases of UniScatter node, where the input distribution boils down to equiprobable and degenerate, respectively.
+	% Based on \gls{csi}, each UniScatter node adapts probability distribution of reflection states to balance information encoding and passive beamforming in a mutualistic and flexible manner.
+	Using shared spectrum, energy, and infrastructures, each UniScatter node adapts probability distribution of reflection states based on \gls{csi} to balance information encoding and passive beamforming in a mutualistic and flexible manner.
+	The scatter source of \gls{bc}/\gls{sr} and reflecting element of \gls{ris} can be viewed as extreme cases of UniScatter node, where the input distribution boils down to equiprobable and degenerate, respectively.
 	% Existing \gls{ris}-based \gls{bc}
 	% UniScatter unifies \gls{bc}, \gls{ris} and \gls{sr} f
 	% To evaluate the benefits of UniScatter, we consider
 	% To accommodate signal characteristics, the receiver first jointly and semi-coherently decodes all UniScatter nodes over accumulated energy, then re-encodes to retrieve
-	To accommodate signal characteristics, we propose a practical receiver that first semi-coherently decodes all nodes from accumulated energy, then re-encodes and determines the equivalent channel for primary decoding.
+	To accommodate signal characteristics, we propose a practical receiver that semi-coherently decodes all nodes from accumulated energy, re-encodes to determine the equivalent channel, then decodes the primary link.
+	% To accommodate signal characteristics, we propose a practical receiver that semi-coherently decodes all nodes from accumulated energy, re-encodes to determine the equivalent channel, and decodes the primary link.
+	% To accommodate signal characteristics, we propose a practical receiver that first semi-coherently decodes all nodes by energy detection, then re-encodes and determines the equivalent channel for primary decoding.
 	% It not only avoids high complexity of joint \gls{ml} and \gls{sic}, but also preserves the benefits of passive beamforming on primary link.
-	It reduces the complexity of cooperative decoding and preserves the benefit of passive beamforming on primary link.
-	Moreover, we consider a scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple UniScatter nodes, and characterize the achievable primary-(total-)backscatter rate region by optimizing input distribution at nodes, active beamforming at the \gls{ap}, and decision regions at the user.
-	Simulation results demonstrate UniScatter can unify \gls{bc}, \gls{ris} and \gls{sr} to flexibly control transmit-assist tradeoff via smart input distribution design.
+	It reduces the complexity of cooperative decoding while preserves the benefit of backscatter modulation and passive beamforming.
+	% Moreover, we consider an application scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple UniScatter nodes, and characterize the achievable primary-(total-)backscatter rate region by optimizing input distribution at nodes, active beamforming at the \gls{ap}, and decision regions at the user.
+	Moreover, we consider an application scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple UniScatter nodes, and characterize the achievable primary-(total-)backscatter rate region by designing input distribution at the nodes, active beamforming at the \gls{ap}, and backscatter decision design at the user.
+	Simulation results demonstrate UniScatter can unify \gls{bc}, \gls{ris} and \gls{sr} to flexibly control the transmit-assist tradeoff via smart input distribution design.
 	% Simulation results demonstrate Metascatters can exploit additional propagation paths to transmit and assist via adaptive input design.
 
 

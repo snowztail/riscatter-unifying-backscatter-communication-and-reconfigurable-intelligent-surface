@@ -38,7 +38,7 @@ weightSet = [0 : 0.01 : 0.05, 0.075, 0.1 : 0.05 : 0.25, 0.3 : 0.1 : 0.5, 0.75, 1
 % number of weights on rate region boundary
 nWeights = length(weightSet);
 % number of quantization bins
-nBins = 2 ^ 8;
+nBins = 2 ^ 9;
 
 %% * Variable
 Variable = struct('Threshold', {'dp', 'smawk', 'bisection', 'ml'});

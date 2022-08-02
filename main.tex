@@ -76,7 +76,10 @@
 \newacronym{dtmac}{DTMAC}{Discrete Thresholding Multiple Access Channel}
 \newacronym{dp}{DP}{Dynamic Programming}
 \newacronym{iid}{i.i.d.}{independent and identically distributed}
+\newacronym{ioe}{IoE}{Internet of Everything}
+\newacronym{iot}{IoT}{Internet of Things}
 \newacronym{kkt}{KKT}{Karush-Kuhn-Tucker}
+\newacronym{m2m}{M2M}{Machine to Machine}
 \newacronym{mac}{MAC}{Multiple Access Channel}
 \newacronym{mc}{MC}{Multiplication Coding}
 \newacronym{miso}{MISO}{Multiple-Input Single-Output}
@@ -90,6 +93,7 @@
 \newacronym{qam}{QAM}{Quadrature Amplitude Modulation}
 \newacronym{qos}{QoS}{Quality of Service}
 \newacronym{rf}{RF}{Radio-Frequency}
+\newacronym{rfid}{RFID}{Radio-Frequency Identification}
 \newacronym{ris}{RIS}{Reconfigurable Intelligent Surface}
 \newacronym{sc}{SC}{Superposition Coding}
 \newacronym{sic}{SIC}{Successive Interference Cancellation}
@@ -121,9 +125,9 @@
 	Scatterers can harvest energy from, modulate information over, and influence propagation of surrounding radio waves.
 	\gls{bc} varies object impedance to manipulate the magnitude, phase, and/or frequency of scattered signal to encode information and deliver within coverage.
 	\gls{ris} adapts scattering antennas or programmable metamaterial to control propagation environment and boost/suppress signal strength in specific directions.
-	\gls{sr} incorporates scatter nodes into active networks, which recycle ambient signal to transmit self information and enhance legacy multipath to the cooperative receiver.
+	\gls{sr} incorporates scatter nodes into active networks that recycle ambient signal to transmit self information and enhance legacy channel to the cooperative receiver.
 	In this paper, we depart from those concepts and introduce UniScatter as a new paradigm for future wireless networks.
-	Instead of treating probability distribution of reflection states as equiprobable (as scattering source of \gls{bc}/\gls{sr}) or degenerate (as reflecting element of \gls{ris}), UniScatter node adapts input distribution of a passive device based on \gls{csi} and link priority, which balances information encoding and channel reconfiguration in a mutualistic and flexible manner.
+	Instead of treating probability distribution of reflection states as equiprobable (as scattering source of \gls{bc}/\gls{sr}) or degenerate (as reflecting element of \gls{ris}), UniScatter node adapts input distribution of a passive scatter node based on link priority and \gls{csi}, which balances information encoding and channel reconfiguration in a flexible and mutualistic manner.
 	To accommodate signal characteristics, UniScatter receiver semi-coherently decodes all nodes from accumulated energy, acquires equivalent primary channel over reflection pattern, then coherently decodes the primary link under enhanced multipath.
 	It reduces the complexity of cooperative decoding while preserves the benefits of backscatter modulation and passive beamforming.
 	Using shared spectrum, energy, and infrastructures, UniScatter is a more general and powerful transmit-assist protocol that generalizes \gls{bc}, \gls{ris} and \gls{sr} with universal hardware design and augmented \gls{qos} control.
@@ -143,8 +147,31 @@
 	% that enables low-power communication by separating the
 	% As an emerging low-power communication technique, \gls{bc} separates the power-hungry \gls{rf} components (i.e., synthesizer and amplifier) as dedicated carrier emitter, and employs passive energy harvester and impedance modulator to operate over incident and scattered signals.
 	% As an emerging low-power communication technique, \gls{bc} separates the power-hungry \gls{rf} components (i.e., synthesizer and amplifier) as dedicated carrier emitter, and equips the backscatter node with energy harvester and load-switching modulator to operate over incident and scattered signals, respectively.
-	As an emerging low-power communication technique, \gls{bc} separates the power-hungry \gls{rf} elements (e.g., synthesizer and amplifier) as dedicated carrier emitter, and leaves the passive components (e.g., harvester and modulator) at the backscatter node.
-	The node harvests energy from emitted \gls{rf} wave and embeds its information over scattered signal.
+	% As an emerging low-power communication protocol, \gls{bc} divides transmitter into a dedicated carrier emitter with power-hungry \gls{rf} elements (e.g., synthesizer and amplifier) and an information-bearing node with passive components (e.g., harvester and modulator).
+	As an emerging low-power communication protocol, \gls{bc} divides transmitter into a \gls{rf} signal emitter with power-hungry elements (e.g., synthesizer and amplifier) and an information-bearing scatter node with passive components (e.g., harvester and modulator).
+	% \gls{bc} is an emerging low-power communication protocol that divides transmitter into a \gls{rf} signal emitter with power-hungry elements (e.g., synthesizer and amplifier) and an information-bearing scatter node with passive components (e.g., harvester and modulator).
+	% The node harvests energy from emitted \gls{rf} wave and embeds its information over scattered signal in a sustainable and controllable manner, bringing more possibilities to \gls{ioe} and \gls{m2m} networks.
+	% The node harvests energy from emitted \gls{rf} wave and embeds its information over scattered signal in a sustainable and controllable manner, which is widely applied in \gls{ioe} and \gls{m2m} networks.
+	The node harvests energy from emitted \gls{rf} wave and embeds its information over scattered signal in a sustainable and controllable manner.
+	% Dated back to early 1970's,
+	% \gls{rfid}, as a main application of \gls{bc}, has experienced great success
+	\gls{rfid}, as a main application of \gls{bc}, has been extensively developed and commonly employed even before the era of \gls{iot} and \gls{m2m}.
+	% It requires a dedicated sinusoidal source
+	Specifically, a dedicated emitter generates a sinusoidal carrier at reserved frequency, and \gls{rfid} tags reports their identifier to a nearby \gls{rfid} reader.
+	% Specifically, a dedicated emitter generates sinusoidal carrier at reserved frequency, and the node reports its identifier to a nearby \gls{rfid} reader.
+
+
+	% Recently, RFID has experienced a tremendous growth due to developments in integrated circuits and radios, and due to increased interest from retail industry and government [4].
+
+	% ? With the upsurge of wireless devices and the downtrend of circuit power consumption, \gls{rfid} has experienced great success in \gls{ioe} and \gls{m2m} networks.
+	% Since the node harvests energy from emitted \gls{rf} wave and embeds its information over scattered signal, such that
+	% The rapid growth of wireless devices and the steady decrease of electronic power consumption
+
+	% account for the
+	% Although \gls{bc} experienced
+
+	% the power-hungry \gls{rf} elements (e.g., synthesizer and amplifier) as dedicated carrier emitter, and leaves the passive components (e.g., harvester and modulator) at the backscatter node.
+	% The node harvests energy from emitted \gls{rf} wave and embeds its information over scattered signal.
 
 
 	% alter scattered electromagnetic field and transmit without onboard \gls{rf} components (e.g., carrier syntheizer and power amplifier).

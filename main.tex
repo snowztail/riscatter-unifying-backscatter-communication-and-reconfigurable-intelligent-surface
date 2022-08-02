@@ -105,11 +105,7 @@
 
 
 \begin{document}
-% \title{UniScatter: Unifying Backscatter Communication, Reconfigurable Intelligent Surface, and Symbiotic Radio}
-% \title{UniScatter:\\Unifying Backscatter Communication, Reconfigurable Intelligent Surface, and Symbiotic Radio}
 \title{UniScatter: Unifying\\Backscatter Communications, Reconfigurable Intelligent Surface, and Symbiotic Radio}
-% \title{UniScatter: Unifying Symbiotic Radio, Reconfigurable Intelligent Surface, and Wireless Sensor Network}
-% \title{UniScatter: Unifying Symbiotic Radio and Reconfigurable Intelligent Surface}
 \author{
 	\IEEEauthorblockN{
 		Yang~Zhao,~\IEEEmembership{Member,~IEEE,}
@@ -122,42 +118,44 @@
 \maketitle
 
 \begin{abstract}
-	% First, we highlight why NOMA is inefficient in multi-antenna settings based on basic multiplexing gain analysis. We stress that the issue lies in how the NOMA literature, originally developed for single-antenna setups, has been hastily applied to multi-antenna setups, resulting in a misuse of spatial dimensions and therefore loss in multiplexing gains and rate. Second, we show that NOMA incurs a severe multiplexing gain loss despite an increased receiver complexity due to an inefficient use of SIC receivers. Third, we emphasize that much of the merits of NOMA are due to the constant comparison to OMA instead of comparing it to MU–LP and RS baselines. We then expose the pivotal design constraint that multi-antenna NOMA requires one user to fully decode the messages of the other users. This design constraint is responsible for the multiplexing gain erosion, rate and spectral efficiency loss, ineffectiveness to serve a large number of users, and inefficient use of SIC receivers in multi-antenna settings. Our analysis and simulation results confirm that NOMA should not be applied blindly to multi-antenna settings, highlight the scenarios where MU–LP outperforms NOMA and vice versa, and demonstrate the inefficiency, performance loss, and complexity disadvantages of NOMA compared to RSMA. The first takeaway message is that, while NOMA is suited for single-antenna settings (as originally intended), it is not efficient in most multi-antenna deployments. The second takeaway message is that another non-orthogonal transmission framework, based on RSMA, exists which fully exploits the multiplexing gain and the benefits of SIC to boost the rate and the number of users to serve in multi-antenna settings and outperforms both NOMA and MU–LP. Indeed, RSMA achieves higher multiplexing gains and rates, serves a larger number of users, is more robust to user deployments, network loads and inaccurate channel state information and has a lower receiver complexity than NOMA. Consequently, RSMA is a promising technology for NGMA and future networks such as 6G and beyond.
-
-
 	Scatterers can harvest energy from, modulate information over, and influence propagation of surrounding radio waves.
 	\gls{bc} varies object impedance to manipulate the magnitude, phase, and/or frequency of scattered signal to encode information and deliver within coverage.
 	\gls{ris} adapts scattering antennas or programmable metamaterial to control propagation environment and boost/suppress signal strength in specific directions.
 	\gls{sr} incorporates scatter nodes into active networks, which recycle ambient signal to transmit self information and enhance legacy multipath to the cooperative receiver.
-	% In this paper, we depart from those concepts and introduce UniScatter as a new paradigm to support the high throughput, ultralow power, and ubiquitous connectivity of future wireless networks using shared spectrum, energy, and infrastructures.
-	In this paper, we depart from those concepts and introduce UniScatter as a new paradigm to support the high throughput, ultralow power, and ubiquitous connectivity of future wireless networks.
-	Instead of treating probability distribution of reflection states as equiprobable (as scattering source of \gls{bc}/\gls{sr}) or degenerate (as reflecting element of \gls{ris}), UniScatter node adapts input distribution based on \gls{csi} and link priority to balance information encoding and channel reconfiguration in a mutualistic and flexible manner.
-	% Accommodated to signal characteristics, UniScatter receiver semi-coherently decodes all nodes from accumulated energy, re-encodes to determine the equivalent channel, then decodes the primary link to support backscatter modulation and preserve passive beamforming.
-	% Accommodated to signal characteristics, UniScatter receiver semi-coherently decodes all nodes from accumulated energy, combines reflection pattern with \gls{csi} for the equivalent channel, then decodes the primary link to support backscatter modulation and preserve passive beamforming.
+	In this paper, we depart from those concepts and introduce UniScatter as a new paradigm for future wireless networks.
+	Instead of treating probability distribution of reflection states as equiprobable (as scattering source of \gls{bc}/\gls{sr}) or degenerate (as reflecting element of \gls{ris}), UniScatter node adapts input distribution of a passive device based on \gls{csi} and link priority, which balances information encoding and channel reconfiguration in a mutualistic and flexible manner.
 	To accommodate signal characteristics, UniScatter receiver semi-coherently decodes all nodes from accumulated energy, acquires equivalent primary channel over reflection pattern, then coherently decodes the primary link under enhanced multipath.
-	It reduces the complexity of cooperative decoding while preserves the benefit of backscatter modulation and passive beamforming.
+	It reduces the complexity of cooperative decoding while preserves the benefits of backscatter modulation and passive beamforming.
 	Using shared spectrum, energy, and infrastructures, UniScatter is a more general and powerful transmit-assist protocol that generalizes \gls{bc}, \gls{ris} and \gls{sr} with universal hardware design and augmented \gls{qos} control.
-	% Using shared spectrum, energy, and infrastructures, each UniScatter node adapts probability distribution of reflection states based on \gls{csi} to balance information encoding and passive beamforming in a mutualistic and flexible manner.
-	% The scatter source of \gls{bc}/\gls{sr} and reflecting element of \gls{ris} can be viewed as extreme cases of UniScatter node, where the input distribution boils down to equiprobable and degenerate, respectively.
-	% To accommodate signal characteristics, we propose a practical receiver that semi-coherently decodes all nodes from accumulated energy, re-encodes to determine the equivalent channel, then decodes the primary link.
-	% It reduces the complexity of cooperative decoding while preserves the benefit of backscatter modulation and passive beamforming.
-	Moreover, we consider an application scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple UniScatter nodes, and characterize the achievable primary-(total-)backscatter rate region by designing input distribution at the nodes, active beamforming at the \gls{ap}, and backscatter decision design at the user.
-	Simulation results demonstrate UniScatter can flexibly control the transmit-assist tradeoff via smart input distribution design.
-
-
-	% reduces the complexity of cooperative decoding while preserves the benefit of passive beamforming.
-	% reduces the complexity of cooperative decoding while preserves the benefit of backscatter modulation and passive beamforming.
-
-
-	% In this paper, we argue that to efficiently cope with the high throughput, heterogeneity of quality of service (QoS), and massive connectivity requirements of future multi-antenna wireless networks, multiple access design needs to depart from those two extreme interference management strategies, namely fully treat interference as noise (as in SDMA) and fully decode interference (as in NOMA). Considering a multiple-input single-output broadcast channel, we develop a novel multiple access framework, called rate-splitting multiple access (RSMA). RSMA is a more general and more powerful multiple access for downlink multi-antenna systems that contains SDMA and NOMA as special cases. RSMA relies on linearly precoded rate-splitting with SIC to decode part of the interference and treat the remaining part of the interference as noise. This capability of RSMA to partially decode interference and partially treat interference as noise enables to softly bridge the two extremes of fully decoding interference and treating interference as noise and provides room for rate and QoS enhancements and complexity reduction. The three multiple access schemes are compared, and extensive numerical results show that RSMA provides a smooth transition between SDMA and NOMA and outperforms them both in a wide range of network loads (underloaded and overloaded regimes) and user deployments (with a diversity of channel directions, channel strengths, and qualities of channel state information at the transmitter). Moreover, RSMA provides rate and QoS enhancements over NOMA at a lower computational complexity for the transmit scheduler and the receivers (number of SIC layers).
+	We consider an application scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple UniScatter nodes, and characterize the achievable primary-(total-)backscatter rate region by designing input distribution at the nodes, active beamforming at the \gls{ap}, and backscatter decision design at the user.
+	Simulation results demonstrate UniScatter nodes can flexibly control the transmit-assist tradeoff via smart input distribution design.
 \end{abstract}
 
+\glsresetall
+
 \begin{section}{Introduction}
-	\IEEEPARstart{B}{ackscatter} is recently re-innovated as a promising approach to support low-power communications and control wireless propagation environments.
+	% TODO You need to explain the key principle and benefits of backscatter, then symbiotic radio, then RIS. Then you need to explain about the apparent differences and similarities between those techniques. Then metascatter concept will appear.
+	% The evolution of wireless communications
+	% \IEEEPARstart{I}{nternet-of-Everything} is envisioned to provide high throughput, ultralow power, ubiquitous distribution, and connected intelligence for future wireless networks.
+	\IEEEPARstart{F}{uture} wireless network is envisioned to provide high throughput, ultralow power, ubiquitous deployment, and connected intelligence for trillions of portable devices.
+	% \gls{bc} is an emerging technique that allows low-power devices to transmit without power-hungry \gls{rf} components.
+	% An emerging technique for low-power communication is \gls{bc}, which allows backscatter node to embed its own message over
+	% An emerging technique for low-power communication is \gls{bc}, which allows information node to embed its own message over
+	% transmit without active \gls{rf} components
+	% \gls{bc} is an emerging technique that allows information nodes to alter scattered electromagnetic field and transmit without onboard \gls{rf} components (e.g., carrier syntheizer and power amplifier).
+	% \gls{bc} is an emerging technique that allows information nodes to operate over surrounding carrier wave and transmit without onboard \gls{rf} components.
+	\gls{bc} is an emerging technique that allows backscatter nodes to operate over dedicated carrier signal without onboard \gls{rf} components (e.g., carrier syntheizer and power amplifier).
+	The low-power nodes harvest energy from incident wave and modulate information over scattered signal.
+
+	% alter scattered electromagnetic field and transmit without onboard \gls{rf} components (e.g., carrier syntheizer and power amplifier).
+	% Passive backscatter nodes harvest energy from surrounding \gls{rf} waves
+
+
+	% The evolution in the field of wireless communications requires not only futuristic technologies but also, a change of mindset about how different technologies interact with each other like a well-oiled machine. In this backdrop, the deployment of massive Internet of things (IoT) networks poses significant challenges. While there have been numerous technologies proposed to improve the performance of such low-powered IoT networks, the current state of the art is still not mature enough to deploy commercial and large-scale networks. Rapid energy consumption along with miniature size of energy reservoirs naturally becomes an obstacle as these IoT devices are likely to be untethered when operating. Fortunately, recent research efforts have shown that radio backscatter communication can effectively offer near-zero-power (less than 1mW) connectivity to small devices. In this regard, this book explores the performance evaluation and optimization aspects of backscatter devices in outdoor and indoor environments, where it is not possible to set up a dedicated nearby transmitter. The book also sheds light on different cooperation techniques for backscatter communications. These techniques help analyze the reliability-energy trade-off for backscatter devices. Also, there are in-depth dis- cussions and recent studies on a variety of emerging wireless topics such as physical-layer security, non-orthogonal multiple access (NOMA), age of informa- tion, and multi-tone carrier techniques.
+
+	% \IEEEPARstart{S}{catterers} can harvest energy from, modulate information over, and influence propagation of surrounding radio waves.
+	% \IEEEPARstart{B}{ackscatter} is recently re-innovated as a promising approach to support low-power communications and control wireless propagation environments.
 	% \IEEEPARstart{B}{ackscatter} is re-innovated to support low-power communications and control wireless propagation environments.
-	% \IEEEPARstart{B}{ackscatter} allows wireless nodes to recycle existing .
-	% \IEEEPARstart{B}{ackscatter} allows wireless nodes to communicate without generating carrier.
-	% The concept of \gls{ambc} was first proposed in \cite{Liu2013b}, where battery-free communication between passive nodes was established by
 	\gls{ambc} that enables battery-free communication between interactive nodes was first introduced and prototyped in \cite{Liu2013b}, where devices harvest energy from and modulate information over ambient \gls{rf} signals by switching between reflecting and absorbing states.
 	To combat the strong direct-link interference of \gls{ambc}, \cite{Yang2018d} exploited the repeating structure of \gls{ofdm} symbol and proposed a multi-antenna detector that only requires the backscatter channel strength.
 	% with periodical change of states.

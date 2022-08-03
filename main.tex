@@ -109,7 +109,8 @@
 
 
 \begin{document}
-\title{UniScatter: Unifying\\Backscatter Communications, Reconfigurable Intelligent Surface, and Symbiotic Radio}
+% \title{UniScatter: Unifying\\Backscatter Communications, Reconfigurable Intelligent Surface, and Symbiotic Radio}
+\title{UniScatter: Unifying\\Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
 \author{
 	\IEEEauthorblockN{
 		Yang~Zhao,~\IEEEmembership{Member,~IEEE,}
@@ -139,66 +140,39 @@
 
 \begin{section}{Introduction}
 	% TODO You need to explain the key principle and benefits of backscatter, then symbiotic radio, then RIS. Then you need to explain about the apparent differences and similarities between those techniques. Then metascatter concept will appear.
-	% The evolution of wireless communications
-	% \IEEEPARstart{I}{nternet-of-Everything} is envisioned to provide high throughput, ultralow power, ubiquitous distribution, and connected intelligence for future wireless networks.
-	% \IEEEPARstart{F}{uture} wireless network is envisioned to provide high throughput, uniform coverage, massive connectivity and heterogeneous control for trillions of portable devices with ultralow power consumption.
 	\IEEEPARstart{F}{uture} wireless network is envisioned to provide high throughput, uniform coverage, pervasive connectivity, heterogeneous control, and cognitive intelligence for trillions of portable devices.
-	% \gls{bc} is an emerging technique
-	% that enables low-power communication by separating the
-	% As an emerging low-power communication technique, \gls{bc} separates the power-hungry \gls{rf} components (i.e., synthesizer and amplifier) as dedicated carrier emitter, and employs passive energy harvester and impedance modulator to operate over incident and scattered signals.
-	% As an emerging low-power communication technique, \gls{bc} separates the power-hungry \gls{rf} components (i.e., synthesizer and amplifier) as dedicated carrier emitter, and equips the backscatter node with energy harvester and load-switching modulator to operate over incident and scattered signals, respectively.
-	% As an emerging low-power communication protocol, \gls{bc} divides transmitter into a dedicated carrier emitter with power-hungry \gls{rf} elements (e.g., synthesizer and amplifier) and an information-bearing node with passive components (e.g., harvester and modulator).
-	As an emerging low-power communication protocol, \gls{bc} divides transmitter into a \gls{rf} signal emitter with power-hungry elements (e.g., synthesizer and amplifier) and an information-bearing scatter node with passive components (e.g., harvester and modulator).
-	% \gls{bc} is an emerging low-power communication protocol that divides transmitter into a \gls{rf} signal emitter with power-hungry elements (e.g., synthesizer and amplifier) and an information-bearing scatter node with passive components (e.g., harvester and modulator).
-	% The node harvests energy from emitted \gls{rf} wave and embeds its information over scattered signal in a sustainable and controllable manner, bringing more possibilities to \gls{ioe} and \gls{m2m} networks.
-	% The node harvests energy from emitted \gls{rf} wave and embeds its information over scattered signal in a sustainable and controllable manner, which is widely applied in \gls{ioe} and \gls{m2m} networks.
-	The node harvests energy from emitted \gls{rf} wave and embeds its information over scattered signal in a sustainable and controllable manner.
-	% Dated back to early 1970's,
-	% \gls{rfid}, as a main application of \gls{bc}, has experienced great success
-	\gls{rfid}, as a main application of \gls{bc}, has been extensively developed and commonly employed even before the era of \gls{iot} and \gls{m2m}.
-	% It requires a dedicated sinusoidal source
-	Specifically, a dedicated emitter generates a sinusoidal carrier at reserved frequency, and \gls{rfid} tags reports their identifier to a nearby \gls{rfid} reader.
-	% Specifically, a dedicated emitter generates sinusoidal carrier at reserved frequency, and the node reports its identifier to a nearby \gls{rfid} reader.
-
-
-	% Recently, RFID has experienced a tremendous growth due to developments in integrated circuits and radios, and due to increased interest from retail industry and government [4].
-
+	As an emerging low-power communication technique, \gls{bc} separates conventional transmitter into a \gls{rf} emitter with power-hungry elements (e.g., synthesizer and amplifier), and an information-bearing node with power-efficient components (e.g., harvester and modulator) \cite{Boyer2014}.
+	The node harvests energy from incident wave and embeds information over scattered signal in a sustainable and controllable manner.
+	Termed as monostatic and bistatic, the backscatter reader can be either co-located or separated with the emitter.
+	\gls{bc} applications such as \gls{rfid} \cite{Dobkin2012,Landt2005} and sensor networks \cite{Vannucci2008,Assimonis2016} have been extensively researched, standardized, and commercialized to support \gls{iot} and \gls{m2m}.
+	% Specifically, a dedicated emitter generates a sinusoidal carrier at reserved frequency, and \gls{rfid} tags reports their identifier to a nearby \gls{rfid} reader.
 	% ? With the upsurge of wireless devices and the downtrend of circuit power consumption, \gls{rfid} has experienced great success in \gls{ioe} and \gls{m2m} networks.
-	% Since the node harvests energy from emitted \gls{rf} wave and embeds its information over scattered signal, such that
-	% The rapid growth of wireless devices and the steady decrease of electronic power consumption
+	However, traditional \gls{bc} requires dedicated carrier emitter and backscatter reader, while passive nodes only respond when externally inquired.
+	% In \gls{ambc} \cite{Liu2013b}, ambient signals (e.g., radio, television, and Wi-Fi) are recycled by interactive nodes to harvest energy and establish connection.
+	In \gls{ambc} \cite{Liu2013b}, interactive nodes recycle ambient signals generated by legacy transmitters (e.g., radio, television, and Wi-Fi) to harvest energy and establish connection.
+	% ambient signals (e.g., radio, television, and Wi-Fi) are recycled by interactive nodes to harvest energy and establish connection.
+	% It not only eliminates the need of power source and carrier emitter, but also avoid the cost of dedicated frequency spectrum.
+	It eliminates the need of dedicated power source, carrier emitter, and frequency spectrum, bringing more possibilities to low-power communications.
+	To combat the strong direct-link interference of \gls{ambc}, \cite{Yang2018} proposed a co-located receiver that cooperatively decodes both primary (legacy) and backscatter links.
+	The authors evaluated the error performance of \gls{ml}, linear, and \gls{sic} detectors for flat fading channel, and proposed a low-complexity detector for frequency-selective fading channel.
+	The concept of cooperative \gls{ambc} was then refined as \gls{sr} to cognitively incorporate \gls{ambc} with existing systems \cite{Liang2020}.
+	In \gls{sr}, the primary transmitter generates active radio carrying primary information, the scatter node modulates re-radiated component using secondary information, and the cooperative receiver decodes both links from two propagation paths.
+	The direct transmitter-receiver path contains only primary information, while the cascaded transmitter-node-receiver path preserves primary and backscatter information.
+	Such a coexistence was further classified into commensal, parasitic, and competitive relationships based on link priority \cite{Guo2019b}, and their instantaneous rates, optimal power allocations, and outage probabilities were subsequently derived in \cite{Guo2019b,Ding2020}.
+	However, one important issue of \gls{sr} is the practical cooperative receiver design.
+	Ideal joint \gls{ml} decoding achieves optimal performance with prohibitive computational complexity \cite{Yang2018,Zhang2022}.
+	% In contrast, sequential decoding is subject to uncertainty/interference at the first layer \cite{Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022,Xu2020b,Hua2022}.
+	% Due to the physical constraint at the load-switching modulator, backscatter symbol duration can be much longer than primary.
+	Due to physical constraints at the load-switching modulator, backscatter symbol period is typically longer than primary symbol period.
+	% \cite{Long2020a} indicated if backscatter symbol is sufficiently long, its randomness can be modelled as channel uncertainty, and primary
+	% \cite{Long2020a} pointed out if backscatter symbol is sufficiently long, its randomness can be modelled as channel uncertainty, and
+	% \cite{Long2020a} pointed out when decoding the primary link first, the randomness of backscatter modulation can be modelled as channel uncertainty.
+	For sequential decoding from primary to backscatter, \cite{Long2020a} pointed out the randomness from backscatter modulation can be modelled as interference or channel uncertainty, depending on symbol period ratio.
+	The authors concluded if backscatter symbol period is sufficiently long, the non-coherent primary rate would approach its coherent counterpart.
+	This motivated \cite{Long2020a} and \cite{Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022,Xu2020b,Hua2022} to decode the primary link, perform \gls{sic}, then decode the backscatter link.
 
-	% account for the
-	% Although \gls{bc} experienced
-
-	% the power-hungry \gls{rf} elements (e.g., synthesizer and amplifier) as dedicated carrier emitter, and leaves the passive components (e.g., harvester and modulator) at the backscatter node.
-	% The node harvests energy from emitted \gls{rf} wave and embeds its information over scattered signal.
-
-
-	% alter scattered electromagnetic field and transmit without onboard \gls{rf} components (e.g., carrier syntheizer and power amplifier).
-	% Passive backscatter nodes harvest energy from surrounding \gls{rf} waves
-
-
-	% The evolution in the field of wireless communications requires not only futuristic technologies but also, a change of mindset about how different technologies interact with each other like a well-oiled machine. In this backdrop, the deployment of massive Internet of things (IoT) networks poses significant challenges. While there have been numerous technologies proposed to improve the performance of such low-powered IoT networks, the current state of the art is still not mature enough to deploy commercial and large-scale networks. Rapid energy consumption along with miniature size of energy reservoirs naturally becomes an obstacle as these IoT devices are likely to be untethered when operating. Fortunately, recent research efforts have shown that radio backscatter communication can effectively offer near-zero-power (less than 1mW) connectivity to small devices. In this regard, this book explores the performance evaluation and optimization aspects of backscatter devices in outdoor and indoor environments, where it is not possible to set up a dedicated nearby transmitter. The book also sheds light on different cooperation techniques for backscatter communications. These techniques help analyze the reliability-energy trade-off for backscatter devices. Also, there are in-depth dis- cussions and recent studies on a variety of emerging wireless topics such as physical-layer security, non-orthogonal multiple access (NOMA), age of informa- tion, and multi-tone carrier techniques.
-
-	% \IEEEPARstart{S}{catterers} can harvest energy from, modulate information over, and influence propagation of surrounding radio waves.
-	% \IEEEPARstart{B}{ackscatter} is recently re-innovated as a promising approach to support low-power communications and control wireless propagation environments.
-	% \IEEEPARstart{B}{ackscatter} is re-innovated to support low-power communications and control wireless propagation environments.
-	\gls{ambc} that enables battery-free communication between interactive nodes was first introduced and prototyped in \cite{Liu2013b}, where devices harvest energy from and modulate information over ambient \gls{rf} signals by switching between reflecting and absorbing states.
-	To combat the strong direct-link interference of \gls{ambc}, \cite{Yang2018d} exploited the repeating structure of \gls{ofdm} symbol and proposed a multi-antenna detector that only requires the backscatter channel strength.
-	% with periodical change of states.
-	% each tag harvests energy from and modulates information over ambient \gls{rf} signals by periodically switching between different reflection patterns.
-	% It enables battery-free communication between fully passive nodes, but the backscatter signal strength can be relatively weak and the decoding is subject to strong direct-link interference.
-	% To solve this, \cite{Yang2018d} exploited the repeating structure of \gls{ofdm} symbol for interference cancellation based on backscatter channel strength.
-	% Using co-located receiver to decode
-	Cooperative \gls{ambc} that decodes primary and backscatter links using co-located receiver was proposed in \cite{Yang2018}, where the authors evaluated the error performance of \gls{ml}, linear, and \gls{sic} detectors for flat fading channels and proposed a low-complexity \gls{ml} detector for frequency-selective fading channels.
-	The concept was then generalized to \gls{sr} in \cite{Liang2020} to ``exploit the benefits and address the drawbacks'' of \gls{cr} and \gls{ambc}.
-	% The concept of \gls{sr} was then proposed in \cite{Liang2020} to exploit
-	% symbiotic radio (SR), is proposed to ex- ploit the benefits and address the drawbacks of cognitive radio (CR) and ambient backscattering communications (AmBC)
-	% When transmit cooperation is also available, cooperative \gls{ambc} is also termed as \gls{sr} \cite{Liang2020}.
-	The authors of \cite{Guo2019b} classified \gls{sr} into commensal, parasitic, and competitive types based on link priority, and derived their instantaneous rates and optimal power allocations.
-	The corresponding outage probabilities were also studied in \cite{Ding2020}.
-	Besides, \cite{Long2020a} concluded that if the backscatter symbol period is sufficiently long, then the non-coherent primary rate would approach its coherent counterpart.
-	The authors thus proposed to decode the primary link under backscatter uncertainty, then perform \gls{sic} and decode the backscatter link.
+	% Besides, \cite{Long2020a} concluded if the backscatter symbol period is sufficiently long, then the non-coherent primary rate would approach its coherent counterpart.
+	% The authors thus proposed to decode the primary link under backscatter uncertainty, then perform \gls{sic} and decode the backscatter link.
 	% The authors also considered the transmit precoder design for weighted total-rate maximization and transmit power minimization problems.
 	% \cite{Zhou2019a} explored how the number of transmit antennas, receive antennas, and symbol period ratio asymptotically influence the ergodic rate of primary and backscatter links.
 	% For \gls{sr} with a single-antenna backscatter node,

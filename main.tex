@@ -170,6 +170,10 @@
 	For sequential decoding from primary to backscatter, \cite{Long2020a} pointed out the randomness from backscatter modulation can be modelled as interference or channel uncertainty, depending on symbol period ratio.
 	The authors concluded if backscatter symbol period is sufficiently long, the non-coherent primary rate would approach its coherent counterpart.
 	This motivated \cite{Long2020a} and \cite{Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022,Xu2020b,Hua2022} to decode the primary link, perform \gls{sic}, then decode the backscatter link.
+	% However, the advantage of this particular scheme is questionable because 1) it does not fully exploit backscatter pattern and signal characteristics; 2) it requires non-coherent encoding at the primary transmitter, and re-encoding, precoding, and subtraction at the receiver; 3) the primary and backscatter symbols are mixed by multiplication instead of superposition.
+	However, the advantage of this particular scheme is questionable because 1) it does not fully exploit backscatter pattern and signal characteristics; 2) non-coherent primary encoding is required at the transmitter while re-encoding, precoding, and subtraction are required at the receiver; 3) the primary and backscatter symbols are mixed by multiplication instead of superposition.
+
+	% This receiving scheme, as would be discussed later, may not fully
 
 	% Besides, \cite{Long2020a} concluded if the backscatter symbol period is sufficiently long, then the non-coherent primary rate would approach its coherent counterpart.
 	% The authors thus proposed to decode the primary link under backscatter uncertainty, then perform \gls{sic} and decode the backscatter link.

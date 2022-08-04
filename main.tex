@@ -25,6 +25,7 @@
 \usepackage{tikz}
 \usepackage{xcolor}
 
+% dark mode
 \usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
 
 % amsthm
@@ -101,6 +102,7 @@
 \newacronym{simo}{SIMO}{Single-Input Multiple-Output}
 \newacronym{sinr}{SINR}{Signal-to-Interference-plus-Noise Ratio}
 \newacronym{smawk}{SMAWK}{Shor-Moran-Aggarwal-Wilber-Klawe}
+\newacronym{snr}{SNR}{Signal-to-Noise Ratio}
 \newacronym{sr}{SR}{Symbiotic Radio}
 \newacronym{tdma}{TDMA}{Time-Division Multiple Access}
 \newacronym{ue}{UE}{user}
@@ -110,7 +112,6 @@
 
 
 \begin{document}
-% \title{UniScatter: Unifying\\Backscatter Communications, Reconfigurable Intelligent Surface, and Symbiotic Radio}
 \title{UniScatter: Unifying\\Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
 \author{
 	\IEEEauthorblockN{
@@ -126,7 +127,7 @@
 \begin{abstract}
 	Scatterers can harvest energy from, modulate information over, and influence propagation of surrounding radio waves.
 	\gls{bc} varies object impedance to manipulate the magnitude, phase, and/or frequency of scattered signal to encode information and deliver within coverage.
-	\gls{ris} adapts scattering antennas or programmable metamaterial to control propagation environment by boosting/suppressing signal strength in specific directions.
+	\gls{ris} adapts scattering antennas or programmable metamaterial to control wireless propagation environment by boosting/suppressing signal strength in specific directions.
 	\gls{sr} incorporates scatter nodes into active networks that recycle ambient signal to transmit self information and enhance legacy channel to the cooperative receiver.
 	In this paper, we depart from those concepts and introduce UniScatter as a new paradigm for future wireless networks.
 	Instead of treating probability distribution of reflection states as equiprobable (as scattering source of \gls{bc}/\gls{sr}) or degenerate (as reflecting element of \gls{ris}), UniScatter node adapts input distribution of a passive scatter node based on link priority and \gls{csi}, balancing information encoding and channel reconfiguration in a flexible and mutualistic manner.
@@ -164,22 +165,22 @@
 	Ideal joint \gls{ml} decoding achieves optimal performance with prohibitive computational complexity \cite{Yang2018,Zhang2022}.
 	Due to physical constraints at the load-switching modulator, backscatter symbol period is typically longer than primary.
 	For sequential decoding from primary to backscatter, \cite{Long2020a} pointed out the randomness from backscatter modulation can be modelled as either interference or channel uncertainty, depending on symbol period ratio.
-	The authors concluded if this ratio is sufficiently long, the non-coherent primary rate would asymptotically approach its coherent counterpart.
+	The authors concluded if this ratio is sufficiently large, the non-coherent primary achievable rate would asymptotically approach its coherent counterpart.
 	This motivated \cite{Long2020a,Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022,Xu2020b,Hua2022} to decode the primary link, perform \gls{sic}, then decode the backscatter link.
-	However, the advantage of \gls{sic} is questionable because 1) backscatter pattern and signal characteristics are not fully exploited; 2) non-coherent primary encoding is required at the transmitter while re-encoding, precoding, and subtraction are required at the receiver; 3) primary and backscatter symbols are mixed by multiplication instead of superposition.
+	However, the advantage of \gls{sic} is questionable because 1) backscatter pattern and signal characteristics are not fully exploited; 2) primary rate analysis considers moderately long backscatter symbol period that constraints backscatter rate; 3) non-coherent primary encoding is required at the transmitter, while re-encoding, precoding, and subtraction are required at the receiver; 4) primary and backscatter symbols are mixed by multiplication instead of superposition.
 	Another open issue for \gls{sr} is backscatter multiple access.
 	% By extending the \gls{sic} scheme to multi-node scenario, \cite{Xu2021a} proposed a backscatter \gls{noma}-based \gls{sr} where the decoding order depends on backscatter channel strength.
-	\cite{Xu2021a} proposed a backscatter \gls{noma}-based \gls{sr} by extending the \gls{sic} scheme to multi-node scenario, where the decoding order depends on backscatter signal strength.
+	\cite{Xu2021a} proposed a backscatter \gls{noma}-based \gls{sr} by extending \gls{sic} to multi-node scenario, where the decoding order depends on backscatter signal strength.
 	However, its performance deteriorates fast when the number of nodes increases.
 	Backscatter \gls{tdma} was also evaluated in \cite{Yang2021a}, where each node transmits information during its own slot and harvests energy during others.
-	Although transmission time and reflection ratio can be designed to boost energy efficiency, it requires frequent feedback to passive nodes and incurs high coordination cost.
-	In \cite{Vougioukas2019}, the nodes control the load-switching speed to shift the scattered signal to desired frequency band, enabling backscatter \gls{fdma}.
-	It requires extra bandwidth and consumes more power at passive nodes.
+	Although energy efficiency can be enhanced by transmission time and reflection ratio design, it requires regular feedback to passive nodes and incurs high coordination cost.
+	% Although transmission time and reflection ratio can be designed to boost energy efficiency, it requires frequent feedback to passive nodes and incurs high coordination cost.
+	% In \cite{Vougioukas2019}, the nodes control the load-switching speed to shift the scattered signal to desired frequency band, enabling backscatter \gls{fdma}.
+	\cite{Vougioukas2019} controls the load-switching speed at nodes to shift the scattered signal to desired frequency bands, which enables backscatter \gls{fdma} at the cost of extra bandwidth and higher power consumption.
+	% It requires extra bandwidth and consumes more power at passive nodes.
 	% In \cite{Han2021}, random code-assisted backscatter multiple access was introduced to \gls{sr}, and the authors evaluated the asymptotic \gls{sinr} performance using random matrix theory.
 	To reduce coordination between passive nodes, \cite{Han2021} proposed a random code-assisted multiple access for \gls{sr} and evaluated the asymptotic \gls{sinr} using random matrix theory.
 	However, it suffers from imperfect synchronization and the near-far problem.
-
-
 	% \cite{Zhou2019a} also explored the asymptotic impact of transmit/receive antenna and backscatter symbol period on the ergodic rate of primary and backscatter links.
 	% For a \gls{mimo} \gls{sr} system with a multi-antenna backscatter node, \cite{Wu2021a} proposed a beamforming design to maximize the backscatter rate while guaranteeing the primary performance.
 	% However, those paper only considered one backscatter node and backscatter multiple access remains an open issue.
@@ -187,13 +188,37 @@
 	% A \gls{tdma}-based \gls{sr} with energy harvesting constraints was also presented in \cite{Yang2021a}, where transmit power, reflection efficiency, and time allocation were jointly optimized to maximize energy efficiency.
 	% To reduce coordination between passive nodes, \cite{Han2021} proposed a random code-assisted multiple access for \gls{sr} and evaluated the asymptotic \gls{sinr} using random matrix theory.
 
-	% On the other hand, \gls{ris} has recently emerged as a promising technique to enhance the energy efficiency.
-	% In practice, an \gls{ris} consists of multiple individual sub-wavelength reflecting elements to adjust the amplitude and phase of the incoming signal (i.e., passive beamforming).
-	% Different from relay, backscatter and frequency-selective surface \cite{Anwar2018}, \gls{ris} assists the primary transmission using passive components with much lower energy consumption and thermal noise, but is limited to frequency-dependent reflection.
-	% On the other hand, \gls{ris} consists of numerous sub-wavelength passive elements that alter propagation environment using adaptive backscatter pattern to assist existing networks. Extensive research has been devoted to optimizing the reflection coefficient
-	% On the other hand, \gls{ris} consists of numerous sub-wavelength passive elements with adaptive amplitudes and/or phases that alter propagation environment to assist existing networks.
-	On the other hand, \gls{ris} alters propagation environment for legacy networks using numerous sub-wavelength passive elements with adaptive amplitudes and/or phases.
-	Extensive research has been devoted to optimizing the phase shifts for the whole channel block to improve communication, sensing, and power performances \cite{Wu2018,Zhang2019a,Lin2022,Liu2022,Feng2022,Zhao2022}.
+	On the other hand, \gls{ris} is a promising technology that evolves wireless propagation environment using numerous passive reflecting elements (e.g., scattering antenna or programmable metamaterial) with adjustable amplitudes and/or phases \cite{Wu2021b}.
+	% The scattered/reflected signals contain no additional information, but adds constructively (or destructively) with the direct component to enhance desired link (or suppress interference).
+	The scattered signals contain no additional information, but adds constructively or destructively with the direct component to enhance desired signal or suppress interference, improving spectrum and energy efficiency.
+	% Specifically, different IRS reflec- tion coefficients are set for different time slots in each channel coherence block to enable more flexible reflection design with generally less number of users selected to be served at each time slot, thus leading to a higher passive beamforming gain
+	% Extensive research has been devoted to optimizing \gls{ris} phase shifts to improve communication, sensing, and power performances.
+	Compared with backscatter nodes of \gls{bc} and \gls{sr}, the reflection pattern of \gls{ris} elements are deterministic and priorly known at transmitter and receiver.
+	It motivated the use of fixed reflection pattern during each channel block to improve communication, sensing, and power performances \cite{Wu2018,Zhang2019a,Lin2022,Liu2022,Feng2022,Zhao2022}.
+	% To create artificial diversity and enable flexible resource allocation, the concept of dynamic passive beamforming was first proposed for \gls{ofdm} systems \cite{Yang2020},
+	% The concept of dynamic passive beamforming that chooses \gls{ris} reflection coefficients independently over different time slots within each channel block was first proposed for \gls{ofdm} systems \cite{Yang2020}, then extended to multi-user \gls{wpt} \cite{Qiu2022} and \gls{wpcn} \cite{Wu2021d,Hua2022a} with dedicated downlink power and uplink information phases.
+	% The concept of dynamic passive beamforming, namely choosing \gls{ris} reflection coefficients independently over different time slots within each channel block, was first proposed for \gls{ofdm} systems \cite{Yang2020}, then extended to multi-user \gls{wpt} \cite{Qiu2022} and \gls{wpcn} \cite{Wu2021d,Hua2022a} with dedicated downlink power and uplink information phases.
+	The concept of dynamic \gls{ris}, namely choosing independent reflection coefficients for different time slots within channel block, was first proposed to assist \gls{ofdm} systems \cite{Yang2020}, then extended for the downlink power and uplink information phases of \gls{wpcn} \cite{Wu2021,Wu2021d,Hua2022a}.
+	Dynamic \gls{ris} introduced artificial channel diversity and flexible resource allocation, but missed the opportunity to encode its own message.
+	% Interestingly, \cite{Karasik2020} reported from information-theoretic perspective that if
+	From an information-theoretic perspective, \cite{Karasik2020} reported using \gls{ris} as an auxiliary equipment to maximize the \gls{snr} is generally rate-suboptimal for finite input constellations.
+	% From an information-theoretic perspective, \cite{Karasik2020} reported using \gls{ris} as a pure auxiliary device to maximize the \gls{snr} at the receiver is generally rate-suboptimal for finite input constellations.
+	% The capacity-achieving transmission scheme is to joint
+	Instead, joint transmitter-\gls{ris} encoding achieves the capacity of \gls{ris}-aided channel, while layered encoding with \gls{sic} decoding (i.e., \gls{sic}-based \gls{sr}) can outperform pure passive beamforming at high \gls{snr}.
+	Further attempts
+
+	How to combine backscatter modulation and passive beamforming
+
+
+
+	Although dynamic passive beamforming artificially creates temporal diversity for flexible channel reconfiguration and resource allocation, it demands additional computational cost and control overhead, and the tradeoff deserves further attention especially for large \gls{ris}.
+	In \cite{Chen2021,Zhang2021d}, \gls{ris} was also introduced to single- and multi-node \gls{sr} systems to reduce the total transmit power.
+	When joint transmitter-\gls{ris} encoding is possible, \cite{Karasik2020} proved using \gls{ris} only for passive beamforming is generally suboptimal in terms of achievable rate for finite input constellations.
+	% The capacity-achieving \gls{ris} strategy was found to
+	Recently, \gls{ris}-empowered \gls{sr} was introduced in \cite{Xu2020b,Hua2022,Hu2021a} where independent passive beamforming and backscatter encoding were combined using advanced architectures.
+	The authors of \cite{Xu2020b,Hua2022} proposed the \gls{ris} to modulate binary message over the whole phase shift matrix and the receiver to decodes from (non-coherent) primary to (coherent) backscatter link.
+	In contrast, \cite{Hu2021a} divided the \gls{ris} into reflection and information elements, and evaluated the error performance of non-coherent backscatter detection.
+
 	% In contrast, dynamic passive beamforming that adjusts \gls{ris} within channel block was proposed in \cite{Yang2020} to create diversity for \gls{ofdm} systems.
 	% In contrast, dynamic passive beamforming that adjusts \gls{ris} over finer time slots was proposed in \cite{Yang2020} to create diversity for \gls{ofdm} systems.
 	Besides, \cite{Yang2020} proposed a dynamic passive beamforming that further adjusts \gls{ris} over fine-grained time slots for \gls{ofdm} systems to balance beamforming gain and multiuser diversity.
@@ -205,7 +230,7 @@
 	% Although dynamic passive beamforming can artificially introduce temporal diversity for flexible channel reconfiguration and resource allocation, it demands additional computational complexity and control overhead, and the performance-cost tradeoff deserves further attention.
 	Although dynamic passive beamforming artificially creates temporal diversity for flexible channel reconfiguration and resource allocation, it demands additional computational cost and control overhead, and the tradeoff deserves further attention especially for large \gls{ris}.
 	In \cite{Chen2021,Zhang2021d}, \gls{ris} was also introduced to single- and multi-node \gls{sr} systems to reduce the total transmit power.
-	When joint transmitter-\gls{ris} encoding is possible, \cite{Karasik2019} proved using \gls{ris} only for passive beamforming is generally suboptimal in terms of achievable rate for finite input constellations.
+	When joint transmitter-\gls{ris} encoding is possible, \cite{Karasik2020} proved using \gls{ris} only for passive beamforming is generally suboptimal in terms of achievable rate for finite input constellations.
 	% The capacity-achieving \gls{ris} strategy was found to
 	Recently, \gls{ris}-empowered \gls{sr} was introduced in \cite{Xu2020b,Hua2022,Hu2021a} where independent passive beamforming and backscatter encoding were combined using advanced architectures.
 	The authors of \cite{Xu2020b,Hua2022} proposed the \gls{ris} to modulate binary message over the whole phase shift matrix and the receiver to decodes from (non-coherent) primary to (coherent) backscatter link.
@@ -933,7 +958,7 @@
 		Fig. \subref*{fi:distribution_weights_1} and \subref*{fi:distribution_weights_2} are obtained from \gls{iid} drop and channel realizations.
 		We note that even for $\rho=0$ (i.e., best backscatter performance), the optimal input distribution is not equiprobable like \gls{sr}, and adaptive channel coding can further increase total backscatter rate based on \gls{csi}.
 		On the other hand, the optimal input distribution becomes fully deterministic at $\rho=1$ (i.e., best primary performance), where the state maximizes equivalent primary channel \eqref{eq:equivalent_channel} strength is chosen with probability \num{1}.
-		In this case, Metascatter boils down to an \gls{ris} element with $M$ discrete states.
+		In this case, Metascatter boils down to a \gls{ris} element with $M$ discrete states.
 		As $\rho$ moves from \num{0} to \num{1}, the optimal input distribution becomes gradually biased to one state and flexibly balances the primary-backscatter tradeoff.
 	\end{subsection}
 

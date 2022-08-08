@@ -1,6 +1,6 @@
 %% Creator: Inkscape 1.2.1 (9c6d41e410, 2022-07-14), www.inkscape.org
 %% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
-%% Accompanies image file 'metascatter_network.eps' (pdf, eps, ps)
+%% Accompanies image file 'uniscatter_network.eps' (pdf, eps, ps)
 %%
 %% To include the image in your LaTeX document, write
 %%   \input{<filename>.pdf_tex}
@@ -20,7 +20,7 @@
 %%   \import{<path to file>}{<filename>.pdf_tex}
 %% Alternatively, one can specify
 %%   \graphicspath{{<path to file>/}}
-%% 
+%%
 %% For more information, please see info/svg-inkscape on CTAN:
 %%   http://tug.ctan.org/tex-archive/info/svg-inkscape
 %%
@@ -53,7 +53,7 @@
   \begin{picture}(1,0.4126334)%
     \lineheight{1}%
     \setlength\tabcolsep{0pt}%
-    \put(0,0){\includegraphics[width=\unitlength]{metascatter_network.eps}}%
+    \put(0,0){\includegraphics[width=\unitlength]{uniscatter_network.eps}}%
     \put(0.17259625,0.10124949){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}AP\end{tabular}}}}%
     \put(0.82822612,0.15856332){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}User\end{tabular}}}}%
     \put(0.86504169,0.10340465){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$\dots$\end{tabular}}}}%

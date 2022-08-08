@@ -6,7 +6,7 @@ Result(nVariables, nWeights) = struct('weight', [], 'rate', [], 'distribution', 
 % * Generate direct channel
 directChannel = rxGain * path_loss(frequency, directDistance, directExponent) * fading_ricean(nTxs, 1, directFactor);
 
-% * Evaluate rate region vs number of Metascatters
+% * Evaluate rate region vs number of tags
 for iVariable = 1 : nVariables
 	% * Set number of tags and update layout
 	nTags = Variable(iVariable).nTags;

@@ -1,0 +1,80 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44706,0.74118}%
+\definecolor{mycolor2}{rgb}{0.85098,0.32549,0.09804}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.036in,
+height=3.396in,
+at={(0.677in,0.458in)},
+scale only axis,
+xmin=5.8,
+xlabel style={font=\color{white!15!black}},
+xlabel={Primary Rate [bits/s/Hz]},
+ymin=0,
+ymax=0.289428920155781,
+ylabel style={font=\color{white!15!black}},
+ylabel={Total Backscatte Rate [bits/BSP]},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={at={(0.03,0.03)}, anchor=south west, legend cell align=left, align=left, draw=white!15!black},
+title style={font=\huge},
+label style={font=\huge},
+ticklabel style={font=\LARGE},
+legend style={font=\LARGE},
+scaled y ticks=false,
+y tick label style={/pgf/number format/.cd, fixed, precision=2}
+]
+\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+5.91510236776696	0.289428920155781\\
+0	0.289428920155781\\
+0	0\\
+6.60747195102881	0\\
+6.60747195102881	1.91506069669179e-14\\
+6.59807435644962	0.0347372563581377\\
+6.51928642785681	0.165537200184165\\
+6.47924513008763	0.19794578857726\\
+6.42616551581157	0.226413655987994\\
+6.39241458390949	0.239133613337985\\
+6.34008632245345	0.254240327147756\\
+6.2816170631732	0.266792612001587\\
+6.21082891212439	0.276738061969233\\
+6.16942787061507	0.280544934311665\\
+6.11005899229338	0.284519311848912\\
+6.07695648445096	0.285957309213374\\
+6.0354962506959	0.287352965676093\\
+5.98318974033764	0.288528758485447\\
+5.91510236776696	0.289428920155781\\
+};
+\addlegendentry{PGD}
+
+\addplot [color=mycolor2, dashed, line width=2.0pt, mark=+, mark options={solid, mycolor2}]
+  table[row sep=crcr]{%
+6.35904552580526	0.225808884580649\\
+0	0.225808884580649\\
+0	0\\
+6.6091473656444	0\\
+6.6091473656444	1.91023583376104e-14\\
+6.59986162822206	0.0344038913694632\\
+6.5234840708941	0.160388145544673\\
+6.48606694631808	0.18975829649633\\
+6.44712971656966	0.209282353398538\\
+6.42759249130641	0.215897953881346\\
+6.40849146805451	0.220650486992134\\
+6.39041619296103	0.223800983865469\\
+6.37412339407446	0.225350351044572\\
+6.36646543189846	0.225694199627973\\
+6.35904552580526	0.225808884580649\\
+};
+\addlegendentry{MRT}
+
+\end{axis}
+\end{tikzpicture}%

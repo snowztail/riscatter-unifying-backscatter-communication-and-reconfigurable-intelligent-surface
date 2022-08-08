@@ -35,5 +35,5 @@ object = plot(region(1, :) / log(2), region(2, :) / log(2), 'DisplayName', strca
 hold off; legend('Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatte Rate [bits/BSP]');
-xlim([5, inf]);
+xlim([5, Inf]);
 style_plot(object);

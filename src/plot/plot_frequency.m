@@ -16,7 +16,7 @@ for iVariable = 1 : nVariables
 	[rate(2, nWeights + 1), rate(2, nWeights + 3)] = deal(eps);
 	region{iVariable} = rate(:, convhull(transpose(rate)));
 end
-% save(strcat('../data/region_', erase(mfilename, 'plot_')));
+save(strcat('../data/region_', erase(mfilename, 'plot_')));
 
 %% * Draw primary-(sum-)backscatter rate regions
 figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Carrier Frequency', 'Position', [0, 0, 500, 400]);
@@ -30,7 +30,7 @@ hold off; legend('Location', 'se'); grid on; box on; axis tight;
 set(gca, 'YScale', 'log');
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatte Rate [bits/BSP]');
-% ylim([1e-7, 1e-1]);
+ylim([1e-8, Inf]);
 style_plot(object);
-% savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
-% matlab2tikz(strcat('../../assets/simulation/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', {'title style={font=\huge}', 'label style={font=\huge}', 'ticklabel style={font=\LARGE}', 'legend style={font=\LARGE}'});
+savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
+matlab2tikz(strcat('../../assets/simulation/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', {'title style={font=\huge}', 'label style={font=\huge}', 'ticklabel style={font=\LARGE}', 'legend style={font=\LARGE}'});

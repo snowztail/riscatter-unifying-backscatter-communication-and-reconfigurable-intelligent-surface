@@ -26,7 +26,7 @@
 \usepackage{xcolor}
 
 % dark mode
-\usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
+% \usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
 
 % amsthm
 \newtheorem{proposition}{Proposition}
@@ -87,6 +87,7 @@
 \newacronym{miso}{MISO}{Multiple-Input Single-Output}
 \newacronym{mimo}{MIMO}{Multiple-Input Multiple-Output}
 \newacronym{ml}{ML}{Maximum-Likelihood}
+\newacronym{mrt}{MRT}{Maximum Ratio Transmission}
 \newacronym{noma}{NOMA}{Non-Orthogonal Multiple Access}
 \newacronym{ofdm}{OFDM}{Orthogonal Frequency-Division Multiplexing}
 \newacronym{pdf}{PDF}{Probability Density Function}
@@ -112,7 +113,7 @@
 
 
 \begin{document}
-\title{UniScatter: Unifying\\Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
+\title{UniScatter: Unifying\\Backscatter Communications, Symbiotic Radio and Reconfigurable Intelligent Surface}
 \author{
 	\IEEEauthorblockN{
 		Yang~Zhao,~\IEEEmembership{Member,~IEEE,}
@@ -134,7 +135,7 @@
 	To accommodate signal characteristics, UniScatter receiver semi-coherently decodes all nodes from accumulated energy, determines equivalent primary channel over reflection pattern, then coherently decodes the primary link under enhanced multipath.
 	It reduces the complexity of cooperative decoding while preserves the benefits of backscatter modulation and passive beamforming.
 	Using shared spectrum, energy, and infrastructures, UniScatter is a general and powerful transmit-assist protocol that unifies \gls{bc}, \gls{ris} and \gls{sr} with universal hardware design and augmented \gls{qos} control.
-	We consider an application scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple UniScatter nodes, and characterize the achievable primary-(total-)backscatter rate region by designing input distribution at the nodes, active beamforming at the \gls{ap}, and backscatter decision design at the user.
+	We consider an application scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple UniScatter nodes, and characterize the achievable primary-total-backscatter rate region by designing input distribution at the nodes, active beamforming at the \gls{ap}, and backscatter decision regions at the user.
 	Simulation results demonstrate UniScatter nodes can flexibly control the transmit-assist tradeoff via smart input distribution design.
 \end{abstract}
 
@@ -188,54 +189,28 @@
 
 	To the best of our knowledge, all relevant literatures assumed either Gaussian codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} or finite equiprobable inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} at backscatter information sources.
 	The former is impractical for passive backscatter devices, while the latter does not fully exploit reflection pattern and \gls{csi}.
-	In this paper, we introduce the concept of UniScatter that generalizes \gls{bc}, \gls{sr}, and \gls{ris} to manipulate the transmit-assist tradeoff via smart input distribution and backscatter detector design.
+	In this paper, we introduce UniScatter that generalizes \gls{bc}, \gls{sr}, and \gls{ris} to manipulate the transmit-assist tradeoff via smart input distribution and backscatter detector design.
 	The contributions of this paper are summarized as follows.
 
-	\emph{First,} we propose the UniScatter node that adapt input probability distribution of a finite-state passive scatter device based on link priority and \gls{csi}.
-	The reflection pattern over time is no longer fully random or deterministic, but can be flexibly distributed to unify and balance backscatter modulation and passive beamforming.
-	Scattering source of \gls{bc}/\gls{sr} and reflecting element of \gls{ris} can be regarded as its extreme cases, where the input distirbution boils down to equiprobable and degenerate, respectively.
-	Like aforementioned \gls{ris}-empowered \gls{bc}/\gls{sr} schemes, it requires regular coordination with passive nodes, but the advantages are 1) UniScatter nodes can be built over conventional load-switching scatterers instead of metamaterial; 2) the optimization cost of input distribution is much lower than that of \gls{ris} reflection coefficients; 3) adaptive backscatter channel coding can achieve higher instantaneous backscatter rate.
+	\emph{First,} we propose UniScatter node to adapt the input probability distribution of a finite-state passive scatter device based on link priority and \gls{csi}.
+	The reflection pattern over time is no longer fully random or deterministic, but can be flexibly distributed to unify and balance backscatter modulation with passive beamforming.
+	Scattering source of \gls{bc}/\gls{sr} and reflecting element of \gls{ris} can be regarded as its extreme cases, where the input distribution boils down to equiprobable and degenerate, respectively.
+	Like aforementioned \gls{ris}-empowered \gls{bc}/\gls{sr} schemes, the passive nodes require regular coordination with active devices, but the advantages are 1) UniScatter nodes can be built over conventional load-switching scatterers instead of composite metamaterial; 2) the optimization cost of input distribution is much lower than that of \gls{ris} reflection coefficients; 3) adaptive channel coding at backscatter sources can exploit \gls{csi} to achieve higher instantaneous rate than conventional uncoded transmission.
 
-	\emph{Second,} we propose a novel backscatter re
+	\emph{Second,} we propose a practical receiving strategy that semi-coherently decodes all UniScatter messages from the received energy during each backscatter symbol block, re-encodes and recovers their reflection patterns at each primary block, combines those with relevant \gls{csi} to construct equivalent primary channels, then coherently decodes the primary link under adapted multipath.
+	The proposed receiver 1) preserves the benefits of backscatter modulation and passive beamforming; 2) enjoys lower computational and operational complexities than joint \gls{ml} and \gls{sic} schemes; 3) accommodates the difference of symbol period in backscatter decoding; 4) exploits the reflection patterns in primary decoding; 5) suits for diverse symbol period ratios.
 
-	To fully accommodate backscatter characteristics, we also propose a novel receiving strategy that first jointly decodes all Metascatter from accumulated energy, then models their reflection pattern and backscatter paths within equivalent channel for primary decoding.
-	Since backscatter message is modulated over primary signal, backscatter decoding is indeed part of primary channel training, and there is no need for operation-intensive \gls{sic} at the receiver.
+	\emph{Third,} we consider an application scenario where multiple UniScatter nodes ride over a point-to-point \gls{miso} transmission, performing backscatter modulation and passive beamforming to a nearby user using shared spectrum, energy, and infrastructures.
+	To investigate how UniScatter unifies \gls{bc}, \gls{sr} and \gls{ris} for the benefits of both coexisting subsystems, we provide primary and backscatter rate analyses and emphasize the contributions of input distribution at UniScatter nodes, active beamforming at the \gls{ap}, and backscatter decision regions at the user.
+	This is the first paper to reveal the importance of those factors in \gls{ris}-empowered \gls{bc}/\gls{sr}.
 
-	The reflection pattern over time is no longer fully random or deterministic, but can be flexibly distributed to balance backscatter encoding and passive beamforming.
-	For single-user scenario, when primary link is absolutely prioritized, the distribution falls on one state and Metascatter boils down to conventional \gls{ris}.
-	When only considering backscatter performance, the distribution involves the highest entropy and Metascatter is essentially an \gls{ambc} node.
+	\emph{Fourth,} we characterize the achievable primary-total-backscatter rate region of the aforementioned system by optimizing the input distribution, active beamforming, and backscatter decision regions.
+	It is formulated as a weighted sum-rate maximization subject to input probability simplex, average transmit power, and sequential decision threshold constraints.
+	Since the original problem is highly non-convex, we decouple it into individual subproblems and constraint all decision regions to convex (connected) intervals.
+	A suboptimal \gls{bcd} algorithm is then proposed, where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is iteratively updated by \gls{pgd} accelerated by backtracking line search, and the decision regions are refined by existing thresholding designs.
 
-	nodes that adapts the input probability distribution of a finite-state passive backscatter device based on primary and (cascaded) backscatter \gls{csi} to unify and generalize parasitic source of \gls{sr} and reflecting elements of \gls{ris}.
-
-	% Motivated by those, we propose the concept of Metascatter, which adapts the input distribution of a passive backscatter node to generalize backscatter sources of \gls{sr} and reflecting elements of \gls{ris}.
-	% An application scenario was considered where multiple Metascatters are introduced to conventional point-to-point system and adapt their input probability distribution to simultaneously act as backscatter tags of \gls{sr} and reflecting elements of \gls{ris}.
-	% An application scenario was considered where multiple Metascatters ride over a point-to-point transmission and simultaneously perform backscatter encoding and passive beamforming.
-	% Compared to existing \gls{ris}-empowered \gls{sr} that encodes and precodes independently using advanced architecture (e.g., overlay or parallel), Metascatter softly bridges and generalizes parasitic source of \gls{sr} and reflecting element of \gls{ris} via smart input design.
-	% ! An application scenario was considered where multiple Metascatters ride over a point-to-point transmission to simultaneously encode self message and perform passive beamforming.
-	% To fully accommodate backscatter characteristics, we also propose a novel receiving strategy that first jointly decodes all Metascatter from accumulated energy, then models their reflection pattern and backscatter paths within equivalent channel for primary decoding.
-	% minor modifications on existing receivers, easy to perform, fits backscatter characteristics.
-	% The contributions of this paper is summarized as follows.
-
-	% ! Φ(c[n]) vs P
-	\emph{First,} Metascatter adapts the input probability distribution of a finite-state passive backscatter device based on primary and (cascaded) backscatter \gls{csi} to unify and generalize parasitic source of \gls{sr} and reflecting elements of \gls{ris}.
-	The reflection pattern over time is no longer fully random or deterministic, but can be flexibly distributed to balance backscatter encoding and passive beamforming.
-	For single-user scenario, when primary link is absolutely prioritized, the distribution falls on one state and Metascatter boils down to conventional \gls{ris}.
-	When only considering backscatter performance, the distribution involves the highest entropy and Metascatter is essentially an \gls{ambc} node.
-
-	\emph{Second,} we consider an application scenario where multiple Metascatters ride over a point-to-point transmission, exploiting additional propagation paths to simultaneously transmit and assist.
-	To fully accommodate backscatter characteristics, we also propose a novel receiving strategy that first jointly decodes all Metascatter from accumulated energy, then models their reflection pattern and backscatter paths within equivalent channel for primary decoding.
-	Since backscatter message is modulated over primary signal, backscatter decoding is indeed part of primary channel training, and there is no need for operation-intensive \gls{sic} at the receiver.
-
-	% \emph{Second,} we propose a novel receiving strategy where the backscatter symbol of all tags are first recovered by energy-based decoding, then modeled within equivalent \gls{csi} for primary decoding.
-	% When the ratio of backscatter symbol period over primary symbol period is large enough, the randomness of primary source can be averaged out and the performance of non-coherent backscatter decoding can be greatly improved.
-	% Since the primary and backscatter symbols are mixed by multiplication coding, the backscatter decoding can be viewed as part of primary channel training, which avoids non-coherent encoding at the transmitter and \gls{sic} at the receiver.
-
-	\emph{Third,} we evaluate the achievable primary-(total-)backscatter rate region by optimizing the input distribution at Metascatters, the active beamforming at the \gls{ap}, and the decision regions at the user. Since the original problem is highly non-convex, we consider a suboptimal \gls{bcd} algorithm where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is iteratively updated by \gls{pgd} accelerated by backtracking line search, and the decision regions are first restricted to convex, then refined by existing thresholding designs.
-
-	% \emph{Third,} we characterize the achievable primary-(total-)backscatter rate region by iteratively optimizing the tag input distribution, the backscatter decision threshold, and the transmit precoder.
-	% For the input design, we propose a numerical method to evaluate the \gls{kkt} solutions by limits of sequences.
-	% For the threshold design, we derive the minimum number of decision thresholds to maximize the total backscatter rate, and obtain the optimal thresholds by \gls{dp} accelerated by \gls{smawk} algorithm.
-	% However, the optimal precoder design can be non-trivial and we may end up with a low-complexity suboptimal solution.
+	\emph{Fifth,} we provide numerical results to demonstrate the benefits of UniScatter and proposed algorithms.
+	It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable transmission of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the \gls{pgd} beamforming achieves larger rate region than conventional \gls{mrt}; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
 
 	\emph{Notations:} Scalars, vectors and matrices are respectively denoted by italic, bold lower-case, and bold upper-case letters.
 	$j$ represents the imaginary unit.
@@ -256,31 +231,6 @@
 \end{section}
 
 \begin{section}{Backscatter Principles}
-	% \begin{figure}[!t]
-	% 	\centering
-	% 	\subfloat[Block Diagram]{
-	% 		\resizebox{0.8\columnwidth}{!}{
-	% 			\input{assets/illustration/block_diagram.tex}
-	% 		}
-	% 		\label{fi:block_diagram}
-	% 	}
-	% 	\\
-	% 	\subfloat[Equivalent Circuit]{
-	% 		\resizebox{0.95\columnwidth}{!}{
-	% 			\input{assets/illustration/equivalent_circuit.tex}
-	% 		}
-	% 		\label{fi:equivalent_circuit}
-	% 	}
-	% 	\\
-	% 	\subfloat[Scatter Model]{
-	% 		\resizebox{0.8\columnwidth}{!}{
-	% 			\input{assets/illustration/scatter_model.tex}
-	% 		}
-	% 		\label{fi:scatter_model}
-	% 	}
-	% 	\caption{Block diagram, equivalent circuit, and scatter model of a typical passive tag. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
-	% \end{figure}
-
 	\begin{figure*}[!t]
 		\centering
 		\subfloat[Block Diagram]{
@@ -322,7 +272,7 @@
 	\end{equation}
 	where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
 
-	\begin{subsection}{SR: Backscatter Modulation}
+	\begin{subsection}{BackCom/SR: Backscatter Modulation}
 		% Backscatter sources encode self message by \emph{randomly changing reflection states.} For $M$-ary \gls{qam}, reflection coefficient $\Gamma_m$ maps to the corresponding complex constellation point $c_m$ by \cite{Thomas2012a}
 		Backscatter sources encode self message by \emph{random reflection states variation.} For $M$-ary \gls{qam}, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{complex constellation point $c_m$} by \cite{Thomas2012a}
 		\begin{equation}
@@ -335,7 +285,7 @@
 
 	\end{subsection}
 
-	\begin{subsection}{IRS: Channel Reconfiguration}
+	\begin{subsection}{RIS: Channel Reconfiguration}
 		% \gls{ris} elements assist legacy transmission by \emph{deterministically choosing phase shifts} based on relevant \gls{csi}. For a reflecting element with $M$ candidate states, reflection coefficient $\Gamma_m$ maps to the corresponding phase shift $\theta_m$ by \cite{Wu2018}
 		\gls{ris} elements assist legacy transmission by \emph{deterministic phase shifts selection} based on relevant \gls{csi}.
 		For a reflecting element with $M$ candidate states, reflection coefficient $\Gamma_m$ relates to the corresponding \emph{phase shift $\theta_m$} by \cite{Wu2018}
@@ -354,7 +304,7 @@
 	% where $\alpha \in [0,1]$ models the harvest-backscatter ratio at the direction of interest.
 	% For passive tags, $\alpha \ll 1$ is commonly assumed as the majority of the incident wave can be harvested to support tag modules \cite{Thomas2012a}.
 
-	\begin{subsection}{Metascatter: Bridge and Generalization}
+	\begin{subsection}{UniScatter: Bridge and Generalization}
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Input Distribution]{
@@ -369,49 +319,51 @@
 				}
 			}
 			\caption{
-				Input probability distribution and time block structure of \gls{sr}, \gls{ris}, and Metascatter.
+				Input probability distribution and time block structure of \gls{sr}, \gls{ris}, and UniScatter.
 				$T_s$ and $T_c$ respectively denote the primary and backscatter symbol period.
-				Within channel coherence time, Metascatter semi-randomly selects reflection state for each backscatter block, with guidance from input probability distribution.
+				Within channel coherence time, UniScatter nodes semi-randomly select reflection state for each backscatter block, with guidance from input probability distribution.
 			}
-			\label{fi:metascatter}
+			\label{fi:uniscatter}
 		\end{figure}
 		% For a passive node with finite states, is it possible to unify backscatter modulation and channel reconfiguration by proper selection of reflection coefficient?
-		Metascatters simultaneously transmit and assist by \emph{adaptive input distribution design} based on primary and (cascaded) backscatter \gls{csi}.
+		UniScatter nodes simultaneously transmit and assist by \emph{adaptive input distribution design} based on primary and (cascaded) backscatter \gls{csi}.
 		% The reflection pattern is neither fully random nor fully deterministic, but flexibly distributed to balance backscatter encoding and passive beamforming.
-		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:metascatter}, Metascatter flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
-		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:metascatter}, Metascatter semi-randomly selects reflection state for each backscatter block with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
-		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:metascatter}, Metascatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.} In other words, it flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming. \gls{sr} and \gls{ris} can be regarded as extreme cases of Metascatter, where node input distribution boils down to uniform and deterministically biased, respectively.
-		Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:metascatter}, Metascatter semi-randomly selects reflection state for each backscatter block, with \emph{guidance of input probability $P(\Gamma_m)$} for state $m$. In other words, it flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming. \gls{sr} and \gls{ris} can be regarded as extreme cases of Metascatter, where node input distribution boils down to uniform and deterministic, respectively.
+		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
+		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter semi-randomly selects reflection state for each backscatter block with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
+		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.} In other words, it flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming. \gls{sr} and \gls{ris} can be regarded as extreme cases of UniScatter, where node input distribution boils down to uniform and deterministically biased, respectively.
+		Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter nodes semi-randomly select reflection state for each backscatter block, with \emph{guidance of input probability $P(\Gamma_m)$} for state $m$. In other words, it flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
+		% \gls{sr} and \gls{ris} can be regarded as extreme cases of UniScatter nodes, where node input distribution boils down to uniform and deterministic, respectively.
 		% flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
-		% Metascatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
-		% % Based on \gls{csi}, Metascatter adapts the reflection state distribution to unify data transmission and channel reconfiguration.
+		% UniScatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
+		% % Based on \gls{csi}, UniScatter adapts the reflection state distribution to unify data transmission and channel reconfiguration.
 		% \gls{sr} and \gls{ris} can be regarded as its extreme cases, where node input distribution boils down to uniform and deterministically biased, respectively.
-		% Within channel coherence time, Metascatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
+		% Within channel coherence time, UniScatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
 		\begin{remark}
-			Compared to conventional \gls{ris} literatures that optimize phase shifts under unit-module constraint, Metascatter starts from predefined reflection coefficients and designs their input distribution under sum-probability constraint to achieve flexible primary-backscatter tradeoff.
+			Compared to conventional \gls{ris} literatures that optimize phase shifts under unit-module constraint, UniScatter nodes start from predefined reflection coefficients and designs their input distribution under sum-probability constraint to achieve flexible primary-backscatter tradeoff.
 		\end{remark}
-		% Next, we will discuss the input design in a Metascatter-enabled network.
-		% consider a Metascatter-aided system to evaluate
+		% Next, we will discuss the input design in a UniScatter-enabled network.
+		% consider a UniScatter-aided system to evaluate
 	\end{subsection}
 \end{section}
 
-\begin{section}{Metascatter-Enabled Network}
+\begin{section}{UniScatter-Enabled Network}
 	\begin{subsection}{System Model}
 		\begin{figure}[!t]
 			\centering
 			\def\svgwidth{0.8\columnwidth}
 			\footnotesize{
-				\import{assets/illustration/}{metascatter_network.eps_tex}
+				\import{assets/illustration/}{uniscatter_network.eps_tex}
 			}
-			\caption{A Metascatter-enabled single-user multi-node network.}
-			\label{fi:metascatter_network}
+			\caption{A UniScatter-enabled single-user multi-node network.}
+			\label{fi:uniscatter_network}
 		\end{figure}
-		% As shown in Fig. \ref{fi:metascatter_network}, we propose a Metascatter-enabled single-user multi-node network where the spectrum, energy and infrastructures are shared by two coexisting systems.
-		As shown in Fig. \ref{fi:metascatter_network}, we propose a Metascatter-enabled single-user multi-node network where two coexisting systems share spectrum, energy and infrastructures.
+		% As shown in Fig. \ref{fi:uniscatter_network}, we propose a UniScatter-enabled single-user multi-node network where the spectrum, energy and infrastructures are shared by two coexisting systems.
+		% UniScatter-enabled single-user multi-node \gls{miso} network where multiple UniScatter nodes ride over a point-to-point transmission to
+		As shown in Fig. \ref{fi:uniscatter_network}, we propose a UniScatter-enabled single-user multi-node \gls{miso} network where two coexisting systems share spectrum, energy and infrastructures.
 		% In the primary point-to-point system, the \gls{ap} transmits information to the single-antenna user.
-		% In the primary point-to-point system, a $Q$-antenna \gls{ap} transmit to a single-antenna user while assisted by $K$ nearby single-antenna Metascatters.
-		The primary point-to-point transmission from a $Q$-antenna \gls{ap} to a single-antenna user is assisted by $K$ nearby single-antenna Metascatters.
-		In the secondary backscatter \gls{mac} system, the \gls{ap} serves as the carrier emitter, $K$ nearby single-antenna Metascatters modulate information over reradiated \gls{rf} signals, and the user decodes their messages.
+		% In the primary point-to-point system, a $Q$-antenna \gls{ap} transmit to a single-antenna user while assisted by $K$ nearby single-antenna UniScatters.
+		The primary point-to-point transmission from a $Q$-antenna \gls{ap} to a single-antenna user is assisted by $K$ nearby single-antenna UniScatter nodes.
+		In the secondary backscatter \gls{mac} system, the \gls{ap} serves as the carrier emitter, $K$ nearby single-antenna UniScatter nodes modulate information over reradiated \gls{rf} signals, and the user decodes their messages.
 		For simplicity, we consider a quasi-static block fading model where channels remain constant within coherence interval while vary independently between consecutive blocks.
 		% Since backscatter modulation involves load switching, tags typically transmit at much lower rate, and we assume the backscatter symbol period is $N \in \mathbb{Z}_{++}$ times the primary symbol period.
 		Due to physical constraints on load switching, we assume the backscatter symbol period is $N \gg 1$ times longer than primary and consider integer $N$ without loss of generality.
@@ -424,8 +376,8 @@
 
 
 		Denote the \gls{ap}-user direct channel as $\boldsymbol{h}_{\mathrm{D}}^H \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-node $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, and the node $k$-user backward channel as $h_{\mathrm{B},k}$. Also, define the cascaded channel of tag $k$ as $\boldsymbol{h}_{\mathrm{C},k}^H \triangleq h_{\mathrm{B},k} \boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, and $\boldsymbol{H}_{\mathrm{C}} \triangleq [\boldsymbol{h}_{\mathrm{C},1},\ldots,\boldsymbol{h}_{\mathrm{C},K}]^H \in \mathbb{C}^{K \times Q}$.
-		% Let $x_{\mathcal{K}} \triangleq \{x_k : k \in \mathcal{K}\}$ be the backscatter symbols of all Metascatters.
-		Let $x_{\mathcal{K}} \triangleq (x_1,\ldots,x_K)$ be the backscatter symbol tuple of all Metascatters.
+		% Let $x_{\mathcal{K}} \triangleq \{x_k : k \in \mathcal{K}\}$ be the backscatter symbols of all UniScatters.
+		Let $x_{\mathcal{K}} \triangleq (x_1,\ldots,x_K)$ be the backscatter symbol tuple of all UniScatter nodes.
 		Consider the signal model during one backscatter block (i.e., $N$ primary blocks).
 		% We assume the primary symbol follows standard \gls{cscg} distribution and the backscatter symbol of all tags employs $M$-\gls{qam}.
 		Under perfect synchronization, the equivalent primary channel is a function of \emph{coded} backscatter symbols
@@ -437,7 +389,7 @@
 				 & = \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}},
 			\end{align}
 		\end{subequations}
-		where $\alpha_k$ is the amplitude reflect ratio of Metascatter $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{R}_+^{K \times 1}$, $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ is the coded backscatter symbol of Metascatter $k$, and $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathbb{C}^{K \times 1}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
+		where $\alpha_k$ is the amplitude reflect ratio of UniScatter node $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{R}_+^{K \times 1}$, $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ is the coded backscatter symbol of node $k$, and $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathbb{C}^{K \times 1}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
 		\begin{equation}
 			y[n] = \boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \boldsymbol{w} s[n] + v[n],
 		\end{equation}
@@ -459,7 +411,7 @@
 		% \end{equation}
 
 		\begin{remark}
-			Metascatter involves a symbiotic \gls{mac} where the primary and backscatter symbols of different duration are mixed by \gls{mc} instead of \gls{sc}.
+			UniScatter involves a symbiotic \gls{mac} where the primary and backscatter symbols of different duration are mixed by \gls{mc} instead of \gls{sc}.
 			For each node, the reflection coefficient not only encodes the backscatter message, but also influences the equivalent primary channel \eqref{eq:equivalent_channel}.
 			% As such, novel receiving strategy other than \gls{sic} should be tailored to signal characteristics to unveil how reflection pattern potentially influences the primary-backscatter tradeoff.
 			To accommodate such signal characteristics, novel receiving strategy apart from \gls{sic} is desired to better utilize the reflection pattern and boost the primary-backscatter tradeoff.
@@ -467,14 +419,14 @@
 	\end{subsection}
 
 	\begin{subsection}{Receiving Strategy}
-		We propose a Metascatter receiver where the backscatter messages of all Metascatters are first jointly and semi-coherently detected using total received energy per backscatter block, then modeled within equivalent channel \eqref{eq:equivalent_channel} as dynamic passive beamforming.
+		We propose a UniScatter receiver where the backscatter messages of all UniScatter nodes are first jointly and semi-coherently detected using total received energy per backscatter block, then modeled within equivalent channel \eqref{eq:equivalent_channel} as dynamic passive beamforming.
 		% identified by non-coherent energy detection, then
-		% Compared with conventional schemes as joint decoding and \gls{sic}, the Metascatter receiver may not achieve as high data rate for one tag, but it avoids non-coherent primary encoding and enables tag multiple access in a practical and low-complexity manner.
+		% Compared with conventional schemes as joint decoding and \gls{sic}, the UniScatter receiver may not achieve as high data rate for one tag, but it avoids non-coherent primary encoding and enables tag multiple access in a practical and low-complexity manner.
 		% Therefore, we believe it can be compatible to and readily implemented over legacy point-to-point systems.
-		Compared with \gls{ml} and \gls{sic}, Metascatter receiver allows practical and low-complexity node multiple access with minor adjustment over legacy equipments.
+		Compared with \gls{ml} and \gls{sic}, UniScatter receiver allows practical and low-complexity node multiple access with minor adjustment over legacy equipments.
 
-		% At a specific backscatter block, denote $m_k \in \mathcal{M}$ as the state index of Metascatter $k$, and let $m_{\mathcal{K}} \triangleq \{m_k: k \in \mathcal{K}\}$ collect the state indexes of all Metascatters.
-		At a specific backscatter block, denote $m_k \in \mathcal{M}$ as the state index of Metascatter $k$, and let $m_{\mathcal{K}} \triangleq (m_1,\ldots,m_K)$ be the state index tuple of all Metascatters.
+		% At a specific backscatter block, denote $m_k \in \mathcal{M}$ as the state index of UniScatter $k$, and let $m_{\mathcal{K}} \triangleq \{m_k: k \in \mathcal{K}\}$ collect the state indexes of all UniScatters.
+		At a specific backscatter block, denote $m_k \in \mathcal{M}$ as the state index of node $k$, and let $m_{\mathcal{K}} \triangleq (m_1,\ldots,m_K)$ be the state index tuple of all nodes.
 		% The received signal at primary block $n$ is subject to the variation of $s[n]$ and $v[n]$, and thus distributed as $y[n] \sim \mathcal{CN}(0,\sigma_v^2)$
 		Conditioned on $m_{\mathcal{K}}$, the received signal at primary block $n$ is subject to the variation of $s[n]$ and $v[n]$, distributed as $y[n] \sim \mathcal{CN}(0,\sigma_{m_{\mathcal{K}}}^2)$ with
 		\begin{equation}
@@ -495,9 +447,9 @@
 			\label{eq:energy_distribution}
 		\end{equation}
 		where $\mathcal{H}_{m_{\mathcal{K}}}$ denotes hypothesis $m_{\mathcal{K}}$.
-		% To accommodate backscatter characteristics and reduce decoding complexity, we consider a joint semi-coherent energy detection for all Metascatters based on disjoint decision regions over accumulated energy $z$.
-		To accommodate backscatter characteristics and reduce decoding complexity, we consider a joint semi-coherent detection for all Metascatters over accumulated energy $z$.
-		% To reduce decoding complexity, we consider a joint semi-coherent energy detection for all Metascatters based on disjoint decision regions over accumulated energy $z$.
+		% To accommodate backscatter characteristics and reduce decoding complexity, we consider a joint semi-coherent energy detection for all UniScatters based on disjoint decision regions over accumulated energy $z$.
+		To accommodate backscatter characteristics and reduce decoding complexity, we consider a joint semi-coherent detection for all UniScatter nodes over accumulated energy $z$.
+		% To reduce decoding complexity, we consider a joint semi-coherent energy detection for all UniScatters based on disjoint decision regions over accumulated energy $z$.
 		\begin{figure}[!t]
 			\centering
 			\resizebox{0.9\columnwidth}{!}{
@@ -538,7 +490,7 @@
 	\end{subsection}
 
 	\begin{subsection}{Achievable Rates}
-		Denote the input probability of state $m_k$ of Metascatter node $k$ as $P_k(x_{m_k})$, and define the input probability distribution vector of node $k$ as $\boldsymbol{p}_k \triangleq [P_k(c_1),\ldots,P_k(c_M)]^T \in \mathbb{R}^{M \times 1}$. With independent encoding at all nodes, the probability of backscatter symbol tuple $x_{m_{\mathcal{K}}}$ is
+		Denote the input probability of state $m_k$ of UniScatter node $k$ as $P_k(x_{m_k})$, and define the input probability distribution vector of node $k$ as $\boldsymbol{p}_k \triangleq [P_k(c_1),\ldots,P_k(c_M)]^T \in \mathbb{R}^{M \times 1}$. With independent encoding at all nodes, the probability of backscatter symbol tuple $x_{m_{\mathcal{K}}}$ is
 		\begin{equation}
 			P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k}).
 			\label{eq:equivalent_distribution}
@@ -621,7 +573,7 @@
 \end{section}
 
 \begin{section}{Input Distribution, Active Beamforming, and Decision Threshold Design}
-	To characterize the achievable primary-(total-)backscatter rate region of the proposed Metascatter-enabled network, we aim to maximize the weighted sum mutual information with respect to node input distributions $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, active beamforming vector $\boldsymbol{w}$, and decision threshold vector $\boldsymbol{t}$ as
+	To characterize the achievable primary-total-backscatter rate region of the proposed UniScatter-enabled network, we aim to maximize the weighted sum mutual information with respect to node input distributions $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, active beamforming vector $\boldsymbol{w}$, and decision threshold vector $\boldsymbol{t}$ as
 	\begin{maxi!}
 		{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{w},\boldsymbol{t}\in\mathbb{R}_+^{L+1}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
 		% \addConstraint{\sum \nolimits_{m_k} P_k(x_{m_k})}{=1,}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
@@ -885,8 +837,8 @@
 \begin{section}{Simulation Results}
 	% TODO add distribution to initializer to smooth curves?
 	% TODO compare PGD and primary-MRT beamformers
-	In this section, we provide numerical results to evaluate the proposed input, beamforming and decision design over a single-user multi-node Metascatter-enabled network.
-	We assume the distance between \gls{ap} and user is \qty{10}{\meter}, and $K=2$ Metascatters are uniformly dropped within a disk centered at the user of radius \qty{1}{\meter}.
+	In this section, we provide numerical results to evaluate the proposed input, beamforming and decision design over a single-user multi-node UniScatter-enabled network.
+	We assume the distance between \gls{ap} and user is \qty{10}{\meter}, and $K=2$ UniScatter nodes are uniformly dropped within a disk centered at the user of radius \qty{1}{\meter}.
 	% The carrier frequency is $f=\qty{200}{\MHz}$, and we consider \gls{iid} Ricean fading for all channels.
 	The carrier frequency is $f=\qty{200}{\MHz}$, and we consider \gls{iid} Ricean fading between all terminals.
 	For direct, forward and backward links, we set the path loss exponents to \num{2.6}, \num{2.4} and \num{2}, and the Ricean factor to \num{5}, \num{5} and \num{10}, respectively.
@@ -894,7 +846,7 @@
 	% and the path loss exponents for direct, forward and backward links are \num{2.6}, \num{2.4} and \num{2}, respectively.
 	% We consider \gls{iid} Ricean fading for all channels with Ricean factor set to \num{5}, \num{5} and \num{10}
 	The \gls{ap} has $Q=4$ antennas with maximum average transmit power $P=\qty{36}{\dBm}$.
-	All nodes have amplitude reflect ratio $\alpha=0.5$, symbol period ratio $N=20$, and perform \gls{qam} with $M=2$ input states.
+	All nodes have amplitude reflect ratio $\alpha=0.5$, symbol period ratio $N=20$, and perform \gls{qam} with $M=4$ input states.
 	% and we consider amplitude reflect ratio $\alpha=0.5$ and symbol period ratio $N=20$.
 	% The user has a receive antenna gain of \qty{3}{\dBi} and average noise power
 	The user is with average noise power $\sigma_v^2=\qty{70}{\dBm}$ and receive antenna gain \qty{3}{\dBi}.
@@ -915,15 +867,15 @@
 					\input{assets/simulation/distribution_weights_2.tex}
 				}
 			}
-			\caption{Typical input distributions vs. weight $\rho$ for a Metascatter with $M=4$ inputs.}
+			\caption{Typical input distributions vs. weight $\rho$ for a UniScatter node with $M=4$ inputs.}
 			\label{fi:distribution_weights}
 		\end{figure}
-		% We consider a single Metascatter with $M=4$ inputs in this case of study.
-		In Fig. \ref{fi:distribution_weights}, we present typical input distributions of a single Metascatter with $M=4$ inputs under different weight $\rho$.
+		% We consider a single UniScatter with $M=4$ inputs in this case of study.
+		In Fig. \ref{fi:distribution_weights}, we present typical input distributions of a single UniScatter node with $M=4$ inputs under different weight $\rho$.
 		Fig. \subref*{fi:distribution_weights_1} and \subref*{fi:distribution_weights_2} are obtained from \gls{iid} drop and channel realizations.
 		We note that even for $\rho=0$ (i.e., best backscatter performance), the optimal input distribution is not equiprobable like \gls{sr}, and adaptive channel coding can further increase total backscatter rate based on \gls{csi}.
 		On the other hand, the optimal input distribution becomes fully deterministic at $\rho=1$ (i.e., best primary performance), where the state maximizes equivalent primary channel \eqref{eq:equivalent_channel} strength is chosen with probability \num{1}.
-		In this case, Metascatter boils down to a \gls{ris} element with $M$ discrete states.
+		In this case, UniScatter node boils down to a \gls{ris} element with $M$ discrete states.
 		As $\rho$ moves from \num{0} to \num{1}, the optimal input distribution becomes gradually biased to one state and flexibly balances the primary-backscatter tradeoff.
 	\end{subsection}
 
@@ -940,26 +892,26 @@
 					\input{assets/simulation/region_threshold.tex}
 				}
 			}
-			\caption{Average primary-(total-)backscatter rate regions for different input distribution and decision threshold schemes.}
+			\caption{Average primary-total-backscatter rate regions for different input distribution and decision threshold schemes.}
 		\end{figure}
 		Fig. \subref*{fi:region_distribution} compares the achievable rate regions by following input designs.
 		\begin{itemize}
 			% \item ``Exhaustion'' means $K$-dimensional grid search over probability simplex;
 			% \item ``\gls{kkt}'' corresponds to Algorithm \ref{al:input_distribution};
-			% \item ``Cooperation'' assumes backscatter cooperation/joint encoding at all Metascatters, and employs Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} to determine \emph{tuple} input distribution;
+			% \item ``Cooperation'' assumes backscatter cooperation/joint encoding at all UniScatters, and employs Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} to determine \emph{tuple} input distribution;
 			\item \textbf{Exhaustion:} $K$-dimensional grid search over probability simplex;
 			\item \textbf{\gls{kkt}:} results of Algorithm \ref{al:input_distribution};
-					% \item \textbf{Cooperation:} with backscatter cooperation/joint encoding at all Metascatters, Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} for \emph{tuple} input distribution;
-					% \item \textbf{Cooperation:} backscatter cooperation/joint encoding at all Metascatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
-					% \item \textbf{Cooperation:} with backscatter cooperation (i.e., joint encoding) at all Metascatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
-			\item \textbf{Cooperation:} backscatter cooperation/joint encoding at all Metascatters, tuple input distribution/joint probability array optimization by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
-					% with backscatter cooperation (i.e., joint encoding) at all Metascatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
+					% \item \textbf{Cooperation:} with backscatter cooperation/joint encoding at all UniScatters, Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} for \emph{tuple} input distribution;
+					% \item \textbf{Cooperation:} backscatter cooperation/joint encoding at all UniScatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
+					% \item \textbf{Cooperation:} with backscatter cooperation (i.e., joint encoding) at all UniScatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
+			\item \textbf{Cooperation:} backscatter cooperation/joint encoding at all UniScatter nodes, tuple input distribution/joint probability array optimization by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
+					% with backscatter cooperation (i.e., joint encoding) at all UniScatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
 			\item \textbf{Marginalization:} marginal distributions of joint probability array;
 			\item \textbf{Decomposition:} normalized tensors of rank-1 \gls{cp} decomposition of joint probability array;
 			\item \textbf{Randomization:} Gaussian recovery from joint probability array \cite{Calvo2010}.
 		\end{itemize}
 
-		We notice adaptive joint encoding at all Metascatters provides the outer bound of rate region.
+		We notice adaptive joint encoding at all nodes provides the outer bound of rate region.
 		However, it involves arbitrarily dependent codewords, and backscatter cooperation between passive nodes is generally unaffordable.
 		In contrast, the rate region of \gls{kkt} input design in Algorithm \ref{al:input_distribution} approaches that of exhaustive search, and the loss is negligible for $K=2$.
 		% Although the randomization method \cite{Calvo2010} achieves similar performance, the computational complexity is much higher as it involves solving $K+1$ linear programming problems
@@ -976,14 +928,14 @@
 			\item \textbf{\gls{ml}:} maximum likelihood decision \eqref{eq:detection_threshold_maximum_likelihood} \cite{Qian2019}.
 		\end{itemize}
 
-		We observe that input-adaptive threshold designs achieve higher total backscatter rate than \gls{ml}.
+		We observe that input distribution-adaptive threshold designs achieve higher total backscatter rate than \gls{ml}.
 		This is because the decision regions can be flexibly adjusted to enhance the capacity of \gls{dtmac} \eqref{eq:dtmac}.
 		For example, the tuples with negligible input probability should have narrower decision regions than those frequently employed, in order to improve detection performance.
 		It emphasizes the importance of joint input distribution and decision region design.
 
-		% We note that ideal joint adaptive encoding at all Metascatters can further boost the total backscatter rate.
+		% We note that ideal joint adaptive encoding at all UniScatters can further boost the total backscatter rate.
 		% However, this ideal upper bound requires real-time feedback
-		% ``Exhaustion'' means $K$-dimensional grid search over probability simplex, ``KKT'' corresponds to Algorithm \ref{ap:input_kkt_solution}, ``Cooperation'' assumes full backscatter cooperation and joint encoding at all Metascatters
+		% ``Exhaustion'' means $K$-dimensional grid search over probability simplex, ``KKT'' corresponds to Algorithm \ref{ap:input_kkt_solution}, ``Cooperation'' assumes full backscatter cooperation and joint encoding at all UniScatters
 	\end{subsection}
 
 
@@ -1011,13 +963,13 @@
 					\input{assets/simulation/region_scatter.tex}
 				}
 			}
-			\caption{Average primary-(total-)backscatter rate regions.}
+			\caption{Average primary-total-backscatter rate regions.}
 			\label{fi:region_config_1}
 		\end{figure}
 
-		% Fig. \ref{fi:region_config_1} reveals the impact of Metascatter nodes, input states, transmit antennas and scatter ratio on the achievable rate region.
-		We present in \ref{fi:region_config_1} the impact of Metascatter nodes, input states, transmit antennas and scatter ratio on the achievable rate region.
-		For the specified scenario, Fig. \subref*{fi:region_tags} shows the total backscatter rate almost scales proportionally with the number of Metascatter nodes, and the decrease of individual backscatter rate is unobvious.
+		% Fig. \ref{fi:region_config_1} reveals the impact of UniScatter nodes, input states, transmit antennas and scatter ratio on the achievable rate region.
+		We present in \ref{fi:region_config_1} the impact of UniScatter nodes, input states, transmit antennas and scatter ratio on the achievable rate region.
+		For the specified scenario, Fig. \subref*{fi:region_tags} shows the total backscatter rate almost scales proportionally with the number of UniScatter nodes, and the decrease of individual backscatter rate is unobvious.
 		Besides, we conclude from \subref*{fi:region_states} that increasing the reflection states has a marginal effect on both primary and backscatter rates.
 		Those two facts motivates the use of numerous elementary/uncomplicated backscatter nodes, instead of high-order transponders or programmable high-resolution surfaces.
 		Figs. \subref*{fi:region_txs} and \subref*{fi:region_scatter} also prove increasing transmit antennas or scatter ratio can improve both primary and backscatter performance.
@@ -1045,7 +997,7 @@
 					\input{assets/simulation/region_noise.tex}
 				}
 			}
-			\caption{Average primary-(total-)backscatter rate regions.}
+			\caption{Average primary-total-backscatter rate regions.}
 			\label{fi:region_config_2}
 		\end{figure}
 
@@ -1053,20 +1005,20 @@
 		When nodes are far from the user, both primary and backscatter rates decrease due to the product pass loss of forward and backward channels.
 		Under the assumption of ideal backscatter decoding and re-encoding, Fig. \subref*{fi:region_duration} suggests using lower symbol period ratio $N$ can boost total backscatter rate per primary symbol.
 		However, it requires more frequent detection and re-encoding at the user to maintain the primary rate.
-		When $N$ becomes sufficiently large, total backscatter rate approaches \num{0} and Metascatters boil down to conventional \gls{ris} elements with fixed reflection pattern during whole channel block.
-		In Fig. \subref*{fi:region_frequency}, we observe that passive Metascatter achieves higher backscatter rate at lower carrier frequency because of preferable propagation loss.
+		When $N$ becomes sufficiently large, total backscatter rate approaches \num{0} and UniScatter nodes boil down to conventional \gls{ris} elements with fixed reflection pattern during whole channel block.
+		In Fig. \subref*{fi:region_frequency}, we observe that passive UniScatter nodes achieve higher backscatter rate at lower carrier frequency because of preferable propagation loss.
 		Finally, \subref*{fi:region_noise} prove the performance of energy detection is robust for a wide range of noise power.
 	\end{subsection}
 \end{section}
 
 \begin{section}{Conclusion}
-	This paper introduced Metascatter that adapts input distribution of passive backscatter nodes to simultaneously transmit and assist over existing wireless systems.
-	Starting from backscatter principles, we showed how Metascatters bridges and generalizes parasitic source of \gls{sr} and reflecting element of \gls{ris} via smart input design.
-	An application scenario was considered where multiple Metascatters ride over a point-to-point transmission to simultaneously encode self message and perform passive beamforming.
+	This paper introduced UniScatter that adapts input distribution of passive backscatter nodes to simultaneously transmit and assist over existing wireless systems.
+	Starting from backscatter principles, we showed how UniScatter nodes bridges and generalizes parasitic source of \gls{sr} and reflecting element of \gls{ris} via smart input design.
+	An application scenario was considered where multiple UniScatter nodes ride over a point-to-point transmission to simultaneously encode self message and perform passive beamforming.
 	To characterize achievable primary-backscatter rate region, we proposed a \gls{bcd} algorithm that evaluates \gls{kkt} input distribution in closed form, optimizes active beamforming by \gls{pgd}, and refines decision regions by existing methods.
 	Numerical results demonstrated the advantage of adaptive node input distribution design for both primary and backscatter subsystems.
 
-	One particular interesting question is how to design Metascatters in a multi-user system.
+	One particular interesting question is how to design UniScatter node and receiver in a multi-user system.
 	If one node can contribute to and be decoded by multiple users, its input distribution may be further adjusted to mimic multi-beam gain of dynamic beamforming \cite{Qiu2022}.
 \end{section}
 

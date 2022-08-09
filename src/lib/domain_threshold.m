@@ -1,4 +1,4 @@
-function [thresholdDomain] = domain_threshold(symbolRatio, nBins, receivePower, confidence, tolerance)
+function [thresholdDomain] = domain_threshold(symbolRatio, nBins, receivePower, confidence)
 	% Function:
     %	- design (high-resolution) quantization set that act as domain of decision thresholds
     %
@@ -7,7 +7,6 @@ function [thresholdDomain] = domain_threshold(symbolRatio, nBins, receivePower, 
 	%	- nBins: number of receive energy quantization bins
 	%	- receivePower [nInputs x 1]: average receive power per primary symbol for each tag state tuple
 	%	- confidence: confidence level for edge hypotheses
-	%	- tolerance: tail probability (i.e., 1 - confidence level) of replacing infinity by critical threshold
     %
     % Output:
 	%	- thresholdDomain [1 x (nBins + 1)]: boundaries of quantized energy bins as domain of decision thresholds
@@ -21,22 +20,18 @@ function [thresholdDomain] = domain_threshold(symbolRatio, nBins, receivePower, 
     %
     % Author & Date: Yang (i@snowztail.com), 22 Apr 18
 
-	% * Set default bin number, confidence level and tolerance
+	% * Set default bin number and confidence level
 	arguments
 		symbolRatio;
 		nBins;
 		receivePower;
-		confidence = 0.95;
-		tolerance = eps;
+		confidence = 1 - eps;
 	end
 
 	% * Compute lower and upper critical thresholds
 	tlb = icdf('Gamma', 1 - confidence, symbolRatio, min(receivePower));
 	tub = icdf('Gamma', confidence, symbolRatio, max(receivePower));
 
-	% * Replace infinity by critical threshold of confidence approaching 1
-	tib = icdf('Gamma', 1 - tolerance, symbolRatio, max(receivePower));
-
 	% * Design threshold domain
-	thresholdDomain = [0, linspace(tlb, tub, nBins - 1), tib];
+	thresholdDomain = [0, linspace(tlb, tub, nBins)];
 end

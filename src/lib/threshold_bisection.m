@@ -107,10 +107,12 @@ function [divergence] = divergence_backward(symbolRatio, receivePower, equivalen
 	% * Forward and backward bin probability
 	fbp = dmc_integration(symbolRatio, receivePower, thresholdPair);
 	bbp = equivalentDistribution .* fbp / (equivalentDistribution' * fbp);
+	bbp(bbp < eps) = eps;
 
 	% * Forward and backward threshold probability
 	ftp = (thresholdPair(end) .^ (symbolRatio - 1) .* exp(-thresholdPair(end) ./ receivePower)) ./ (receivePower .^ symbolRatio .* gamma(symbolRatio));
 	btp = equivalentDistribution .* ftp / (equivalentDistribution' * ftp);
+	btp(btp < eps) = eps;
 
 	% * Divergence of backward probabilities
 	divergence = sum(rel_entr(btp, bbp));

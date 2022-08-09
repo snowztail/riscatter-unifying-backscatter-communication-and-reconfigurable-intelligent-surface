@@ -25,7 +25,7 @@ function [thresholdDomain] = domain_threshold(symbolRatio, nBins, receivePower, 
 		symbolRatio;
 		nBins;
 		receivePower;
-		confidence = 1 - eps;
+		confidence = 1 - 1e-3;
 	end
 
 	% * Compute lower and upper critical thresholds

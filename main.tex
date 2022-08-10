@@ -26,7 +26,7 @@
 \usepackage{xcolor}
 
 % dark mode
-% \usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
+\usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
 
 % amsthm
 \newtheorem{proposition}{Proposition}
@@ -212,22 +212,14 @@
 	\emph{Fifth,} we provide numerical results to demonstrate the benefits of UniScatter and proposed algorithms.
 	It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable transmission of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the \gls{pgd} beamforming achieves larger rate region than conventional \gls{mrt}; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
 
-	\emph{Notations:} Scalars, vectors and matrices are respectively denoted by italic, bold lower-case, and bold upper-case letters.
-	$j$ represents the imaginary unit.
-	% $\boldsymbol{0}$ and $\boldsymbol{1}$ denote respectively zero and one vector or matrix.
-	% $\boldsymbol{I}$ represents the identity matrix.
-	% $\mathbb{R}_+^{x \times y}$ and $\mathbb{C}^{x \times y}$ denote respectively the space of real nonnegative and complex $x \times y$ matrices.
-	$\mathbb{R}_+^{x \times y}$ and $\mathbb{C}^{x \times y}$ respectively denote the space of real nonnegative and complex $x \times y$ matrices.
-	% $\Re\{\cdot\}$ retrieves the real part of a complex entity. $[\cdot]_{(n)}$ denotes the $n$-th entry of a vector and $[\cdot]_{(1:n)}$ denotes the first $n$ entries of a vector.
-	$(\cdot)^*$, $(\cdot)^T$, $(\cdot)^H$, $(\cdot)^+$, $\lvert{\cdot}\rvert$, $\lVert{\cdot}\rVert$ respectively represent the conjugate, transpose, conjugate transpose, ramp function, absolute value, and Euclidean norm.
-	% $\arg(\cdot)$, $\mathrm{rank}(\cdot)$, $\mathrm{tr}(\cdot)$, $\mathrm{diag}(\cdot)$ and $\mathrm{diag}^{-1}(\cdot)$ respectively denote the argument, rank, trace, a square matrix with input vector on the main diagonal, and a vector retrieving the main diagonal of the input matrix.
-	% $\odot$ denotes the Hadamard product.
-	% $\boldsymbol{S} \succeq \boldsymbol{0}$ means $\boldsymbol{S}$ is positive semi-definite.
-	% $\mathbb{A}\{\cdot\}$ extracts the DC component of a signal.
-	% $\mathbb{E}_X\{\cdot\}$ takes expectation w.r.t. random variable $X$ ($X$ is omitted for simplicity).
-	The distribution of a CSCG random vector with mean $\boldsymbol{0}$ and covariance $\boldsymbol{\Sigma}$ is denoted by $\mathcal{CN}(\boldsymbol{0},\boldsymbol{\Sigma})$.
-	$\sim$ means ``distributed as''.
-	$(\cdot)^{(i)}$ represents the $i$-th iterated value and $(\cdot)^{\star}$ represents the end solution.
+	\emph{Notations:}
+	Italic, bold lower-case, and bold upper-case letters denote scalars, vectors and matrices, respectively.
+	$\boldsymbol{0}$ and $\boldsymbol{1}$ denote zero and one array of appropriate size, respectively.
+	$\mathbb{R}_+^{x \times y}$ and $\mathbb{C}^{x \times y}$ denote the real nonnegative and complex spaces of dimension $x \times y$, respectively.
+	$j$ denotes the imaginary unit.
+	$(\cdot)^*$, $(\cdot)^T$, $(\cdot)^H$, $\lvert{\cdot}\rvert$, and $\lVert{\cdot}\rVert$ denote the conjugate, transpose, conjugate transpose, absolute value, and Euclidean norm operators, respectively.
+	$(\cdot)^{(r)}$ and $(\cdot)^{\star}$ denote the $r$-th iterated and terminal solutions, respectively.
+	The distribution of a \gls{cscg} random variable with zero mean and variance $\sigma^2$ is denoted by $\mathcal{CN}(0,\sigma^2)$, and $\sim$ means ``distributed as''.
 \end{section}
 
 \begin{section}{Backscatter Principles}

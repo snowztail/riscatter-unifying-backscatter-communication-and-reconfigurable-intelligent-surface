@@ -8,7 +8,7 @@ nStates = 4;
 % constellation diagram at tags
 constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
 % carrier frequency
-frequency = 2e8;
+frequency = 9e8;
 % amplitude scatter ratio at tags
 % scatterRatio = 0.5;
 % backscatter/primary symbol duration ratio

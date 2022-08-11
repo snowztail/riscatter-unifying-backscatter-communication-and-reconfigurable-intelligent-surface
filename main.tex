@@ -217,12 +217,14 @@
 	$\boldsymbol{0}$ and $\boldsymbol{1}$ denote zero and one array of appropriate size, respectively.
 	$\mathbb{R}_+^{x \times y}$ and $\mathbb{C}^{x \times y}$ denote the real nonnegative and complex spaces of dimension $x \times y$, respectively.
 	$j$ denotes the imaginary unit.
+	$\arg(\cdot)$, $\mathrm{rank}(\cdot)$, $\mathrm{tr}(\cdot)$, $\mathrm{diag}(\cdot)$ and $\mathrm{diag}^{-1}(\cdot)$ denote the argument, rank, trace, a square matrix with input vector on main diagonal, and a vector retrieving main diagonal of input square matrix, respectively.
 	$(\cdot)^*$, $(\cdot)^T$, $(\cdot)^H$, $\lvert{\cdot}\rvert$, and $\lVert{\cdot}\rVert$ denote the conjugate, transpose, conjugate transpose, absolute value, and Euclidean norm operators, respectively.
 	$(\cdot)^{(r)}$ and $(\cdot)^{\star}$ denote the $r$-th iterated and terminal solutions, respectively.
 	The distribution of a \gls{cscg} random variable with zero mean and variance $\sigma^2$ is denoted by $\mathcal{CN}(0,\sigma^2)$, and $\sim$ means ``distributed as''.
 \end{section}
 
-\begin{section}{Backscatter Principles}
+% \begin{section}{Scattering/Reflecting Principles}
+\begin{section}{Scattering Principles}
 	\begin{figure*}[!t]
 		\centering
 		\subfloat[Block Diagram]{
@@ -245,6 +247,68 @@
 		}
 		\caption{Block diagram, equivalent circuit, and scatter model of a passive backscatter node. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
 	\end{figure*}
+	% The introduction of an obstacle in the path of a plane electromagnetic wave produces scattering.
+	Scattering is defined as a change of moving direction of particles after colliding with others.
+	% It often refers to the diffuse reflection where the incident particles are redistributed at many angles rather than the opposite direction.
+	It often refers to \emph{diffuse reflection} where an incident ray is redistributed at many angles.
+	An electromagnetic wave is scattered when an obstruction is placed in its path.
+	% In \gls{rf} applications such as \gls{bc}, \gls{sr} and \gls{ris}, the scatterer often includes integrated antenna or programmable metamaterial for controllable reflection pattern \cite{Liang2022}.
+	% In \gls{rf} applications such as \gls{bc}, \gls{sr} and \gls{ris}, the scatterer often includes integrated antenna or programmable metamaterial for the diversity of reflection patterns \cite{Liang2022}.
+	In \gls{rf} applications such as \gls{bc}, \gls{sr} and \gls{ris}, the scatterer often includes variable-load antenna or programmable metamaterial for various reflection patterns \cite{Liang2022}.
+	% For the former case, the signal impinging on the antenna is first received,
+	% For the former case, the antenna first receives the impinging signal, then reradiates a part and absorb the rest.
+	The antenna-based scatterer first receive the impinging signals, then reradiate a portion back to the space and absorb the remainder potentially for energy harvesting.
+	% According to \cite{Hansen1989}, the reradiated part can be decomposed into \emph{structural} component that consistently contributes to environment multipath and \emph{antenna} component that depends on antenna-load impedance mismatch.
+	According to \cite{Hansen1989}, its reradiated part can be decomposed into \emph{structural} component that consistently contributes to environment multipath and \emph{antenna} component that depends on antenna-load impedance mismatch.
+	The former is modelled within channel estimation while the latter is controlled by load switching \cite{Boyer2014}.
+	For antenna-based scatterers, the reflection coefficient at (load) state $m$ is%
+	\footnote{It corresponds to a linear scatter model where the reflection coefficient is irrelevant to incident electromagnetic field strength.}
+	\begin{equation}
+		\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
+		\label{eq:reflection_coefficient}
+	\end{equation}
+	where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
+	On the other hand, ideal metamaterial-based scatterers reflect the incident waves without receiving them, and the reflection happens at the interface between free space and metamaterial.
+	% The reflection happens at the interface between free space and metamaterial, and the reflection coefficient at metamaterial unit is
+	% The reflection happens at the interface between free space and metamaterial.
+	For metamaterial-based scatterers with a discrete impedance set, the reflection coefficient at (metamaterial) state $m$ is
+	\begin{equation}
+		\Gamma_m = \frac{Z_m - Z_0}{Z_m + Z_0},
+	\end{equation}
+	where $Z_0 = \qty{377}{\ohm}$ is the characteristic impedance of free space.
+
+	% When illuminated, the node absorbs a portion of the impinging wave for information decoding and energy harvesting \cite{Kim2021a}, while scatters the remaining back to the space. The scattered signal is further decomposed into the \emph{structural} component that consistently contributes to environment multipath and covered by channel estimation \cite{Boyer2014}, and the
+	When illuminated, the node absorbs a portion of the impinging wave for information decoding and/or energy harvesting \cite{Kim2021a}, and backscatters the remaining as \emph{structural} and \emph{antenna} components.
+	% The scattered signal is further decomposed into the \emph{structural} component that consistently contributes to environment multipath and covered by channel estimation \cite{Boyer2014}, and the \emph{antenna} mode component that
+	% and \emph{antenna} mode components \cite{Hansen1989}.
+	The former consistently contributes to environment multipath and can be modelled by channel estimation \cite{Boyer2014}, while the latter depends on antenna-load impedance mismatch and can be used for backscatter modulation \cite{Boyer2012} and/or channel reconfiguration \cite{Wu2021b}.
+	% Depending on structure, shape and material of general objects, structural scattering consistently contributes to environment multipath and is covered by channel estimation \cite{Boyer2014}.
+	% In contrast, antenna scattering models radiation pattern from antenna-load impedance mismatch and can be used for backscatter modulation \cite{Boyer2012} and/or channel reconfiguration \cite{Wu2021b}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	signal impinging on the antenna is first received,
+
+
+	Diffuse reflection is the reflection of light or other waves or particles from a surface such that a ray incident on the surface is scattered at many angles rather than at just one angle as in the case of specular reflection.
+
+	% By definition, reflection
+	% Scattering refers to a diffuse reflection
+	scattering, in physics, a change in the direction of motion of a particle because of a collision with another particle.
+	Scattering thus refers to particle-particle collisions between molecules, atoms, electrons, photons and other particles.
+	wave scattering corresponds to the collision and scattering of a wave with some material object, for instance (sunlight) scattered by rain drops to form a rainbow.
 
 	Passive backscatter nodes harvest energy from and modulate information over surrounding \gls{rf} signals.
 	As shown in Fig. \subref*{fi:block_diagram}, a typical passive node consists of a scattering antenna, an energy harvester, an integrated receiver, a load-switching modulator, and on-chip components (e.g., micro-controller and sensors) \cite{Dobkin2012}.
@@ -257,11 +321,11 @@
 	% Depending on structure, shape and material of general objects, structural scattering consistently contributes to environment multipath and is covered by channel estimation \cite{Boyer2014}.
 	% In contrast, antenna scattering models radiation pattern from antenna-load impedance mismatch and can be used for backscatter modulation \cite{Boyer2012} and/or channel reconfiguration \cite{Wu2021b}.
 	Fig. \subref*{fi:scatter_model} illustrates the scatter model of a node with $M$ states, where the reflection coefficient of state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$ is defined as%
-	\footnote{It corresponds to a linear backscatter model where the reflection coefficient is irrelevant to incident electromagnetic field strength.}
-	\begin{equation}
-		\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
-		\label{eq:reflection_coefficient}
-	\end{equation}
+	% \footnote{It corresponds to a linear backscatter model where the reflection coefficient is irrelevant to incident electromagnetic field strength.}
+	% \begin{equation}
+	% 	\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
+	% 	\label{eq:reflection_coefficient}
+	% \end{equation}
 	where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
 
 	\begin{subsection}{BackCom/SR: Backscatter Modulation}

@@ -248,15 +248,15 @@
 		\caption{Block diagram, equivalent circuit, and scatter model of a passive backscatter node. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
 	\end{figure*}
 	\begin{subsection}{Scatterer Categories}
-		Scattering is defined as a change of moving direction of particles after colliding with others.
-		It often refers to \emph{diffuse reflection} where an incident ray is redistributed at many angles.
+		Scattering refers to a change of moving direction of particles after colliding with others.
+		It often involves \emph{diffuse reflection} where an incident ray is redistributed at many angles.
 		An electromagnetic wave is scattered when an obstruction is placed in its path.
-		In \gls{rf} applications such as \gls{bc}, \gls{sr} and \gls{ris}, the scatterer often includes variable-load antenna or programmable metamaterial to realize various reflection patterns \cite{Liang2022}.
+		In \gls{rf} applications such as \gls{bc}, \gls{sr} and \gls{ris}, the scatterer often includes \emph{variable-load antenna} or \emph{programmable metamaterial} to produce various reflection patterns \cite{Liang2022}.
 		\begin{subsubsection}{Antenna-Based Scatterer}
-			Antenna-based scatterers first receive the impinging signals, then reradiate a portion back to the space and absorb the remainder potentially for energy harvesting.
-			According to \cite{Hansen1989}, its reradiated part can be decomposed into \emph{structural} component that consistently contributes to environment multipath, and \emph{antenna} component that depends on antenna-load impedance mismatch.
-			The former is modelled within channel estimation while the latter is controlled by load switching \cite{Boyer2014}.
-			For antenna-based scatterers, the reflection coefficient at (load) state $m$ is%
+			Antenna-based scatterers first receive the impinging signals, then reradiate some back to the space and absorb the remainder potentially for energy harvesting.
+			According to \cite{Hansen1989}, the reradiated part can be decomposed into \emph{structural} component that consistently contributes to the environment multipath, and \emph{antenna} component that depends on the antenna-load impedance mismatch.
+			The former is modelled within channel estimation while the latter can be controlled by load switching \cite{Boyer2014}.
+			For antenna-based scatterers, the reflection coefficient at load state $m$ is%
 			\footnote{It corresponds to a linear scatter model where the reflection coefficient is irrelevant to incident electromagnetic field strength.}
 			\begin{equation}
 				\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
@@ -265,15 +265,36 @@
 			where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
 		\end{subsubsection}
 		\begin{subsubsection}{Metamaterial-Based Scatterer}
-			% ? [Do we discuss unit or surface here?] As shown in Fig. 3(a), the metamaterial-based RIS is realized by a metasurface, which is composed of a large number of periodic metamaterial units
+			% The core concept of metamaterials is to produce materi- als by using artificially designed and fabricated structural units made of metallic or dielectric materials to achieve the desired properties and functionalities. These subwave- length structural units—the constituent artificial “atoms” and “molecules” of the metamaterial—can be tailored in shape and size.
 
-			Ideal metamaterial-based scatterers reflect the incident waves without receiving them, and the reflection happens at the interface between free space and metamaterial.
-			For metamaterial-based scatterers with a discrete impedance set, the reflection coefficient at (metamaterial) state $m$ is
+			% The lattice constant and interatomic inter- action can be artificially tuned. They can be designed and placed at desired locations. By engineering the arrange- ment of these small unit cells into the desired architecture or geometry, one can tune the effective permittivity or permeability of the metamaterial to positive, near-zero, or negative values. Thus, metamaterials can be endowed with properties and functionalities unattainable in natural materials [11], [12].
+
+			% 2) Epsilon-negative (ENG) materials: They display a neg- ative permittivity ε but positive permeability μ. ENG could be formed using conducting rods (thin wires). In this case, the refractive index becomes imaginary, and EM waves cannot propagate in the material but are reflected at the boundary between air and the medium. Any propagation into the medium would be evanescent. 3) Mu-negative (MNG) materials: They have a positive ε but negative μ. MNG and could be formed using split-ring resonators (SRRs). Again, in this case, the refractive index becomes imaginary, and EM waves cannot propagate in the material and will be reflected at the boundary between air and the material.
+
+			% The metamaterials, in general, are composite materials. Each unit cell (SRR or other designs) has an individually tailored response to the EM field. This is similar to how light interacts with everyday materials; materials such as glass or lenses are made of atoms. An averaging or macroscopic effect is produced. The cell of a metamaterial is designed to mimic the EM response of atoms, only on a much larger scale. Also, as part of periodic com- posite structures, these are designed to have a stronger EM coupling than that found in nature. The larger scale allows for more control over the EM response, while each unit is smaller than the wavelength of the radiated EM wave. Achieving fascinating functionalities of metamaterials typically entails multiple stacks of material layers, which not only leads to extensive loss but also brings a lot of challenges in fabrication. Many metamaterials consist of complex metallic wires and other structures that require sophisticated fabrication technology and are difficult to assemble. 3-D metamaterials can be extended by arranging electrically small scatters or holes into a 2-D pattern at a surface or interface. This surface version of a metamaterial has been given the name metasurface. For many applica- tions, metasurfaces can be used in place of metamaterials. They have the advantage of taking up less physical space than full 3-D metamaterial structures do; consequently, they offer the possibility of less-lossy structures as well.
+
+			% In metamaterial-based RIS, the equivalent impedance depends on various factors related to the design of the metamaterial unit. Therefore, there exist several meth- ods to change the equivalent impedances and, thus, the reconfigurable reflection coefficients. The first one is to use functional materials, such as graphene [73] and liquid crystals [74], [75], whose relative permittivity can be var- ied with the applied voltage. The second one is to change the physical structure of the metamaterial unit, such as the physical dimension or orientation of the unit [76], [77]. The third one is to vary the external biasing voltage applied on the tunable electronic devices, such as p-i-n diodes and varactor diodes [72], [78]–[82].
+
+
+			Metamaterial consists of numerous sub-wavelength structural units made of metallic or dielectric materials.
+			% The shape and size of each unit cell can be artificially altered for customized response to the electromagnetic field.
+			% One can change the effective permittivity or permeability of the metamaterial by manipulating the lattice constant and inter-atomic interaction \cite{Zhou2021}.
+			The properties of unit cells can be artificially tuned for unconventional effective permittivity $\epsilon$ and permeability $\mu$, bringing customizable response to the electromagnetic field \cite{Zhou2021}.
+			Using epsilon-negative material (e.g., conducing rods) or mu-negative material (e.g., split-ring resonators), ideal metamaterial-based scatterers can reflect the incident waves at the boundary between free space and metamaterial without receiving them \cite{Huang2021a}.
+			This mainly applies a phase shift on the reflected wave because any propagation into the metamaterial would be evanescent.
+			% It mainly applies a phase shift on the reflected wave, while any propagation into the metamaterial would be evanescent.
+			% The reflection happens at the boundary between free space and metamaterial, which mainly applies a phase shift on the reflected wave.
+			% There exists several methods to change the equivalent impedance of metamaterial unit, such as
+			% applied voltage on
+			% functional materials, such as graphene [73] and liquid crystals [74], [75]
+			Depending on the type of metamaterial, its equivalent impedance can be controlled by voltage (for functional materials \cite{Singh2020} and tunable diodes \cite{Costa2021}) or architecture (for resonant elements \cite{Bialkowski2008}).
+			For metamaterial-based scatterers with a discrete impedance set, the reflection coefficient at metamaterial state $m$ is
 			\begin{equation}
 				\Gamma_m = \frac{Z_m - Z_0}{Z_m + Z_0},
 			\end{equation}
 			where $Z_m$ is the equivalent impedance of metamaterial unit at state $m$, and $Z_0 = \qty{377}{\ohm}$ is the characteristic impedance of free space.
 		\end{subsubsection}
+		% TODO discuss how BC, SR, RIS relates to both
 	\end{subsection}
 
 	Passive backscatter nodes harvest energy from and modulate information over surrounding \gls{rf} signals.

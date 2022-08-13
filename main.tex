@@ -250,12 +250,18 @@
 	\begin{subsection}{Scatterer Categories}
 		Scattering refers to a change of moving direction of particles after colliding with others.
 		It often involves \emph{diffuse reflection} where an incident ray is redistributed at many angles.
-		An electromagnetic wave is scattered when an obstruction is placed in its path.
-		In \gls{rf} applications such as \gls{bc}, \gls{sr} and \gls{ris}, the scatterer often includes \emph{variable-load antenna} or \emph{programmable metamaterial} to produce various reflection patterns \cite{Liang2022}.
+		An electromagnetic wave is scattered when an obstruction is placed in its propagation path.
+		In \gls{rf} applications such as \gls{bc}, \gls{sr} and \gls{ris}, the scatterer often includes \emph{variable-load antenna} or \emph{programmable metamaterial} with various reflection patterns \cite{Liang2022}.
 		\begin{subsubsection}{Antenna-Based Scatterer}
-			Antenna-based scatterers first receive the impinging signals, then reradiate some back to the space and absorb the remainder potentially for energy harvesting.
-			According to \cite{Hansen1989}, the reradiated part can be decomposed into \emph{structural} component that consistently contributes to the environment multipath, and \emph{antenna} component that depends on the antenna-load impedance mismatch.
-			The former is modelled within channel estimation while the latter can be controlled by load switching \cite{Boyer2014}.
+			A typical antenna-based scatterer consists of an integrated antenna, a load-switching modulator, an energy harvester, and on-chip components (e.g., microcontroller and sensors) \cite{Dobkin2012}.
+			It first receives the impinging signals, then reradiates some back to the space and dissipates the remainder.
+			According to transmission line theory, the scatter-absorb tradeoff depends on the impedance matching of the load and the antenna.
+			For passive scatterers without dedicated energy source, a majority of incident wave is harvested to support node operation and the reradiated part can be relatively weak \cite{Thomas2012a}.
+			% For passive tags, $\alpha \ll 1$ is commonly assumed as the majority of the incident wave can be harvested to support tag modules \cite{Thomas2012a}.
+			% To support the operation of on-chip components, the majority of incident wave is consumed for energy harvesting
+			% According to \cite{Hansen1989}, the reradiated part can be decomposed into \emph{structural} component that consistently contributes to the environment multipath, and \emph{antenna} component that depends on the antenna-load impedance mismatch.
+			At the receiver, the observed signal can be further decomposed into \emph{structural mode} and \emph{antenna mode} components \cite{Hansen1989}.
+			The former consistently contributes to environment multipath and is modelled within channel estimation, while the latter depends on impedance mismatch and can be used for backscatter modulation \cite{Boyer2014} and/or channel reconfiguration \cite{Liang2022}.
 			For antenna-based scatterers, the reflection coefficient at load state $m$ is%
 			\footnote{It corresponds to a linear scatter model where the reflection coefficient is irrelevant to incident electromagnetic field strength.}
 			\begin{equation}
@@ -263,6 +269,8 @@
 				\label{eq:reflection_coefficient}
 			\end{equation}
 			where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
+			% Antenna-based scatterers are typically considered in \gls{bc} and \gls{sr} literatures, while some \gls{ris}
+			% BC and SR typically antenna-based, RIS both
 		\end{subsubsection}
 		\begin{subsubsection}{Metamaterial-Based Scatterer}
 			% The core concept of metamaterials is to produce materi- als by using artificially designed and fabricated structural units made of metallic or dielectric materials to achieve the desired properties and functionalities. These subwave- length structural units—the constituent artificial “atoms” and “molecules” of the metamaterial—can be tailored in shape and size.
@@ -275,13 +283,14 @@
 
 			% In metamaterial-based RIS, the equivalent impedance depends on various factors related to the design of the metamaterial unit. Therefore, there exist several meth- ods to change the equivalent impedances and, thus, the reconfigurable reflection coefficients. The first one is to use functional materials, such as graphene [73] and liquid crystals [74], [75], whose relative permittivity can be var- ied with the applied voltage. The second one is to change the physical structure of the metamaterial unit, such as the physical dimension or orientation of the unit [76], [77]. The third one is to vary the external biasing voltage applied on the tunable electronic devices, such as p-i-n diodes and varactor diodes [72], [78]–[82].
 
-
-			Metamaterial consists of numerous sub-wavelength structural units made of metallic or dielectric materials.
+			% Metamaterial consists of numerous sub-wavelength structural units made of metallic or dielectric materials.
+			A typical metamaterial-based scatterer consists of multiple material layers and a smart controller \cite{Wu2020}.
+			The outer metamaterial layer involves numerous sub-wavelength structural units made of metallic or dielectric materials.
 			% The shape and size of each unit cell can be artificially altered for customized response to the electromagnetic field.
 			% One can change the effective permittivity or permeability of the metamaterial by manipulating the lattice constant and inter-atomic interaction \cite{Zhou2021}.
-			The properties of unit cells can be artificially tuned for unconventional effective permittivity $\epsilon$ and permeability $\mu$, bringing customizable response to the electromagnetic field \cite{Zhou2021}.
+			The properties of unit cells can be artificially tuned for unconventional effective permittivity $\epsilon$ and permeability $\mu$, producing customizable response to the electromagnetic field \cite{Zhou2021}.
 			Using epsilon-negative material (e.g., conducing rods) or mu-negative material (e.g., split-ring resonators), ideal metamaterial-based scatterers can reflect the incident waves at the boundary between free space and metamaterial without receiving them \cite{Huang2021a}.
-			This mainly applies a phase shift on the reflected wave because any propagation into the metamaterial would be evanescent.
+			This mainly applies a phase shift on the reflected wave and any propagation into the metamaterial would be evanescent.
 			% It mainly applies a phase shift on the reflected wave, while any propagation into the metamaterial would be evanescent.
 			% The reflection happens at the boundary between free space and metamaterial, which mainly applies a phase shift on the reflected wave.
 			% There exists several methods to change the equivalent impedance of metamaterial unit, such as
@@ -292,7 +301,7 @@
 			\begin{equation}
 				\Gamma_m = \frac{Z_m - Z_0}{Z_m + Z_0},
 			\end{equation}
-			where $Z_m$ is the equivalent impedance of metamaterial unit at state $m$, and $Z_0 = \qty{377}{\ohm}$ is the characteristic impedance of free space.
+			where $Z_m$ is the equivalent impedance of metamaterial unit at state $m$ and $Z_0 = \qty{377}{\ohm}$ is the characteristic impedance of free space.
 		\end{subsubsection}
 		% TODO discuss how BC, SR, RIS relates to both: BC and SR typically antenna-based, RIS both
 	\end{subsection}
@@ -322,7 +331,7 @@
 			\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
 			\label{eq:backscatter_modulation}
 		\end{equation}
-		where $0 \le \alpha \le 1$ is the amplitude reflect ratio that controls the harvest-scatter tradeoff at the direction of interest.
+		where $0 \le \alpha \le 1$ is the amplitude scattering ratio that controls the harvest-scatter tradeoff at the direction of interest.
 		% When the \gls{csi} and reflection alphabet $\{\Gamma_1,\ldots,\Gamma_M\}$ are available at the reader, it can decode the tag message from the observed scattered signal.
 		% ! Use larger alpha in simulation: for high-order QAM, some constellation point may harvests more power than others
 
@@ -335,7 +344,7 @@
 		\begin{equation}
 			\Gamma_m = \beta_m \exp(j \theta_m),
 		\end{equation}
-		where $0 \le \beta_m \le 1$ is overall amplitude reflect ratio of state $m$.
+		where $0 \le \beta_m \le 1$ is overall amplitude scattering ratio of state $m$.
 		% Based on relevant \gls{csi}
 	\end{subsection}
 	% Tags periodically switch between different states to perform backscatter modulation.
@@ -368,7 +377,7 @@
 			}
 			\label{fi:uniscatter}
 		\end{figure}
-		% For a passive node with finite states, is it possible to unify backscatter modulation and channel reconfiguration by proper selection of reflection coefficient?
+		% ? For a passive node with finite states, is it possible to unify backscatter modulation and channel reconfiguration by proper selection of reflection coefficient?
 		UniScatter nodes simultaneously transmit and assist by \emph{adaptive input distribution design} based on primary and (cascaded) backscatter \gls{csi}.
 		% The reflection pattern is neither fully random nor fully deterministic, but flexibly distributed to balance backscatter encoding and passive beamforming.
 		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
@@ -432,7 +441,7 @@
 				 & = \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}},
 			\end{align}
 		\end{subequations}
-		where $\alpha_k$ is the amplitude reflect ratio of UniScatter node $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{R}_+^{K \times 1}$, $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ is the coded backscatter symbol of node $k$, and $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathbb{C}^{K \times 1}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
+		where $\alpha_k$ is the amplitude scattering ratio of UniScatter node $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{R}_+^{K \times 1}$, $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ is the coded backscatter symbol of node $k$, and $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathbb{C}^{K \times 1}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
 		\begin{equation}
 			y[n] = \boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \boldsymbol{w} s[n] + v[n],
 		\end{equation}
@@ -889,8 +898,8 @@
 	% and the path loss exponents for direct, forward and backward links are \num{2.6}, \num{2.4} and \num{2}, respectively.
 	% We consider \gls{iid} Ricean fading for all channels with Ricean factor set to \num{5}, \num{5} and \num{10}
 	The \gls{ap} has $Q=4$ antennas with maximum average transmit power $P=\qty{36}{\dBm}$.
-	All nodes have amplitude reflect ratio $\alpha=0.5$, symbol period ratio $N=20$, and perform \gls{qam} with $M=4$ input states.
-	% and we consider amplitude reflect ratio $\alpha=0.5$ and symbol period ratio $N=20$.
+	All nodes have amplitude scattering ratio $\alpha=0.5$, symbol period ratio $N=20$, and perform \gls{qam} with $M=4$ input states.
+	% and we consider amplitude scattering ratio $\alpha=0.5$ and symbol period ratio $N=20$.
 	% The user has a receive antenna gain of \qty{3}{\dBi} and average noise power
 	The user is with average noise power $\sigma_v^2=\qty{70}{\dBm}$ and receive antenna gain \qty{3}{\dBi}.
 	All rate regions are averaged over at least \num{1000} instances, where ``PSP'' and ``BSP'' means primary and backscatter symbol periods, respectively.

@@ -225,32 +225,12 @@
 \end{section}
 
 \begin{section}{Scattering Principles}
-	\begin{figure*}[!t]
-		\centering
-		\subfloat[Block Diagram]{
-			\resizebox{0.32\linewidth}{!}{
-				\input{assets/illustration/block_diagram.tex}
-			}
-			\label{fi:block_diagram}
-		}
-		\subfloat[Equivalent Circuit]{
-			\resizebox{0.37\linewidth}{!}{
-				\input{assets/illustration/equivalent_circuit.tex}
-			}
-			\label{fi:equivalent_circuit}
-		}
-		\subfloat[Scatter Model]{
-			\resizebox{0.28\linewidth}{!}{
-				\input{assets/illustration/scatter_model.tex}
-			}
-			\label{fi:scatter_model}
-		}
-		\caption{Block diagram, equivalent circuit, and scatter model of a passive backscatter node. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
-	\end{figure*}
+	Scattering refers to a change of moving direction of particles after colliding with others.
+	It often involves \emph{diffuse reflection} where an incident ray is redistributed at many angles.
+	An electromagnetic wave is scattered when an obstruction is placed in its propagation path.
+	% In this section, we first introduce the principles of two common scatterer categories, then briefly
+	In this section, we first introduce two common scatterer categories and review their operation principles, then briefly discuss how scatterers realize backscatter modulation and channel reconfiguration over reflection patterns.
 	\begin{subsection}{Scatterer Categories}
-		Scattering refers to a change of moving direction of particles after colliding with others.
-		It often involves \emph{diffuse reflection} where an incident ray is redistributed at many angles.
-		An electromagnetic wave is scattered when an obstruction is placed in its propagation path.
 		In \gls{rf} applications such as \gls{bc}, \gls{sr} and \gls{ris}, the scatterer often includes \emph{variable-load antenna} or \emph{programmable metamaterial} with various reflection patterns \cite{Liang2022}.
 		\begin{subsubsection}{Antenna-Based Scatterer}
 			A typical antenna-based scatterer consists of an integrated antenna, a load-switching modulator, an energy harvester, and on-chip components (e.g., microcontroller and sensors) \cite{Dobkin2012}.
@@ -305,7 +285,6 @@
 		where $0 \le \beta_m \le 1$ is the overall amplitude scattering ratio of state $m$.
 	\end{subsection}
 
-	% \begin{subsection}{Opportunities and Challenges}
 	\begin{subsection}{Opportunities}
 		We have seen conventional scattering applications as \gls{bc}, \gls{sr} and \gls{ris} using the reflection pattern \eqref{eq:reflection_pattern_antenna}, \eqref{eq:reflection_pattern_metamaterial} for either backscatter modulation \eqref{eq:backscatter_modulation} or passive beamforming \eqref{eq:passive_beamforming}.
 		A natural but critical question is, for a given scatterer with pre-determined reflection pattern set, \emph{can we softly bridge backscatter modulation and passive beamforming by appropriate reflection design?}
@@ -314,7 +293,34 @@
 \end{section}
 
 \begin{section}{UniScatter}
+	We introduce UniScatter as a novel low-power communication/assistance protocol that generalizes \gls{bc}, \gls{sr} and \gls{ris} using shared spectrum, energy and infrastructures.
+	% In particular, the passive UniScatter nodes ride over an active legacy transmission to simultaneously encode self information and reconfigure wireless environment.
+	% Using shared spectrum, energy and infrastructures, the passive UniScatter nodes ride over an active legacy transmission for backscatter modulation and passive beamforming, while the low-complexity cooperative UniScatter receiver decodes both links
+	% In particular, the passive UniScatter nodes adapt input distribution based on link priority and \gls{csi}
+	In particular, the passive UniScatter nodes ride over an active legacy transmission in a flexible and mutualistic manner, while the practical cooperative UniScatter receiver decodes both links under the benefits of backscatter modulation and passive beamforming.
 	\begin{subsection}{UniScatter Nodes}
+		\begin{figure*}[!t]
+			\centering
+			\subfloat[Block Diagram]{
+				\resizebox{0.32\linewidth}{!}{
+					\input{assets/illustration/block_diagram.tex}
+				}
+				\label{fi:block_diagram}
+			}
+			\subfloat[Equivalent Circuit]{
+				\resizebox{0.37\linewidth}{!}{
+					\input{assets/illustration/equivalent_circuit.tex}
+				}
+				\label{fi:equivalent_circuit}
+			}
+			\subfloat[Scatter Model]{
+				\resizebox{0.28\linewidth}{!}{
+					\input{assets/illustration/scatter_model.tex}
+				}
+				\label{fi:scatter_model}
+			}
+			\caption{Block diagram, equivalent circuit, and scatter model of a passive backscatter node. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
+		\end{figure*}
 		% TODO compare BC, SR and IRS
 		\begin{figure}[!t]
 			\centering
@@ -336,6 +342,7 @@
 			}
 			\label{fi:uniscatter}
 		\end{figure}
+		% ! antenna-based
 		% ! Passive backscatter nodes harvest energy from and modulate information over surrounding \gls{rf} signals.
 		% As shown in Fig. \subref*{fi:block_diagram}, a typical passive node consists of a scattering antenna, an energy harvester, an integrated receiver, a load-switching modulator, and on-chip components (e.g., micro-controller and sensors) \cite{Dobkin2012}.
 		% Its equivalent circuit is presented in Fig. \subref*{fi:equivalent_circuit}.

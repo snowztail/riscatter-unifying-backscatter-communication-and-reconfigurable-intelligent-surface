@@ -283,24 +283,23 @@
 	\end{subsection}
 
 	\begin{subsection}{BackCom/SR: Backscatter Modulation}
-		\gls{bc} and \gls{sr} commonly employ antenna-based scatterers as backscatter information sources.
-		% Backscatter information sources of \gls{bc} and \gls{sr} encode self message by \emph{random reflection states variation.}
+		\gls{bc} and \gls{sr} commonly employ antenna-based scatterers as passive information sources.
+		By \emph{frequently switching} between the available states, each backscatter node encodes self message over scattered signal and introduces backscatter uncertainty at the receiver.
 		For $M$-ary \gls{qam}, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{complex constellation point $c_m$} by \cite{Thomas2012a}
 		\begin{equation}
 			\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
 			\label{eq:backscatter_modulation}
 		\end{equation}
 		where $0 \le \alpha \le 1$ is the amplitude scattering ratio at the direction of interest.
-		% When the \gls{csi} and reflection alphabet $\{\Gamma_1,\ldots,\Gamma_M\}$ are available at the reader, it can decode the tag message from the observed scattered signal.
-		% ! Use larger alpha in simulation: for high-order QAM, some constellation point may harvests more power than others
-		% TODO by switching between reflection states, backscatter modulation introduces uncertainty.
-
 	\end{subsection}
 
 	\begin{subsection}{RIS: Channel Reconfiguration}
 		% \gls{ris} elements assist legacy transmission by \emph{deterministically choosing phase shifts} based on relevant \gls{csi}. For a reflecting element with $M$ candidate states, reflection coefficient $\Gamma_m$ maps to the corresponding phase shift $\theta_m$ by \cite{Wu2018}
 		% \gls{ris} involves numerous
-		\gls{ris} involves either a planar scattering antenna array or a metasurface of numerous metamaterial units.
+		\gls{ris} typically involves a planar antenna array or metasurface of numerous metamaterial units as a passive channel reconfigurator.
+		% By \emph{adaptively deciding} the reflection pattern, each reflecting element alters the phase of reflected signal for constructive/destructive superposition at the receiver.
+		By \emph{adaptively choosing} the reflection pattern, each reflecting element alters the phase of scattered signal for constructive/destructive superposition at the receiver.
+		% Compared with backscatter nodes of \gls{bc}/\gls{sr}, \gls{ris} elements employ deterministic reflection pattern priorly known at transmitter and receiver.
 		% Reflecting elements of \gls{ris} assist legacy transmission by \emph{deterministic phase shifts selection} based on relevant \gls{csi}.
 		For each unit with $M$ candidate states, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{phase shift $\theta_m$} by \cite{Wu2018}
 		\begin{equation}
@@ -319,6 +318,7 @@
 	% For passive tags, $\alpha \ll 1$ is commonly assumed as the majority of the incident wave can be harvested to support tag modules \cite{Thomas2012a}.
 
 	\begin{subsection}{UniScatter: Bridge and Generalization}
+		% TODO compare BC, SR and IRS
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Input Distribution]{

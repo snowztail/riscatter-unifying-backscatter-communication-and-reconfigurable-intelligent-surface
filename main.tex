@@ -263,7 +263,7 @@
 			\footnote{It corresponds to a linear scatter model where the reflection coefficient is irrelevant to incident electromagnetic field strength.}
 			\begin{equation}
 				\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
-				\label{eq:reflection_coefficient}
+				\label{eq:reflection_pattern_antenna}
 			\end{equation}
 			where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
 		\end{subsubsection}
@@ -277,6 +277,7 @@
 			For metamaterial-based scatterers with a discrete impedance set, the reflection coefficient at metamaterial state $m$ is
 			\begin{equation}
 				\Gamma_m = \frac{Z_m - Z_0}{Z_m + Z_0},
+				\label{eq:reflection_pattern_metamaterial}
 			\end{equation}
 			where $Z_m$ is the equivalent impedance of metamaterial unit at state $m$ and $Z_0 = \qty{377}{\ohm}$ is the characteristic impedance of free space.
 		\end{subsubsection}
@@ -294,30 +295,26 @@
 	\end{subsection}
 
 	\begin{subsection}{RIS: Channel Reconfiguration}
-		% \gls{ris} elements assist legacy transmission by \emph{deterministically choosing phase shifts} based on relevant \gls{csi}. For a reflecting element with $M$ candidate states, reflection coefficient $\Gamma_m$ maps to the corresponding phase shift $\theta_m$ by \cite{Wu2018}
-		% \gls{ris} involves numerous
 		\gls{ris} typically involves a planar antenna array or metasurface of numerous metamaterial units as a passive channel reconfigurator.
-		% By \emph{adaptively deciding} the reflection pattern, each reflecting element alters the phase of reflected signal for constructive/destructive superposition at the receiver.
 		By \emph{adaptively choosing} the reflection pattern, each reflecting element alters the phase of scattered signal for constructive/destructive superposition at the receiver.
-		% Compared with backscatter nodes of \gls{bc}/\gls{sr}, \gls{ris} elements employ deterministic reflection pattern priorly known at transmitter and receiver.
-		% Reflecting elements of \gls{ris} assist legacy transmission by \emph{deterministic phase shifts selection} based on relevant \gls{csi}.
 		For each unit with $M$ candidate states, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{phase shift $\theta_m$} by \cite{Wu2018}
 		\begin{equation}
 			\Gamma_m = \beta_m \exp(j \theta_m),
+			\label{eq:passive_beamforming}
 		\end{equation}
 		where $0 \le \beta_m \le 1$ is the overall amplitude scattering ratio of state $m$.
-		% Based on relevant \gls{csi}
 	\end{subsection}
-	% Tags periodically switch between different states to perform backscatter modulation.
-	% For $M$-ary \gls{qam}, the complex constellation point $c_m \in \mathcal{C}$ maps to the reflection coefficient by \cite{Thomas2012a}
-	% \begin{equation}
-	% 	\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
-	% 	\label{eq:backscatter_modulation}
-	% \end{equation}
-	% where $\alpha \in [0,1]$ models the harvest-backscatter ratio at the direction of interest.
-	% For passive tags, $\alpha \ll 1$ is commonly assumed as the majority of the incident wave can be harvested to support tag modules \cite{Thomas2012a}.
 
-	\begin{subsection}{UniScatter: Bridge and Generalization}
+	% \begin{subsection}{Opportunities and Challenges}
+	\begin{subsection}{Opportunities}
+		We have seen conventional scattering applications as \gls{bc}, \gls{sr} and \gls{ris} using the reflection pattern \eqref{eq:reflection_pattern_antenna}, \eqref{eq:reflection_pattern_metamaterial} for either backscatter modulation \eqref{eq:backscatter_modulation} or passive beamforming \eqref{eq:passive_beamforming}.
+		A natural but critical question is, for a given scatterer with pre-determined reflection pattern set, \emph{can we softly bridge backscatter modulation and passive beamforming by appropriate reflection design?}
+		This question is answered in Section \ref{se:uniscatter}.
+	\end{subsection}
+\end{section}
+
+\begin{section}{UniScatter}
+	\begin{subsection}{UniScatter Nodes}
 		% TODO compare BC, SR and IRS
 		\begin{figure}[!t]
 			\centering
@@ -365,9 +362,7 @@
 		% Next, we will discuss the input design in a UniScatter-enabled network.
 		% consider a UniScatter-aided system to evaluate
 	\end{subsection}
-\end{section}
 
-\begin{section}{UniScatter}
 	\begin{subsection}{System Model}
 		\begin{figure}[!t]
 			\centering
@@ -591,6 +586,7 @@
 		% \end{align}
 		% where $\rho \in [0,1]$ represents the priority of the primary link.
 	\end{subsection}
+	\label{se:uniscatter}
 \end{section}
 
 \begin{section}{Input Distribution, Active Beamforming, and Decision Threshold Design}

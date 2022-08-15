@@ -114,6 +114,7 @@
 
 \begin{document}
 \title{UniScatter: Unifying\\Backscatter Communications, Symbiotic Radio and Reconfigurable Intelligent Surface}
+% \title{UniScatter: Unifying Backcatter Modulation and Passive Beamforming by Adaptive Input Distribution}
 \author{
 	\IEEEauthorblockN{
 		Yang~Zhao,~\IEEEmembership{Member,~IEEE,}
@@ -218,7 +219,7 @@
 	$\mathbb{R}_+^{x \times y}$ and $\mathbb{C}^{x \times y}$ denote the real nonnegative and complex spaces of dimension $x \times y$, respectively.
 	$j$ denotes the imaginary unit.
 	% $\arg(\cdot)$, $\mathrm{rank}(\cdot)$, $\mathrm{tr}(\cdot)$, $\mathrm{diag}(\cdot)$ and $\mathrm{diag}^{-1}(\cdot)$ denote the argument, rank, trace, a square matrix with input vector on main diagonal, and a vector retrieving main diagonal of input square matrix, respectively.
-	$\mathrm{diag}(\cdot)$ returns a square matrix with the input vector on main diagonal.
+	$\mathrm{diag}(\cdot)$ returns a square matrix with the input vector on its main diagonal and zeros elsewhere.
 	$(\cdot)^*$, $(\cdot)^T$, $(\cdot)^H$, $\lvert{\cdot}\rvert$, and $\lVert{\cdot}\rVert$ denote the conjugate, transpose, conjugate transpose, absolute value, and Euclidean norm operators, respectively.
 	$(\cdot)^{(r)}$ and $(\cdot)^{\star}$ denote the $r$-th iterated and terminal solutions, respectively.
 	The distribution of a \gls{cscg} random variable with zero mean and variance $\sigma^2$ is denoted by $\mathcal{CN}(0,\sigma^2)$, and $\sim$ means ``distributed as''.
@@ -228,7 +229,6 @@
 	Scattering refers to a change of moving direction of particles after colliding with others.
 	It often involves \emph{diffuse reflection} where an incident ray is redistributed at many angles.
 	An electromagnetic wave is scattered when an obstruction is placed in its propagation path.
-	% In this section, we first introduce the principles of two common scatterer categories, then briefly
 	In this section, we first introduce two common scatterer categories and review their operation principles, then briefly discuss how scatterers realize backscatter modulation and channel reconfiguration over reflection patterns.
 	\begin{subsection}{Scatterer Categories}
 		In \gls{rf} applications such as \gls{bc}, \gls{sr} and \gls{ris}, the scatterer often includes \emph{variable-load antenna} or \emph{programmable metamaterial} with various reflection patterns \cite{Liang2022}.
@@ -266,7 +266,8 @@
 	\begin{subsection}{BackCom/SR: Backscatter Modulation}
 		\gls{bc} and \gls{sr} commonly employ antenna-based scatterers as passive information sources.
 		By \emph{frequently switching} between the available states, each backscatter node encodes self message over scattered signal and introduces backscatter uncertainty at the receiver.
-		For $M$-ary \gls{qam}, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{complex constellation point $c_m$} by \cite{Thomas2012a}
+		For $M$-ary \gls{qam}, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{complex constellation point $c_m$} by
+		% \cite{Thomas2012a}
 		\begin{equation}
 			\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
 			\label{eq:backscatter_modulation}
@@ -277,7 +278,8 @@
 	\begin{subsection}{RIS: Channel Reconfiguration}
 		\gls{ris} typically involves a planar antenna array or metasurface of numerous metamaterial units as a passive channel reconfigurator.
 		By \emph{adaptively choosing} the reflection pattern, each reflecting element alters the phase of scattered signal for constructive/destructive superposition at the receiver.
-		For each unit with $M$ candidate states, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{phase shift $\theta_m$} by \cite{Wu2018}
+		For each unit with $M$ candidate states, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{phase shift $\theta_m$} by
+		% \cite{Wu2018}
 		\begin{equation}
 			\Gamma_m = \beta_m \exp(j \theta_m),
 			\label{eq:passive_beamforming}
@@ -293,12 +295,38 @@
 \end{section}
 
 \begin{section}{UniScatter}
-	We introduce UniScatter as a novel low-power communication/assistance protocol that generalizes \gls{bc}, \gls{sr} and \gls{ris} using shared spectrum, energy and infrastructures.
-	% In particular, the passive UniScatter nodes ride over an active legacy transmission to simultaneously encode self information and reconfigure wireless environment.
-	% Using shared spectrum, energy and infrastructures, the passive UniScatter nodes ride over an active legacy transmission for backscatter modulation and passive beamforming, while the low-complexity cooperative UniScatter receiver decodes both links
-	% In particular, the passive UniScatter nodes adapt input distribution based on link priority and \gls{csi}
-	In particular, the passive UniScatter nodes ride over an active legacy transmission in a flexible and mutualistic manner, while the practical cooperative UniScatter receiver decodes both links under the benefits of backscatter modulation and passive beamforming.
+	Using shared spectrum, energy and infrastructures, UniScatter is a novel passive communication/assistance protocol that generalizes \gls{bc}, \gls{sr} and \gls{ris} from the perspective of distribution.
+	In particular, passive UniScatter nodes ride over an active legacy transmission in a flexible and mutualistic manner, while practical UniScatter receiver cooperatively decodes both links under the benefits of backscatter modulation and passive beamforming.
+	% TODO compare BC, SR and IRS
 	\begin{subsection}{UniScatter Nodes}
+		Based on link priority and \gls{csi}, UniScatter nodes adapt the \emph{state input probability distribution} of antenna-based scatterers to unify and generalize backscatter modulation and passive beamforming.
+		The scattering sources of \gls{bc}/\gls{sr} and reflecting elements of \gls{ris} can be viewed as its extreme cases, where the input distribution boils down to equiprobable and degenerate, respectively.
+		\begin{figure}[!t]
+			\centering
+			\subfloat[Input Distribution]{
+				\resizebox{0.8\columnwidth}{!}{
+					\input{assets/illustration/input_distribution.tex}
+				}
+				\label{fi:input_distribution}
+			}
+			\\
+			\subfloat[Time Block]{
+				\resizebox{0.8\columnwidth}{!}{
+					\input{assets/illustration/time_block.tex}
+				}
+				\label{fi:time_block}
+			}
+			\caption{
+				Input probability distribution and time block structure of \gls{bc}, \gls{sr}, \gls{ris}, and UniScatter.
+				$T_s$ and $T_c$ respectively denote the primary and backscatter symbol period.
+				Within channel coherence time, UniScatter nodes semi-randomly select reflection state for each backscatter symbol block with the guidance of input probability distribution.
+			}
+			\label{fi:uniscatter_distribution}
+		\end{figure}
+		As illustrated in Fig. \ref{fi:uniscatter_distribution}, instead of always using fully random or deterministic reflection pattern over time, each UniScatter node can \emph{flexibly adjust} its input distribution to balance information encoding and channel reconfiguration.
+		That is, it semi-randomly select the reflection state during each backscatter symbol block with the guidance of input probability $P(\Gamma_m)$ for state $m$.
+		Such an adaptive backscatter channel coding coincides with \gls{ris} when primary link is absolutely prioritized, and outperforms the uncoded equiprobable transmission of \gls{bc}/\gls{sr} when backscatter link is absolutely prioritized.
+		UniScatter nodes can be implemented over readily available passive backscatter devices with energy harvester and integrated receiver \cite{Kim2021a}, while the relevant \gls{csi} can be efficiently and accurately acquired using the state-of-the-art parallel approach \cite{Jin2021a}.
 		\begin{figure*}[!t]
 			\centering
 			\subfloat[Block Diagram]{
@@ -319,55 +347,16 @@
 				}
 				\label{fi:scatter_model}
 			}
-			\caption{Block diagram, equivalent circuit, and scatter model of a passive backscatter node. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
+			\caption{Block diagram, equivalent circuit, and scatter model of a UniScatter node. The solid and dashed vectors represent signal and energy flows. The scattering antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
+			\label{fi:uniscatter_node}
 		\end{figure*}
-		% TODO compare BC, SR and IRS
-		\begin{figure}[!t]
-			\centering
-			\subfloat[Input Distribution]{
-				\resizebox{0.8\columnwidth}{!}{
-					\input{assets/illustration/input_distribution.tex}
-				}
-			}
-			\\
-			\subfloat[Time Block]{
-				\resizebox{0.8\columnwidth}{!}{
-					\input{assets/illustration/time_block.tex}
-				}
-			}
-			\caption{
-				Input probability distribution and time block structure of \gls{sr}, \gls{ris}, and UniScatter.
-				$T_s$ and $T_c$ respectively denote the primary and backscatter symbol period.
-				Within channel coherence time, UniScatter nodes semi-randomly select reflection state for each backscatter block, with guidance from input probability distribution.
-			}
-			\label{fi:uniscatter}
-		\end{figure}
-		% ! antenna-based
-		% ! Passive backscatter nodes harvest energy from and modulate information over surrounding \gls{rf} signals.
-		% As shown in Fig. \subref*{fi:block_diagram}, a typical passive node consists of a scattering antenna, an energy harvester, an integrated receiver, a load-switching modulator, and on-chip components (e.g., micro-controller and sensors) \cite{Dobkin2012}.
-		% Its equivalent circuit is presented in Fig. \subref*{fi:equivalent_circuit}.
-		% When illuminated, the node absorbs a portion of the impinging wave for information decoding and/or energy harvesting \cite{Kim2021a}, and backscatters the remaining as \emph{structural} and \emph{antenna} components.
-		% The former consistently contributes to environment multipath and can be modelled by channel estimation \cite{Boyer2014}, while the latter depends on antenna-load impedance mismatch and can be used for backscatter modulation \cite{Boyer2012} and/or channel reconfiguration \cite{Wu2021b}.
-		% Fig. \subref*{fi:scatter_model} illustrates the scatter model of a node with $M$ states.
-
-		% ? For a passive node with finite states, is it possible to unify backscatter modulation and channel reconfiguration by proper selection of reflection coefficient?
-		UniScatter nodes simultaneously transmit and assist by \emph{adaptive input distribution design} based on primary and (cascaded) backscatter \gls{csi}.
-		% The reflection pattern is neither fully random nor fully deterministic, but flexibly distributed to balance backscatter encoding and passive beamforming.
-		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
-		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter semi-randomly selects reflection state for each backscatter block with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
-		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.} In other words, it flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming. \gls{sr} and \gls{ris} can be regarded as extreme cases of UniScatter, where node input distribution boils down to uniform and deterministically biased, respectively.
-		Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter nodes semi-randomly select reflection state for each backscatter block, with \emph{guidance of input probability $P(\Gamma_m)$} for state $m$. In other words, it flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
-		% \gls{sr} and \gls{ris} can be regarded as extreme cases of UniScatter nodes, where node input distribution boils down to uniform and deterministic, respectively.
-		% flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
-		% UniScatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
-		% % Based on \gls{csi}, UniScatter adapts the reflection state distribution to unify data transmission and channel reconfiguration.
-		% \gls{sr} and \gls{ris} can be regarded as its extreme cases, where node input distribution boils down to uniform and deterministically biased, respectively.
-		% Within channel coherence time, UniScatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
-		\begin{remark}
-			Compared to conventional \gls{ris} literatures that optimize phase shifts under unit-module constraint, UniScatter nodes start from predefined reflection coefficients and designs their input distribution under sum-probability constraint to achieve flexible primary-backscatter tradeoff.
-		\end{remark}
+		The block diagram, equivalent circuit, and scatter model of a UniScatter node are illustrated in Fig. \ref{fi:uniscatter_node}.
+		A proportion of the impinging wave emitted by primary transmitter is harvested for the operation of UniScatter node, while reradiated component includes a (potentially) random phase shift due to backscatter message.
 		% Next, we will discuss the input design in a UniScatter-enabled network.
-		% consider a UniScatter-aided system to evaluate
+	\end{subsection}
+
+	\begin{subsection}{UniScatter Receiver}
+		TODO
 	\end{subsection}
 
 	\begin{subsection}{System Model}

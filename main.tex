@@ -165,7 +165,7 @@
 	For sequential decoding from primary to backscatter, \cite{Long2020a} pointed out the randomness from backscatter modulation can be modelled as either interference or channel uncertainty, depending on the symbol period ratio.
 	The authors concluded if this ratio is sufficiently large, the non-coherent primary achievable rate would asymptotically approach its coherent counterpart.
 	This motivated \cite{Long2020a,Liang2020,Guo2019b,Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022} to first decode the primary link, perform \gls{sic}, then decode the backscatter link.
-	However, the advantage of \gls{sic} is questionable because 1) sufficiently large symbol period ratio is assumed in primary rate analysis and constraints backscatter rate; 2) backscatter pattern and signal characteristics are not fully exploited; 3) non-coherent primary encoding is required at the transmitter, while re-encoding, precoding, and subtraction are required at the receiver; 4) primary and backscatter symbols are mixed by multiplication instead of superposition.
+	However, the advantage of \gls{sic} is questionable because 1) sufficiently large symbol period ratio is assumed in primary rate analysis and constraints backscatter rate; 2) backscatter pattern and signal characteristics are not fully exploited; 3) non-coherent primary encoding is required at the transmitter, while re-encoding, precoding, and subtraction are required at the receiver; 4) primary and backscatter symbols are superimposed by multiplication instead of superposition.
 	Another open issue for \gls{sr} is backscatter multiple access.
 	\cite{Xu2021a} extended \gls{sic} to multi-node scenario and proposed a backscatter \gls{noma}-based \gls{sr} with decoding order following backscatter signal strength.
 	However, its performance deteriorates fast when the number of nodes increases.
@@ -193,13 +193,14 @@
 	In this paper, we introduce UniScatter that generalizes \gls{bc}, \gls{sr}, and \gls{ris} to manipulate the transmit-assist tradeoff via smart input distribution and backscatter detector design.
 	The contributions of this paper are summarized as follows.
 
-	\emph{First,} we propose UniScatter node to adapt the input probability distribution of a finite-state passive scatter device based on link priority and \gls{csi}.
+	\emph{First,} we propose UniScatter nodes to adapt the input probability distribution of a finite-state passive scatter device based on link priority and \gls{csi}.
 	The reflection pattern over time is no longer fully random or deterministic, but can be flexibly distributed to unify and balance backscatter modulation with passive beamforming.
 	Scattering source of \gls{bc}/\gls{sr} and reflecting element of \gls{ris} can be regarded as its extreme cases, where the input distribution boils down to equiprobable and degenerate, respectively.
 	Like aforementioned \gls{ris}-empowered \gls{bc}/\gls{sr} schemes, the passive nodes require regular coordination with active devices, but the advantages are 1) UniScatter nodes can be built over conventional load-switching scatterers instead of composite metamaterial; 2) the optimization cost of input distribution is much lower than that of \gls{ris} reflection coefficients; 3) adaptive channel coding at backscatter sources can exploit \gls{csi} to achieve higher instantaneous rate than conventional uncoded transmission.
 
-	\emph{Second,} we propose a practical receiving strategy that semi-coherently decodes all UniScatter messages from the received energy during each backscatter symbol block, re-encodes and recovers their reflection patterns at each primary block, combines those with relevant \gls{csi} to construct equivalent primary channels, then coherently decodes the primary link under adapted multipath.
-	The proposed receiver 1) preserves the benefits of backscatter modulation and passive beamforming; 2) enjoys lower computational and operational complexities than joint \gls{ml} and \gls{sic} schemes; 3) accommodates the difference of symbol period in backscatter decoding; 4) exploits the reflection patterns in primary decoding; 5) suits for diverse symbol period ratios.
+	% \emph{Second,} we propose a practical UniScatter receiver that semi-coherently decodes UniScatter nodes from the received energy during each backscatter symbol block, re-encodes and recovers their reflection patterns, combines with relevant \gls{csi} for equivalent primary channel as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
+	\emph{Second,} we propose a practical UniScatter receiver that semi-coherently decodes UniScatter nodes from the received energy during each backscatter symbol block, re-encodes for their reflection patterns, combines with relevant \gls{csi} as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
+	The proposed receiver 1) preserves the benefits of backscatter modulation and passive beamforming; 2) enjoys lower computational and operational complexities than joint \gls{ml} and \gls{sic} schemes; 3) accommodates the link difference and suits for diverse symbol period ratios; 4) requires minor modification over legacy hardware.
 
 	\emph{Third,} we consider an application scenario where multiple UniScatter nodes ride over a point-to-point \gls{miso} transmission, performing backscatter modulation and passive beamforming to a nearby user using shared spectrum, energy, and infrastructures.
 	To investigate how UniScatter unifies \gls{bc}, \gls{sr} and \gls{ris} for the benefits of both coexisting subsystems, we provide primary and backscatter rate analyses and emphasize the contributions of input distribution at UniScatter nodes, active beamforming at the \gls{ap}, and backscatter decision regions at the user.
@@ -352,11 +353,29 @@
 		\end{figure*}
 		The block diagram, equivalent circuit, and scatter model of a UniScatter node are illustrated in Fig. \ref{fi:uniscatter_node}.
 		A proportion of the impinging wave emitted by primary transmitter is harvested for the operation of UniScatter node, while reradiated component includes a (potentially) random phase shift due to backscatter message.
-		% Next, we will discuss the input design in a UniScatter-enabled network.
+		% Next, we will discuss the input design in a UniScatter network.
 	\end{subsection}
 
 	\begin{subsection}{UniScatter Receiver}
-		TODO
+		Since each passive UniScatter node directly modulates its own message over the legacy signal, it involves a \emph{double modulation} where the primary and backscatter symbols are superimposed by \emph{multiplication coding} instead of superposition coding.
+		Besides, the backscatter symbol period is typically longer than primary due to the load switching constraint.
+		% ? In such case, the advantages of power-domain \gls{noma} with \gls{sic} receiver becomes questionable.
+		% Those facts imply if the backscatter messages can be decoded first, one can recover the reflection patterns of all UniScatters and model them within the equivalent primary channel as if dynamic passive beamforming.
+		Both facts imply backscatter detection under primary uncertainty is also part of equivalent primary channel training.
+		Hence, we propose a practical UniScatter receiver that semi-coherently decodes UniScatter nodes from the received energy during each backscatter symbol block, re-encodes for their reflection patterns, combines with relevant \gls{csi} as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
+		\begin{figure}[!t]
+			\centering
+			\resizebox{0.9\columnwidth}{!}{
+				\input{assets/illustration/energy_distribution.tex}
+			}
+			\caption{
+				\gls{pdf} of total received energy per backscatter block, conditioned on different input state hypotheses.
+				$t$ and $\mathcal{R}$ denote the energy decision thresholds and regions, respectively.
+			}
+			\label{fi:energy_distribution}
+		\end{figure}
+		As illustrated in Fig. \ref{fi:energy_distribution}, the total received energy during each backscatter symbol block is a random variable that follows different distributions conditioned on different input state hypotheses.
+		Compared with conventional joint \gls{ml} and \gls{sic} from stronger primary link to weaker backscatter links, UniScatter receiver not only preserves the benefits of backscatter modulation and passive beamforming, but also enjoys much lower computational and operational complexities.
 	\end{subsection}
 
 	\begin{subsection}{System Model}
@@ -366,12 +385,10 @@
 			\footnotesize{
 				\import{assets/illustration/}{uniscatter_network.eps_tex}
 			}
-			\caption{A UniScatter-enabled single-user multi-node network.}
+			\caption{A single-user multi-node UniScatter network.}
 			\label{fi:uniscatter_network}
 		\end{figure}
-		% As shown in Fig. \ref{fi:uniscatter_network}, we propose a UniScatter-enabled single-user multi-node network where the spectrum, energy and infrastructures are shared by two coexisting systems.
-		% UniScatter-enabled single-user multi-node \gls{miso} network where multiple UniScatter nodes ride over a point-to-point transmission to
-		As shown in Fig. \ref{fi:uniscatter_network}, we propose a UniScatter-enabled single-user multi-node \gls{miso} network where two coexisting systems share spectrum, energy and infrastructures.
+		In this subsection, we consider a single-user multi-node \gls{miso} UniScatter network as shown in Fig. \ref{fi:uniscatter_network}.
 		% In the primary point-to-point system, the \gls{ap} transmits information to the single-antenna user.
 		% In the primary point-to-point system, a $Q$-antenna \gls{ap} transmit to a single-antenna user while assisted by $K$ nearby single-antenna UniScatters.
 		The primary point-to-point transmission from a $Q$-antenna \gls{ap} to a single-antenna user is assisted by $K$ nearby single-antenna UniScatter nodes.
@@ -422,21 +439,6 @@
 		% 	\label{eq:equivalent_channel}
 		% \end{equation}
 
-		\begin{remark}
-			UniScatter involves a symbiotic \gls{mac} where the primary and backscatter symbols of different duration are mixed by \gls{mc} instead of \gls{sc}.
-			For each node, the reflection coefficient not only encodes the backscatter message, but also influences the equivalent primary channel \eqref{eq:equivalent_channel}.
-			% As such, novel receiving strategy other than \gls{sic} should be tailored to signal characteristics to unveil how reflection pattern potentially influences the primary-backscatter tradeoff.
-			To accommodate such signal characteristics, novel receiving strategy apart from \gls{sic} is desired to better utilize the reflection pattern and boost the primary-backscatter tradeoff.
-		\end{remark}
-	\end{subsection}
-
-	\begin{subsection}{Receiving Strategy}
-		We propose a UniScatter receiver where the backscatter messages of all UniScatter nodes are first jointly and semi-coherently detected using total received energy per backscatter block, then modeled within equivalent channel \eqref{eq:equivalent_channel} as dynamic passive beamforming.
-		% identified by non-coherent energy detection, then
-		% Compared with conventional schemes as joint decoding and \gls{sic}, the UniScatter receiver may not achieve as high data rate for one tag, but it avoids non-coherent primary encoding and enables tag multiple access in a practical and low-complexity manner.
-		% Therefore, we believe it can be compatible to and readily implemented over legacy point-to-point systems.
-		Compared with \gls{ml} and \gls{sic}, UniScatter receiver allows practical and low-complexity node multiple access with minor adjustment over legacy equipments.
-
 		% At a specific backscatter block, denote $m_k \in \mathcal{M}$ as the state index of UniScatter $k$, and let $m_{\mathcal{K}} \triangleq \{m_k: k \in \mathcal{K}\}$ collect the state indexes of all UniScatters.
 		At a specific backscatter block, denote $m_k \in \mathcal{M}$ as the state index of node $k$, and let $m_{\mathcal{K}} \triangleq (m_1,\ldots,m_K)$ be the state index tuple of all nodes.
 		% The received signal at primary block $n$ is subject to the variation of $s[n]$ and $v[n]$, and thus distributed as $y[n] \sim \mathcal{CN}(0,\sigma_v^2)$
@@ -460,22 +462,24 @@
 		\end{equation}
 		where $\mathcal{H}_{m_{\mathcal{K}}}$ denotes hypothesis $m_{\mathcal{K}}$.
 		% To accommodate backscatter characteristics and reduce decoding complexity, we consider a joint semi-coherent energy detection for all UniScatters based on disjoint decision regions over accumulated energy $z$.
-		To accommodate backscatter characteristics and reduce decoding complexity, we consider a joint semi-coherent detection for all UniScatter nodes over accumulated energy $z$.
-		% To reduce decoding complexity, we consider a joint semi-coherent energy detection for all UniScatters based on disjoint decision regions over accumulated energy $z$.
-		\begin{figure}[!t]
-			\centering
-			\resizebox{0.9\columnwidth}{!}{
-				\input{assets/illustration/energy_distribution.tex}
-			}
-			% \caption{\gls{pdf} of Average Received Power Conditioned on Different Input Hypothesis. Example \gls{ml}.}
-			\caption{
-				\gls{pdf} of total received energy per backscatter block, conditioned on different input hypothesis.
-				% This \gls{ml} decision consists of convex regions and is generally rate-suboptimal except for equiprobable inputs.}
-				Here, the convex \gls{ml} decision regions are generally rate-suboptimal except for equiprobable inputs.
-			}
-			\label{fi:energy_distribution}
-		\end{figure}
+		% !
+		% To accommodate backscatter characteristics and reduce decoding complexity, we consider a joint semi-coherent detection for all UniScatter nodes over accumulated energy $z$.
+		% % To reduce decoding complexity, we consider a joint semi-coherent energy detection for all UniScatters based on disjoint decision regions over accumulated energy $z$.
+		% \begin{figure}[!t]
+		% 	\centering
+		% 	\resizebox{0.9\columnwidth}{!}{
+		% 		\input{assets/illustration/energy_distribution.tex}
+		% 	}
+		% 	% \caption{\gls{pdf} of Average Received Power Conditioned on Different Input Hypothesis. Example \gls{ml}.}
+		% 	\caption{
+		% 		\gls{pdf} of total received energy per backscatter block, conditioned on different input hypothesis.
+		% 		% This \gls{ml} decision consists of convex regions and is generally rate-suboptimal except for equiprobable inputs.}
+		% 		Here, the convex \gls{ml} decision regions are generally rate-suboptimal except for equiprobable inputs.
+		% 	}
+		% 	\label{fi:energy_distribution}
+		% \end{figure}
 		% The idea is presented in Fig. \ref{fi:energy_distribution}.
+		% !
 		% As illustrated in Fig. \ref{fi:energy_distribution}, o
 		Once disjoint energy decision regions are determined, we can construct a \gls{dtmac} and formulate the transition probability from input $x_{m_{\mathcal{K}}}$ to output $\hat{x}_{m_{\mathcal{K}}'}$ as
 		% it essentially formulates a \gls{dtmac}, and the transition probability from input $x_{m_{\mathcal{K}}}$ to output $\hat{x}_{m_{\mathcal{K}}'}$ is
@@ -586,7 +590,7 @@
 \end{section}
 
 \begin{section}{Input Distribution, Active Beamforming, and Decision Threshold Design}
-	To characterize the achievable primary-total-backscatter rate region of the proposed UniScatter-enabled network, we aim to maximize the weighted sum mutual information with respect to node input distributions $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, active beamforming vector $\boldsymbol{w}$, and decision threshold vector $\boldsymbol{t}$ as
+	To characterize the achievable primary-total-backscatter rate region of the proposed UniScatter network, we aim to maximize the weighted sum mutual information with respect to node input distributions $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, active beamforming vector $\boldsymbol{w}$, and decision threshold vector $\boldsymbol{t}$ as
 	\begin{maxi!}
 		{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{w},\boldsymbol{t}\in\mathbb{R}_+^{L+1}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
 		% \addConstraint{\sum \nolimits_{m_k} P_k(x_{m_k})}{=1,}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
@@ -850,7 +854,7 @@
 \begin{section}{Simulation Results}
 	% TODO add distribution to initializer to smooth curves?
 	% TODO compare PGD and primary-MRT beamformers
-	In this section, we provide numerical results to evaluate the proposed input, beamforming and decision design over a single-user multi-node UniScatter-enabled network.
+	In this section, we provide numerical results to evaluate the proposed input, beamforming and decision design over a single-user multi-node UniScatter network.
 	We assume the distance between \gls{ap} and user is \qty{10}{\meter}, and $K=2$ UniScatter nodes are uniformly dropped within a disk centered at the user of radius \qty{1}{\meter}.
 	% The carrier frequency is $f=\qty{200}{\MHz}$, and we consider \gls{iid} Ricean fading for all channels.
 	The carrier frequency is $f=\qty{200}{\MHz}$, and we consider \gls{iid} Ricean fading between all terminals.

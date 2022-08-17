@@ -400,15 +400,19 @@
 		Let $x_{\mathcal{K}} \triangleq (x_1,\ldots,x_K)$ be the backscatter symbol tuple of all UniScatter nodes.
 		Without loss of generality, we consider one specific backscatter block (i.e., $N$ primary blocks) in the following context.
 		Due to double modulation, the equivalent primary channel is a function of \emph{coded} backscatter symbols
-		\begin{subequations}
+		% \begin{subequations}
+		% 	\label{eq:equivalent_channel}
+		% 	\begin{align}
+		% 		\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}})
+		% 		 & \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k   \\
+		% 		 & = \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}},
+		% 	\end{align}
+		% \end{subequations}
+		\begin{equation}
+			\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k = \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}},
 			\label{eq:equivalent_channel}
-			\begin{align}
-				\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}})
-				 & \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k   \\
-				 & = \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}},
-			\end{align}
-		\end{subequations}
-		where $\alpha_k \in \mathbb{I}$ is the amplitude scattering ratio of UniScatter node $k$, $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ is the coded backscatter symbol of node $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{I}^{K \times 1}$, $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathcal{X}^{K \times 1}$, and $\boldsymbol{H}_{\mathrm{C}} \triangleq [\boldsymbol{h}_{\mathrm{C},1},\ldots,\boldsymbol{h}_{\mathrm{C},K}]^H \in \mathbb{C}^{K \times Q}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
+		\end{equation}
+		where $\alpha_k \in \mathbb{I}$ is the amplitude scattering ratio of UniScatter node $k$, $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ is the \emph{coded} backscatter symbol of node $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{I}^{K \times 1}$, $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathcal{X}^{K \times 1}$, and $\boldsymbol{H}_{\mathrm{C}} \triangleq [\boldsymbol{h}_{\mathrm{C},1},\ldots,\boldsymbol{h}_{\mathrm{C},K}]^H \in \mathbb{C}^{K \times Q}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
 		\begin{equation}
 			y[n] = \boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \boldsymbol{w} s[n] + v[n],
 			\label{eq:receive_signal}
@@ -435,12 +439,10 @@
 		As illustrated in Fig. \ref{fi:energy_distribution}, the UniScatter receiver divides the received energy space into disjoint decision regions associated with those hypotheses.
 		For example, if the total received energy during a backscatter block falls within region $\mathcal{R}_{m_{\mathcal{K}}}$, then the detector output would be $x_{m_{\mathcal{K}}}$.
 		\begin{remark}
-			Interestingly, the capacity-achieving decision design for \gls{dmtc} remains under-investigated, and some attempts were made for single source with binary inputs \cite{Qian2019b,Nguyen2021b}.
+			Interestingly, the capacity-achieving decision design for \gls{dmtc} remains under-investigated, and some attempts were made for a single source with binary inputs \cite{Qian2019b,Nguyen2021b}.
 			For non-binary inputs with arbitrary distribution, the optimal decision region for each letter can be non-convex (i.e., with non-adjacent partitions) and the optimal number of thresholds is still unknown \cite{Nguyen2018,Nguyen2021}.
 		\end{remark}
 		Like most existing literatures, we limit the scope of this paper to convex decision regions and consider sequential decision thresholds design therein.
-		% In particular, we define a general bijective mapping from backscatter index tuples to ordered indexes $f : m_{\mathcal{K}} \to \mathcal{L} \triangleq \{1,\ldots,L \triangleq M^K\}$, and use both notation interchangably in the following context.
-		% In particular, we define a general bijective mapping from backscatter index tuples to ordered indexes $\mathcal{M}^K \to \mathcal{L} \triangleq \{1,\ldots,L \triangleq M^K\}$, $m_{\mathcal{K}} \mapsto l$ and use both notation interchangably in the following context.
 		For the ease of notations, we define a general bijective function transforming backscatter index tuple $m_{\mathcal{K}}$ to integer $l \in \mathcal{L} \triangleq \{1,\ldots,L \triangleq M^K\}$, and use both notation interchangeably in the following context.
 		As such, the convex decision region of backscatter index tuple $m_{\mathcal{K}}$ or equivalent letter $l$ can be written as
 		\begin{equation}
@@ -451,66 +453,52 @@
 			P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) = \int_{\mathcal{R}_{m_{\mathcal{K}}'}} f(z|\mathcal{H}_{m_{\mathcal{K}}}) \, d z,
 			\label{eq:dmtmac}
 		\end{equation}
-		and backscatter channel coding can be performed on top of it.
+		then perform backscatter channel coding on top of it.
 	\end{subsection}
 
-	\begin{subsection}{Achievable Rates}
-		Denote the input probability of state $m_k$ of UniScatter node $k$ as $P_k(x_{m_k})$, and define the input probability distribution vector of node $k$ as $\boldsymbol{p}_k \triangleq [P_k(c_1),\ldots,P_k(c_M)]^T \in \mathbb{R}^{M \times 1}$. With independent encoding at all nodes, the probability of backscatter symbol tuple $x_{m_{\mathcal{K}}}$ is
+	\begin{subsection}{Information Theory}
+		Denote the input probability distribution vector of node $k$ as $\boldsymbol{p}_k \triangleq [P_k(c_1),\ldots,P_k(c_M)]^T \in \mathbb{I}^{M \times 1}$, and the probability of state $m_k$ as $P_k(x_{m_k})$.
+		With independent encoding at all nodes, the probability of backscatter symbol tuple $x_{m_{\mathcal{K}}}$ is
 		\begin{equation}
 			P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k}).
 			\label{eq:equivalent_distribution}
 		\end{equation}
-		% Denote the input probability distribution vector of tag $k$ as $\boldsymbol{p}_k \triangleq [P_k(x_1),\ldots,P_k(x_M)]^T \in \mathbb{R}^{M \times 1}$, where $P_k(x_{m_k})$ is the probability at state $m_k$.
-		% Consider independent encoding at all tags such that the probability of input combination $x_{m_{\mathcal{K}}}$ is $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k})$.
-		% The backscatter information function of input combination $x_{m_{\mathcal{K}}}$ is defined as
-		Similar to \cite{Rezaeian2004}, we define the backscatter information function between input symbol tuple instance $x_{m_{\mathcal{K}}}$ and output symbol tuple $\hat{x}_{\mathcal{K}}$ as
+
+		Similar to \cite{Rezaeian2004}, we define the backscatter information function between input symbol tuple instance $x_{m_{\mathcal{K}}}$ and output symbol tuple variable $\hat{x}_{\mathcal{K}}$ as
 		\begin{equation}
-			I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}) \triangleq \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}})}{P(\hat{x}_{m_{\mathcal{K}}'})},
+			I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}) \triangleq \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}})}{P_{\mathcal{K}}(\hat{x}_{m_{\mathcal{K}}'})},
 			\label{eq:backscatter_information_function}
 		\end{equation}
-		where $P(\hat{x}_{m_{\mathcal{K}}'}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}})$.
+		where $P_{\mathcal{K}}(\hat{x}_{m_{\mathcal{K}}'}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}})$ is the probability of channel output tuple $\hat{x}_{m_{\mathcal{K}}'}$.
 		We also define the backscatter marginal information of letter $x_{m_k}$ of node $k$ as
-		% Besides, the backscatter marginal information function associated with letter $x_{m_k}$ of tag $k$ is
 		\begin{equation}
 			I_{\mathrm{B},k}(x_{m_k};\hat{x}_{\mathcal{K}}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}),
 			\label{eq:backscatter_marginal_information}
 		\end{equation}
 		where $P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) = \prod_{q \in \mathcal{K} \setminus \{k\}} P_{q}(x_{m_{q}})$.
-		Moreover, we can write the backscatter mutual information as
+		The backscatter mutual information can be written as
 		\begin{equation}
 			I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}).
 			\label{eq:backscatter_mutual_information}
 		\end{equation}
-
-		% Once the tag input combination is successfully decoded, the backscatter uncertainty can be eliminated and the equivalent channel for primary transmission can be updated by \eqref{eq:equivalent_channel}.
-
-		% eliminate modulation uncertainty
-		Once backscatter messages are successfully decoded, we can re-encode to determine $x_{\mathcal{K}}$ and retrieve equivalent primary channel by \eqref{eq:equivalent_channel}. We define the primary information function conditioned on backscatter symbol tuple $x_{m_{\mathcal{K}}}$ as
-		% Once backscatter symbols are successfully decoded, we can eliminate modulation uncertainty and retrieve equivalent primary channel by \eqref{eq:equivalent_channel}. We define the primary information function conditioned on backscatter symbol tuple $x_{m_{\mathcal{K}}}$ as
-		% \begin{equation}
-		% 	I_{\mathrm{P}}(x_{m_{\mathcal{K}}};\boldsymbol{y}) \triangleq \log \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\right),
-		% 	\label{eq:primary_information_function}
-		% \end{equation}
+		Once backscatter messages of all nodes are successfully decoded, we can re-code for backscatter symbol tuple $x_{\mathcal{K}}$, recover their reflection patterns by \eqref{eq:backscatter_modulation}, and retrieve the equivalent primary channel by \eqref{eq:equivalent_channel}.
+		Moreover, we define the primary information function conditioned on backscatter symbol tuple $x_{m_{\mathcal{K}}}$ as
 		\begin{equation}
 			I_{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}) \triangleq \log \Bigl(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\Bigr),
 			\label{eq:primary_information_function}
 		\end{equation}
 		the primary marginal information conditioned on letter $x_{m_k}$ of node $k$ as
-		% the primary marginal information function associated with letter $x_{m_k}$ of tag $k$ is
 		\begin{equation}
 			I_{\mathrm{P},k}(s;y|x_{m_k}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}),
 			\label{eq:primary_marginal_information}
 		\end{equation}
 		and the primary ergodic mutual information as
-		% and the primary (ergodic) mutual information is
 		\begin{equation}
-			% I_{\mathrm{P}}(s;y|x_{\mathcal{K}}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \log \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\right).
 			I_{\mathrm{P}}(s;y|x_{\mathcal{K}}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) I_{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}).
 			\label{eq:primary_mutual_information}
 		\end{equation}
 
-		% Moreover, with $\rho \in [0,1]$ being the relative priority of the primary link, we define corresponding weighted sum information function, marginal information, and mutual information respectively as
-		Finally, with a slight abuse of notation, we define the corresponding weighted sum information function, marginal information, and mutual information respectively as
+		With a slight abuse of notation, we define the corresponding weighted sum information function, marginal information, and mutual information respectively as
 		\begin{align}
 			I(x_{m_{\mathcal{K}}})
 			 & \triangleq \rho I_{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}) + (1 - \rho) I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_information_function} \\
@@ -520,63 +508,35 @@
 			 & \triangleq \rho I_{\mathrm{P}}(s;y|x_{\mathcal{K}}) + (1 - \rho) I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_mutual_information}
 		\end{align}
 		where $\rho \in \mathbb{I}$ is the relative priority of the primary link.
-
-
-		% Therefore, the weighted sum information function, marginal information function, and mutual information of primary and backscatter links are respectively given by
-		% \begin{align}
-		% 	I(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}},\boldsymbol{y})
-		% 	 & \triangleq \rho I_{\mathrm{P}}(x_{m_{\mathcal{K}}};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_information_function} \\
-		% 	I_k(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})
-		% 	 & \triangleq \rho I_{\mathrm{P},k}(x_{m_k};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B},k}(x_{m_k};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_marginal_information}                     \\
-		% 	I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})
-		% 	 & \triangleq \rho I_{\mathrm{P}}(x_{\mathcal{K}};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_mutual_information}
-		% \end{align}
-		% where $\rho \in [0,1]$ represents the priority of the primary link.
 	\end{subsection}
 	\label{se:uniscatter}
 \end{section}
 
-\begin{section}{Input Distribution, Active Beamforming, and Decision Threshold Design}
-	To characterize the achievable primary-total-backscatter rate region of the proposed UniScatter network, we aim to maximize the weighted sum mutual information with respect to node input distributions $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, active beamforming vector $\boldsymbol{w}$, and decision threshold vector $\boldsymbol{t}$ as
+\begin{section}{Rate-Region Characterization}
+	To characterize the achievable primary-total-backscatter rate region of the proposed UniScatter system, we aim to maximize the weighted sum mutual information with respect to input distribution $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, active beamforming $\boldsymbol{w}$, and decision thresholds $\boldsymbol{t}$ as
 	\begin{maxi!}
-		{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{w},\boldsymbol{t}\in\mathbb{R}_+^{L+1}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
-		% \addConstraint{\sum \nolimits_{m_k} P_k(x_{m_k})}{=1,}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
-		\addConstraint{\sum \nolimits_{m_k} P_k(x_{m_k})}{=1,}{\quad \forall k}{\label{co:sum_probability}}
-		% \addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k \in \mathcal{K}, \ \forall m_k \in \mathcal{M}}{\label{co:nonnegative_probability}}
-		\addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k,m_k}{\label{co:nonnegative_probability}}
+		{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{w},\boldsymbol{t}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
+		\addConstraint{\boldsymbol{1}^T \boldsymbol{p}_k}{=1,}{\quad \forall k}{\label{co:sum_probability}}
+		\addConstraint{\boldsymbol{p}_k}{\ge \boldsymbol{0},}{\quad \forall k}{\label{co:nonnegative_probability}}
 		\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P}{\label{co:transmit_power}}
 		\addConstraint{t_{l-1}}{\le t_l,}{\quad \forall l.}{\label{co:decision_threshold}}
 	\end{maxi!}
-	% \begin{maxi!}
-	% 	{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{t},\boldsymbol{w}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
-	% 	\addConstraint{\boldsymbol{p}_k}{\in \Delta^{M-1},}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
-	% 	% \addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k \in \mathcal{K}, \ \forall m_k \in \mathcal{M}}{\label{co:nonnegative_probability}}
-	% 	\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.}{\label{co:transmit_power}}
-	% \end{maxi!}
-	% \begin{maxi!}
-	% 	{\scriptstyle{\boldsymbol{p}_k \in \Delta^{M-1},\boldsymbol{t},\boldsymbol{w}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
-	% 	% \addConstraint{\boldsymbol{p}_k}{\in \Delta^{M-1},}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
-	% 	% \addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k \in \mathcal{K}, \ \forall m_k \in \mathcal{M}}{\label{co:nonnegative_probability}}
-	% 	\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.}{\label{co:transmit_power}}
-	% \end{maxi!}
-	Problem \eqref{op:weighted_sum_rate} is highly non-convex, and we propose a \gls{bcd} algorithm that iteratively updates $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{w}$ and $\boldsymbol{t}$ until convergence.
+	Since problem \eqref{op:weighted_sum_rate} is highly non-convex, we propose a \gls{bcd} algorithm that iteratively updates $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{w}$ and $\boldsymbol{t}$ until convergence.
 
 	\begin{subsection}{Input Distribution}
-		% For any fixed decision boundary $\boldsymbol{t}$ and transmit precoder $\boldsymbol{w}$, the equivalent \gls{dmtmac} can be formulated by \eqref{eq:dmtmac} and problem \eqref{op:weighted_sum_rate} boils down to
 		For any given $\boldsymbol{w}$ and $\boldsymbol{t}$, we can construct the equivalent \gls{dmtmac} by \eqref{eq:dmtmac} and simplify \eqref{op:weighted_sum_rate} to
 		\begin{maxi!}
 			{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}}}{I(x_{\mathcal{K}})}{\label{op:input_distribution}}{}
 			\addConstraint{\eqref{co:sum_probability},\eqref{co:nonnegative_probability},}
 		\end{maxi!}
-		which involves coupled term $\prod_{k \in \mathcal{K}} P_k(x_{m_k})$ and is non-convex when $K > 1$. Next, we propose a numerical method that evaluate the \gls{kkt} input distribution by limit of sequences.
+		which involves the coupled term $\prod_{k \in \mathcal{K}} P_k(x_{m_k})$ and is non-convex when $K > 1$.
+		Following \cite{Rezaeian2004}, we first recast \gls{kkt} conditions of problem \eqref{op:input_distribution} to their equivalent forms, then propose a numerical method that guarantees those conditions on convergence of sequences.
+		% ? Next, we propose a numerical method that evaluate the \gls{kkt} input distribution by limit of sequences.
 		\begin{remark}
-			% As pointed out in \cite{Buhler2011}, \gls{kkt} conditions are only necessary for such kind of problems and these solutions may end up being saddle points.
-			As pointed out in \cite{Buhler2011}, \gls{kkt} conditions are generally necessary but insufficient for total rate maximization in discrete memoryless \gls{mac}. Therefore, \gls{kkt} solutions may end up being saddle points of problem \eqref{op:input_distribution}.
+			As demonstrated in \cite{Buhler2011}, \gls{kkt} conditions are generally necessary but insufficient for total rate maximization problems.
+			Although \gls{kkt} solutions to problem \eqref{op:input_distribution} may end up being saddle points, we will later show by simulation their average performance can be reasonably close to optimal for a moderate $K$.
 		\end{remark}
-		Following \cite{Rezaeian2004}, we first recast \gls{kkt} conditions to their equivalent form for problem \eqref{op:input_distribution}, then propose an iterative method that guarantees input distribution satisfying above conditions on convergence.
-		% Interestingly, the total-rate optimal input design for general discrete memoryless \gls{mac} remains an open problem, and we instead propose a \gls{kkt} solution to problem \eqref{op:input_distribution}.
 		\begin{proposition}
-			% The \gls{kkt} optimality conditions for problem \eqref{op:input_distribution} are equivalent to, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$,
 			The \gls{kkt} optimality conditions for problem \eqref{op:input_distribution} are equivalent to, $\forall k,m_k$,
 			\begin{subequations}
 				\label{eq:input_kkt_condition}
@@ -593,19 +553,14 @@
 			\label{pf:input_kkt_condition}
 		\end{proof}
 
-		For each node, \eqref{eq:probable_states} suggests each probable state should produce the same marginal information (averaged over all states of other nodes), while \eqref{eq:dropped_states} implies any state with potentially less marginal information should not be used.
-		% We notice \eqref{eq:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{eq:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
-		% Next, we generalize the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} and propose a numerical evaluation of \gls{kkt} points by limits of sequences.
+		For each node, \eqref{eq:probable_states} suggests each probable state should produce the same marginal information (averaged over all states of other nodes), while \eqref{eq:dropped_states} suggests any state with potentially less marginal information should not be used.
 		\begin{proposition}
-			% The \gls{kkt} solution of input probability of tag $k$ at state $m_k$ is given by the converging point of the sequence
-			The \gls{kkt} input probability of node $k$ of state $m_k$ is given by the converging point of the sequence
-			% The \gls{kkt} solution of input probability of tag $k$ at state $m_k$ is given by the converging point of the sequence
+			For any strictly positive initializer $\{\boldsymbol{p}_k^{(0)}\}_{k \in \mathcal{K}}$, the \gls{kkt} input probability of node $k$ at state $m_k$ is given by the converging point of the sequence
 			\begin{equation}
 				P_k^{(r+1)}(x_{m_k}) = \frac{P_k^{(r)}(x_{m_k}) \exp \Bigl( \frac{\rho}{1 - \rho} I_k^{(r)}(x_{m_k}) \Bigr)}{\sum_{m_k'} P_k^{(r)}(x_{m_k'}) \exp \Bigl( \frac{\rho}{1 - \rho} I_k^{(r)}(x_{m_k'}) \Bigr)},
 				\label{eq:input_kkt_solution}
 			\end{equation}
-			% where $r$ is the iteration index and $\boldsymbol{p}_k^{(0)} > \boldsymbol{0}$, $\forall k \in \mathcal{K}$.
-			where $r$ is the iteration index and $\boldsymbol{p}_k^{(0)} > \boldsymbol{0}$, $\forall k$.
+			where $r$ is the iteration index.
 			\label{pr:input_kkt_solution}
 		\end{proposition}
 		\begin{proof}
@@ -613,10 +568,11 @@
 			\label{pf:input_kkt_solution}
 		\end{proof}
 
-		At each iteration, the input distribution of node $k$ is evaluated over updated input distribution of node $1$ to $k-1$, together with previous input distribution of node $k+1$ to $K$. The \gls{kkt} input distribution design is summarized in Algorithm \ref{al:input_distribution}.
+		For \eqref{eq:input_kkt_solution} at iteration $r+1$, the input distribution of node $k$ is updated over $\bigl\{\{\boldsymbol{p}_q^{(r+1)}\}_{q=1}^{k-1},\{\boldsymbol{p}_q^{(r)}\}_{q=k}^{K}\bigr\}$.
+		The \gls{kkt} input distribution design is summarized in Algorithm \ref{al:input_distribution}.
 
 		\begin{algorithm}[!t]
-			\caption{Numerical Evaluation of \gls{kkt} Input Distribution}
+			\caption{Numerical \gls{kkt} Input Distribution Evaluation by Limits of Sequence}
 			\label{al:input_distribution}
 			\begin{algorithmic}[1]
 				\Require $K$, $N$, $\boldsymbol{h}_{\mathrm{D}}^H$, $\boldsymbol{H}_{\mathrm{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $\sigma_v^2$, $\rho$, $\boldsymbol{w}$, $\boldsymbol{t}$, $\epsilon$
@@ -635,10 +591,6 @@
 					\State Update $r \gets r+1$
 					\State \phantom{Update} $\boldsymbol{p}_k^{(r)}$, $\forall k$ by \eqref{eq:input_kkt_solution}
 					\State Redo step \ref{st:input_distribution_begin}--\ref{st:input_distribution_end}
-					% \State Get $P_{\mathcal{K}}^{(r)}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_distribution}
-					% \State \phantom{Get} $I^{(r)}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:backscatter_information_function}, \eqref{eq:primary_information_function}, \eqref{eq:weighted_sum_information_function}
-					% \State \phantom{Get} $I^{(r)}_k(x_{m_k})$, $\forall k,m_k$ by \eqref{eq:backscatter_marginal_information}, \eqref{eq:primary_marginal_information}, \eqref{eq:weighted_sum_marginal_information}
-					% \State \phantom{Get} $I^{(r)}(x_{\mathcal{K}})$ by \eqref{eq:backscatter_mutual_information}, \eqref{eq:primary_mutual_information}, \eqref{eq:weighted_sum_mutual_information}
 				\Until $I^{(r)}(x_{\mathcal{K}}) - I^{(r-1)}(x_{\mathcal{K}}) \le \epsilon$
 			\end{algorithmic}
 		\end{algorithm}
@@ -650,56 +602,48 @@
 			{\scriptstyle{\boldsymbol{w}}}{I(x_{\mathcal{K}})}{\label{op:active_beamforming}}{\label{ob:active_beamforming}}
 			\addConstraint{\eqref{co:transmit_power},}
 		\end{maxi!}
-		which is still non-convex due to integration and entropy terms.
+		which is still non-convex due to the integration and entropy terms.
+		To tackle this, we rewrite the \gls{dmtmac} transition probability \eqref{eq:dmtmac} from input index tuple $m_{\mathcal{K}}$ to output index $l$ as a regularized incomplete Gamma function in the series representation \cite[Theorem~3]{Jameson2016}
+		\begin{equation}
+			\begin{gathered}
+				Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) = \frac{\int_{{t_{l-1}}/{\sigma_{m_{\mathcal{K}}}^2}}^{{t_l}/{\sigma_{m_{\mathcal{K}}}^2}} z^{N-1} \exp(-z) \, d z}{(N-1)!}\\
+				= \exp \Bigl(-\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\bigl(\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^n}{n!} - \exp \Bigl(-\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\bigl(\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^n}{n!}.
+			\end{gathered}
+			\label{eq:regularized_incomplete_gamma}
+		\end{equation}
+		Its gradient with respect to $\boldsymbol{w}^*$ can be derived as
+		\begin{equation}
+			\nabla_{\boldsymbol{w}^*} Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) = \frac{\boldsymbol{h}_{\mathrm{E}}(x_{m_{\mathcal{K}}})\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}}{(\sigma_{m_{\mathcal{K}}}^2)^2} g_{m_{\mathcal{K}}}(t_{l-1},t_l),
+			\label{eq:regularized_incomplete_gamma_gradient}
+		\end{equation}
+		where $g_{m_{\mathcal{K}}}(t_{l-1},t_l) \triangleq g_{m_{\mathcal{K}}}(t_l)-g_{m_{\mathcal{K}}}(t_{l-1})$ and
+		\begin{equation}
+			g_{m_{\mathcal{K}}}(t_l) = t_l\exp\Bigl(-\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)\Bigl(-1+\sum_{n=1}^{N-1} \frac{\bigl(n - \frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr) \bigl(\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^{n-1}}{n!}\Bigr).
+			\label{eq:regularized_incomplete_gamma_gradient_component}
+		\end{equation}
+		On top of \eqref{eq:regularized_incomplete_gamma} and \eqref{eq:regularized_incomplete_gamma_gradient}, we explicitly express the objective function \eqref{ob:active_beamforming} and its gradient as \eqref{eq:weighted_sum_mutual_information_explicit} and \eqref{eq:weighted_sum_mutual_information_gradient} at the end of page \pageref{eq:weighted_sum_mutual_information_explicit}, respectively.
 		\begin{figure*}[!b]
 			\hrule
 			\begin{equation}
 				I(x_{\mathcal{K}})=\sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\log\Bigl(1+\frac{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2}{\sigma_v^2}\Bigr)+(1-\rho)\sum_l Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \log \frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'} P_{\mathcal{K}}(x_{m_{\mathcal{K}}'}) Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}\Biggr)
 				\label{eq:weighted_sum_mutual_information_explicit}
 			\end{equation}
-		\end{figure*}
-		To see this, we explicitly write \eqref{ob:active_beamforming} as \eqref{eq:weighted_sum_mutual_information_explicit} at the bottom of page \pageref{eq:regularized_incomplete_gamma}, where
-		\begin{equation}
-			Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) = \frac{\int_{{t_{l-1}}/{\sigma_{m_{\mathcal{K}}}^2}}^{{t_l}/{\sigma_{m_{\mathcal{K}}}^2}} z^{N-1} \exp(-z) \, d z}{(N-1)!}
-			\label{eq:regularized_incomplete_gamma}
-		\end{equation}
-		is the regularized incomplete Gamma function that substitutes the \gls{dmtmac} transition probability \eqref{eq:dmtmac}.
-		Its series representation is given by \cite[Theorem~3]{Jameson2016}
-		\begin{align}
-			Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)
-			 & = \exp \Bigl(-\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\Bigl(\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)^n}{n!} \nonumber \\
-			 & \quad - \exp \Bigl(-\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\Bigl(\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)^n}{n!}.
-			\label{eq:regularized_incomplete_gamma_series}
-		\end{align}
-		Next, we derive the gradients of \eqref{eq:regularized_incomplete_gamma_series} and \eqref{eq:weighted_sum_mutual_information_explicit} w.r.t. $\boldsymbol{w}^*$ as \eqref{eq:regularized_incomplete_gamma_gradient} and \eqref{eq:weighted_sum_mutual_information_gradient} at the end of page \pageref{eq:regularized_incomplete_gamma_gradient} and \pageref{eq:weighted_sum_mutual_information_gradient}, respectively.
-		\begin{figure*}[!b]
-			\begin{align}
-				\nabla_{\boldsymbol{w}^*} Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)
-				 & = \frac{\boldsymbol{h}_{\mathrm{E}}(x_{m_{\mathcal{K}}})\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}}{\bigl(\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2\bigr)^2}\nonumber                                                                                                                                                                                                        \\
-				 & \quad \times \Biggl(t_l\exp\Bigl(-\frac{t_l}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr)\biggl(-1+\sum_{n=1}^{N-1} \frac{n\Bigl(\frac{t_l}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr)^{n-1}-\Bigl(\frac{t_l}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr)^n}{n!}\biggr)\nonumber    \\
-				 & \qquad - t_{l-1}\exp\Bigl(-\frac{t_{l-1}}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr)\biggl(-1+\sum_{n=1}^{N-1} \frac{n\Bigl(\frac{t_{l-1}}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr)^{n-1}-\Bigl(\frac{t_{l-1}}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr)^n}{n!}\biggr)\Biggr)
-				\label{eq:regularized_incomplete_gamma_gradient}
-			\end{align}
-		\end{figure*}
-		\begin{figure*}[!b]
-			\hrule
 			\begin{align}
 				\nabla_{\boldsymbol{w}^*} I(x_{\mathcal{K}})
-				 & = \sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\frac{\boldsymbol{h}_{\mathrm{E}}(x_{m_{\mathcal{K}}})\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}+(1-\rho)\sum_l\biggl(\log\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}+1\biggr)\nonumber   \\
+				 & = \sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\frac{\boldsymbol{h}_{\mathrm{E}}(x_{m_{\mathcal{K}}})\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}}{\sigma_{m_{\mathcal{K}}}^2}+(1-\rho)\sum_l\biggl(\log\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}+1\biggr)\nonumber                                                                  \\
 				 & \qquad \times \nabla_{\boldsymbol{w}^*} Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)-\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})\nabla_{\boldsymbol{w}^*}Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}\Biggr)
 				\label{eq:weighted_sum_mutual_information_gradient}
 			\end{align}
 		\end{figure*}
-		% Next, we express the gradient of \eqref{eq:regularized_incomplete_gamma_series} and \eqref{eq:weighted_sum_mutual_information_explicit} w.r.t. $\boldsymbol{w}^*$ as \eqref{eq:regularized_incomplete_gamma_gradient} and \eqref{eq:weighted_sum_mutual_information_gradient} at the end of page \pageref{eq:regularized_incomplete_gamma_gradient},
-		It allows problem \eqref{op:active_beamforming} to be solved by the \gls{pgd} method, where any unregulated beamforming vector $\bar{\boldsymbol{w}}$ can be projected onto the feasible domain of average transmit power constraint \eqref{co:transmit_power} by
-		% the projection function associated with average transmit power constraint \eqref{co:transmit_power} is
+		Those allows problem \eqref{op:active_beamforming} to be solved by the \gls{pgd} method, where any unregulated beamforming vector $\bar{\boldsymbol{w}}$ can be projected onto the feasible domain of average transmit power constraint \eqref{co:transmit_power} by
 		\begin{equation}
 			\boldsymbol{w} = \sqrt{P} \frac{\bar{\boldsymbol{w}}}{\max\bigl(\sqrt{P},\lVert\bar{\boldsymbol{w}}\rVert\bigr)}.
 			\label{eq:beamforming_projection}
 		\end{equation}
-		We present the iterative active beamforming design accelerated by backtracking line search in Algorithm \ref{al:active_beamforming}.
+
+		The \gls{pgd} active beamforming optimization with step size determined by backtracking line search is summarized in Algorithm \ref{al:active_beamforming}.
 		\begin{algorithm}[!t]
-			\caption{Iterative Active Beamforming Design by \gls{pgd} with Backtracking Line Search}
+			\caption{Iterative Active Beamforming Optimization by \gls{pgd} with Backtracking Line Search}
 			\label{al:active_beamforming}
 			\begin{algorithmic}[1]
 				\Require $Q$, $N$, $\boldsymbol{h}_{\mathrm{D}}^H$, $\boldsymbol{H}_{\mathrm{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $P$, $\sigma_v^2$, $\rho$, $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{t}$, $\alpha$, $\beta$, $\gamma$, $\epsilon$
@@ -709,7 +653,7 @@
 				\State Initialize $r \gets 0$
 				\State \phantom{Initialize} $\boldsymbol{w}^{(0)}$, $\lVert\boldsymbol{w}^{(0)}\rVert^2 \le P$
 				\State Get $(\sigma_{m_{\mathcal{K}}}^{(r)})^2$, $\forall m_{\mathcal{K}}$ by \eqref{eq:receive_variance} \label{st:gradient_descent_begin}
-				\State \phantom{Get} $Q^{(r)}\bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)$, $\forall m_{\mathcal{K}},l$ by \eqref{eq:regularized_incomplete_gamma} or \eqref{eq:regularized_incomplete_gamma_series}
+				\State \phantom{Get} $Q^{(r)}\bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)$, $\forall m_{\mathcal{K}},l$ by \eqref{eq:regularized_incomplete_gamma}
 				\State \phantom{Get} $I^{(r)}(x_{\mathcal{K}})$ by \eqref{eq:weighted_sum_mutual_information_explicit} \label{st:gradient_descent_end}
 				\State \phantom{Get} $\nabla_{\boldsymbol{w}^*} Q^{(r)}\bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)$, $\forall m_{\mathcal{K}},l$ by \eqref{eq:regularized_incomplete_gamma_gradient} \label{st:gradient_update_start}
 				\State \phantom{Get} $\nabla_{\boldsymbol{w}^*} I^{(r)}(x_{\mathcal{K}})$ by \eqref{eq:weighted_sum_mutual_information_gradient} \label{st:gradient_update_end}
@@ -719,10 +663,6 @@
 					\State \phantom{Update} $\bar{\boldsymbol{w}}^{(r)} \gets \boldsymbol{w}^{(r-1)}+\gamma\nabla_{\boldsymbol{w}^*} I^{(r-1)}(x_{\mathcal{K}})$ \label{st:backtracking_line_search_begin}
 					\State \phantom{Update} $\boldsymbol{w}^{(r)}$ by \eqref{eq:beamforming_projection}
 					\State Redo step \ref{st:gradient_descent_begin}--\ref{st:gradient_descent_end} \label{st:backtracking_line_search_end}
-					% \State \phantom{Update} $(\sigma_{m_{\mathcal{K}}}^{(r)})^2$, $\forall m_{\mathcal{K}}$ by \eqref{eq:receive_variance}
-					% \State \phantom{Update} $Q^{(r)}\bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)$, $\forall m_{\mathcal{K}},l$ by \eqref{eq:regularized_incomplete_gamma} or \eqref{eq:regularized_incomplete_gamma_series}
-					% \State \phantom{Update} $I^{(r)}(x_{\mathcal{K}})$ by \eqref{eq:weighted_sum_mutual_information_explicit} \label{st:backtracking_line_search_end}
-					% \While{$I^{(r-1)}(x_{\mathcal{K}})>I^{(r)}(x_{\mathcal{K}})+\alpha\gamma\lVert\nabla_{\boldsymbol{w}^*}I^{(r-1)}(x_{\mathcal{K}})\rVert$}
 					\While{$I^{(r)}(x_{\mathcal{K}})<I^{(r-1)}(x_{\mathcal{K}})+\alpha\gamma\lVert\nabla_{\boldsymbol{w}^*}I^{(r-1)}(x_{\mathcal{K}})\rVert^2$}
 						\State Set $\gamma^{(r)}\gets\beta\gamma^{(r)}$
 						\State Redo step \ref{st:backtracking_line_search_begin}--\ref{st:backtracking_line_search_end}
@@ -734,13 +674,12 @@
 	\end{subsection}
 
 	\begin{subsection}{Decision Threshold}
-		% Once node input distribution $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$ and active beamforming vector $\boldsymbol{w}$ are obtained, problem \eqref{op:weighted_sum_rate}
 		For any given $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$ and $\boldsymbol{w}$, problem \eqref{op:weighted_sum_rate} reduces to
 		\begin{maxi!}
-			{\scriptstyle{\boldsymbol{t}\in\mathbb{R}_+^{L+1}}}{I(x_{\mathcal{K}})}{\label{op:decision_threshold}}{\label{ob:decision_threshold}}
+			{\scriptstyle{\boldsymbol{t}}}{I(x_{\mathcal{K}})}{\label{op:decision_threshold}}{\label{ob:decision_threshold}}
 			\addConstraint{\eqref{co:decision_threshold},}
 		\end{maxi!}
-		where it is trivial to conclude $t_0^\star=0$ and $t_L^\star=\infty$ for energy-based backscatter detection.
+		and it is trivial to conclude $t_0^\star=0$ and $t_L^\star=\infty$ for energy-based backscatter detection.
 
 		\begin{remark}
 			Backscatter detection (and decision design) has no impact on primary achievable rate.
@@ -990,16 +929,9 @@
 	\begin{subsection}{Proof of Proposition \ref{pr:input_kkt_condition}}
 		Denote the Lagrange multipliers associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\{\nu_k\}_{k \in \mathcal{K}}$ and $\{\lambda_{k,m_k}\}_{k \in \mathcal{K},m_k \in \mathcal{M}}$, respectively.
 		The Lagrangian function of problem \eqref{op:input_distribution} is
-		\begin{align}
-			% L(\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\{\nu_k\},\{\lambda_{k,m_k}\})
-			L
-			%  & = - I(x_{\mathcal{K}}) + \sum_{k \in \mathcal{K}} \nu_k \left( \sum_{m_k \in \mathcal{M}} P_k(x_{m_k}) - 1 \right)\nonumber \\
-			 & = - I(x_{\mathcal{K}}) + \sum_k \nu_k \left( \sum_{m_k \in \mathcal{M}} P_k(x_{m_k}) - 1 \right)\nonumber \\
-			%  & \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(x_{m_k}),
-			 & \quad - \sum_k \sum_{m_k} \lambda_{k,m_k} P_k(x_{m_k}),
-		\end{align}
-		% and the \gls{kkt} conditions on the optimal primal and dual variables are, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
-		% and the \gls{kkt} conditions are, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
+		\begin{equation}
+			- I(x_{\mathcal{K}}) + \sum_k \nu_k \biggl( \sum_{m_k} P_k(x_{m_k}) - 1 \biggr) - \sum_k \sum_{m_k} \lambda_{k,m_k} P_k(x_{m_k})
+		\end{equation}
 		and the \gls{kkt} conditions are, $\forall k,m_k$,
 		\begin{subequations}
 			\label{eq:input_kkt_condition_original}
@@ -1010,10 +942,10 @@
 				\lambda_{k,m_k}^\star = 0, \quad P_k^\star(x_{m_k}) > 0,
 			\end{equation}
 			\begin{equation}
-				\lambda_{k,m_k}^\star \ge 0, \quad P_k^\star(x_{m_k}) = 0.
+				\lambda_{k,m_k}^\star \ge 0, \quad P_k^\star(x_{m_k}) = 0,
 			\end{equation}
 		\end{subequations}
-		The directional derivative can be explicitly expressed as
+		where directional derivative is explicitly written as
 		\begin{equation}
 			\nabla_{P_k^\star(x_{m_k})} I^\star(x_{\mathcal{K}}) = I_k^\star(x_{m_k}) - (1 - \rho).
 			\label{eq:input_directional_derivative}
@@ -1026,12 +958,12 @@
 				I_k^\star(x_{m_k}) & \le \nu_k^\star + (1 - \rho), \quad &  & P_k^\star(x_{m_k}) = 0,\label{eq:dropped_states_marginal}
 			\end{alignat}
 		\end{subequations}
-		which suggests
+		such that
 		\begin{equation}
 			\sum_{m_k} P_k^\star(x_{m_k}) I_k^\star(x_{m_k}) = \nu_k^\star + (1 - \rho).
 			\label{eq:input_kkt_condition_implied}
 		\end{equation}
-		On the other hand, by definition of weighted sum marginal information \eqref{eq:weighted_sum_marginal_information},
+		On the other hand, by definition \eqref{eq:weighted_sum_marginal_information} we have
 		\begin{equation}
 			\sum_{m_k} P_k^\star(x_{m_k}) I_k^\star(x_{m_k}) = I^\star(x_{\mathcal{K}}),
 			\label{eq:weighted_sum_marginal_information_implied}
@@ -1043,22 +975,17 @@
 
 	\begin{subsection}{Proof of Proposition \ref{pr:input_kkt_solution}}
 		We first prove sequence \eqref{eq:input_kkt_solution} is non-decreasing in weighted sum mutual information.
-		Let $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(x_{m_q})$ and $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) = P_k'(x_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(x_{m_q})$ be two probability distributions with potentially different marginal for tag $k \in \mathcal{K}$ at state $m_k \in \mathcal{M}$, and define an intermediate function $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)$ as \eqref{eq:intermediate_information_function} at the end of page \pageref{eq:intermediate_information_function}.
+		Let $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(x_{m_q})$ and $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) = P_k'(x_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(x_{m_q})$ be two probability distributions with potentially different marginal for tag $k$ at state $m_k$, and define an intermediate function $J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr)$ as \eqref{eq:intermediate_information_function} at the end of page \pageref{eq:intermediate_information_function}.
 		\begin{figure*}[!b]
 			\hrule
-			% \begin{equation}
-			% 	J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right) \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \log \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\right) + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})}.
-			% 	\label{eq:intermediate_information_function}
-			% \end{equation}
-			\begin{align}
-				J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)
-				 & \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \log \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\right)\nonumber                                                                                                                    \\
-				 & \quad + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})}.
+			\begin{equation}
+				J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr) \triangleq \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}})
+				\Biggl( \rho \log \Bigl(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\Bigr) + (1 - \rho) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P_{\mathcal{K}}'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})} \Biggr).
 				\label{eq:intermediate_information_function}
-			\end{align}
+			\end{equation}
 		\end{figure*}
-		It is straightforward to verify $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \right) = I(x_{\mathcal{K}})$ and $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)$ is a concave function for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$.
-		By choosing $\nabla_{P_k^\star(x_{m_k})} J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right) = 0$, we have
+		It is straightforward to verify $J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \bigr) = I(x_{\mathcal{K}})$ and $J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr)$ is a concave function for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$.
+		Setting $\nabla_{P_k^\star(x_{m_k})} J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr) = 0$, we have
 		\begin{equation}
 			S_k'(x_{m_k}) - S_k'(x_{i_k}) + (1 - \rho) \log \frac{P_k(x_{i_k})}{P_k^\star(x_{m_k})} = 0,
 			\label{eq:optimal_intermediate_information_condition}
@@ -1071,40 +998,34 @@
 		\end{align}
 		Evidently, $\forall m_k \ne i_k$, \eqref{eq:optimal_intermediate_information_condition} boils down to
 		\begin{equation}
-			P_k^\star(x_{m_k}) = \frac{P_k'(x_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k}) \right)}{\sum_{m_k'} P_k'(x_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k'}) \right)}.
+			P_k^\star(x_{m_k}) = \frac{P_k'(x_{m_k}) \exp \Bigl( \frac{\rho}{1 - \rho} I_k'(x_{m_k}) \Bigr)}{\sum_{m_k'} P_k'(x_{m_k'}) \exp \Bigl( \frac{\rho}{1 - \rho} I_k'(x_{m_k'}) \Bigr)}.
 			\label{eq:optimal_relative_distribution}
 		\end{equation}
-		We also notice $P_k(x_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^\star(x_{m_k})$ has exactly the same expression as \eqref{eq:optimal_relative_distribution}.
-		% We also notice $P_k(x_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^\star(x_{m_k})$ is in the same expression as \eqref{eq:optimal_relative_distribution}.
-		Therefore, the result is irrelevant to the choice of reference state, and \eqref{eq:optimal_relative_distribution} is indeed optimal $\forall m_k \in \mathcal{M}$.
-		% It implies the selection of reference state does not matter and \eqref{eq:optimal_relative_distribution} is indeed optimal $\forall m_k \in \mathcal{M}$.
+		Since $P_k(x_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^\star(x_{m_k})$ has exactly the same form as \eqref{eq:optimal_relative_distribution}, the choice of reference state $i_k$ does not matter and \eqref{eq:optimal_relative_distribution} is indeed optimal $\forall m_k \in \mathcal{M}$.
 		That is, for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$, choosing $P_k(x_{m_k})$ by \eqref{eq:optimal_relative_distribution} ensures
 		\begin{equation}
-			J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right) \ge I'(x_{\mathcal{K}}).
+			J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr) \ge I'(x_{\mathcal{K}}).
 			\label{eq:information_difference_lower}
 		\end{equation}
-		On the other hand, it also guarantees
+		On the other hand, we also have
 		\begin{subequations}
 			\label{eq:information_difference_upper}
 			\begin{align}
 				\Delta
-				 & \triangleq I(x_{\mathcal{K}}) - J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)                                                                                \\
-				 & = (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k})\nonumber                             \\
-				 & \quad \times \log \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k'})}               \\
-				 & \ge (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k})\nonumber                           \\
-				 & \quad \times \left( 1 - \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k'})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k})} \right) \\
+				 & \triangleq I(x_{\mathcal{K}}) - J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr)                                                                                  \\
+				 & = (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k})\nonumber                              \\
+				 & \quad \times \log \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k'})}                \\
+				 & \ge (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k})\nonumber                            \\
+				 & \quad \times \Biggl( 1 - \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k'})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k})} \Biggr) \\
 				 & = 0,
 			\end{align}
 		\end{subequations}
-		where $f_k'(x_{m_k}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k}) \right)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges.
+		where $f_k'(x_{m_k}) \triangleq \exp \bigl( \frac{\rho}{1 - \rho} I_k'(x_{m_k}) \bigr)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges.
 		\eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper} together imply $I(x_{\mathcal{K}}) \ge I'(x_{\mathcal{K}})$.
 		Since mutual information is bounded above, we conclude the sequence \eqref{eq:input_kkt_solution} is non-decreasing and convergent in mutual information.
 
 		Next, we prove any converging point of sequence \eqref{eq:input_kkt_solution}, denoted as $P_k^\star(x_{m_k})$, fulfills \gls{kkt} conditions \eqref{eq:input_kkt_condition}.
-		% Next, we prove that sequence \eqref{eq:input_kkt_solution} fulfills \gls{kkt} conditions \eqref{eq:input_kkt_condition} on convergence.
-		% To see this, recall $P_k^{(0)}(x_{m_k}) > 0$ and define
-		To see this, define
-		% To see this, we define
+		To see this, let
 		\begin{equation}
 			D_k^{(r)}(x_{m_k}) \triangleq \frac{P_k^{(r+1)}(x_{m_k})}{P_k^{(r)}(x_{m_k})} = \frac{f_k^{(r)}(x_{m_k})}{\sum_{m_k'} P_k^{(r)}(x_{m_k'}) f_k^{(r)}(x_{m_k'})}.
 		\end{equation}
@@ -1113,20 +1034,19 @@
 			I_k^\star(x_{m_k}) = \frac{1 - \rho}{\rho} \log \sum_{m_k'} P_k^\star(x_{m_k'}) f_k^\star(x_{m_k'}),
 		\end{equation}
 		which is reminiscent of \eqref{eq:probable_states_marginal} and \eqref{eq:probable_states}.
-		That is to say, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) > 0$ must satisfy \eqref{eq:probable_states}.
+		That is, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) > 0$ must satisfy \eqref{eq:probable_states}.
 		On the other hand, we assume $P_k^\star(x_{m_k})$ does not satisfy \eqref{eq:dropped_states}, such that for any state with $P_k^\star(x_{m_k}) = 0$,
-		% On the other hand, we show if $P_k^\star(x_{m_k})$ does not satisfy \eqref{eq:dropped_states}, then it is not a converging point of sequence \eqref{eq:input_kkt_solution}. By this assumption, for any state with $P_k^\star(x_{m_k}) = 0$,
 		\begin{equation}
 			I_k^\star(x_{m_k}) > I^\star(x_{\mathcal{K}}) = \sum_{m_k'} P_k^\star(x_{m_k'}) I_k^\star(x_{m_k'}),
 		\end{equation}
 		where the equality inherits from \eqref{eq:weighted_sum_mutual_information}.
-		Since exponential function is monotonically increasing, we have $f_k^\star(x_{m_k}) > \sum_{m_k'} P_k^\star(x_{m_k'}) f_k^\star(x_{m_k'})$ and $D_k^\star(x_{m_k}) > 1$.
+		Since the exponential function is monotonically increasing, we have $f_k^\star(x_{m_k}) > \sum_{m_k'} P_k^\star(x_{m_k'}) f_k^\star(x_{m_k'})$ and $D_k^\star(x_{m_k}) > 1$.
 		Considering $P_k^{(0)}(x_{m_k}) > 0$ and $P_k^\star(x_{m_k}) = 0$, it contradicts with
 		\begin{equation}
 			P_k^{(r)}(x_{m_k}) = P_k^{(0)}(x_{m_k}) \prod_{n=1}^r D_k^{(n)}(x_{m_k}).
 		\end{equation}
-		Therefore, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) = 0$ must satisfy \eqref{eq:dropped_states}.
-		This completes the proof.
+		That is, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) = 0$ must satisfy \eqref{eq:dropped_states}.
+		The proof is thus completed.
 		\label{ap:input_kkt_solution}
 	\end{subsection}
 

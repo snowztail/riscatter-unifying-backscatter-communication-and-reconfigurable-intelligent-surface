@@ -412,12 +412,12 @@
 			\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k = \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}},
 			\label{eq:equivalent_channel}
 		\end{equation}
-		where $\alpha_k \in \mathbb{I}$ is the amplitude scattering ratio of UniScatter node $k$, $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ is the \emph{coded} backscatter symbol of node $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{I}^{K \times 1}$, $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathcal{X}^{K \times 1}$, and $\boldsymbol{H}_{\mathrm{C}} \triangleq [\boldsymbol{h}_{\mathrm{C},1},\ldots,\boldsymbol{h}_{\mathrm{C},K}]^H \in \mathbb{C}^{K \times Q}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
+		where $\alpha_k \in \mathbb{I}$ is the amplitude scattering ratio of UniScatter node $k$, $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ is the \emph{coded} backscatter symbol of node $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{I}^{K}$, $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathcal{X}^{K}$, and $\boldsymbol{H}_{\mathrm{C}} \triangleq [\boldsymbol{h}_{\mathrm{C},1},\ldots,\boldsymbol{h}_{\mathrm{C},K}]^H \in \mathbb{C}^{K \times Q}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
 		\begin{equation}
 			y[n] = \boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \boldsymbol{w} s[n] + v[n],
 			\label{eq:receive_signal}
 		\end{equation}
-		where $s \sim \mathcal{CN}(0,1)$ is the primary symbol, $v \sim \mathcal{CN}(0,\sigma_v^2)$ is the \gls{awgn}, and $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the active beamforming vector subject to average transmit power constraint $\lVert \boldsymbol{w} \rVert^2 \le P$.
+		where $s \sim \mathcal{CN}(0,1)$ is the primary symbol, $v \sim \mathcal{CN}(0,\sigma_v^2)$ is the \gls{awgn}, and $\boldsymbol{w} \in \mathbb{C}^{Q}$ is the active beamforming vector subject to average transmit power constraint $\lVert \boldsymbol{w} \rVert^2 \le P$.
 		Denote $m_k \in \mathcal{M} \triangleq \{1,\ldots,M\}$ as the reflection state index of node $k$, and $m_{\mathcal{K}} \triangleq (m_1,\ldots,m_K)$ as the state index tuple of all nodes.
 		Conditioned on backscatter index tuple $m_{\mathcal{K}}$, the received signal \eqref{eq:receive_signal} follows \gls{cscg} distribution $y[n] \sim \mathcal{CN}(0,\sigma_{m_{\mathcal{K}}}^2)$, where
 		\begin{equation}
@@ -448,7 +448,7 @@
 		\begin{equation}
 			\mathcal{R}_{m_{\mathcal{K}}} \triangleq [t_{l-1},t_l), \quad t_{l-1} \le t_l.
 		\end{equation}
-		Once the decision threshold vector $\boldsymbol{t} \triangleq [t_0,\ldots,t_L]^T \in \mathbb{R}_+^{(L+1) \times 1}$ is determined, we can formulate a \gls{dmtmac} with transition probability from input $x_{m_{\mathcal{K}}}$ to output $\hat{x}_{m_{\mathcal{K}}'}$
+		Once the decision threshold vector $\boldsymbol{t} \triangleq [t_0,\ldots,t_L]^T \in \mathbb{R}_+^{(L+1)}$ is determined, we can formulate a \gls{dmtmac} with transition probability from input $x_{m_{\mathcal{K}}}$ to output $\hat{x}_{m_{\mathcal{K}}'}$
 		\begin{equation}
 			P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) = \int_{\mathcal{R}_{m_{\mathcal{K}}'}} f(z|\mathcal{H}_{m_{\mathcal{K}}}) \, d z,
 			\label{eq:dmtmac}
@@ -457,7 +457,7 @@
 	\end{subsection}
 
 	\begin{subsection}{Information Theory}
-		Denote the input probability distribution vector of node $k$ as $\boldsymbol{p}_k \triangleq [P_k(c_1),\ldots,P_k(c_M)]^T \in \mathbb{I}^{M \times 1}$, and the probability of state $m_k$ as $P_k(x_{m_k})$.
+		Denote the input probability distribution vector of node $k$ as $\boldsymbol{p}_k \triangleq [P_k(c_1),\ldots,P_k(c_M)]^T \in \mathbb{I}^{M}$, and the probability of state $m_k$ as $P_k(x_{m_k})$.
 		With independent encoding at all nodes, the probability of backscatter symbol tuple $x_{m_{\mathcal{K}}}$ is
 		\begin{equation}
 			P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k}).
@@ -603,7 +603,7 @@
 			\addConstraint{\eqref{co:transmit_power},}
 		\end{maxi!}
 		which is still non-convex due to the integration and entropy terms.
-		To tackle this, we rewrite the \gls{dmtmac} transition probability \eqref{eq:dmtmac} from input index tuple $m_{\mathcal{K}}$ to output index $l$ as a regularized incomplete Gamma function in the series representation \cite[Theorem~3]{Jameson2016}
+		To tackle this, we rewrite the \gls{dmtmac} transition probability \eqref{eq:dmtmac} from input index tuple $m_{\mathcal{K}}$ to output index $l$ as a regularized incomplete Gamma function in the series representation \cite[Theorem 3]{Jameson2016}
 		\begin{equation}
 			\begin{gathered}
 				Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) = \frac{\int_{{t_{l-1}}/{\sigma_{m_{\mathcal{K}}}^2}}^{{t_l}/{\sigma_{m_{\mathcal{K}}}^2}} z^{N-1} \exp(-z) \, d z}{(N-1)!}\\
@@ -680,23 +680,21 @@
 			\addConstraint{\eqref{co:decision_threshold},}
 		\end{maxi!}
 		which is still non-convex because variable $\boldsymbol{t}$ appear on the limits of integration \eqref{eq:dmtmac}.
-		% % To tackle this, we 1) reveal backscatter decision design has no impact on primary decoding, 2) constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+$ to finite candidate set (i.e., fine-grained discrete output energy levels) $\mathcal{T}$,
-		% To tackle this, we 1) reveal backscatter decision design has no impact on primary decoding, 2) constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+$ to finite candidate set of fine-grained discrete output energy levels $\mathcal{T}$, 3) regard UniScatter nodes with given input distribution as an equivalent augmented source in terms of total backscatter rate, 4) reuse existing quantization schemes for \gls{dmc} to solve problem \eqref{op:decision_threshold}.
-		% % 3) indicate the equivalence between multi and single in terms of total backscatter rate
-		% % 3) regard all UniScatter nodes as an equivalent augmented source in terms of total backscatter rate
-		To tackle this, we first reveal backscatter decision design has no impact on primary decoding, then constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+$ to finite candidate set (i.e., fine-grained discrete energy levels) $\mathcal{T}$.
-		We also point out distributed nodes with given input distribution is equivalent to an augmented source of symbol tuples in terms of total rate, and reuse existing rate-optimal quantization schemes for \gls{dmc} to solve problem \eqref{op:decision_threshold}.
+		To tackle this, we reveal backscatter decision design has no impact on primary achievable rate, and regard the dispersed nodes with given input distribution as an equivalent augmented source in terms of total rate.
+		% We then constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+^{L+1}$ to finite candidate set (i.e., fine-grained discrete energy levels) $\mathcal{T}^{L+1}$, and reuse existing rate-optimal quantization schemes for \gls{dmc} to solve problem \eqref{op:decision_threshold}.
 
 		\begin{remark}
-			Backscatter detection (and decision design) has no impact on primary achievable rate.
-			When nodes transmit at non-zero total rate, the user can re-encode backscatter messages to recover coded backscatter tuple $x_{\mathcal{K}}$ at each block.
-			Otherwise, $x_{\mathcal{K}}$ can be fully deterministic and known to the user.
-			% Once backscatter messages are successfully decoded, the user can re-encode backscatter messages to recover coded backscatter tuple $x_{\mathcal{K}}$ at each block.
-			% Upon successful backscatter detection, the user can re-encode backscatter messages to recover coded backscatter tuple $x_{\mathcal{K}}$ at each block.
-			% Therefore, decision design has no impact on primary achievable rate.
-			% Decision threshold only influences backscatter rate instead of primary rate.
+			Upon successful backscatter decoding, UniScatter receiver can always re-encode node messages to recover their reflection patterns at each primary block.
+			Therefore, backscatter decision design has no impact on the primary achievable rate, and any thresholding scheme maximizing the total backscatter mutual information \eqref{eq:backscatter_mutual_information} is also optimal for problem \eqref{op:decision_threshold}.
 			\label{re:backscatter_detection}
 		\end{remark}
+
+		\begin{remark}
+			In terms of total backscatter rate, the dispersed nodes with given input distribution can be viewed as an equivalent source with augmented alphabet of backscatter symbol tuples $x_{m_{\mathcal{K}}}$.
+			As such, the \gls{dmtmac} \eqref{eq:dmtmac} is essentially a \gls{dmtc}, and problem \eqref{op:decision_threshold} reduces to rate-optimal quantization design for discrete-input continuous-output memoryless channel.
+		\end{remark}
+
+		Next, we constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+^{L+1}$ to finite candidate set (i.e., fine-grained discrete energy levels) $\mathcal{T}^{L+1}$, and reuse existing rate-optimal quantization schemes for \gls{dmc} to solve problem \eqref{op:decision_threshold}.
 
 		Remark \ref{re:backscatter_detection} suggests any $\boldsymbol{t}$ maximizes total backscatter mutual information $I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}})$ is also optimal for problem \eqref{op:decision_threshold}.
 
@@ -1063,7 +1061,7 @@
 	% 	On the other hand, the optimal decision regions are apparently empty for those unused letters.
 
 	% 	Suppose the optimal number of thresholds is $S+1$ where $S \ge L$.
-	% 	Let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{(S+1) \times 1}$ be the optimal threshold vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.
+	% 	Let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{(S+1)}$ be the optimal threshold vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.
 	% 	Since the optimal decision region for any letter may consist of multiple partitions, without loss of generality, we assume the mapping from threshold vector to decision region $l' \in \mathcal{L} \triangleq \{1,\ldots,L\}$ is given by $\mathcal{R}_{l'} = \bigcup_{s \equiv l' \pmod L} [t_{s-1},t_s)$.
 	% 	\begin{footnote}
 	% 		The proof holds for any valid mapping from threshold vector to decision regions, and we consider this specific case for the ease of presentation.

@@ -220,6 +220,7 @@
 	$j$ denotes the imaginary unit.
 	% $\arg(\cdot)$, $\mathrm{rank}(\cdot)$, $\mathrm{tr}(\cdot)$, $\mathrm{diag}(\cdot)$ and $\mathrm{diag}^{-1}(\cdot)$ denote the argument, rank, trace, a square matrix with input vector on main diagonal, and a vector retrieving main diagonal of input square matrix, respectively.
 	$\mathrm{diag}(\cdot)$ returns a square matrix with the input vector on its main diagonal and zeros elsewhere.
+	$\mathrm{card}(\cdot)$ returns the cardinality of a set.
 	$(\cdot)^*$, $(\cdot)^T$, $(\cdot)^H$, $\lvert{\cdot}\rvert$, and $\lVert{\cdot}\rVert$ denote the conjugate, transpose, conjugate transpose, absolute value, and Euclidean norm operators, respectively.
 	$(\cdot)^{(r)}$ and $(\cdot)^{\star}$ denote the $r$-th iterated and terminal solutions, respectively.
 	The distribution of a \gls{cscg} random variable with zero mean and variance $\sigma^2$ is denoted by $\mathcal{CN}(0,\sigma^2)$, and $\sim$ means ``distributed as''.
@@ -443,10 +444,11 @@
 			For non-binary inputs with arbitrary distribution, the optimal decision region for each letter can be non-convex (i.e., with non-adjacent partitions) and the optimal number of thresholds is still unknown \cite{Nguyen2018,Nguyen2021}.
 		\end{remark}
 		Like most existing literatures, we limit the scope of this paper to convex decision regions and consider sequential decision thresholds design therein.
-		For the ease of notations, we define a general bijective function transforming backscatter index tuple $m_{\mathcal{K}}$ to integer $l \in \mathcal{L} \triangleq \{1,\ldots,L \triangleq M^K\}$, and use both notation interchangeably in the following context.
-		As such, the convex decision region of backscatter index tuple $m_{\mathcal{K}}$ or equivalent letter $l$ can be written as
+		For the ease of notations, we define a general bijective function from backscatter index tuple $m_{\mathcal{K}}$ to integer $l \in \mathcal{L} \triangleq \{1,\ldots,L \triangleq M^K\}$, where $\{\sigma_l^2\}_{l \in \mathcal{L}}$ are sorted in an ascending order.
+		Both notations are used interchangeably in the following context.
+		As such, the convex decision region of backscatter tuple $l$ can be written as
 		\begin{equation}
-			\mathcal{R}_{m_{\mathcal{K}}} \triangleq [t_{l-1},t_l), \quad t_{l-1} \le t_l.
+			\mathcal{R}_{l} \triangleq [t_{l-1},t_l), \quad t_{l-1} \le t_l.
 		\end{equation}
 		Once the decision threshold vector $\boldsymbol{t} \triangleq [t_0,\ldots,t_L]^T \in \mathbb{R}_+^{(L+1)}$ is determined, we can formulate a \gls{dmtmac} with transition probability from input $x_{m_{\mathcal{K}}}$ to output $\hat{x}_{m_{\mathcal{K}}'}$
 		\begin{equation}
@@ -519,7 +521,8 @@
 		\addConstraint{\boldsymbol{1}^T \boldsymbol{p}_k}{=1,}{\quad \forall k}{\label{co:sum_probability}}
 		\addConstraint{\boldsymbol{p}_k}{\ge \boldsymbol{0},}{\quad \forall k}{\label{co:nonnegative_probability}}
 		\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P}{\label{co:transmit_power}}
-		\addConstraint{t_{l-1}}{\le t_l,}{\quad \forall l.}{\label{co:decision_threshold}}
+		% \addConstraint{t_{l-1}}{\le t_l,}{\quad \forall l.}{\label{co:decision_threshold}}
+		\addConstraint{\boldsymbol{t}}{\ge \boldsymbol{0}.}{\label{co:decision_threshold}}
 	\end{maxi!}
 	Since problem \eqref{op:weighted_sum_rate} is highly non-convex, we propose a \gls{bcd} algorithm that iteratively updates $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{w}$ and $\boldsymbol{t}$ until convergence.
 
@@ -679,71 +682,50 @@
 			{\scriptstyle{\boldsymbol{t}}}{I(x_{\mathcal{K}})}{\label{op:decision_threshold}}{\label{ob:decision_threshold}}
 			\addConstraint{\eqref{co:decision_threshold},}
 		\end{maxi!}
-		which is still non-convex because variable $\boldsymbol{t}$ appear on the limits of integration \eqref{eq:dmtmac}.
-		To tackle this, we reveal backscatter decision design has no impact on primary achievable rate, and regard the dispersed nodes with given input distribution as an equivalent augmented source in terms of total rate.
-		% We then constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+^{L+1}$ to finite candidate set (i.e., fine-grained discrete energy levels) $\mathcal{T}^{L+1}$, and reuse existing rate-optimal quantization schemes for \gls{dmc} to solve problem \eqref{op:decision_threshold}.
+		which is still non-convex because variable $\boldsymbol{t}$ appears on the limits of integration \eqref{eq:dmtmac}.
+		Fortunately, we can further simplify problem \eqref{op:decision_threshold} as a point-to-point rate-optimal quantization design for a discrete-input continuous-output memoryless channel, thanks to Remark \ref{re:backscatter_decision} and \ref{re:augmented_source}.
 
 		\begin{remark}
 			Upon successful backscatter decoding, UniScatter receiver can always re-encode node messages to recover their reflection patterns at each primary block.
 			Therefore, backscatter decision design has no impact on the primary achievable rate, and any thresholding scheme maximizing the total backscatter mutual information \eqref{eq:backscatter_mutual_information} is also optimal for problem \eqref{op:decision_threshold}.
-			\label{re:backscatter_detection}
+			\label{re:backscatter_decision}
 		\end{remark}
 
 		\begin{remark}
-			In terms of total backscatter rate, the dispersed nodes with given input distribution can be viewed as an equivalent source with augmented alphabet of backscatter symbol tuples $x_{m_{\mathcal{K}}}$.
-			As such, the \gls{dmtmac} \eqref{eq:dmtmac} is essentially a \gls{dmtc}, and problem \eqref{op:decision_threshold} reduces to rate-optimal quantization design for discrete-input continuous-output memoryless channel.
+			In terms of total backscatter rate, the dispersed nodes with given input distribution can be viewed as an equivalent source with augmented alphabet of backscatter symbol tuples $\{x_{m_{\mathcal{K}}}\}$.
+			As such, the \gls{dmtmac} \eqref{eq:dmtmac} is essentially a \gls{dmtc}, and problem \eqref{op:decision_threshold} reduces to the rate-optimal quantization design for a discrete-input continuous-output memoryless channel.
+			\label{re:augmented_source}
 		\end{remark}
 
-		Next, we constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+^{L+1}$ to finite candidate set (i.e., fine-grained discrete energy levels) $\mathcal{T}^{L+1}$, and reuse existing rate-optimal quantization schemes for \gls{dmc} to solve problem \eqref{op:decision_threshold}.
-
-		Remark \ref{re:backscatter_detection} suggests any $\boldsymbol{t}$ maximizes total backscatter mutual information $I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}})$ is also optimal for problem \eqref{op:decision_threshold}.
-
-		where $t_0^\star=0$ and $t_L^\star=\infty$ for energy-based backscatter detection.
-
-		\begin{remark}
-			% With input distribution of all nodes, we can formulate an equivalent information source with augmented alphabet of tag input combination.
-			% In terms of total backscatter rate, we can formulate an equivalent information source with augmented alphabet of tag input combination.
-			% When input distribution of all nodes are available, we can formulate an equivalent information source in terms of total backscatter rate.
-			% When input distribution of all nodes are available, we can think an equivalent information source with augmented alphabet of state tuple, in terms of total backscatter rate.
-			% In terms of total backscatter rate, we can regard all nodes as an equivalent information source with augmented alphabet of node state tuple $x_{m_{\mathcal{K}}}$.
-			In terms of total backscatter rate, the nodes can be regarded as an equivalent source with augmented alphabet of symbol tuple $x_{m_{\mathcal{K}}}$, and the \gls{dmtmac} \eqref{eq:dmtmac} essentially reduces to a \gls{dmtc}.
-			% As such, the \gls{dmtmac} \eqref{eq:dmtmac} is essentially a \gls{dmtc}, and decision threshold design can be simplified accordingly.
-		\end{remark}
-
-		Finally, we can employ existing thresholding design for \gls{dmtc} to solve problem \eqref{op:decision_threshold}.
-		For example, \cite{He2021} first discretized the continuous energy $z$ into numerous output bins, then grouped adjacent bins to maximize mutual information using \gls{dp} accelerated by \gls{smawk} algorithm.
-		In \cite{Nguyen2020a}, the authors first proved the optimality condition for any three neighbor thresholds, then fix $t_0$, traverse $t_1$, and sequentially optimizes the others by bisection.
-		Both will be compared with \gls{ml} decision \cite{Qian2019}
+		Next, we constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+^{L+1}$ to finite candidate set (i.e., fine-grained discrete energy levels) $\mathcal{T}^{L+1}$.
+		\begin{figure}[!t]
+			\centering
+			\resizebox{0.9\columnwidth}{!}{
+				\input{assets/illustration/discrete_outputs.tex}
+			}
+			\caption{
+				The decision thresholds are selected from fine-grained discrete energy levels instead of continuous space, and each decision region consists of at least one neighbor energy bins.
+			}
+			\label{fi:discrete_outputs}
+		\end{figure}
+		As shown in Fig. \ref{fi:discrete_outputs}, by introducing the extra analog-to-digital conversion step, we can obtain decision regions by grouping adjacent high-resolution energy bins.
+		Thus, problem \eqref{op:decision_threshold} is recast as
+		\begin{maxi}
+			{\scriptstyle{\boldsymbol{t} \in \mathcal{T}^{L+1}}}{I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}),}{\label{op:decision_threshold_recast}}{}
+		\end{maxi}
+		which can be solved by existing rate-optimal \gls{dmc} quantizer designs.
+		For global optimal solutions, \cite{He2021} proposed a \gls{dp} method accelerated by the \gls{smawk} algorithm with computational complexity $\mathcal{O}\bigl(L^2(\mathrm{card}(\mathcal{T})-L)\bigr)$, and \cite{Nguyen2020a} presented a traverse-bisection algorithm using the optimality condition of three neighbor thresholds with complexity $\mathcal{O}\bigl(\mathrm{card}(\mathcal{T})L\log(\mathrm{card}(\mathcal{T})L)\bigr)$.
+		In Section \ref{se:simulation_results}, both schemes will be compared with the \gls{ml} thresholding scheme \cite{Qian2019}
 		\begin{equation}
-			t_{l}^{\mathrm{\gls{ml}}} = N \frac{\sigma_{l-1}^2 \sigma_{l}^2}{\sigma_{l-1}^2 - \sigma_{l}^2} \log \frac{\sigma_{l-1}^2}{\sigma_{l}^2}, \quad l \in \mathcal{L} \setminus \{0,L\},
+			t_{l}^{\mathrm{\gls{ml}}} = N \frac{\sigma_{l-1}^2 \sigma_{l}^2}{\sigma_{l-1}^2 - \sigma_{l}^2} \log \frac{\sigma_{l-1}^2}{\sigma_{l}^2}, \quad l \in \mathcal{L} \setminus \{L\},
 			\label{eq:detection_threshold_maximum_likelihood}
 		\end{equation}
-		which is generally suboptimal for problem \eqref{op:decision_threshold} except for equiprobable inputs at all nodes.
-
-		% \begin{remark}
-		% 	Although the \gls{ml} decision threshold is optimal in terms of the likelihood function, it is not necessarily capacity-achieving, although the performance gap can be negligible in the single-tag \gls{bibo} case.
-		% \end{remark}
-
-		% Interestingly, the optimal threshold design to maximize the mutual information for a general \gls{dmtc} with a fixed number of output letters remains an open issue.
-		% The reason is that each decision region may contain more than one disjoint partitions (i.e., non-convex) and the number of thresholds are unknown.
-		% Fortunately, for the proposed energy detection, we proved that the \gls{dmtc} capacity can be achieved using only convex decision regions.
-		% This conclusion is summarized below.
-
-		% \begin{proposition}
-		% 	For a discrete-input continuous-output channel in Gamma distribution \eqref{eq:energy_distribution}, if the \gls{dmtc} is constructed for detection (i.e., same input/output alphabet) and $L$ input letters are with non-zero probability, then it is possible to achieve the \gls{dmtc} capacity by $L$ non-empty convex decision regions defined by $L+1$ distinct decision thresholds.
-		% 	\label{pr:threshold}
-		% \end{proposition}
-
-		% \begin{proof}
-		% 	Please refer to Appendix \ref{ap:threshold}.
-		% 	\label{pf:threshold}
-		% \end{proof}
-
-		% Once the optimal number of decision threshold is determined, we can first discretize the output energy level into numerous bins, then obtain the optimal decision regions that maximizes the total backscatter rate by \gls{dp} accelerated by \gls{smawk} algorithm \cite{He2021}.
+		which is generally suboptimal for problem \eqref{op:decision_threshold} except when all nodes are with equiprobable inputs.
 	\end{subsection}
 \end{section}
 
 \begin{section}{Simulation Results}
+	% TODO design $\mathcal{T}$
 	% TODO add distribution to initializer to smooth curves?
 	% TODO compare PGD and primary-MRT beamformers
 	In this section, we provide numerical results to evaluate the proposed input, beamforming and decision design over a single-user multi-node UniScatter network.
@@ -918,6 +900,7 @@
 		In Fig. \subref*{fi:region_frequency}, we observe that passive UniScatter nodes achieve higher backscatter rate at lower carrier frequency because of preferable propagation loss.
 		Finally, \subref*{fi:region_noise} prove the performance of energy detection is robust for a wide range of noise power.
 	\end{subsection}
+	\label{se:simulation_results}
 \end{section}
 
 \begin{section}{Conclusion}

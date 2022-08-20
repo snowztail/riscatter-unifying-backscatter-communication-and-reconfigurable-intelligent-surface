@@ -679,7 +679,13 @@
 			{\scriptstyle{\boldsymbol{t}}}{I(x_{\mathcal{K}})}{\label{op:decision_threshold}}{\label{ob:decision_threshold}}
 			\addConstraint{\eqref{co:decision_threshold},}
 		\end{maxi!}
-		and it is trivial to conclude $t_0^\star=0$ and $t_L^\star=\infty$ for energy-based backscatter detection.
+		which is still non-convex because variable $\boldsymbol{t}$ appear on the limits of integration \eqref{eq:dmtmac}.
+		% % To tackle this, we 1) reveal backscatter decision design has no impact on primary decoding, 2) constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+$ to finite candidate set (i.e., fine-grained discrete output energy levels) $\mathcal{T}$,
+		% To tackle this, we 1) reveal backscatter decision design has no impact on primary decoding, 2) constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+$ to finite candidate set of fine-grained discrete output energy levels $\mathcal{T}$, 3) regard UniScatter nodes with given input distribution as an equivalent augmented source in terms of total backscatter rate, 4) reuse existing quantization schemes for \gls{dmc} to solve problem \eqref{op:decision_threshold}.
+		% % 3) indicate the equivalence between multi and single in terms of total backscatter rate
+		% % 3) regard all UniScatter nodes as an equivalent augmented source in terms of total backscatter rate
+		To tackle this, we first reveal backscatter decision design has no impact on primary decoding, then constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+$ to finite candidate set (i.e., fine-grained discrete energy levels) $\mathcal{T}$.
+		We also point out distributed nodes with given input distribution is equivalent to an augmented source of symbol tuples in terms of total rate, and reuse existing rate-optimal quantization schemes for \gls{dmc} to solve problem \eqref{op:decision_threshold}.
 
 		\begin{remark}
 			Backscatter detection (and decision design) has no impact on primary achievable rate.
@@ -693,6 +699,8 @@
 		\end{remark}
 
 		Remark \ref{re:backscatter_detection} suggests any $\boldsymbol{t}$ maximizes total backscatter mutual information $I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}})$ is also optimal for problem \eqref{op:decision_threshold}.
+
+		where $t_0^\star=0$ and $t_L^\star=\infty$ for energy-based backscatter detection.
 
 		\begin{remark}
 			% With input distribution of all nodes, we can formulate an equivalent information source with augmented alphabet of tag input combination.

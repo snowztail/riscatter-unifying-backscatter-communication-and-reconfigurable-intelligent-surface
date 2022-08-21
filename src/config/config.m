@@ -1,14 +1,16 @@
 %% * System
 % number of transmit antennas
 nTxs = 4;
+% number of scatter antennas
+nSxs = 1;
+% number of receive antennas
+nRxs = 1;
 % number of tags
 nTags = 2;
 % number of available states at tags (i.e., modulation order)
 nStates = 4;
 % constellation diagram at tags
 constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
-% carrier frequency
-frequency = 2e8;
 % amplitude scatter ratio at tags
 scatterRatio = 0.5;
 % backscatter/primary symbol duration ratio
@@ -16,12 +18,10 @@ symbolRatio = 20;
 % average transmit power
 transmitPower = db2pow(6);
 % average noise power
-noisePower = db2pow(-90);
-% antenna gain
-rxGain = db2pow(3);
+noisePower = db2pow(-70);
 % layout and distance
 directDistance = 10;
-coverage = 1;
+coverage = 2;
 [forwardDistance, backwardDistance] = layout(directDistance, nTags, coverage);
 % path loss exponents
 directExponent = 2.6;
@@ -30,11 +30,13 @@ backwardExponent = 2;
 % Ricean factors
 directFactor = 5;
 forwardFactor = 5;
-backwardFactor = 10;
+backwardFactor = 5;
 
 %% * Algorithm
 % relative priority of primary link
-weightSet = [0 : 0.01 : 0.05, 0.075, 0.1 : 0.05 : 0.25, 0.3 : 0.1 : 0.5, 0.75, 1];
+% weightSet = [0 : 0.001 : 0.05, 0.075, 0.1 : 0.05 : 0.25, 0.3 : 0.1 : 0.5, 0.75, 1];
+% weightSet = [0 : 1e-3 : 2e-1 - 1e-3, 2e-1 : 1e-2 : 1];
+weightSet = (0 : 1e-2 : 1) .^ 2;
 % number of weights on rate region boundary
 nWeights = length(weightSet);
 % number of quantization bins

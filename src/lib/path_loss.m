@@ -1,29 +1,24 @@
-function [pathLoss] = path_loss(frequency, distance, exponent, txGain, rxGain)
+function [pathLoss] = path_loss(distance, exponent, rpl)
 	% Function:
 	%	- compute the path loss between transmitter and receiver
     %
     % Input:
-	%	- frequency: carrier frequency
     %	- distance: distance between transmitter and receiver
 	%	- exponent: path loss exponent
-	%	- txGain: transmit antenna gain
-	%	- rxGain: receive antenna gain
+	%	- rpl: reference path loss at 1m
     %
     % Output:
 	%	- pathLoss: large-scale signal attenuation
     %
     % Author & Date: Yang (i@snowztail.com), 22 May 10
 
-	% * Set default antenna gains
+	% * Set reference path loss at 1m
 	arguments
-		frequency;
 		distance;
 		exponent;
-		txGain = 1;
-		rxGain = 1;
+		rpl = db2pow(-30);
 	end
 
 	% * Compute path loss
-	wavelength = physconst('LightSpeed') / frequency;
-	pathLoss = txGain * rxGain * wavelength ^ 2 / (16 * pi ^ 2 * distance ^ exponent);
+	pathLoss = rpl * (1 / distance) ^ exponent;
 end

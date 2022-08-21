@@ -387,10 +387,10 @@
 			\footnotesize{
 				\import{assets/illustration/}{uniscatter_network.eps_tex}
 			}
-			\caption{A single-user multi-node UniScatter network.}
+			\caption{A single-user multi-node UniScatter system.}
 			\label{fi:uniscatter_network}
 		\end{figure}
-		To demonstrate the advantages of UniScatter, we consider a single-user multi-node \gls{miso} UniScatter network as shown in Fig. \ref{fi:uniscatter_network}.
+		To demonstrate the advantages of UniScatter, we consider a single-user multi-node \gls{miso} UniScatter system as shown in Fig. \ref{fi:uniscatter_network}.
 		In the primary active point-to-point system, a $Q$-antenna \gls{ap} transmits to a single-antenna user assisted by $K$ nearby single-antenna UniScatter nodes with $M$ reflection states.
 		In the secondary backscatter \gls{mac} system, the \gls{ap} serves as the carrier emitter, the distributed UniScatter nodes modulate information over reradiated \gls{rf} signals, and the user decodes their messages.
 		For simplicity, we consider a quasi-static block fading model where channels remain constant within coherence block and vary independently between consecutive blocks.
@@ -683,7 +683,7 @@
 			\addConstraint{\eqref{co:decision_threshold},}
 		\end{maxi!}
 		which is still non-convex because variable $\boldsymbol{t}$ appears on the limits of integration \eqref{eq:dmtmac}.
-		Fortunately, we can further simplify problem \eqref{op:decision_threshold} as a point-to-point rate-optimal quantization design for a discrete-input continuous-output memoryless channel, thanks to Remark \ref{re:backscatter_decision} and \ref{re:augmented_source}.
+		Fortunately, we can further simplify problem \eqref{op:decision_threshold} as a point-to-point rate-optimal quantizer optimization for a discrete-input continuous-output memoryless channel, thanks to Remark \ref{re:backscatter_decision} and \ref{re:augmented_source}.
 
 		\begin{remark}
 			Upon successful backscatter decoding, UniScatter receiver can always re-encode node messages to recover their reflection patterns at each primary block.
@@ -708,13 +708,13 @@
 			}
 			\label{fi:discrete_outputs}
 		\end{figure}
-		As shown in Fig. \ref{fi:discrete_outputs}, by introducing the extra analog-to-digital conversion step, we can obtain decision regions by grouping adjacent high-resolution energy bins.
+		As shown in Fig. \ref{fi:discrete_outputs}, by introducing the extra analog-to-digital conversion step, we can group adjacent high-resolution energy bins for backscatter decision regions.
 		Thus, problem \eqref{op:decision_threshold} is recast as
 		\begin{maxi}
 			{\scriptstyle{\boldsymbol{t} \in \mathcal{T}^{L+1}}}{I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}),}{\label{op:decision_threshold_recast}}{}
 		\end{maxi}
 		which can be solved by existing rate-optimal \gls{dmc} quantizer designs.
-		For global optimal solutions, \cite{He2021} proposed a \gls{dp} method accelerated by the \gls{smawk} algorithm with computational complexity $\mathcal{O}\bigl(L^2(\mathrm{card}(\mathcal{T})-L)\bigr)$, and \cite{Nguyen2020a} presented a traverse-bisection algorithm using the optimality condition of three neighbor thresholds with complexity $\mathcal{O}\bigl(\mathrm{card}(\mathcal{T})L\log(\mathrm{card}(\mathcal{T})L)\bigr)$.
+		For global optimal solutions, \cite{He2021} proposed a \gls{dp} method accelerated by the \gls{smawk} algorithm with computational complexity $\mathcal{O}\bigl(L^2(\mathrm{card}(\mathcal{T})-L)\bigr)$, and \cite{Nguyen2020a} presented a traverse-then-bisect algorithm using the optimality condition of three neighbor thresholds with complexity $\mathcal{O}\bigl(\mathrm{card}(\mathcal{T})L\log(\mathrm{card}(\mathcal{T})L)\bigr)$.
 		In Section \ref{se:simulation_results}, both schemes will be compared with the \gls{ml} thresholding scheme \cite{Qian2019}
 		\begin{equation}
 			t_{l}^{\mathrm{\gls{ml}}} = N \frac{\sigma_{l-1}^2 \sigma_{l}^2}{\sigma_{l-1}^2 - \sigma_{l}^2} \log \frac{\sigma_{l-1}^2}{\sigma_{l}^2}, \quad l \in \mathcal{L} \setminus \{L\},
@@ -725,25 +725,21 @@
 \end{section}
 
 \begin{section}{Simulation Results}
-	% TODO design $\mathcal{T}$
-	% TODO add distribution to initializer to smooth curves?
 	% TODO compare PGD and primary-MRT beamformers
-	In this section, we provide numerical results to evaluate the proposed input, beamforming and decision design over a single-user multi-node UniScatter network.
-	We assume the distance between \gls{ap} and user is \qty{10}{\meter}, and $K=2$ UniScatter nodes are uniformly dropped within a disk centered at the user of radius \qty{1}{\meter}.
-	% The carrier frequency is $f=\qty{200}{\MHz}$, and we consider \gls{iid} Ricean fading for all channels.
-	The carrier frequency is $f=\qty{200}{\MHz}$, and we consider \gls{iid} Ricean fading between all terminals.
-	For direct, forward and backward links, we set the path loss exponents to \num{2.6}, \num{2.4} and \num{2}, and the Ricean factor to \num{5}, \num{5} and \num{10}, respectively.
-	% For direct, forward and backward links, we choose path loss exponents \num{2.6}, \num{2.4} and \num{2}, and Ricean factor \num{5}, \num{5} and \num{10}, respectively.
-	% and the path loss exponents for direct, forward and backward links are \num{2.6}, \num{2.4} and \num{2}, respectively.
-	% We consider \gls{iid} Ricean fading for all channels with Ricean factor set to \num{5}, \num{5} and \num{10}
-	The \gls{ap} has $Q=4$ antennas with maximum average transmit power $P=\qty{36}{\dBm}$.
-	All nodes have amplitude scattering ratio $\alpha=0.5$, symbol period ratio $N=20$, and perform \gls{qam} with $M=4$ input states.
-	% and we consider amplitude scattering ratio $\alpha=0.5$ and symbol period ratio $N=20$.
-	% The user has a receive antenna gain of \qty{3}{\dBi} and average noise power
-	The user is with average noise power $\sigma_v^2=\qty{70}{\dBm}$ and receive antenna gain \qty{3}{\dBi}.
-	All rate regions are averaged over at least \num{1000} instances, where ``PSP'' and ``BSP'' means primary and backscatter symbol periods, respectively.
-	We choose decision design by \gls{smawk} \cite{He2021} as reference, and select discretize boundaries uniformly over the \qty{95}{\percent} confidence region of edge hypotheses.
-	The parameters remain fixed unless otherwise specified.
+	In this section, we provide numerical results to evaluate the proposed input distribution, active beamforming, and backscatter decision design for the UniScatter system in Fig. \ref{fi:uniscatter_network}.
+	We assume the AP-user distance is \qty{10}{\meter}, $K=2$ UniScatter nodes are randomly dropped within a disk of radius \qty{2}{\meter} centered at the user, the \gls{ap} is with $Q=4$ transmit antennas and an average power budget $P=\qty{36}{\dBm}$, the nodes employs \num{4}-\gls{qam} with amplitude scattering ratio $\alpha=0.5$, the user is with average noise power $\sigma_v^2=\qty{-40}{\dBm}$, and the symbol period ratio is $N=20$.
+	For all channels involved, we consider a distance-dependent path loss model
+	\begin{equation}
+		L(d) = L_0 \biggl(\frac{d_0}{d}\biggr)^\gamma,
+	\end{equation}
+	together with a Ricean fading model
+	\begin{equation}
+		\boldsymbol{H} = \sqrt{\frac{\kappa}{1+\kappa}} \bar{\boldsymbol{H}} + \sqrt{\frac{1}{1+\kappa}} \tilde{\boldsymbol{H}}
+	\end{equation}
+	where $d$ is the transmission distance, $L_0=-\qty{30}{\dB}$ is the reference path loss at distance $d_0=\qty{1}{\meter}$, $\kappa$ is the Ricean $K$-factor, $\bar{\boldsymbol{H}}$ is the deterministic line-of-sight component with unit-magnitude entries, and $\tilde{\boldsymbol{H}}$ is the Rayleigh fading component with entries in standard \gls{iid} \gls{cscg} distribution.
+	We choose $\gamma_{\mathrm{D}}=2.6$, $\gamma_{\mathrm{F}}=2.4$, $\gamma_{\mathrm{B}}=2$, and $\kappa_{\mathrm{D}}=\kappa_{\mathrm{F}}=\kappa_{\mathrm{B}}=5$ for direct, forward and backward links.
+	The finite threshold domain $\mathcal{T}$ comes from $b$-bit uniform discretization over the critical interval defined by the confidence bounds of edge hypotheses (i.e., lower bound of $\mathcal{H}_1$ and upper bound of $\mathcal{H}_L$) with confidence level $1-\varepsilon$, where $b=8$ and $\varepsilon=\num{2.22e-16}$.
+	All achievable rate regions are averaged over \num{3000} realizations, and the parameters remain fixed unless otherwise specified.
 
 	\begin{subsection}{Input Distribution vs. Weight}
 		\begin{figure}[!t]

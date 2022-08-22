@@ -355,7 +355,11 @@
 				}
 				\label{fi:scatter_model}
 			}
-			\caption{Block diagram, equivalent circuit, and scatter model of a UniScatter node. The solid and dashed vectors represent signal and energy flows. The scattering antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
+			\caption{
+			Block diagram, equivalent circuit, and scatter model of a UniScatter node.
+			The solid and dashed vectors represent signal and energy flows.
+			The scattering antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.
+			}
 			\label{fi:uniscatter_node}
 		\end{figure*}
 	\end{subsection}
@@ -448,7 +452,7 @@
 		Both notations are used interchangeably in the following context.
 		As such, the convex decision region of backscatter tuple $l$ can be written as
 		\begin{equation}
-			\mathcal{R}_{l} \triangleq [t_{l-1},t_l), \quad t_{l-1} \le t_l.
+			\mathcal{R}_{l} \triangleq [t_{l-1},t_l), \quad 0 \le t_{l-1} \le t_l.
 		\end{equation}
 		Once the decision threshold vector $\boldsymbol{t} \triangleq [t_0,\ldots,t_L]^T \in \mathbb{R}_+^{(L+1)}$ is determined, we can formulate a \gls{dmtmac} with transition probability from input $x_{m_{\mathcal{K}}}$ to output $\hat{x}_{m_{\mathcal{K}}'}$
 		\begin{equation}
@@ -521,8 +525,8 @@
 		\addConstraint{\boldsymbol{1}^T \boldsymbol{p}_k}{=1,}{\quad \forall k}{\label{co:sum_probability}}
 		\addConstraint{\boldsymbol{p}_k}{\ge \boldsymbol{0},}{\quad \forall k}{\label{co:nonnegative_probability}}
 		\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P}{\label{co:transmit_power}}
-		% \addConstraint{t_{l-1}}{\le t_l,}{\quad \forall l.}{\label{co:decision_threshold}}
-		\addConstraint{\boldsymbol{t}}{\ge \boldsymbol{0}.}{\label{co:decision_threshold}}
+		\addConstraint{t_{l-1}}{\le t_l,}{\quad \forall l}{\label{co:sequential_threshold}}
+		\addConstraint{\boldsymbol{t}}{\ge \boldsymbol{0}.}{\label{co:nonnegative_threshold}}
 	\end{maxi!}
 	Since problem \eqref{op:weighted_sum_rate} is highly non-convex, we propose a \gls{bcd} algorithm that iteratively updates $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{w}$ and $\boldsymbol{t}$ until convergence.
 
@@ -538,6 +542,7 @@
 		\begin{remark}
 			As demonstrated in \cite{Buhler2011}, \gls{kkt} conditions are generally necessary but insufficient for total rate maximization problems.
 			Although \gls{kkt} solutions to problem \eqref{op:input_distribution} may end up being saddle points, we will later show by simulation their average performance can be reasonably close to optimal for a moderate $K$.
+			\label{re:input_kkt_distribution}
 		\end{remark}
 		\begin{proposition}
 			The \gls{kkt} optimality conditions for problem \eqref{op:input_distribution} are equivalent to, $\forall k,m_k$,
@@ -680,7 +685,7 @@
 		For any given $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$ and $\boldsymbol{w}$, problem \eqref{op:weighted_sum_rate} reduces to
 		\begin{maxi!}
 			{\scriptstyle{\boldsymbol{t}}}{I(x_{\mathcal{K}})}{\label{op:decision_threshold}}{\label{ob:decision_threshold}}
-			\addConstraint{\eqref{co:decision_threshold},}
+			\addConstraint{\eqref{co:sequential_threshold},\eqref{co:nonnegative_threshold},}
 		\end{maxi!}
 		which is still non-convex because variable $\boldsymbol{t}$ appears on the limits of integration \eqref{eq:dmtmac}.
 		Fortunately, we can further simplify problem \eqref{op:decision_threshold} as a point-to-point rate-optimal quantizer optimization for a discrete-input continuous-output memoryless channel, thanks to Remark \ref{re:backscatter_decision} and \ref{re:augmented_source}.
@@ -703,19 +708,18 @@
 			\resizebox{0.9\columnwidth}{!}{
 				\input{assets/illustration/discrete_outputs.tex}
 			}
-			\caption{
-				The decision thresholds are selected from fine-grained discrete energy levels instead of continuous space, and each decision region consists of at least one neighbor energy bins.
-			}
+			\caption{The decision thresholds are selected from fine-grained discrete energy levels instead of continuous space, and each decision region consists of at least one neighbor energy bins.}
 			\label{fi:discrete_outputs}
 		\end{figure}
 		As shown in Fig. \ref{fi:discrete_outputs}, by introducing the extra analog-to-digital conversion step, we can group adjacent high-resolution energy bins for backscatter decision regions.
 		Thus, problem \eqref{op:decision_threshold} is recast as
-		\begin{maxi}
-			{\scriptstyle{\boldsymbol{t} \in \mathcal{T}^{L+1}}}{I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}),}{\label{op:decision_threshold_recast}}{}
-		\end{maxi}
-		which can be solved by existing rate-optimal \gls{dmc} quantizer designs.
-		For global optimal solutions, \cite{He2021} proposed a \gls{dp} method accelerated by the \gls{smawk} algorithm with computational complexity $\mathcal{O}\bigl(L^2(\mathrm{card}(\mathcal{T})-L)\bigr)$, and \cite{Nguyen2020a} presented a traverse-then-bisect algorithm using the optimality condition of three neighbor thresholds with complexity $\mathcal{O}\bigl(\mathrm{card}(\mathcal{T})L\log(\mathrm{card}(\mathcal{T})L)\bigr)$.
-		In Section \ref{se:simulation_results}, both schemes will be compared with the \gls{ml} thresholding scheme \cite{Qian2019}
+		\begin{maxi!}
+			{\scriptstyle{\boldsymbol{t} \in \mathcal{T}^{L+1}}}{I(x_{\mathcal{K}})}{\label{op:decision_threshold_discrete}}{\label{ob:decision_threshold_discrete}}
+			\addConstraint{\eqref{co:sequential_threshold},}
+		\end{maxi!}
+		which can be solved by existing rate-optimal sequential quantizer designs for \gls{dmc}.
+		To obtain global optimal solution, \cite{He2021} started from the quadrangle inequality and proposed a \gls{dp} method accelerated by the \gls{smawk} algorithm with computational complexity $\mathcal{O}\bigl(L^2(\mathrm{card}(\mathcal{T})-L)\bigr)$, while \cite{Nguyen2020a} started from the optimality condition for three neighbor thresholds and presented a traverse-then-bisect algorithm with complexity $\mathcal{O}\bigl(\mathrm{card}(\mathcal{T})L\log(\mathrm{card}(\mathcal{T})L)\bigr)$.
+		In Section \ref{se:simulation_results}, both schemes will be compared with the \gls{ml} thresholding \cite{Qian2019}
 		\begin{equation}
 			t_{l}^{\mathrm{\gls{ml}}} = N \frac{\sigma_{l-1}^2 \sigma_{l}^2}{\sigma_{l-1}^2 - \sigma_{l}^2} \log \frac{\sigma_{l-1}^2}{\sigma_{l}^2}, \quad l \in \mathcal{L} \setminus \{L\},
 			\label{eq:detection_threshold_maximum_likelihood}
@@ -736,12 +740,12 @@
 	\begin{equation}
 		\boldsymbol{H} = \sqrt{\frac{\kappa}{1+\kappa}} \bar{\boldsymbol{H}} + \sqrt{\frac{1}{1+\kappa}} \tilde{\boldsymbol{H}}
 	\end{equation}
-	where $d$ is the transmission distance, $L_0=-\qty{30}{\dB}$ is the reference path loss at distance $d_0=\qty{1}{\meter}$, $\kappa$ is the Ricean $K$-factor, $\bar{\boldsymbol{H}}$ is the deterministic line-of-sight component with unit-magnitude entries, and $\tilde{\boldsymbol{H}}$ is the Rayleigh fading component with entries in standard \gls{iid} \gls{cscg} distribution.
+	where $d$ is the transmission distance, $L_0=-\qty{30}{\dB}$ is the reference path loss at distance $d_0=\qty{1}{\meter}$, $\kappa$ is the Ricean $K$-factor, $\bar{\boldsymbol{H}}$ is the deterministic line-of-sight component with entries of unit magnitude, and $\tilde{\boldsymbol{H}}$ is the Rayleigh fading component with entries in standard \gls{iid} \gls{cscg} distribution.
 	We choose $\gamma_{\mathrm{D}}=2.6$, $\gamma_{\mathrm{F}}=2.4$, $\gamma_{\mathrm{B}}=2$, and $\kappa_{\mathrm{D}}=\kappa_{\mathrm{F}}=\kappa_{\mathrm{B}}=5$ for direct, forward and backward links.
 	The finite threshold domain $\mathcal{T}$ comes from $b$-bit uniform discretization over the critical interval defined by the confidence bounds of edge hypotheses (i.e., lower bound of $\mathcal{H}_1$ and upper bound of $\mathcal{H}_L$) with confidence level $1-\varepsilon$, where $b=8$ and $\varepsilon=\num{2.22e-16}$.
-	All achievable rate regions are averaged over \num{3000} realizations, and the parameters remain fixed unless otherwise specified.
+	All achievable rate curves/regions are averaged over \num{3000} realizations, and the parameters remain fixed unless otherwise specified.
 
-	\begin{subsection}{Input Distribution vs. Weight}
+	\begin{subsection}{Input Distribution versus Link Priority}
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Instance 1\label{fi:distribution_weights_1}]{
@@ -754,19 +758,29 @@
 					\input{assets/simulation/distribution_weights_2.tex}
 				}
 			}
-			\caption{Typical input distributions vs. weight $\rho$ for a UniScatter node with $M=4$ inputs.}
+			\caption{Typical instances of node input distribution under different weights.}
 			\label{fi:distribution_weights}
 		\end{figure}
-		% We consider a single UniScatter with $M=4$ inputs in this case of study.
-		In Fig. \ref{fi:distribution_weights}, we present typical input distributions of a single UniScatter node with $M=4$ inputs under different weight $\rho$.
-		Fig. \subref*{fi:distribution_weights_1} and \subref*{fi:distribution_weights_2} are obtained from \gls{iid} drop and channel realizations.
-		We note that even for $\rho=0$ (i.e., best backscatter performance), the optimal input distribution is not equiprobable like \gls{sr}, and adaptive channel coding can further increase total backscatter rate based on \gls{csi}.
-		On the other hand, the optimal input distribution becomes fully deterministic at $\rho=1$ (i.e., best primary performance), where the state maximizes equivalent primary channel \eqref{eq:equivalent_channel} strength is chosen with probability \num{1}.
-		In this case, UniScatter node boils down to a \gls{ris} element with $M$ discrete states.
-		As $\rho$ moves from \num{0} to \num{1}, the optimal input distribution becomes gradually biased to one state and flexibly balances the primary-backscatter tradeoff.
+		The objective of this study is to demonstrate each UniScatter node can adjust its input distribution based on \gls{csi} and link priority to balance backscatter modulation and passive beamforming.
+		For this aim, we evaluate the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution} for a single node under different weights $\rho=\{0,0.1,0.2,0.3,1\}$ in Fig. \ref{fi:distribution_weights}, where \subref*{fi:distribution_weights_1} and \subref*{fi:distribution_weights_2} are two representative instances.
+		We observe that as $\rho$ increases from \num{0} to \num{1}, the \gls{kkt} input distribution
+		gradually progresses from slightly skewed to completely biased.
+		For $\rho=0$ where backscatter performance is absolutely prioritized, the \gls{csi}-adaptive channel coding at the UniScatter node provides higher backscatter rate than conventional \gls{bc} and \gls{sr} nodes with uncoded equiprobable inputs.
+		On the other hand, for $\rho=1$ where primary performance is absolutely prioritized, the input probability is \num{1} at the state that maximizes the equivalent primary channel strength, and \num{0} at the others.
+		In this case, the reflection pattern over time is fully deterministic, and the UniScatter node indeed boils down to a \gls{ris} element with discrete phase shifts.
+		These observations meet our expectation that UniScatter nodes include scattering sources of \gls{bc}/\gls{sr} and reflecting elements of \gls{ris} as special cases, and generalize backscatter modulation and passive beamforming from the perspective of input distribution design.
 	\end{subsection}
 
-	\begin{subsection}{Rate Region vs. Input, Beamforming, and Decision Schemes}
+	\begin{subsection}{Backscatter Rate versus Output Discretization Bit}
+		Since the transformation from problem \eqref{op:decision_threshold} to \eqref{op:decision_threshold_discrete} introduces performance degradation, we investigate the impact of threshold domain discretization on the total backscatter rate.
+
+		% TODO Total Backscatter Rate versus Output Discretization Bit
+		TODO
+
+
+	\end{subsection}
+
+	\begin{subsection}{Rate Region under Different Schemes}
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Input Distribution\label{fi:region_distribution}]{
@@ -774,55 +788,80 @@
 					\input{assets/simulation/region_distribution.tex}
 				}
 			}
+			\\
+			\subfloat[Active Beamforming\label{fi:region_beamforming}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_beamforming.tex}
+				}
+			}
 			\subfloat[Decision Threshold\label{fi:region_threshold}]{
 				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_threshold.tex}
 				}
 			}
-			\caption{Average primary-total-backscatter rate regions for different input distribution and decision threshold schemes.}
+			\caption{
+				Average primary-total-backscatter rate regions for different input distribution, active beamforming, and decision threshold schemes.
+				``BSP'' means backscatter symbol period.
+			}
 		\end{figure}
-		Fig. \subref*{fi:region_distribution} compares the achievable rate regions by following input designs.
-		\begin{itemize}
-			% \item ``Exhaustion'' means $K$-dimensional grid search over probability simplex;
-			% \item ``\gls{kkt}'' corresponds to Algorithm \ref{al:input_distribution};
-			% \item ``Cooperation'' assumes backscatter cooperation/joint encoding at all UniScatters, and employs Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} to determine \emph{tuple} input distribution;
-			\item \textbf{Exhaustion:} $K$-dimensional grid search over probability simplex;
-			\item \textbf{\gls{kkt}:} results of Algorithm \ref{al:input_distribution};
-					% \item \textbf{Cooperation:} with backscatter cooperation/joint encoding at all UniScatters, Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} for \emph{tuple} input distribution;
-					% \item \textbf{Cooperation:} backscatter cooperation/joint encoding at all UniScatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
-					% \item \textbf{Cooperation:} with backscatter cooperation (i.e., joint encoding) at all UniScatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
-			\item \textbf{Cooperation:} backscatter cooperation/joint encoding at all UniScatter nodes, tuple input distribution/joint probability array optimization by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
-					% with backscatter cooperation (i.e., joint encoding) at all UniScatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
-			\item \textbf{Marginalization:} marginal distributions of joint probability array;
-			\item \textbf{Decomposition:} normalized tensors of rank-1 \gls{cp} decomposition of joint probability array;
-			\item \textbf{Randomization:} Gaussian recovery from joint probability array \cite{Calvo2010}.
-		\end{itemize}
+		For the \gls{bcd} algorithm considered in the rest of this paper, we choose the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution}, the \gls{pgd} active beamforming by Algorithm \ref{al:active_beamforming}, and the \gls{smawk} decision threshold by \cite{He2021} as reference.
+		The impact of different component schemes are explored below.
 
-		We notice adaptive joint encoding at all nodes provides the outer bound of rate region.
-		However, it involves arbitrarily dependent codewords, and backscatter cooperation between passive nodes is generally unaffordable.
-		In contrast, the rate region of \gls{kkt} input design in Algorithm \ref{al:input_distribution} approaches that of exhaustive search, and the loss is negligible for $K=2$.
-		% Although the randomization method \cite{Calvo2010} achieves similar performance, the computational complexity is much higher as it involves solving $K+1$ linear programming problems
-		Although the randomization method \cite{Calvo2010} returns similar rate region, it requires solving $K+1$ linear programming problems before applying Gaussian recovery.
-		The marginal distribution is slightly worse than \gls{kkt} despite having the same computational complexity, while the approximation from \gls{cp} decomposition is unsatisfying.
+		\begin{subsubsection}{Input Distribution}
+			We compare the following input distribution schemes for problem \eqref{op:input_distribution}:
+			\begin{itemize}
+				\item \emph{Exhaustion:} Exhaustive grid search over the probability $K$-simplex with resolution $\Delta p = \num{1e-3}$;
+				% \item \emph{\gls{kkt}:} Numerical evaluation of the \gls{kkt} solutions by Algorithm \ref{al:input_distribution};
+				\item \emph{\gls{kkt}:} Numerical \gls{kkt} solution evaluation by Algorithm \ref{al:input_distribution};
+				\item \emph{Cooperation:} Numerical symbol tuple distribution (i.e., $K$-dimensional joint probability array) evaluation by the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a}.
+			\end{itemize}
 
-		% TODO: beamforming
+			Since \emph{Cooperation} involves full transmit cooperation of all nodes, we also propose the following recovery methods from the joint probability array for independent backscatter encoding:
+			\begin{itemize}
+				\item \emph{Marginalization:} Marginal probability distributions;
+				\item \emph{Decomposition:} Normalized rank-\num{1} \gls{cp} decomposition tensors;
+				\item \emph{Randomization:} Random search with correlation matrix guidance \cite{Calvo2010}.
+			\end{itemize}
 
-		Fig. \subref*{fi:region_threshold} compares the achievable rate region by following threshold schemes.
-		\begin{itemize}
-			\item \textbf{\gls{dp}:} sequential quantizer grouping by dynamic programming \cite{He2021};
-			\item \textbf{\gls{smawk}:} above accelerated by \gls{smawk} algorithm;
-			\item \textbf{Bisection:} sequential bisection threshold design \cite{Nguyen2020a};
-			\item \textbf{\gls{ml}:} maximum likelihood decision \eqref{eq:detection_threshold_maximum_likelihood} \cite{Qian2019}.
-		\end{itemize}
+			Fig. \subref*{fi:region_distribution} shows the achievable rate regions for those input distribution schemes.
+			We observe that \emph{Cooperation} provides the outer bound for all achievable rate regions.
+			Although transmit cooperation between UniScatter nodes can be generally helpful, it requires joint encoding with arbitrarily dependent codewords, which introduces extra coordination burden and may be unaffordable for a large $K$.
+			We also notice the average performance of \emph{\gls{kkt}} input distribution design by Algorithm \ref{al:input_distribution} is extremely close to that of \emph{Exhaustion}, and the loss is indistinguishable for $K=2$.
+			This verified our claim in Remark \ref{re:input_kkt_distribution}.
+			Despite \emph{Randomization} yields a similar result, the computational complexity is much higher (loops over $K+1$ linear programming problems) and the performance is backed by numerous random instances.
+			In contrast, the low-complexity \emph{Marginalization} returns a comparable result and the rate loss is insignificant when $K$ is small.
+			Finally, \emph{Decomposition} suffers from much lower average total backscatter rate, as the rank-\num{1} \gls{cp} approximation can be inaccurate for some channel-drop realizations.
+		\end{subsubsection}
 
-		We observe that input distribution-adaptive threshold designs achieve higher total backscatter rate than \gls{ml}.
-		This is because the decision regions can be flexibly adjusted to enhance the capacity of \gls{dmtmac} \eqref{eq:dmtmac}.
-		For example, the tuples with negligible input probability should have narrower decision regions than those frequently employed, in order to improve detection performance.
-		It emphasizes the importance of joint input distribution and decision region design.
 
-		% We note that ideal joint adaptive encoding at all UniScatters can further boost the total backscatter rate.
-		% However, this ideal upper bound requires real-time feedback
-		% ``Exhaustion'' means $K$-dimensional grid search over probability simplex, ``KKT'' corresponds to Algorithm \ref{ap:input_kkt_solution}, ``Cooperation'' assumes full backscatter cooperation and joint encoding at all UniScatters
+		\begin{subsubsection}{Active Beamforming}
+			% It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable inputs of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the \gls{pgd} beamforming achieves larger rate region than conventional \gls{mrt}; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
+			We compare the following active beamforming schemes for problem \eqref{op:active_beamforming}:
+			\begin{itemize}
+				\item \emph{\gls{pgd}:} Iterative \gls{pgd} optimization by Algorithm \ref{al:active_beamforming};
+				\item \emph{MRT:} Maximum ratio transmission to ergodic equivalent primary channel $\sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})$.
+			\end{itemize}
+
+			Fig. \subref*{fi:region_beamforming} reveals the achievable regions for those active beamforming schemes.
+
+		\end{subsubsection}
+
+		\begin{subsubsection}{Decision Threshold}
+			We compare the following decision thresholds for problem \eqref{op:decision_threshold_discrete}:
+			\begin{itemize}
+				\item \emph{\gls{dp}:} Benchmark \gls{dp} method for sequential quantizer \cite{He2021};
+				\item \emph{\gls{smawk}:} \gls{dp} accelerated by the \gls{smawk} algorithm \cite{He2021};
+				\item \emph{Bisection:} The traverse-then-bisect algorithm \cite{Nguyen2020a};
+				\item \emph{\gls{ml}:} Maximum likelihood detector \eqref{eq:detection_threshold_maximum_likelihood} \cite{Qian2019}.
+			\end{itemize}
+
+			Fig. \subref*{fi:region_threshold} presents the achievable rate region for those decision threshold schemes.
+			We observe that input distribution-adaptive threshold designs achieve higher total backscatter rate than \gls{ml}.
+			This is because the decision regions can be flexibly adjusted to enhance the capacity of \gls{dmtmac} \eqref{eq:dmtmac}.
+			For example, the tuples with negligible input probability should have narrower decision regions than those frequently employed, in order to improve detection performance.
+			It emphasizes the importance of joint input distribution and decision region design.
+		\end{subsubsection}
+
 	\end{subsection}
 
 

@@ -134,7 +134,7 @@
 	\gls{sr} incorporates scatter nodes into active networks that recycle ambient signal to transmit self information and enhance legacy channel to the cooperative receiver.
 	In this paper, we depart from those concepts and introduce UniScatter as a new paradigm for future wireless networks.
 	Instead of treating probability distribution of reflection states as equiprobable (as scattering source of \gls{bc}/\gls{sr}) or degenerate (as reflecting element of \gls{ris}), UniScatter nodes located at different places adapt the input distribution of passive scatterers based on link priority and \gls{csi}, balancing information encoding and channel reconfiguration in a flexible and mutualistic manner.
-	To accommodate signal characteristics, UniScatter receiver semi-coherently decodes all nodes from accumulated energy, determines equivalent primary channel over reflection pattern, then coherently decodes the primary link under enhanced multipath.
+	To accommodate signal characteristics, UniScatter receiver semi-coherently decodes all nodes from accumulated energy, determines primary equivalent channel over reflection pattern, then coherently decodes the primary link under enhanced multipath.
 	It reduces the complexity of cooperative decoding while preserves the benefits of backscatter modulation and passive beamforming.
 	Using shared spectrum, energy, and infrastructures, UniScatter is a general and powerful transmit-assist protocol that unifies \gls{bc}, \gls{ris} and \gls{sr} with universal hardware design and augmented \gls{qos} control.
 	We consider an application scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple UniScatter nodes, and characterize the achievable primary-total-backscatter rate region by designing input distribution at the nodes, active beamforming at the \gls{ap}, and backscatter decision regions at the user.
@@ -199,7 +199,7 @@
 	Scattering source of \gls{bc}/\gls{sr} and reflecting element of \gls{ris} can be regarded as its extreme cases, where the input distribution boils down to equiprobable and degenerate, respectively.
 	Like aforementioned \gls{ris}-empowered \gls{bc}/\gls{sr} schemes, the passive nodes require regular coordination with active devices, but the advantages are 1) UniScatter nodes can be built over conventional load-switching scatterers instead of composite metamaterial; 2) the optimization cost of input distribution is much lower than that of \gls{ris} reflection coefficients; 3) adaptive backscatter channel coding can exploit \gls{csi} to achieve higher instantaneous rate than conventional uncoded transmission; 4) the physically distributed characteristics of UniScatter nodes and legacy users avoids the development optimization and allows uniformly good performance for both links.
 
-	\emph{Second,} we propose a practical UniScatter receiver that semi-coherently decodes UniScatter nodes from the received energy per backscatter block, re-encodes for their reflection patterns, retrieves equivalent primary channel as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
+	\emph{Second,} we propose a practical UniScatter receiver that semi-coherently decodes UniScatter nodes from the received energy per backscatter block, re-encodes for their reflection patterns, retrieves primary equivalent channel as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
 	The proposed receiver 1) preserves the benefits of backscatter modulation and passive beamforming; 2) enjoys lower computational and operational complexities than joint \gls{ml} and \gls{sic} schemes; 3) accommodates the link difference and suits for diverse symbol period ratios; 4) requires minor modification over legacy hardware.
 
 	\emph{Third,} we consider an application scenario where multiple UniScatter nodes ride over a point-to-point \gls{miso} transmission, performing backscatter modulation and passive beamforming to a nearby user using shared spectrum, energy, and infrastructures.
@@ -212,7 +212,7 @@
 	A suboptimal \gls{bcd} algorithm is then proposed, where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is iteratively updated by \gls{pgd} accelerated by backtracking line search, and the decision regions are refined by existing thresholding designs.
 
 	\emph{Fifth,} we provide numerical results to demonstrate the benefits of UniScatter and proposed algorithms.
-	It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable inputs of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the \gls{pgd} beamforming achieves larger rate region than conventional \gls{mrt}; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
+	It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable inputs of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the proposed \gls{pgd} beamforming achieves larger rate region than \gls{mrt} to ergodic primary equivalent channel; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
 
 	\emph{Notations:}
 	Italic, bold lower-case, and bold upper-case letters denote scalars, vectors and matrices, respectively.
@@ -368,7 +368,7 @@
 		Since each passive UniScatter node directly modulates its own message over the legacy signal, it involves a \emph{double modulation} where the primary and backscatter symbols are superimposed by \emph{multiplication coding} instead of superposition coding.
 		Besides, the backscatter symbol period is typically longer than primary due to the load switching speed constraint.
 		Those facts imply \emph{backscatter detection} under primary uncertainty can be viewed as part of \emph{primary channel training}.
-		Hence, we propose a practical UniScatter receiver that semi-coherently decodes UniScatter nodes from the received energy per backscatter block, re-encodes for their reflection patterns, retrieves equivalent primary channel as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
+		Hence, we propose a practical UniScatter receiver that semi-coherently decodes UniScatter nodes from the received energy per backscatter block, re-encodes for their reflection patterns, retrieves primary equivalent channel as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
 		\begin{figure}[!t]
 			\centering
 			\resizebox{0.9\columnwidth}{!}{
@@ -404,7 +404,7 @@
 		Denote the \gls{ap}-user direct channel as $\boldsymbol{h}_{\mathrm{D}}^H \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-node $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, the node $k$-user backward channel as $h_{\mathrm{B},k}$, and the cascaded channel via tag $k$ as $\boldsymbol{h}_{\mathrm{C},k}^H \triangleq h_{\mathrm{B},k} \boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$.
 		Let $x_{\mathcal{K}} \triangleq (x_1,\ldots,x_K)$ be the backscatter symbol tuple of all UniScatter nodes.
 		Without loss of generality, we consider one specific backscatter block (i.e., $N$ primary blocks) in the following context.
-		Due to double modulation, the equivalent primary channel is a function of \emph{coded} backscatter symbols
+		Due to double modulation, the primary equivalent channel is a function of \emph{coded} backscatter symbols
 		% \begin{subequations}
 		% 	\label{eq:equivalent_channel}
 		% 	\begin{align}
@@ -487,7 +487,7 @@
 			I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}).
 			\label{eq:backscatter_mutual_information}
 		\end{equation}
-		Once backscatter messages of all nodes are successfully decoded, we can re-code for backscatter symbol tuple $x_{\mathcal{K}}$, recover their reflection patterns by \eqref{eq:backscatter_modulation}, and retrieve the equivalent primary channel by \eqref{eq:equivalent_channel}.
+		Once backscatter messages of all nodes are successfully decoded, we can re-code for backscatter symbol tuple $x_{\mathcal{K}}$, recover their reflection patterns by \eqref{eq:backscatter_modulation}, and retrieve the primary equivalent channel by \eqref{eq:equivalent_channel}.
 		Moreover, we define the primary information function conditioned on backscatter symbol tuple $x_{m_{\mathcal{K}}}$ as
 		\begin{equation}
 			I_{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}) \triangleq \log \Bigl(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\Bigr),
@@ -729,7 +729,6 @@
 \end{section}
 
 \begin{section}{Simulation Results}
-	% TODO compare PGD and primary-MRT beamformers
 	In this section, we provide numerical results to evaluate the proposed input distribution, active beamforming, and backscatter decision design for the UniScatter system in Fig. \ref{fi:uniscatter_network}.
 	We assume the AP-user distance is \qty{10}{\meter}, $K=2$ UniScatter nodes are randomly dropped within a disk of radius \qty{2}{\meter} centered at the user, the \gls{ap} is with $Q=4$ transmit antennas and an average power budget $P=\qty{36}{\dBm}$, the nodes employs \num{4}-\gls{qam} with amplitude scattering ratio $\alpha=0.5$, the user is with average noise power $\sigma_v^2=\qty{-40}{\dBm}$, and the symbol period ratio is $N=20$.
 	For all channels involved, we consider a distance-dependent path loss model
@@ -766,13 +765,13 @@
 		We observe that as $\rho$ increases from \num{0} to \num{1}, the \gls{kkt} input distribution
 		gradually progresses from slightly skewed to completely biased.
 		For $\rho=0$ where backscatter performance is absolutely prioritized, the \gls{csi}-adaptive channel coding at the UniScatter node provides higher backscatter rate than conventional \gls{bc} and \gls{sr} nodes with uncoded equiprobable inputs.
-		On the other hand, for $\rho=1$ where primary performance is absolutely prioritized, the input probability is \num{1} at the state that maximizes the equivalent primary channel strength, and \num{0} at the others.
+		On the other hand, for $\rho=1$ where primary performance is absolutely prioritized, the input probability is \num{1} at the state that maximizes the primary equivalent channel strength, and \num{0} at the others.
 		In this case, the reflection pattern over time is fully deterministic, and the UniScatter node indeed boils down to a \gls{ris} element with discrete phase shifts.
-		These observations meet our expectation that UniScatter nodes include scattering sources of \gls{bc}/\gls{sr} and reflecting elements of \gls{ris} as special cases, and generalize backscatter modulation and passive beamforming from the perspective of input distribution design.
+		Those observations meet our expectation that UniScatter nodes include scattering sources of \gls{bc}/\gls{sr} and reflecting elements of \gls{ris} as special cases, and generalize backscatter modulation and passive beamforming from the perspective of input distribution design.
 	\end{subsection}
 
 	\begin{subsection}{Backscatter Rate versus Output Discretization Bit}
-		Since the transformation from problem \eqref{op:decision_threshold} to \eqref{op:decision_threshold_discrete} introduces performance degradation, we investigate the impact of threshold domain discretization on the total backscatter rate.
+		Since the transformation from problem \eqref{op:decision_threshold} to \eqref{op:decision_threshold_discrete} introduces performance degradation, we now investigate the impact of threshold domain discretization on the total backscatter rate.
 
 		% TODO Total Backscatter Rate versus Output Discretization Bit
 		TODO
@@ -805,45 +804,51 @@
 			}
 		\end{figure}
 		For the \gls{bcd} algorithm considered in the rest of this paper, we choose the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution}, the \gls{pgd} active beamforming by Algorithm \ref{al:active_beamforming}, and the \gls{smawk} decision threshold by \cite{He2021} as reference.
-		The impact of different component schemes are explored below.
+		The impacts of different schemes are explored below.
 
 		\begin{subsubsection}{Input Distribution}
-			We compare the following input distribution schemes for problem \eqref{op:input_distribution}:
+			We compare the following input distribution designs for problem \eqref{op:input_distribution}:
 			\begin{itemize}
 				\item \emph{Exhaustion:} Exhaustive grid search over the probability $K$-simplex with resolution $\Delta p = \num{1e-3}$;
-				% \item \emph{\gls{kkt}:} Numerical evaluation of the \gls{kkt} solutions by Algorithm \ref{al:input_distribution};
 				\item \emph{\gls{kkt}:} Numerical \gls{kkt} solution evaluation by Algorithm \ref{al:input_distribution};
 				\item \emph{Cooperation:} Numerical symbol tuple distribution (i.e., $K$-dimensional joint probability array) evaluation by the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a}.
 			\end{itemize}
 
-			Since \emph{Cooperation} involves full transmit cooperation of all nodes, we also propose the following recovery methods from the joint probability array for independent backscatter encoding:
+			Since \emph{Cooperation} involves full transmit cooperation of all nodes, to support independent backscatter encoding, we also propose the following methods to recover individual input distributions from the joint probability array:
 			\begin{itemize}
 				\item \emph{Marginalization:} Marginal probability distributions;
 				\item \emph{Decomposition:} Normalized rank-\num{1} \gls{cp} decomposition tensors;
-				\item \emph{Randomization:} Random search with correlation matrix guidance \cite{Calvo2010}.
+				\item \emph{Randomization:} Random search guided with correlation matrix \cite{Calvo2010}.
 			\end{itemize}
 
 			Fig. \subref*{fi:region_distribution} shows the achievable rate regions for those input distribution schemes.
-			We observe that \emph{Cooperation} provides the outer bound for all achievable rate regions.
-			Although transmit cooperation between UniScatter nodes can be generally helpful, it requires joint encoding with arbitrarily dependent codewords, which introduces extra coordination burden and may be unaffordable for a large $K$.
+			We observe that \emph{Cooperation} provides the outer bound for all achievable rate regions, which suggests transmit cooperation between UniScatter nodes can be generally helpful.
+			However, it requires joint encoding with arbitrarily dependent codewords, and the extra coordination burden may be unaffordable for a large $K$.
 			We also notice the average performance of \emph{\gls{kkt}} input distribution design by Algorithm \ref{al:input_distribution} is extremely close to that of \emph{Exhaustion}, and the loss is indistinguishable for $K=2$.
-			This verified our claim in Remark \ref{re:input_kkt_distribution}.
-			Despite \emph{Randomization} yields a similar result, the computational complexity is much higher (loops over $K+1$ linear programming problems) and the performance is backed by numerous random instances.
+			This verified our claim in Remark \ref{re:input_kkt_distribution} that the average performance of \gls{kkt} solutions can be reasonably good for a moderate $K$.
+			Despite \emph{Randomization} yields a similar result, the computational complexity is much higher (loops over $K+1$ linear programming problems) and the performance is backed by numerous randomly generated instances.
 			In contrast, the low-complexity \emph{Marginalization} returns a comparable result and the rate loss is insignificant when $K$ is small.
 			Finally, \emph{Decomposition} suffers from much lower average total backscatter rate, as the rank-\num{1} \gls{cp} approximation can be inaccurate for some channel-drop realizations.
+			Those observations demonstrated the performance and complexity advantages of the proposed \gls{kkt} input distribution design, and reveals the potential of joint encoding at UniScatter nodes.
 		\end{subsubsection}
 
 
 		\begin{subsubsection}{Active Beamforming}
-			% It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable inputs of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the \gls{pgd} beamforming achieves larger rate region than conventional \gls{mrt}; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
+			% It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable inputs of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the proposed \gls{pgd} beamforming achieves larger rate region than \gls{mrt} to ergodic primary equivalent channel; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
 			We compare the following active beamforming schemes for problem \eqref{op:active_beamforming}:
 			\begin{itemize}
 				\item \emph{\gls{pgd}:} Iterative \gls{pgd} optimization by Algorithm \ref{al:active_beamforming};
-				\item \emph{MRT:} Maximum ratio transmission to ergodic equivalent primary channel $\sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})$.
+				\item \emph{\gls{mrt}:} Maximum ratio transmission to the ergodic primary equivalent channel $\sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})$.
 			\end{itemize}
 
-			Fig. \subref*{fi:region_beamforming} reveals the achievable regions for those active beamforming schemes.
-
+			Fig. \subref*{fi:region_beamforming} plots the achievable regions for both active beamforming schemes.
+			In the low-$\rho$ regime, we observe the proposed \emph{\gls{pgd}} design by Algorithm \ref{al:active_beamforming} outperforms \emph{\gls{mrt}} in terms of backscatter rate.
+			This is because the performance of energy detection depends on the \emph{difference} of received variances under different backscatter symbol tuples.
+			Such a diversity of variance is not fully exploited by \emph{\gls{mrt}} that simply maximizes the ergodic \gls{snr}, but can be properly controlled by \emph{\gls{pgd}} to further boost the total backscatter rate.
+			As $\rho$ further increases, the input distribution becomes more biased to one state, and the primary equivalent \gls{snr} outweighs the backscatter variance difference in the weighted sum-rate expression \eqref{eq:weighted_sum_mutual_information_explicit}.
+			Therefore, the result of \emph{\gls{pgd}} approaches that of \emph{\gls{mrt}}.
+			For the extreme case $\rho=1$, the UniScatter nodes reduce to \gls{ris} elements and both active beamforming schemes boil down to \gls{mrt} to the deterministic primary equivalent channel.
+			Therefore, we conclude the proposed \emph{\gls{pgd}} active beamforming design by Algorithm \ref{al:active_beamforming} is more powerful than ergodic \emph{\gls{mrt}}.
 		\end{subsubsection}
 
 		\begin{subsubsection}{Decision Threshold}

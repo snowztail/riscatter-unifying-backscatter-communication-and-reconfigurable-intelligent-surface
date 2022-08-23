@@ -74,7 +74,7 @@
 \newacronym{dmc}{DMC}{Discrete Memoryless Channel}
 \newacronym{dmtc}{DMTC}{Discrete Memoryless Thresholding Channel}
 \newacronym{dmtmac}{DMTMAC}{Discrete Memoryless Thresholding Multiple Access Channel}
-\newacronym{dtmac}{DTMAC}{Discrete Thresholding Multiple Access Channel}
+% \newacronym{dtmac}{DTMAC}{Discrete Thresholding Multiple Access Channel}
 \newacronym{dp}{DP}{Dynamic Programming}
 \newacronym{fdma}{FDMA}{Frequency-Division Multiple Access}
 \newacronym{iid}{i.i.d.}{independent and identically distributed}
@@ -105,6 +105,7 @@
 \newacronym{smawk}{SMAWK}{Shor-Moran-Aggarwal-Wilber-Klawe}
 \newacronym{snr}{SNR}{Signal-to-Noise Ratio}
 \newacronym{sr}{SR}{Symbiotic Radio}
+\newacronym{swipt}{SWIPT}{Simultaneous Wireless Information and Power Transfer}
 \newacronym{tdma}{TDMA}{Time-Division Multiple Access}
 \newacronym{ue}{UE}{user}
 \newacronym{wit}{WIT}{Wireless Information Transfer}
@@ -114,6 +115,7 @@
 
 \begin{document}
 \title{UniScatter: Unifying\\Backscatter Communications, Symbiotic Radio and Reconfigurable Intelligent Surface}
+% \title{UniScatter: Unifying Backcatter Modulation and Passive Beamforming by Adaptive Input Distribution}
 \author{
 	\IEEEauthorblockN{
 		Yang~Zhao,~\IEEEmembership{Member,~IEEE,}
@@ -131,8 +133,8 @@
 	\gls{ris} adapts scattering antennas or programmable metamaterial to control wireless propagation environment by boosting/suppressing signal strength in specific directions.
 	\gls{sr} incorporates scatter nodes into active networks that recycle ambient signal to transmit self information and enhance legacy channel to the cooperative receiver.
 	In this paper, we depart from those concepts and introduce UniScatter as a new paradigm for future wireless networks.
-	Instead of treating probability distribution of reflection states as equiprobable (as scattering source of \gls{bc}/\gls{sr}) or degenerate (as reflecting element of \gls{ris}), UniScatter node adapts the input distribution of a passive scatterer based on link priority and \gls{csi}, balancing information encoding and channel reconfiguration in a flexible and mutualistic manner.
-	To accommodate signal characteristics, UniScatter receiver semi-coherently decodes all nodes from accumulated energy, determines equivalent primary channel over reflection pattern, then coherently decodes the primary link under enhanced multipath.
+	Instead of treating probability distribution of reflection states as equiprobable (as scattering source of \gls{bc}/\gls{sr}) or degenerate (as reflecting element of \gls{ris}), UniScatter nodes located at different places adapt the input distribution of passive scatterers based on link priority and \gls{csi}, balancing information encoding and channel reconfiguration in a flexible and mutualistic manner.
+	To accommodate signal characteristics, UniScatter receiver semi-coherently decodes all nodes from accumulated energy, determines primary equivalent channel over reflection pattern, then coherently decodes the primary link under enhanced multipath.
 	It reduces the complexity of cooperative decoding while preserves the benefits of backscatter modulation and passive beamforming.
 	Using shared spectrum, energy, and infrastructures, UniScatter is a general and powerful transmit-assist protocol that unifies \gls{bc}, \gls{ris} and \gls{sr} with universal hardware design and augmented \gls{qos} control.
 	We consider an application scenario where a multi-antenna \gls{ap} serves a single-antenna user surrounded by multiple UniScatter nodes, and characterize the achievable primary-total-backscatter rate region by designing input distribution at the nodes, active beamforming at the \gls{ap}, and backscatter decision regions at the user.
@@ -164,7 +166,7 @@
 	For sequential decoding from primary to backscatter, \cite{Long2020a} pointed out the randomness from backscatter modulation can be modelled as either interference or channel uncertainty, depending on the symbol period ratio.
 	The authors concluded if this ratio is sufficiently large, the non-coherent primary achievable rate would asymptotically approach its coherent counterpart.
 	This motivated \cite{Long2020a,Liang2020,Guo2019b,Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022} to first decode the primary link, perform \gls{sic}, then decode the backscatter link.
-	However, the advantage of \gls{sic} is questionable because 1) sufficiently large symbol period ratio is assumed in primary rate analysis and constraints backscatter rate; 2) backscatter pattern and signal characteristics are not fully exploited; 3) non-coherent primary encoding is required at the transmitter, while re-encoding, precoding, and subtraction are required at the receiver; 4) primary and backscatter symbols are mixed by multiplication instead of superposition.
+	However, the advantage of \gls{sic} is questionable because 1) sufficiently large symbol period ratio is assumed in primary rate analysis and constraints backscatter rate; 2) backscatter pattern and signal characteristics are not fully exploited; 3) non-coherent primary encoding is required at the transmitter, while re-encoding, precoding, and subtraction are required at the receiver; 4) primary and backscatter symbols are superimposed by multiplication instead of superposition.
 	Another open issue for \gls{sr} is backscatter multiple access.
 	\cite{Xu2021a} extended \gls{sic} to multi-node scenario and proposed a backscatter \gls{noma}-based \gls{sr} with decoding order following backscatter signal strength.
 	However, its performance deteriorates fast when the number of nodes increases.
@@ -187,18 +189,18 @@
 	In particular, \emph{symbol level precoding} maps backscatter symbols to \gls{ris} coefficient sets optimized for detection \cite{Liu2019d,Bereyhi2020}, \emph{overlay modulation} superposes information-bearing symbols over a common auxiliary matrix \cite{Xu2020b,Zhang2021d,Hu2021b,Hua2022}, \emph{spatial modulation} switches between reflection coefficient sets that maximize \gls{snr} at different receive antennas \cite{Basar2020,Ma2020a,Yuan2021}, and \emph{index modulation} divides \gls{ris} into reflection elements for passive beamforming and information elements for on-off modulation \cite{Hu2021a}.
 	However, those \gls{ris}-empowered \gls{bc}/\gls{sr} designs involve advanced hardware architecture, high optimization complexity, and additional control overhead.
 
-	To the best of our knowledge, all relevant literatures assumed either Gaussian codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} or finite equiprobable inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} at backscatter information sources.
+	To the best of our knowledge, all relevant literatures assumed at backscatter information sources either Gaussian codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} or finite equiprobable inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a}.
 	The former is impractical for passive backscatter devices, while the latter does not fully exploit reflection pattern and \gls{csi}.
 	In this paper, we introduce UniScatter that generalizes \gls{bc}, \gls{sr}, and \gls{ris} to manipulate the transmit-assist tradeoff via smart input distribution and backscatter detector design.
 	The contributions of this paper are summarized as follows.
 
-	\emph{First,} we propose UniScatter node to adapt the input probability distribution of a finite-state passive scatter device based on link priority and \gls{csi}.
+	\emph{First,} we propose UniScatter nodes to adapt the input probability distribution of a finite-state passive scatter device based on link priority and \gls{csi}.
 	The reflection pattern over time is no longer fully random or deterministic, but can be flexibly distributed to unify and balance backscatter modulation with passive beamforming.
 	Scattering source of \gls{bc}/\gls{sr} and reflecting element of \gls{ris} can be regarded as its extreme cases, where the input distribution boils down to equiprobable and degenerate, respectively.
-	Like aforementioned \gls{ris}-empowered \gls{bc}/\gls{sr} schemes, the passive nodes require regular coordination with active devices, but the advantages are 1) UniScatter nodes can be built over conventional load-switching scatterers instead of composite metamaterial; 2) the optimization cost of input distribution is much lower than that of \gls{ris} reflection coefficients; 3) adaptive channel coding at backscatter sources can exploit \gls{csi} to achieve higher instantaneous rate than conventional uncoded transmission.
+	Like aforementioned \gls{ris}-empowered \gls{bc}/\gls{sr} schemes, the passive nodes require regular coordination with active devices, but the advantages are 1) UniScatter nodes can be built over conventional load-switching scatterers instead of composite metamaterial; 2) the optimization cost of input distribution is much lower than that of \gls{ris} reflection coefficients; 3) adaptive backscatter channel coding can exploit \gls{csi} to achieve higher instantaneous rate than conventional uncoded transmission; 4) the physically distributed characteristics of UniScatter nodes and legacy users avoids the development optimization and allows uniformly good performance for both links.
 
-	\emph{Second,} we propose a practical receiving strategy that semi-coherently decodes all UniScatter messages from the received energy during each backscatter symbol block, re-encodes and recovers their reflection patterns at each primary block, combines those with relevant \gls{csi} to construct equivalent primary channels, then coherently decodes the primary link under adapted multipath.
-	The proposed receiver 1) preserves the benefits of backscatter modulation and passive beamforming; 2) enjoys lower computational and operational complexities than joint \gls{ml} and \gls{sic} schemes; 3) accommodates the difference of symbol period in backscatter decoding; 4) exploits the reflection patterns in primary decoding; 5) suits for diverse symbol period ratios.
+	\emph{Second,} we propose a practical UniScatter receiver that semi-coherently decodes UniScatter nodes from the received energy per backscatter block, re-encodes for their reflection patterns, retrieves primary equivalent channel as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
+	The proposed receiver 1) preserves the benefits of backscatter modulation and passive beamforming; 2) enjoys lower computational and operational complexities than joint \gls{ml} and \gls{sic} schemes; 3) accommodates the link difference and suits for diverse symbol period ratios; 4) requires minor modification over legacy hardware.
 
 	\emph{Third,} we consider an application scenario where multiple UniScatter nodes ride over a point-to-point \gls{miso} transmission, performing backscatter modulation and passive beamforming to a nearby user using shared spectrum, energy, and infrastructures.
 	To investigate how UniScatter unifies \gls{bc}, \gls{sr} and \gls{ris} for the benefits of both coexisting subsystems, we provide primary and backscatter rate analyses and emphasize the contributions of input distribution at UniScatter nodes, active beamforming at the \gls{ap}, and backscatter decision regions at the user.
@@ -210,135 +212,178 @@
 	A suboptimal \gls{bcd} algorithm is then proposed, where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is iteratively updated by \gls{pgd} accelerated by backtracking line search, and the decision regions are refined by existing thresholding designs.
 
 	\emph{Fifth,} we provide numerical results to demonstrate the benefits of UniScatter and proposed algorithms.
-	It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable transmission of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the \gls{pgd} beamforming achieves larger rate region than conventional \gls{mrt}; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
+	It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable inputs of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the proposed \gls{pgd} beamforming achieves larger rate region than \gls{mrt} to ergodic primary equivalent channel; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
 
 	\emph{Notations:}
 	Italic, bold lower-case, and bold upper-case letters denote scalars, vectors and matrices, respectively.
-	$\boldsymbol{0}$ and $\boldsymbol{1}$ denote zero and one array of appropriate size, respectively.
-	$\mathbb{R}_+^{x \times y}$ and $\mathbb{C}^{x \times y}$ denote the real nonnegative and complex spaces of dimension $x \times y$, respectively.
+	$\boldsymbol{0}$ and $\boldsymbol{1}$ denote zero and one array of appropriate size, respectively. $\mathbb{I}^{x \times y}$, $\mathbb{R}_+^{x \times y}$, and $\mathbb{C}^{x \times y}$ denote the unit, real nonnegative, and complex spaces of dimension $x \times y$, respectively.
 	$j$ denotes the imaginary unit.
+	% $\arg(\cdot)$, $\mathrm{rank}(\cdot)$, $\mathrm{tr}(\cdot)$, $\mathrm{diag}(\cdot)$ and $\mathrm{diag}^{-1}(\cdot)$ denote the argument, rank, trace, a square matrix with input vector on main diagonal, and a vector retrieving main diagonal of input square matrix, respectively.
+	$\mathrm{diag}(\cdot)$ returns a square matrix with the input vector on its main diagonal and zeros elsewhere.
+	$\mathrm{card}(\cdot)$ returns the cardinality of a set.
 	$(\cdot)^*$, $(\cdot)^T$, $(\cdot)^H$, $\lvert{\cdot}\rvert$, and $\lVert{\cdot}\rVert$ denote the conjugate, transpose, conjugate transpose, absolute value, and Euclidean norm operators, respectively.
 	$(\cdot)^{(r)}$ and $(\cdot)^{\star}$ denote the $r$-th iterated and terminal solutions, respectively.
 	The distribution of a \gls{cscg} random variable with zero mean and variance $\sigma^2$ is denoted by $\mathcal{CN}(0,\sigma^2)$, and $\sim$ means ``distributed as''.
 \end{section}
 
-\begin{section}{Backscatter Principles}
-	\begin{figure*}[!t]
-		\centering
-		\subfloat[Block Diagram]{
-			\resizebox{0.32\linewidth}{!}{
-				\input{assets/illustration/block_diagram.tex}
-			}
-			\label{fi:block_diagram}
-		}
-		\subfloat[Equivalent Circuit]{
-			\resizebox{0.37\linewidth}{!}{
-				\input{assets/illustration/equivalent_circuit.tex}
-			}
-			\label{fi:equivalent_circuit}
-		}
-		\subfloat[Scatter Model]{
-			\resizebox{0.28\linewidth}{!}{
-				\input{assets/illustration/scatter_model.tex}
-			}
-			\label{fi:scatter_model}
-		}
-		\caption{Block diagram, equivalent circuit, and scatter model of a passive backscatter node. The solid and dashed vectors represent signal and energy flows. The backscatter antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.}
-	\end{figure*}
-
-	Passive backscatter nodes harvest energy from and modulate information over surrounding \gls{rf} signals.
-	As shown in Fig. \subref*{fi:block_diagram}, a typical passive node consists of a scattering antenna, an energy harvester, an integrated receiver, a load-switching modulator, and on-chip components (e.g., micro-controller and sensors) \cite{Dobkin2012}.
-	Its equivalent circuit is presented in Fig. \subref*{fi:equivalent_circuit}.
-	% When illuminated, the node absorbs a portion of the impinging wave for information decoding and energy harvesting \cite{Kim2021a}, while scatters the remaining back to the space. The scattered signal is further decomposed into the \emph{structural} component that consistently contributes to environment multipath and covered by channel estimation \cite{Boyer2014}, and the
-	When illuminated, the node absorbs a portion of the impinging wave for information decoding and/or energy harvesting \cite{Kim2021a}, and backscatters the remaining as \emph{structural} and \emph{antenna} components.
-	% The scattered signal is further decomposed into the \emph{structural} component that consistently contributes to environment multipath and covered by channel estimation \cite{Boyer2014}, and the \emph{antenna} mode component that
-	% and \emph{antenna} mode components \cite{Hansen1989}.
-	The former consistently contributes to environment multipath and can be modelled by channel estimation \cite{Boyer2014}, while the latter depends on antenna-load impedance mismatch and can be used for backscatter modulation \cite{Boyer2012} and/or channel reconfiguration \cite{Wu2021b}.
-	% Depending on structure, shape and material of general objects, structural scattering consistently contributes to environment multipath and is covered by channel estimation \cite{Boyer2014}.
-	% In contrast, antenna scattering models radiation pattern from antenna-load impedance mismatch and can be used for backscatter modulation \cite{Boyer2012} and/or channel reconfiguration \cite{Wu2021b}.
-	Fig. \subref*{fi:scatter_model} illustrates the scatter model of a node with $M$ states, where the reflection coefficient of state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$ is defined as%
-	\footnote{It corresponds to a linear backscatter model where the reflection coefficient is irrelevant to incident electromagnetic field strength.}
-	\begin{equation}
-		\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
-		\label{eq:reflection_coefficient}
-	\end{equation}
-	where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
+\begin{section}{Scattering Principles}
+	Scattering refers to a change of moving direction of particles after colliding with others.
+	It often involves \emph{diffuse reflection} where an incident ray is redistributed at many angles.
+	An electromagnetic wave is scattered when an obstruction is placed in its propagation path.
+	In this section, we first introduce two common scatterer categories and review their operation principles, then briefly discuss how scatterers realize backscatter modulation and channel reconfiguration over reflection patterns.
+	\begin{subsection}{Scatterer Categories}
+		In \gls{rf} applications such as \gls{bc}, \gls{sr} and \gls{ris}, the scatterer often includes \emph{variable-load antenna} or \emph{programmable metamaterial} with various reflection patterns \cite{Liang2022}.
+		\begin{subsubsection}{Antenna-Based Scatterer}
+			A typical antenna-based scatterer consists of an integrated antenna, a load-switching modulator, an energy harvester, and on-chip components (e.g., microcontroller and sensors) \cite{Dobkin2012}.
+			It first receives the impinging signals, then reradiates some back to the space and dissipates the remainder.
+			According to transmission line theory, the scatter-absorb tradeoff depends on the impedance matching of the load and the antenna.
+			For passive scatterers without dedicated energy source, a majority of incident wave is harvested to support node operation and the reradiated part can be relatively weak \cite{Thomas2012a}.
+			At the receiver, the observed signal can be further decomposed into \emph{structural mode} and \emph{antenna mode} components \cite{Hansen1989}.
+			The former consistently contributes to environment multipath and is modelled within channel estimation, while the latter depends on impedance mismatch and can be used for backscatter modulation \cite{Boyer2014} and/or channel reconfiguration \cite{Liang2022}.
+			For antenna-based scatterers, the reflection coefficient at load state $m$ is%
+			\footnote{It corresponds to a linear scatter model where the reflection coefficient is irrelevant to incident electromagnetic field strength.}
+			\begin{equation}
+				\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
+				\label{eq:reflection_pattern_antenna}
+			\end{equation}
+			where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
+		\end{subsubsection}
+		\begin{subsubsection}{Metamaterial-Based Scatterer}
+			A typical metamaterial-based scatterer consists of multiple material layers and a smart controller \cite{Wu2020}.
+			The outer metamaterial layer involves numerous sub-wavelength structural units made of metallic or dielectric materials.
+			The properties of unit cells can be artificially tuned for unconventional effective permittivity $\epsilon$ and permeability $\mu$, producing customizable response to the electromagnetic field \cite{Zhou2021}.
+			Using epsilon-negative material (e.g., conducing rods) or mu-negative material (e.g., split-ring resonators), ideal metamaterial-based scatterers can reflect the incident waves at the boundary between free space and metamaterial without receiving them \cite{Huang2021a}.
+			This mainly applies a phase shift on the reflected wave and any propagation into the metamaterial would be evanescent.
+			Depending on the type of metamaterial, its equivalent impedance can be controlled by voltage (for functional materials \cite{Singh2020} and tunable diodes \cite{Costa2021}) or architecture (for resonant elements \cite{Bialkowski2008}).
+			For metamaterial-based scatterers with a discrete impedance set, the reflection coefficient at metamaterial state $m$ is
+			\begin{equation}
+				\Gamma_m = \frac{Z_m - Z_0}{Z_m + Z_0},
+				\label{eq:reflection_pattern_metamaterial}
+			\end{equation}
+			where $Z_m$ is the equivalent impedance of metamaterial unit at state $m$ and $Z_0 = \qty{377}{\ohm}$ is the characteristic impedance of free space.
+		\end{subsubsection}
+	\end{subsection}
 
 	\begin{subsection}{BackCom/SR: Backscatter Modulation}
-		% Backscatter sources encode self message by \emph{randomly changing reflection states.} For $M$-ary \gls{qam}, reflection coefficient $\Gamma_m$ maps to the corresponding complex constellation point $c_m$ by \cite{Thomas2012a}
-		Backscatter sources encode self message by \emph{random reflection states variation.} For $M$-ary \gls{qam}, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{complex constellation point $c_m$} by \cite{Thomas2012a}
+		\gls{bc} and \gls{sr} commonly employ antenna-based scatterers as passive information sources.
+		By \emph{frequently switching} between the available states, each backscatter node encodes self message over scattered signal and introduces backscatter uncertainty at the receiver.
+		For $M$-ary \gls{qam}, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{complex constellation point $c_m$} by
+		% \cite{Thomas2012a}
 		\begin{equation}
 			\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
 			\label{eq:backscatter_modulation}
 		\end{equation}
-		where $0 \le \alpha \le 1$ is the amplitude reflect ratio that controls the harvest-scatter tradeoff at the direction of interest.
-		% When the \gls{csi} and reflection alphabet $\{\Gamma_1,\ldots,\Gamma_M\}$ are available at the reader, it can decode the tag message from the observed scattered signal.
-		% ! Use larger alpha in simulation: for high-order QAM, some constellation point may harvests more power than others
-
+		where $\alpha \in \mathbb{I}$ is the amplitude scattering ratio at the direction of interest.
 	\end{subsection}
 
 	\begin{subsection}{RIS: Channel Reconfiguration}
-		% \gls{ris} elements assist legacy transmission by \emph{deterministically choosing phase shifts} based on relevant \gls{csi}. For a reflecting element with $M$ candidate states, reflection coefficient $\Gamma_m$ maps to the corresponding phase shift $\theta_m$ by \cite{Wu2018}
-		\gls{ris} elements assist legacy transmission by \emph{deterministic phase shifts selection} based on relevant \gls{csi}.
-		For a reflecting element with $M$ candidate states, reflection coefficient $\Gamma_m$ relates to the corresponding \emph{phase shift $\theta_m$} by \cite{Wu2018}
+		\gls{ris} typically involves a planar antenna array or metasurface of numerous metamaterial units as a passive channel reconfigurator.
+		By \emph{adaptively choosing} the reflection pattern, each reflecting element alters the phase of scattered signal for constructive/destructive superposition at the receiver.
+		For each unit with $M$ candidate states, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{phase shift $\theta_m$} by
+		% \cite{Wu2018}
 		\begin{equation}
 			\Gamma_m = \beta_m \exp(j \theta_m),
+			\label{eq:passive_beamforming}
 		\end{equation}
-		where $0 \le \beta_m \le 1$ is overall amplitude reflect ratio of state $m$.
-		% Based on relevant \gls{csi}
+		where $\beta_m \in \mathbb{I}$ is the overall amplitude scattering ratio of state $m$.
 	\end{subsection}
-	% Tags periodically switch between different states to perform backscatter modulation.
-	% For $M$-ary \gls{qam}, the complex constellation point $c_m \in \mathcal{C}$ maps to the reflection coefficient by \cite{Thomas2012a}
-	% \begin{equation}
-	% 	\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
-	% 	\label{eq:backscatter_modulation}
-	% \end{equation}
-	% where $\alpha \in [0,1]$ models the harvest-backscatter ratio at the direction of interest.
-	% For passive tags, $\alpha \ll 1$ is commonly assumed as the majority of the incident wave can be harvested to support tag modules \cite{Thomas2012a}.
 
-	\begin{subsection}{UniScatter: Bridge and Generalization}
+	\begin{subsection}{Opportunities}
+		We have seen conventional scattering applications as \gls{bc}, \gls{sr} and \gls{ris} using the reflection pattern \eqref{eq:reflection_pattern_antenna}, \eqref{eq:reflection_pattern_metamaterial} for either backscatter modulation \eqref{eq:backscatter_modulation} or passive beamforming \eqref{eq:passive_beamforming}.
+		A natural but critical question is, for a given scatterer with pre-determined reflection pattern set, \emph{can we softly bridge backscatter modulation and passive beamforming by appropriate reflection design?}
+		This question is answered in Section \ref{se:uniscatter}.
+	\end{subsection}
+\end{section}
+
+\begin{section}{UniScatter}
+	Using shared spectrum, energy and infrastructures, UniScatter is a novel passive communication/assistance protocol that generalizes \gls{bc}, \gls{sr} and \gls{ris} in a \emph{physically} and \emph{probabilistically} distributed manner.
+	In particular, passive UniScatter nodes located at different places ride over an active legacy transmission in a flexible and mutualistic manner, while practical UniScatter receiver cooperatively decodes both primary and backscatter links under the benefits of backscatter modulation and passive beamforming.
+	% TODO compare BC, SR and IRS
+	\begin{subsection}{UniScatter Nodes}
+		Based on link priority and \gls{csi}, UniScatter nodes adapt the \emph{state input probability distribution} of antenna-based scatterers to unify backscatter modulation and passive beamforming.
+		The scattering sources of \gls{bc}/\gls{sr} and reflecting elements of \gls{ris} can be viewed as its extreme cases, where the input distribution boils down to equiprobable and degenerate, respectively.
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Input Distribution]{
 				\resizebox{0.8\columnwidth}{!}{
 					\input{assets/illustration/input_distribution.tex}
 				}
+				\label{fi:input_distribution}
 			}
 			\\
 			\subfloat[Time Block]{
 				\resizebox{0.8\columnwidth}{!}{
 					\input{assets/illustration/time_block.tex}
 				}
+				\label{fi:time_block}
 			}
 			\caption{
-				Input probability distribution and time block structure of \gls{sr}, \gls{ris}, and UniScatter.
+				Input probability distribution and time block structure of \gls{bc}, \gls{sr}, \gls{ris}, and UniScatter.
 				$T_s$ and $T_c$ respectively denote the primary and backscatter symbol period.
-				Within channel coherence time, UniScatter nodes semi-randomly select reflection state for each backscatter block, with guidance from input probability distribution.
+				Within channel coherence time, UniScatter nodes semi-randomly select reflection state for each backscatter symbol block under the guidance of input probability distribution.
 			}
-			\label{fi:uniscatter}
+			\label{fi:uniscatter_distribution}
 		\end{figure}
-		% For a passive node with finite states, is it possible to unify backscatter modulation and channel reconfiguration by proper selection of reflection coefficient?
-		UniScatter nodes simultaneously transmit and assist by \emph{adaptive input distribution design} based on primary and (cascaded) backscatter \gls{csi}.
-		% The reflection pattern is neither fully random nor fully deterministic, but flexibly distributed to balance backscatter encoding and passive beamforming.
-		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
-		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter semi-randomly selects reflection state for each backscatter block with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
-		% Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.} In other words, it flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming. \gls{sr} and \gls{ris} can be regarded as extreme cases of UniScatter, where node input distribution boils down to uniform and deterministically biased, respectively.
-		Instead of using fully random or deterministic reflection pattern over time, as shown in Fig. \ref{fi:uniscatter}, UniScatter nodes semi-randomly select reflection state for each backscatter block, with \emph{guidance of input probability $P(\Gamma_m)$} for state $m$. In other words, it flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
-		% \gls{sr} and \gls{ris} can be regarded as extreme cases of UniScatter nodes, where node input distribution boils down to uniform and deterministic, respectively.
-		% flexibly controls input distribution of candidate reflection states to balance backscatter encoding and passive beamforming.
-		% UniScatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
-		% % Based on \gls{csi}, UniScatter adapts the reflection state distribution to unify data transmission and channel reconfiguration.
-		% \gls{sr} and \gls{ris} can be regarded as its extreme cases, where node input distribution boils down to uniform and deterministically biased, respectively.
-		% Within channel coherence time, UniScatter semi-randomly selects reflection state for each backscatter block, with guidance from \emph{input probability distribution $P(\Gamma_m)$.}
-		\begin{remark}
-			Compared to conventional \gls{ris} literatures that optimize phase shifts under unit-module constraint, UniScatter nodes start from predefined reflection coefficients and designs their input distribution under sum-probability constraint to achieve flexible primary-backscatter tradeoff.
-		\end{remark}
-		% Next, we will discuss the input design in a UniScatter-enabled network.
-		% consider a UniScatter-aided system to evaluate
-	\end{subsection}
-\end{section}
+		As illustrated in Fig. \ref{fi:uniscatter_distribution}, instead of always using fully random or deterministic reflection pattern over time, each UniScatter node can \emph{flexibly adjust} its input distribution to balance information encoding and channel reconfiguration.
+		That is, it semi-randomly select the reflection state per backscatter symbol block under the guidance of input probability $P(\Gamma_m)$ for state $m$.
+		Such an adaptive backscatter channel coding coincides with \gls{ris} when primary link is absolutely prioritized, and outperforms the uncoded equiprobable inputs of \gls{bc}/\gls{sr} when backscatter link is absolutely prioritized.
+		Besides, the physically distributed characteristics of UniScatter nodes and legacy users avoids the development optimization and allows uniformly good performance for both links.
 
-\begin{section}{UniScatter-Enabled Network}
+		As shown in Fig. \subref*{fi:block_diagram}, UniScatter nodes can be implemented over readily available passive backscatter devices with energy harvester and information decoder.
+		Its equivalent circuit and scatter model are presented in Fig. \subref*{fi:equivalent_circuit} and \subref*{fi:scatter_model}.
+		When activated by primary transmitter, each node harvests a proportion of the impinging wave for its own operation, decode the embedded coordination information for input distribution control, then applies a potentially random phase shift on the reradiated signal due to backscatter modulation.
+		Energy harvesting and information decoding at passive UniScatter nodes can be realized using conventional power-splitting or time-sharing \gls{swipt} protocols \cite{Clerckx2019} or integrated energy-information receiver with pulse position modulated signal \cite{Kim2021a}.
+		Besides, relevant \gls{csi} can be acquired using either traditional sequential methods \cite{Bharadia2015,Yang2015b,Guo2019g} or the state-of-the-art parallel approach \cite{Jin2021a}.
+		In the following context, we assume perfect primary-backscatter coordination and perfect channel estimation for all links.
+		\begin{figure*}[!t]
+			\centering
+			\subfloat[Block Diagram]{
+				\resizebox{0.32\linewidth}{!}{
+					\input{assets/illustration/block_diagram.tex}
+				}
+				\label{fi:block_diagram}
+			}
+			\subfloat[Equivalent Circuit]{
+				\resizebox{0.37\linewidth}{!}{
+					\input{assets/illustration/equivalent_circuit.tex}
+				}
+				\label{fi:equivalent_circuit}
+			}
+			\subfloat[Scatter Model]{
+				\resizebox{0.28\linewidth}{!}{
+					\input{assets/illustration/scatter_model.tex}
+				}
+				\label{fi:scatter_model}
+			}
+			\caption{
+			Block diagram, equivalent circuit, and scatter model of a UniScatter node.
+			The solid and dashed vectors represent signal and energy flows.
+			The scattering antenna behaves as a constant power source, where the voltage $V_0$ and current $I_0$ are introduced by incident electric field $\vec{E}_{\mathrm{I}}$ and magnetic field $\vec{H}_{\mathrm{I}}$ \cite{Huang2021}.
+			}
+			\label{fi:uniscatter_node}
+		\end{figure*}
+	\end{subsection}
+
+	\begin{subsection}{UniScatter Receiver}
+		Since each passive UniScatter node directly modulates its own message over the legacy signal, it involves a \emph{double modulation} where the primary and backscatter symbols are superimposed by \emph{multiplication coding} instead of superposition coding.
+		Besides, the backscatter symbol period is typically longer than primary due to the load switching speed constraint.
+		Those facts imply \emph{backscatter detection} under primary uncertainty can be viewed as part of \emph{primary channel training}.
+		Hence, we propose a practical UniScatter receiver that semi-coherently decodes UniScatter nodes from the received energy per backscatter block, re-encodes for their reflection patterns, retrieves primary equivalent channel as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
+		\begin{figure}[!t]
+			\centering
+			\resizebox{0.9\columnwidth}{!}{
+				\input{assets/illustration/energy_distribution.tex}
+			}
+			\caption{
+				\gls{pdf} of total received energy per backscatter block, conditioned on different input state hypotheses.
+				$t$ and $\mathcal{R}$ denote the energy decision thresholds and regions, respectively.
+			}
+			\label{fi:energy_distribution}
+		\end{figure}
+		As illustrated in Fig. \ref{fi:energy_distribution}, the total received energy per backscatter block is a random variable that follows different distributions conditioned on different input state hypotheses.
+		Compared with conventional joint \gls{ml} and \gls{sic} from stronger primary link to weaker backscatter links, UniScatter receiver not only preserves the benefits of backscatter modulation and passive beamforming, but also enjoys much lower computational and operational complexities.
+	\end{subsection}
+
 	\begin{subsection}{System Model}
 		\begin{figure}[!t]
 			\centering
@@ -346,265 +391,160 @@
 			\footnotesize{
 				\import{assets/illustration/}{uniscatter_network.eps_tex}
 			}
-			\caption{A UniScatter-enabled single-user multi-node network.}
+			\caption{A single-user multi-node UniScatter system.}
 			\label{fi:uniscatter_network}
 		\end{figure}
-		% As shown in Fig. \ref{fi:uniscatter_network}, we propose a UniScatter-enabled single-user multi-node network where the spectrum, energy and infrastructures are shared by two coexisting systems.
-		% UniScatter-enabled single-user multi-node \gls{miso} network where multiple UniScatter nodes ride over a point-to-point transmission to
-		As shown in Fig. \ref{fi:uniscatter_network}, we propose a UniScatter-enabled single-user multi-node \gls{miso} network where two coexisting systems share spectrum, energy and infrastructures.
-		% In the primary point-to-point system, the \gls{ap} transmits information to the single-antenna user.
-		% In the primary point-to-point system, a $Q$-antenna \gls{ap} transmit to a single-antenna user while assisted by $K$ nearby single-antenna UniScatters.
-		The primary point-to-point transmission from a $Q$-antenna \gls{ap} to a single-antenna user is assisted by $K$ nearby single-antenna UniScatter nodes.
-		In the secondary backscatter \gls{mac} system, the \gls{ap} serves as the carrier emitter, $K$ nearby single-antenna UniScatter nodes modulate information over reradiated \gls{rf} signals, and the user decodes their messages.
-		For simplicity, we consider a quasi-static block fading model where channels remain constant within coherence interval while vary independently between consecutive blocks.
-		% Since backscatter modulation involves load switching, tags typically transmit at much lower rate, and we assume the backscatter symbol period is $N \in \mathbb{Z}_{++}$ times the primary symbol period.
-		Due to physical constraints on load switching, we assume the backscatter symbol period is $N \gg 1$ times longer than primary and consider integer $N$ without loss of generality.
-		We also assume the direct channel and all cascaded channels can be estimated and fed back to the \gls{ap}.%
-		\footnote{
-			Due to the lack of \gls{rf} chains at the passive tag, accurate and efficient \gls{csi} acquisition at the \gls{ap} can be challenging.
-			One possibility is the \gls{ap} sends training pilots, the tags respond in predefined manners, and the user performs least-square estimation with feedbacks \cite{Bharadia2015,Yang2015b,Guo2019g}.
-		}
-		Besides, we omit the signal reflected by two or more times\cite{Wu2019} and ignore the time difference of arrival from different paths\cite{Guo2019b}.
+		To demonstrate the advantages of UniScatter, we consider a single-user multi-node \gls{miso} UniScatter system as shown in Fig. \ref{fi:uniscatter_network}.
+		In the primary active point-to-point system, a $Q$-antenna \gls{ap} transmits to a single-antenna user assisted by $K$ nearby single-antenna UniScatter nodes with $M$ reflection states.
+		In the secondary backscatter \gls{mac} system, the \gls{ap} serves as the carrier emitter, the distributed UniScatter nodes modulate information over reradiated \gls{rf} signals, and the user decodes their messages.
+		For simplicity, we consider a quasi-static block fading model where channels remain constant within coherence block and vary independently between consecutive blocks.
+		Due to the physical constraints of load switching speed, we assume the backscatter over primary symbol period ratio is an integer $N \gg 1$.
+		We also omit the signal reflected by two or more times and ignore the propagation time difference of different paths.
 
-
-		Denote the \gls{ap}-user direct channel as $\boldsymbol{h}_{\mathrm{D}}^H \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-node $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, and the node $k$-user backward channel as $h_{\mathrm{B},k}$. Also, define the cascaded channel of tag $k$ as $\boldsymbol{h}_{\mathrm{C},k}^H \triangleq h_{\mathrm{B},k} \boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, and $\boldsymbol{H}_{\mathrm{C}} \triangleq [\boldsymbol{h}_{\mathrm{C},1},\ldots,\boldsymbol{h}_{\mathrm{C},K}]^H \in \mathbb{C}^{K \times Q}$.
-		% Let $x_{\mathcal{K}} \triangleq \{x_k : k \in \mathcal{K}\}$ be the backscatter symbols of all UniScatters.
+		Denote the \gls{ap}-user direct channel as $\boldsymbol{h}_{\mathrm{D}}^H \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-node $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$, the node $k$-user backward channel as $h_{\mathrm{B},k}$, and the cascaded channel via tag $k$ as $\boldsymbol{h}_{\mathrm{C},k}^H \triangleq h_{\mathrm{B},k} \boldsymbol{h}_{\mathrm{F},k}^H \in \mathbb{C}^{1 \times Q}$.
 		Let $x_{\mathcal{K}} \triangleq (x_1,\ldots,x_K)$ be the backscatter symbol tuple of all UniScatter nodes.
-		Consider the signal model during one backscatter block (i.e., $N$ primary blocks).
-		% We assume the primary symbol follows standard \gls{cscg} distribution and the backscatter symbol of all tags employs $M$-\gls{qam}.
-		Under perfect synchronization, the equivalent primary channel is a function of \emph{coded} backscatter symbols
-		\begin{subequations}
+		Without loss of generality, we consider one specific backscatter block (i.e., $N$ primary blocks) in the following context.
+		Due to double modulation, the primary equivalent channel is a function of \emph{coded} backscatter symbols
+		% \begin{subequations}
+		% 	\label{eq:equivalent_channel}
+		% 	\begin{align}
+		% 		\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}})
+		% 		 & \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k   \\
+		% 		 & = \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}},
+		% 	\end{align}
+		% \end{subequations}
+		\begin{equation}
+			\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k = \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}},
 			\label{eq:equivalent_channel}
-			\begin{align}
-				\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}})
-				 & \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k   \\
-				 & = \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}},
-			\end{align}
-		\end{subequations}
-		where $\alpha_k$ is the amplitude reflect ratio of UniScatter node $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{R}_+^{K \times 1}$, $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ is the coded backscatter symbol of node $k$, and $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathbb{C}^{K \times 1}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
+		\end{equation}
+		where $\alpha_k \in \mathbb{I}$ is the amplitude scattering ratio of UniScatter node $k$, $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ is the \emph{coded} backscatter symbol of node $k$, $\boldsymbol{\alpha} \triangleq [\alpha_1,\ldots,\alpha_K]^T \in \mathbb{I}^{K}$, $\boldsymbol{x} \triangleq [x_1,\ldots,x_K]^H \in \mathcal{X}^{K}$, and $\boldsymbol{H}_{\mathrm{C}} \triangleq [\boldsymbol{h}_{\mathrm{C},1},\ldots,\boldsymbol{h}_{\mathrm{C},K}]^H \in \mathbb{C}^{K \times Q}$. The signal received by the user at primary block $n \in \mathcal{N} \triangleq \{1,\ldots,N\}$ is
 		\begin{equation}
 			y[n] = \boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \boldsymbol{w} s[n] + v[n],
+			\label{eq:receive_signal}
 		\end{equation}
-		where $s \sim \mathcal{CN}(0,1)$ is the primary symbol, $v \sim \mathcal{CN}(0,\sigma_v^2)$ is the \gls{awgn}, and $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the active beamforming vector with average power constraint $\lVert \boldsymbol{w} \rVert^2 \le P$.
-		% The equivalent channel for primary link is subject to backscatter uncertainty
-		% The equivalent primary channel is a function of backscatter symbols  as
-		% \begin{equation}
-		% 	% \boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k.
-		% 	\boldsymbol{h}_{\mathrm{E}}^H(\boldsymbol{x}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \boldsymbol{x}^H \mathrm{diag}(\boldsymbol{\alpha}) \boldsymbol{H}_{\mathrm{C}}.
-		% 	\label{eq:equivalent_channel}
-		% \end{equation}
-
-		% where $\alpha_k$ and $x_k$ denote respectively the harvest-backscatter efficiency and backscatter symbol of tag $k$, $s[n]$ and $w[n] \sim \mathcal{CN}(0,\sigma_v^2)$ denote respectively the primary symbol and \gls{awgn} at block $n$, and $\boldsymbol{w} \in \mathbb{C}^{Q \times 1}$ is the transmit precoder satisfying power constraint $\lVert \boldsymbol{w} \rVert^2 \le P$.
-		% For the ease of notation, we define $x_{\mathcal{K}} \triangleq \{x_k : k \in \mathcal{K}\}$ as the tag input combination, and $\boldsymbol{y} \triangleq \left[y[1],\ldots,y[N]\right]^T \in \mathbb{C}^{N \times 1}$ as the received signal per backscatter symbol period.
-		% For primary transmission, the equivalent channel is subject to backscatter modulation uncertainty as
-		% \begin{equation}
-		% 	\boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \triangleq \boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_k.
-		% 	\label{eq:equivalent_channel}
-		% \end{equation}
-
-		\begin{remark}
-			UniScatter involves a symbiotic \gls{mac} where the primary and backscatter symbols of different duration are mixed by \gls{mc} instead of \gls{sc}.
-			For each node, the reflection coefficient not only encodes the backscatter message, but also influences the equivalent primary channel \eqref{eq:equivalent_channel}.
-			% As such, novel receiving strategy other than \gls{sic} should be tailored to signal characteristics to unveil how reflection pattern potentially influences the primary-backscatter tradeoff.
-			To accommodate such signal characteristics, novel receiving strategy apart from \gls{sic} is desired to better utilize the reflection pattern and boost the primary-backscatter tradeoff.
-		\end{remark}
-	\end{subsection}
-
-	\begin{subsection}{Receiving Strategy}
-		We propose a UniScatter receiver where the backscatter messages of all UniScatter nodes are first jointly and semi-coherently detected using total received energy per backscatter block, then modeled within equivalent channel \eqref{eq:equivalent_channel} as dynamic passive beamforming.
-		% identified by non-coherent energy detection, then
-		% Compared with conventional schemes as joint decoding and \gls{sic}, the UniScatter receiver may not achieve as high data rate for one tag, but it avoids non-coherent primary encoding and enables tag multiple access in a practical and low-complexity manner.
-		% Therefore, we believe it can be compatible to and readily implemented over legacy point-to-point systems.
-		Compared with \gls{ml} and \gls{sic}, UniScatter receiver allows practical and low-complexity node multiple access with minor adjustment over legacy equipments.
-
-		% At a specific backscatter block, denote $m_k \in \mathcal{M}$ as the state index of UniScatter $k$, and let $m_{\mathcal{K}} \triangleq \{m_k: k \in \mathcal{K}\}$ collect the state indexes of all UniScatters.
-		At a specific backscatter block, denote $m_k \in \mathcal{M}$ as the state index of node $k$, and let $m_{\mathcal{K}} \triangleq (m_1,\ldots,m_K)$ be the state index tuple of all nodes.
-		% The received signal at primary block $n$ is subject to the variation of $s[n]$ and $v[n]$, and thus distributed as $y[n] \sim \mathcal{CN}(0,\sigma_v^2)$
-		Conditioned on $m_{\mathcal{K}}$, the received signal at primary block $n$ is subject to the variation of $s[n]$ and $v[n]$, distributed as $y[n] \sim \mathcal{CN}(0,\sigma_{m_{\mathcal{K}}}^2)$ with
+		where $s \sim \mathcal{CN}(0,1)$ is the primary symbol, $v \sim \mathcal{CN}(0,\sigma_v^2)$ is the \gls{awgn}, and $\boldsymbol{w} \in \mathbb{C}^{Q}$ is the active beamforming vector subject to average transmit power constraint $\lVert \boldsymbol{w} \rVert^2 \le P$.
+		Denote $m_k \in \mathcal{M} \triangleq \{1,\ldots,M\}$ as the reflection state index of node $k$, and $m_{\mathcal{K}} \triangleq (m_1,\ldots,m_K)$ as the state index tuple of all nodes.
+		Conditioned on backscatter index tuple $m_{\mathcal{K}}$, the received signal \eqref{eq:receive_signal} follows \gls{cscg} distribution $y[n] \sim \mathcal{CN}(0,\sigma_{m_{\mathcal{K}}}^2)$, where
 		\begin{equation}
-			% \sigma_{m_{\mathcal{K}}}^2 = \Bigl\lvert \underbrace{\bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k \in \mathcal{K}} \sqrt{\alpha_k} \boldsymbol{h}_{\mathrm{C},k}^H x_{m_k}\bigr)}_{\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})} \boldsymbol{w} \Bigr\rvert^2 + \sigma_v^2,
-			\sigma_{m_{\mathcal{K}}}^2 = \lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2 + \sigma_v^2,
+			\sigma_{m_{\mathcal{K}}}^2 = \lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2 + \sigma_v^2
 			\label{eq:receive_variance}
 		\end{equation}
-		where $x_{m_k}$ and $x_{m_\mathcal{K}}$ are the symbol and symbol tuple associated with state $m_k$ and state tuple $m_{\mathcal{K}}$, respectively.%
+		is the received variance and $x_{m_\mathcal{K}}$ is the backscatter symbol tuple associated with $m_{\mathcal{K}}$.
+		For node $k$, let $x_{m_k}$ be the backscatter symbol associated with index $m_k$.%
 		\footnote{
-			$x_k$ and $x_{\mathcal{K}}$ are random variables, while $x_{m_k}$ and $x_{m_{\mathcal{K}}}$ are their instances indexed by $m_k$ and $m_{\mathcal{K}}$.
+			Please note $x_k$ and $x_{\mathcal{K}}$ are random variable and tuple, while $x_{m_k}$ and $x_{m_{\mathcal{K}}}$ are their instances of index $m_k$ and $m_{\mathcal{K}}$.
 		}
-		Also, denote the total received energy within backscatter block as $z=\sum_{n=1}^N \lvert y[n] \rvert^2$.
-		% As the sum of $N$ \gls{iid} exponential variables, conditioned on $m_{\mathcal{K}}$, its \gls{pdf} follows Erlang distribution
-		As the sum of $N$ \gls{iid} exponential variables, the \gls{pdf} of $z$ conditioned on $m_{\mathcal{K}}$ follows Erlang distribution
+		Besides, we define the total received energy per backscatter block as $z=\sum_{n=1}^N \lvert y[n] \rvert^2$.
+		Since $z$ is the sum of $N$ \gls{iid} exponential variables, its \gls{pdf} conditioned on $m_{\mathcal{K}}$ follows Gamma distribution
 		\begin{equation}
 			f(z|\mathcal{H}_{m_{\mathcal{K}}}) = \frac{z^{N-1} \exp(-z/\sigma_{m_{\mathcal{K}}}^2)}{\sigma_{m_{\mathcal{K}}}^{2N} (N-1)!},
-			% f(z|\mathcal{H}_{m_{\mathcal{K}}}) = \frac{z^{N-1} \exp(\frac{-z}{\sigma_{m_{\mathcal{K}}}^2})}{\sigma_{m_{\mathcal{K}}}^{2N} (N-1)!},
 			\label{eq:energy_distribution}
 		\end{equation}
 		where $\mathcal{H}_{m_{\mathcal{K}}}$ denotes hypothesis $m_{\mathcal{K}}$.
-		% To accommodate backscatter characteristics and reduce decoding complexity, we consider a joint semi-coherent energy detection for all UniScatters based on disjoint decision regions over accumulated energy $z$.
-		To accommodate backscatter characteristics and reduce decoding complexity, we consider a joint semi-coherent detection for all UniScatter nodes over accumulated energy $z$.
-		% To reduce decoding complexity, we consider a joint semi-coherent energy detection for all UniScatters based on disjoint decision regions over accumulated energy $z$.
-		\begin{figure}[!t]
-			\centering
-			\resizebox{0.9\columnwidth}{!}{
-				\input{assets/illustration/energy_distribution.tex}
-			}
-			% \caption{\gls{pdf} of Average Received Power Conditioned on Different Input Hypothesis. Example \gls{ml}.}
-			\caption{
-				\gls{pdf} of total received energy per backscatter block, conditioned on different input hypothesis.
-				% This \gls{ml} decision consists of convex regions and is generally rate-suboptimal except for equiprobable inputs.}
-				Here, the convex \gls{ml} decision regions are generally rate-suboptimal except for equiprobable inputs.
-			}
-			\label{fi:energy_distribution}
-		\end{figure}
-		% The idea is presented in Fig. \ref{fi:energy_distribution}.
-		% As illustrated in Fig. \ref{fi:energy_distribution}, o
-		Once disjoint energy decision regions are determined, we can construct a \gls{dtmac} and formulate the transition probability from input $x_{m_{\mathcal{K}}}$ to output $\hat{x}_{m_{\mathcal{K}}'}$ as
-		% it essentially formulates a \gls{dtmac}, and the transition probability from input $x_{m_{\mathcal{K}}}$ to output $\hat{x}_{m_{\mathcal{K}}'}$ is
+		As illustrated in Fig. \ref{fi:energy_distribution}, the UniScatter receiver divides the received energy space into disjoint decision regions associated with those hypotheses.
+		For example, if the total received energy during a backscatter block falls within region $\mathcal{R}_{m_{\mathcal{K}}}$, then the detector output would be $x_{m_{\mathcal{K}}}$.
+		\begin{remark}
+			Interestingly, the capacity-achieving decision design for \gls{dmtc} remains under-investigated, and some attempts were made for a single source with binary inputs \cite{Qian2019b,Nguyen2021b}.
+			For non-binary inputs with arbitrary distribution, the optimal decision region for each letter can be non-convex (i.e., with non-adjacent partitions) and the optimal number of thresholds is still unknown \cite{Nguyen2018,Nguyen2021}.
+		\end{remark}
+		Like most existing literatures, we limit the scope of this paper to convex decision regions and consider sequential decision thresholds design therein.
+		For the ease of notations, we define a general bijective function from backscatter index tuple $m_{\mathcal{K}}$ to integer $l \in \mathcal{L} \triangleq \{1,\ldots,L \triangleq M^K\}$, where $\{\sigma_l^2\}_{l \in \mathcal{L}}$ are sorted in an ascending order.
+		Both notations are used interchangeably in the following context.
+		As such, the convex decision region of backscatter tuple $l$ can be written as
+		\begin{equation}
+			\mathcal{R}_{l} \triangleq [t_{l-1},t_l), \quad 0 \le t_{l-1} \le t_l.
+		\end{equation}
+		Once the decision threshold vector $\boldsymbol{t} \triangleq [t_0,\ldots,t_L]^T \in \mathbb{R}_+^{(L+1)}$ is determined, we can formulate a \gls{dmtmac} with transition probability from input $x_{m_{\mathcal{K}}}$ to output $\hat{x}_{m_{\mathcal{K}}'}$
 		\begin{equation}
 			P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) = \int_{\mathcal{R}_{m_{\mathcal{K}}'}} f(z|\mathcal{H}_{m_{\mathcal{K}}}) \, d z,
-			\label{eq:dtmac}
+			\label{eq:dmtmac}
 		\end{equation}
-		where $\mathcal{R}_{m_{\mathcal{K}}'}$ is the decision region of hypothesis $\mathcal{H}_{m_{\mathcal{K}}'}$. An example of \gls{ml} energy decision is illustrated in Fig. \ref{fi:energy_distribution}.
-
-		\begin{remark}
-			% For a general input distribution, not only the optimal decision thresholds
-			The rate-optimal thresholding channel design remains under-investigated, and some attempts were made for single source with binary inputs in \cite{Qian2019b,Nguyen2021b}.
-			% The question was only answered for single source with binary inputs in \cite{Qian2019b,Nguyen2021b}.
-			% Some attempts for single source with binary inputs were presented in \cite{Qian2019b,Nguyen2021b}.
-			For non-binary inputs with general distribution, the optimal decision region for each letter can be non-convex (i.e., with non-adjacent partitions) and the optimal number of thresholds is still unknown.
-			% Next, we will restrict the design over convex decision regions.
-			% For a general input distribution, not only the rate-optimal decision thresholds
-			% % Interestingly, the optimal threshold design to maximize the mutual information for a general \gls{dmtc} with a fixed number of output letters remains an open issue.
-			% % The reason is that each decision region may contain more than one disjoint partitions (i.e., non-convex) and the number of thresholds are unknown.
-			% % Fortunately, for the proposed energy detection, we proved that the \gls{dmtc} capacity can be achieved using only convex decision regions.
-			% not only the capacity-achieving thresholding design remains an open problem, but also the optimal number of thresholds for general non-binary-input channels remains unknown.
-		\end{remark}
-		In the following context, we restrict all decision regions to convex and optimize decision thresholds accordingly. That is, for any bijective mapping $f : m_{\mathcal{K}} \to \mathcal{L} \triangleq \{1,\ldots,M^K\}$, the decision region of letter $l \in \mathcal{L}$ is defined as $\mathcal{R}_l \triangleq [t_{l-1},t_l)$, where $t_{l-1} \le t_l$. We also define the decision threshold vector as $\boldsymbol{t} \triangleq [t_0,\ldots,t_L]^T \in \mathbb{R}_+^{(L+1) \times 1}$.
+		then perform backscatter channel coding on top of it.
 	\end{subsection}
 
-	\begin{subsection}{Achievable Rates}
-		Denote the input probability of state $m_k$ of UniScatter node $k$ as $P_k(x_{m_k})$, and define the input probability distribution vector of node $k$ as $\boldsymbol{p}_k \triangleq [P_k(c_1),\ldots,P_k(c_M)]^T \in \mathbb{R}^{M \times 1}$. With independent encoding at all nodes, the probability of backscatter symbol tuple $x_{m_{\mathcal{K}}}$ is
+	\begin{subsection}{Information Theory}
+		Denote the input probability distribution vector of node $k$ as $\boldsymbol{p}_k \triangleq [P_k(c_1),\ldots,P_k(c_M)]^T \in \mathbb{I}^{M}$, and the probability of state $m_k$ as $P_k(x_{m_k})$.
+		With independent encoding at all nodes, the probability of backscatter symbol tuple $x_{m_{\mathcal{K}}}$ is
 		\begin{equation}
 			P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k}).
 			\label{eq:equivalent_distribution}
 		\end{equation}
-		% Denote the input probability distribution vector of tag $k$ as $\boldsymbol{p}_k \triangleq [P_k(x_1),\ldots,P_k(x_M)]^T \in \mathbb{R}^{M \times 1}$, where $P_k(x_{m_k})$ is the probability at state $m_k$.
-		% Consider independent encoding at all tags such that the probability of input combination $x_{m_{\mathcal{K}}}$ is $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{k \in \mathcal{K}} P_k(x_{m_k})$.
-		% The backscatter information function of input combination $x_{m_{\mathcal{K}}}$ is defined as
-		Similar to \cite{Rezaeian2004}, we define the backscatter information function between input symbol tuple instance $x_{m_{\mathcal{K}}}$ and output symbol tuple $\hat{x}_{\mathcal{K}}$ as
+
+		Similar to \cite{Rezaeian2004}, we define the backscatter information function between input symbol tuple instance $x_{m_{\mathcal{K}}}$ and output symbol tuple variable $\hat{x}_{\mathcal{K}}$ as
 		\begin{equation}
-			I^{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}) \triangleq \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}})}{P(\hat{x}_{m_{\mathcal{K}}'})},
+			I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}) \triangleq \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}})}{P_{\mathcal{K}}(\hat{x}_{m_{\mathcal{K}}'})},
 			\label{eq:backscatter_information_function}
 		\end{equation}
-		where $P(\hat{x}_{m_{\mathcal{K}}'}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}})$.
+		where $P_{\mathcal{K}}(\hat{x}_{m_{\mathcal{K}}'}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}})$ is the probability of channel output tuple $\hat{x}_{m_{\mathcal{K}}'}$.
 		We also define the backscatter marginal information of letter $x_{m_k}$ of node $k$ as
-		% Besides, the backscatter marginal information function associated with letter $x_{m_k}$ of tag $k$ is
 		\begin{equation}
-			% I_{\mathrm{B},k}(x_{m_k};\hat{x}_{\mathcal{K}}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}),
-			I^{\mathrm{B}}_{k}(x_{m_k};\hat{x}_{\mathcal{K}}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) I^{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}),
+			I_{\mathrm{B},k}(x_{m_k};\hat{x}_{\mathcal{K}}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}),
 			\label{eq:backscatter_marginal_information}
 		\end{equation}
 		where $P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) = \prod_{q \in \mathcal{K} \setminus \{k\}} P_{q}(x_{m_{q}})$.
-		Moreover, we can write the backscatter mutual information as
+		The backscatter mutual information can be written as
 		\begin{equation}
-			% I^{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}})}{P(\hat{x}_{m_{\mathcal{K}}'})}.
-			I^{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) I^{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}).
+			I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}).
 			\label{eq:backscatter_mutual_information}
 		\end{equation}
-
-		% Once the tag input combination is successfully decoded, the backscatter uncertainty can be eliminated and the equivalent channel for primary transmission can be updated by \eqref{eq:equivalent_channel}.
-
-		% eliminate modulation uncertainty
-		Once backscatter messages are successfully decoded, we can re-encode to determine $x_{\mathcal{K}}$ and retrieve equivalent primary channel by \eqref{eq:equivalent_channel}. We define the primary information function conditioned on backscatter symbol tuple $x_{m_{\mathcal{K}}}$ as
-		% Once backscatter symbols are successfully decoded, we can eliminate modulation uncertainty and retrieve equivalent primary channel by \eqref{eq:equivalent_channel}. We define the primary information function conditioned on backscatter symbol tuple $x_{m_{\mathcal{K}}}$ as
-		% \begin{equation}
-		% 	I_{\mathrm{P}}(x_{m_{\mathcal{K}}};\boldsymbol{y}) \triangleq \log \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\right),
-		% 	\label{eq:primary_information_function}
-		% \end{equation}
+		Once backscatter messages of all nodes are successfully decoded, we can re-code for backscatter symbol tuple $x_{\mathcal{K}}$, recover their reflection patterns by \eqref{eq:backscatter_modulation}, and retrieve the primary equivalent channel by \eqref{eq:equivalent_channel}.
+		Moreover, we define the primary information function conditioned on backscatter symbol tuple $x_{m_{\mathcal{K}}}$ as
 		\begin{equation}
-			I^{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}) \triangleq \log \Bigl(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\Bigr),
+			I_{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}) \triangleq \log \Bigl(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\Bigr),
 			\label{eq:primary_information_function}
 		\end{equation}
 		the primary marginal information conditioned on letter $x_{m_k}$ of node $k$ as
-		% the primary marginal information function associated with letter $x_{m_k}$ of tag $k$ is
 		\begin{equation}
-			I^{\mathrm{P}}_{k}(s;y|x_{m_k}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) I^{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}),
+			I_{\mathrm{P},k}(s;y|x_{m_k}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}),
 			\label{eq:primary_marginal_information}
 		\end{equation}
 		and the primary ergodic mutual information as
-		% and the primary (ergodic) mutual information is
 		\begin{equation}
-			% I^{\mathrm{P}}(s;y|x_{\mathcal{K}}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \log \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\right).
-			I^{\mathrm{P}}(s;y|x_{\mathcal{K}}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) I^{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}).
+			I_{\mathrm{P}}(s;y|x_{\mathcal{K}}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) I_{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}).
 			\label{eq:primary_mutual_information}
 		\end{equation}
 
-		% Moreover, with $\rho \in [0,1]$ being the relative priority of the primary link, we define corresponding weighted sum information function, marginal information, and mutual information respectively as
-		Finally, with a slight abuse of notation, we define the corresponding weighted sum information function, marginal information, and mutual information respectively as
+		With a slight abuse of notation, we define the corresponding weighted sum information function, marginal information, and mutual information respectively as
 		\begin{align}
 			I(x_{m_{\mathcal{K}}})
-			 & \triangleq \rho I^{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}) + (1 - \rho) I^{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_information_function} \\
+			 & \triangleq \rho I_{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}) + (1 - \rho) I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_information_function} \\
 			I_k(x_{m_k})
-			 & \triangleq \rho I^{\mathrm{P}}_{k}(s;y|x_{m_k}) + (1 - \rho) I^{\mathrm{B}}_{k}(x_{m_k};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_marginal_information}                 \\
+			 & \triangleq \rho I_{\mathrm{P},k}(s;y|x_{m_k}) + (1 - \rho) I_{\mathrm{B},k}(x_{m_k};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_marginal_information}                     \\
 			I(x_{\mathcal{K}})
-			 & \triangleq \rho I^{\mathrm{P}}(s;y|x_{\mathcal{K}}) + (1 - \rho) I^{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_mutual_information}
+			 & \triangleq \rho I_{\mathrm{P}}(s;y|x_{\mathcal{K}}) + (1 - \rho) I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_mutual_information}
 		\end{align}
-		where $0 \le \rho \le 1$ is the relative priority of the primary link.
-
-
-		% Therefore, the weighted sum information function, marginal information function, and mutual information of primary and backscatter links are respectively given by
-		% \begin{align}
-		% 	I(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}},\boldsymbol{y})
-		% 	 & \triangleq \rho I_{\mathrm{P}}(x_{m_{\mathcal{K}}};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_information_function} \\
-		% 	I_k(x_{m_k};\hat{x}_{\mathcal{K}},\boldsymbol{y})
-		% 	 & \triangleq \rho I_{\mathrm{P},k}(x_{m_k};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B},k}(x_{m_k};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_marginal_information}                     \\
-		% 	I(x_{\mathcal{K}};\hat{x}_{\mathcal{K}},\boldsymbol{y})
-		% 	 & \triangleq \rho I_{\mathrm{P}}(x_{\mathcal{K}};\boldsymbol{y}) + (1 - \rho) I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_mutual_information}
-		% \end{align}
-		% where $\rho \in [0,1]$ represents the priority of the primary link.
+		where $\rho \in \mathbb{I}$ is the relative priority of the primary link.
 	\end{subsection}
+	\label{se:uniscatter}
 \end{section}
 
-\begin{section}{Input Distribution, Active Beamforming, and Decision Threshold Design}
-	To characterize the achievable primary-total-backscatter rate region of the proposed UniScatter-enabled network, we aim to maximize the weighted sum mutual information with respect to node input distributions $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, active beamforming vector $\boldsymbol{w}$, and decision threshold vector $\boldsymbol{t}$ as
+\begin{section}{Rate-Region Characterization}
+	To characterize the achievable primary-total-backscatter rate region of the proposed UniScatter system, we aim to maximize the weighted sum mutual information with respect to input distribution $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, active beamforming $\boldsymbol{w}$, and decision thresholds $\boldsymbol{t}$ as
 	\begin{maxi!}
-		{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{w},\boldsymbol{t}\in\mathbb{R}_+^{L+1}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
-		% \addConstraint{\sum \nolimits_{m_k} P_k(x_{m_k})}{=1,}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
-		\addConstraint{\sum \nolimits_{m_k} P_k(x_{m_k})}{=1,}{\quad \forall k}{\label{co:sum_probability}}
-		% \addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k \in \mathcal{K}, \ \forall m_k \in \mathcal{M}}{\label{co:nonnegative_probability}}
-		\addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k,m_k}{\label{co:nonnegative_probability}}
+		{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{w},\boldsymbol{t}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
+		\addConstraint{\boldsymbol{1}^T \boldsymbol{p}_k}{=1,}{\quad \forall k}{\label{co:sum_probability}}
+		\addConstraint{\boldsymbol{p}_k}{\ge \boldsymbol{0},}{\quad \forall k}{\label{co:nonnegative_probability}}
 		\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P}{\label{co:transmit_power}}
-		\addConstraint{t_{l-1}}{\le t_l,}{\quad \forall l.}{\label{co:decision_threshold}}
+		\addConstraint{t_{l-1}}{\le t_l,}{\quad \forall l}{\label{co:sequential_threshold}}
+		\addConstraint{\boldsymbol{t}}{\ge \boldsymbol{0}.}{\label{co:nonnegative_threshold}}
 	\end{maxi!}
-	% \begin{maxi!}
-	% 	{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{t},\boldsymbol{w}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
-	% 	\addConstraint{\boldsymbol{p}_k}{\in \Delta^{M-1},}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
-	% 	% \addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k \in \mathcal{K}, \ \forall m_k \in \mathcal{M}}{\label{co:nonnegative_probability}}
-	% 	\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.}{\label{co:transmit_power}}
-	% \end{maxi!}
-	% \begin{maxi!}
-	% 	{\scriptstyle{\boldsymbol{p}_k \in \Delta^{M-1},\boldsymbol{t},\boldsymbol{w}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
-	% 	% \addConstraint{\boldsymbol{p}_k}{\in \Delta^{M-1},}{\quad \forall k \in \mathcal{K}}{\label{co:sum_probability}}
-	% 	% \addConstraint{P_k(x_{m_k})}{\ge 0,}{\quad \forall k \in \mathcal{K}, \ \forall m_k \in \mathcal{M}}{\label{co:nonnegative_probability}}
-	% 	\addConstraint{\lVert \boldsymbol{w} \rVert^2}{\le P.}{\label{co:transmit_power}}
-	% \end{maxi!}
-	Problem \eqref{op:weighted_sum_rate} is highly non-convex, and we propose a \gls{bcd} algorithm that iteratively updates $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{w}$ and $\boldsymbol{t}$ until convergence.
+	Since problem \eqref{op:weighted_sum_rate} is highly non-convex, we propose a \gls{bcd} algorithm that iteratively updates $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{w}$ and $\boldsymbol{t}$ until convergence.
 
 	\begin{subsection}{Input Distribution}
-		% For any fixed decision boundary $\boldsymbol{t}$ and transmit precoder $\boldsymbol{w}$, the equivalent \gls{dtmac} can be formulated by \eqref{eq:dtmac} and problem \eqref{op:weighted_sum_rate} boils down to
-		For any given $\boldsymbol{w}$ and $\boldsymbol{t}$, we can construct the equivalent \gls{dtmac} by \eqref{eq:dtmac} and simplify \eqref{op:weighted_sum_rate} to
+		For any given $\boldsymbol{w}$ and $\boldsymbol{t}$, we can construct the equivalent \gls{dmtmac} by \eqref{eq:dmtmac} and simplify \eqref{op:weighted_sum_rate} to
 		\begin{maxi!}
 			{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}}}{I(x_{\mathcal{K}})}{\label{op:input_distribution}}{}
 			\addConstraint{\eqref{co:sum_probability},\eqref{co:nonnegative_probability},}
 		\end{maxi!}
-		which involves coupled term $\prod_{k \in \mathcal{K}} P_k(x_{m_k})$ and is non-convex when $K > 1$. Next, we propose a numerical method that evaluate the \gls{kkt} input distribution by limit of sequences.
+		which involves the coupled term $\prod_{k \in \mathcal{K}} P_k(x_{m_k})$ and is non-convex when $K > 1$.
+		Following \cite{Rezaeian2004}, we first recast \gls{kkt} conditions of problem \eqref{op:input_distribution} to their equivalent forms, then propose a numerical method that guarantees those conditions on convergence of sequences.
+		% ? Next, we propose a numerical method that evaluate the \gls{kkt} input distribution by limit of sequences.
 		\begin{remark}
-			% As pointed out in \cite{Buhler2011}, \gls{kkt} conditions are only necessary for such kind of problems and these solutions may end up being saddle points.
-			As pointed out in \cite{Buhler2011}, \gls{kkt} conditions are generally necessary but insufficient for total rate maximization in discrete memoryless \gls{mac}. Therefore, \gls{kkt} solutions may end up being saddle points of problem \eqref{op:input_distribution}.
+			As demonstrated in \cite{Buhler2011}, \gls{kkt} conditions are generally necessary but insufficient for total rate maximization problems.
+			Although \gls{kkt} solutions to problem \eqref{op:input_distribution} may end up being saddle points, we will later show by simulation their average performance can be reasonably close to optimal for a moderate $K$.
+			\label{re:input_kkt_distribution}
 		\end{remark}
-		Following \cite{Rezaeian2004}, we first recast \gls{kkt} conditions to their equivalent form for problem \eqref{op:input_distribution}, then propose an iterative method that guarantees input distribution satisfying above conditions on convergence.
-		% Interestingly, the total-rate optimal input design for general discrete memoryless \gls{mac} remains an open problem, and we instead propose a \gls{kkt} solution to problem \eqref{op:input_distribution}.
 		\begin{proposition}
-			% The \gls{kkt} optimality conditions for problem \eqref{op:input_distribution} are equivalent to, $\forall k \in \mathcal{K}$ and $\forall m_k \in \mathcal{M}$,
 			The \gls{kkt} optimality conditions for problem \eqref{op:input_distribution} are equivalent to, $\forall k,m_k$,
 			\begin{subequations}
 				\label{eq:input_kkt_condition}
@@ -621,19 +561,14 @@
 			\label{pf:input_kkt_condition}
 		\end{proof}
 
-		For each node, \eqref{eq:probable_states} suggests each probable state should produce the same marginal information (averaged over all states of other nodes), while \eqref{eq:dropped_states} implies any state with potentially less marginal information should not be used.
-		% We notice \eqref{eq:probable_states} means each probable state of each tag should produce the same marginal information (averaged over all states of other tags), while \eqref{eq:dropped_states} implies any state of any tag with potentially less marginal information than above should not be used.
-		% Next, we generalize the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} and propose a numerical evaluation of \gls{kkt} points by limits of sequences.
+		For each node, \eqref{eq:probable_states} suggests each probable state should produce the same marginal information (averaged over all states of other nodes), while \eqref{eq:dropped_states} suggests any state with potentially less marginal information should not be used.
 		\begin{proposition}
-			% The \gls{kkt} solution of input probability of tag $k$ at state $m_k$ is given by the converging point of the sequence
-			The \gls{kkt} input probability of node $k$ of state $m_k$ is given by the converging point of the sequence
-			% The \gls{kkt} solution of input probability of tag $k$ at state $m_k$ is given by the converging point of the sequence
+			For any strictly positive initializer $\{\boldsymbol{p}_k^{(0)}\}_{k \in \mathcal{K}}$, the \gls{kkt} input probability of node $k$ at state $m_k$ is given by the converging point of the sequence
 			\begin{equation}
 				P_k^{(r+1)}(x_{m_k}) = \frac{P_k^{(r)}(x_{m_k}) \exp \Bigl( \frac{\rho}{1 - \rho} I_k^{(r)}(x_{m_k}) \Bigr)}{\sum_{m_k'} P_k^{(r)}(x_{m_k'}) \exp \Bigl( \frac{\rho}{1 - \rho} I_k^{(r)}(x_{m_k'}) \Bigr)},
 				\label{eq:input_kkt_solution}
 			\end{equation}
-			% where $r$ is the iteration index and $\boldsymbol{p}_k^{(0)} > \boldsymbol{0}$, $\forall k \in \mathcal{K}$.
-			where $r$ is the iteration index and $\boldsymbol{p}_k^{(0)} > \boldsymbol{0}$, $\forall k$.
+			where $r$ is the iteration index.
 			\label{pr:input_kkt_solution}
 		\end{proposition}
 		\begin{proof}
@@ -641,10 +576,11 @@
 			\label{pf:input_kkt_solution}
 		\end{proof}
 
-		At each iteration, the input distribution of node $k$ is evaluated over updated input distribution of node $1$ to $k-1$, together with previous input distribution of node $k+1$ to $K$. The \gls{kkt} input distribution design is summarized in Algorithm \ref{al:input_distribution}.
+		For \eqref{eq:input_kkt_solution} at iteration $r+1$, the input distribution of node $k$ is updated over $\bigl\{\{\boldsymbol{p}_q^{(r+1)}\}_{q=1}^{k-1},\{\boldsymbol{p}_q^{(r)}\}_{q=k}^{K}\bigr\}$.
+		The \gls{kkt} input distribution design is summarized in Algorithm \ref{al:input_distribution}.
 
 		\begin{algorithm}[!t]
-			\caption{Numerical Evaluation of \gls{kkt} Input Distribution}
+			\caption{Numerical \gls{kkt} Input Distribution Evaluation by Limits of Sequence}
 			\label{al:input_distribution}
 			\begin{algorithmic}[1]
 				\Require $K$, $N$, $\boldsymbol{h}_{\mathrm{D}}^H$, $\boldsymbol{H}_{\mathrm{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $\sigma_v^2$, $\rho$, $\boldsymbol{w}$, $\boldsymbol{t}$, $\epsilon$
@@ -652,7 +588,7 @@
 				\State Set $\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_channel}
 				\State \phantom{Set} $\sigma^2_{m_{\mathcal{K}}}$, $\forall m_{\mathcal{K}}$ by \eqref{eq:receive_variance}
 				\State \phantom{Set} $f(z|\mathcal{H}_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:energy_distribution}
-				\State \phantom{Set} $P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}, m_{\mathcal{K}}'$ by \eqref{eq:dtmac}
+				\State \phantom{Set} $P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}, m_{\mathcal{K}}'$ by \eqref{eq:dmtmac}
 				\State Initialize $r \gets 0$
 				\State \phantom{Initialize} $\boldsymbol{p}_k^{(0)} > \boldsymbol{0}$, $\forall k$
 				\State Get $P_{\mathcal{K}}^{(r)}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_distribution} \label{st:input_distribution_begin}
@@ -663,10 +599,6 @@
 					\State Update $r \gets r+1$
 					\State \phantom{Update} $\boldsymbol{p}_k^{(r)}$, $\forall k$ by \eqref{eq:input_kkt_solution}
 					\State Redo step \ref{st:input_distribution_begin}--\ref{st:input_distribution_end}
-					% \State Get $P_{\mathcal{K}}^{(r)}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_distribution}
-					% \State \phantom{Get} $I^{(r)}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:backscatter_information_function}, \eqref{eq:primary_information_function}, \eqref{eq:weighted_sum_information_function}
-					% \State \phantom{Get} $I^{(r)}_k(x_{m_k})$, $\forall k,m_k$ by \eqref{eq:backscatter_marginal_information}, \eqref{eq:primary_marginal_information}, \eqref{eq:weighted_sum_marginal_information}
-					% \State \phantom{Get} $I^{(r)}(x_{\mathcal{K}})$ by \eqref{eq:backscatter_mutual_information}, \eqref{eq:primary_mutual_information}, \eqref{eq:weighted_sum_mutual_information}
 				\Until $I^{(r)}(x_{\mathcal{K}}) - I^{(r-1)}(x_{\mathcal{K}}) \le \epsilon$
 			\end{algorithmic}
 		\end{algorithm}
@@ -678,56 +610,48 @@
 			{\scriptstyle{\boldsymbol{w}}}{I(x_{\mathcal{K}})}{\label{op:active_beamforming}}{\label{ob:active_beamforming}}
 			\addConstraint{\eqref{co:transmit_power},}
 		\end{maxi!}
-		which is still non-convex due to integration and entropy terms.
+		which is still non-convex due to the integration and entropy terms.
+		To tackle this, we rewrite the \gls{dmtmac} transition probability \eqref{eq:dmtmac} from input index tuple $m_{\mathcal{K}}$ to output index $l$ as a regularized incomplete Gamma function in the series representation \cite[Theorem 3]{Jameson2016}
+		\begin{equation}
+			\begin{gathered}
+				Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) = \frac{\int_{{t_{l-1}}/{\sigma_{m_{\mathcal{K}}}^2}}^{{t_l}/{\sigma_{m_{\mathcal{K}}}^2}} z^{N-1} \exp(-z) \, d z}{(N-1)!}\\
+				= \exp \Bigl(-\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\bigl(\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^n}{n!} - \exp \Bigl(-\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\bigl(\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^n}{n!}.
+			\end{gathered}
+			\label{eq:regularized_incomplete_gamma}
+		\end{equation}
+		Its gradient with respect to $\boldsymbol{w}^*$ can be derived as
+		\begin{equation}
+			\nabla_{\boldsymbol{w}^*} Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) = \frac{\boldsymbol{h}_{\mathrm{E}}(x_{m_{\mathcal{K}}})\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}}{(\sigma_{m_{\mathcal{K}}}^2)^2} g_{m_{\mathcal{K}}}(t_{l-1},t_l),
+			\label{eq:regularized_incomplete_gamma_gradient}
+		\end{equation}
+		where $g_{m_{\mathcal{K}}}(t_{l-1},t_l) \triangleq g_{m_{\mathcal{K}}}(t_l)-g_{m_{\mathcal{K}}}(t_{l-1})$ and
+		\begin{equation}
+			g_{m_{\mathcal{K}}}(t_l) = t_l\exp\Bigl(-\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)\Bigl(-1+\sum_{n=1}^{N-1} \frac{\bigl(n - \frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr) \bigl(\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^{n-1}}{n!}\Bigr).
+			\label{eq:regularized_incomplete_gamma_gradient_component}
+		\end{equation}
+		On top of \eqref{eq:regularized_incomplete_gamma} and \eqref{eq:regularized_incomplete_gamma_gradient}, we explicitly express the objective function \eqref{ob:active_beamforming} and its gradient as \eqref{eq:weighted_sum_mutual_information_explicit} and \eqref{eq:weighted_sum_mutual_information_gradient} at the end of page \pageref{eq:weighted_sum_mutual_information_explicit}, respectively.
 		\begin{figure*}[!b]
 			\hrule
 			\begin{equation}
 				I(x_{\mathcal{K}})=\sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\log\Bigl(1+\frac{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2}{\sigma_v^2}\Bigr)+(1-\rho)\sum_l Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \log \frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'} P_{\mathcal{K}}(x_{m_{\mathcal{K}}'}) Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}\Biggr)
 				\label{eq:weighted_sum_mutual_information_explicit}
 			\end{equation}
-		\end{figure*}
-		To see this, we explicitly write \eqref{ob:active_beamforming} as \eqref{eq:weighted_sum_mutual_information_explicit} at the bottom of page \pageref{eq:regularized_incomplete_gamma}, where
-		\begin{equation}
-			Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) = \frac{\int_{{t_{l-1}}/{\sigma_{m_{\mathcal{K}}}^2}}^{{t_l}/{\sigma_{m_{\mathcal{K}}}^2}} z^{N-1} \exp(-z) \, d z}{(N-1)!}
-			\label{eq:regularized_incomplete_gamma}
-		\end{equation}
-		is the regularized incomplete Gamma function that substitutes the \gls{dtmac} transition probability \eqref{eq:dtmac}.
-		Its series representation is given by \cite[Theorem~3]{Jameson2016}
-		\begin{align}
-			Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)
-			 & = \exp \Bigl(-\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\Bigl(\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)^n}{n!} \nonumber \\
-			 & \quad - \exp \Bigl(-\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\Bigl(\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)^n}{n!}.
-			\label{eq:regularized_incomplete_gamma_series}
-		\end{align}
-		Next, we derive the gradients of \eqref{eq:regularized_incomplete_gamma_series} and \eqref{eq:weighted_sum_mutual_information_explicit} w.r.t. $\boldsymbol{w}^*$ as \eqref{eq:regularized_incomplete_gamma_gradient} and \eqref{eq:weighted_sum_mutual_information_gradient} at the end of page \pageref{eq:regularized_incomplete_gamma_gradient} and \pageref{eq:weighted_sum_mutual_information_gradient}, respectively.
-		\begin{figure*}[!b]
-			\begin{align}
-				\nabla_{\boldsymbol{w}^*} Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)
-				 & = \frac{\boldsymbol{h}_{\mathrm{E}}(x_{m_{\mathcal{K}}})\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}}{\bigl(\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2\bigr)^2}\nonumber                                                                                                                                                                                                        \\
-				 & \quad \times \Biggl(t_l\exp\Bigl(-\frac{t_l}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr)\biggl(-1+\sum_{n=1}^{N-1} \frac{n\Bigl(\frac{t_l}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr)^{n-1}-\Bigl(\frac{t_l}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr)^n}{n!}\biggr)\nonumber    \\
-				 & \qquad - t_{l-1}\exp\Bigl(-\frac{t_{l-1}}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr)\biggl(-1+\sum_{n=1}^{N-1} \frac{n\Bigl(\frac{t_{l-1}}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr)^{n-1}-\Bigl(\frac{t_{l-1}}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr)^n}{n!}\biggr)\Biggr)
-				\label{eq:regularized_incomplete_gamma_gradient}
-			\end{align}
-		\end{figure*}
-		\begin{figure*}[!b]
-			\hrule
 			\begin{align}
 				\nabla_{\boldsymbol{w}^*} I(x_{\mathcal{K}})
-				 & = \sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\frac{\boldsymbol{h}_{\mathrm{E}}(x_{m_{\mathcal{K}}})\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}}{\lvert\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2+\sigma_v^2}+(1-\rho)\sum_l\biggl(\log\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}+1\biggr)\nonumber   \\
+				 & = \sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\frac{\boldsymbol{h}_{\mathrm{E}}(x_{m_{\mathcal{K}}})\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})\boldsymbol{w}}{\sigma_{m_{\mathcal{K}}}^2}+(1-\rho)\sum_l\biggl(\log\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}+1\biggr)\nonumber                                                                  \\
 				 & \qquad \times \nabla_{\boldsymbol{w}^*} Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)-\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})\nabla_{\boldsymbol{w}^*}Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}\Biggr)
 				\label{eq:weighted_sum_mutual_information_gradient}
 			\end{align}
 		\end{figure*}
-		% Next, we express the gradient of \eqref{eq:regularized_incomplete_gamma_series} and \eqref{eq:weighted_sum_mutual_information_explicit} w.r.t. $\boldsymbol{w}^*$ as \eqref{eq:regularized_incomplete_gamma_gradient} and \eqref{eq:weighted_sum_mutual_information_gradient} at the end of page \pageref{eq:regularized_incomplete_gamma_gradient},
-		It allows problem \eqref{op:active_beamforming} to be solved by the \gls{pgd} method, where any unregulated beamforming vector $\bar{\boldsymbol{w}}$ can be projected onto the feasible domain of average transmit power constraint \eqref{co:transmit_power} by
-		% the projection function associated with average transmit power constraint \eqref{co:transmit_power} is
+		Those allows problem \eqref{op:active_beamforming} to be solved by the \gls{pgd} method, where any unregulated beamforming vector $\bar{\boldsymbol{w}}$ can be projected onto the feasible domain of average transmit power constraint \eqref{co:transmit_power} by
 		\begin{equation}
 			\boldsymbol{w} = \sqrt{P} \frac{\bar{\boldsymbol{w}}}{\max\bigl(\sqrt{P},\lVert\bar{\boldsymbol{w}}\rVert\bigr)}.
 			\label{eq:beamforming_projection}
 		\end{equation}
-		We present the iterative active beamforming design accelerated by backtracking line search in Algorithm \ref{al:active_beamforming}.
+
+		The \gls{pgd} active beamforming optimization with step size determined by backtracking line search is summarized in Algorithm \ref{al:active_beamforming}.
 		\begin{algorithm}[!t]
-			\caption{Iterative Active Beamforming Design by \gls{pgd} with Backtracking Line Search}
+			\caption{Iterative Active Beamforming Optimization by \gls{pgd} with Backtracking Line Search}
 			\label{al:active_beamforming}
 			\begin{algorithmic}[1]
 				\Require $Q$, $N$, $\boldsymbol{h}_{\mathrm{D}}^H$, $\boldsymbol{H}_{\mathrm{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $P$, $\sigma_v^2$, $\rho$, $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{t}$, $\alpha$, $\beta$, $\gamma$, $\epsilon$
@@ -737,7 +661,7 @@
 				\State Initialize $r \gets 0$
 				\State \phantom{Initialize} $\boldsymbol{w}^{(0)}$, $\lVert\boldsymbol{w}^{(0)}\rVert^2 \le P$
 				\State Get $(\sigma_{m_{\mathcal{K}}}^{(r)})^2$, $\forall m_{\mathcal{K}}$ by \eqref{eq:receive_variance} \label{st:gradient_descent_begin}
-				\State \phantom{Get} $Q^{(r)}\bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)$, $\forall m_{\mathcal{K}},l$ by \eqref{eq:regularized_incomplete_gamma} or \eqref{eq:regularized_incomplete_gamma_series}
+				\State \phantom{Get} $Q^{(r)}\bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)$, $\forall m_{\mathcal{K}},l$ by \eqref{eq:regularized_incomplete_gamma}
 				\State \phantom{Get} $I^{(r)}(x_{\mathcal{K}})$ by \eqref{eq:weighted_sum_mutual_information_explicit} \label{st:gradient_descent_end}
 				\State \phantom{Get} $\nabla_{\boldsymbol{w}^*} Q^{(r)}\bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)$, $\forall m_{\mathcal{K}},l$ by \eqref{eq:regularized_incomplete_gamma_gradient} \label{st:gradient_update_start}
 				\State \phantom{Get} $\nabla_{\boldsymbol{w}^*} I^{(r)}(x_{\mathcal{K}})$ by \eqref{eq:weighted_sum_mutual_information_gradient} \label{st:gradient_update_end}
@@ -747,10 +671,6 @@
 					\State \phantom{Update} $\bar{\boldsymbol{w}}^{(r)} \gets \boldsymbol{w}^{(r-1)}+\gamma\nabla_{\boldsymbol{w}^*} I^{(r-1)}(x_{\mathcal{K}})$ \label{st:backtracking_line_search_begin}
 					\State \phantom{Update} $\boldsymbol{w}^{(r)}$ by \eqref{eq:beamforming_projection}
 					\State Redo step \ref{st:gradient_descent_begin}--\ref{st:gradient_descent_end} \label{st:backtracking_line_search_end}
-					% \State \phantom{Update} $(\sigma_{m_{\mathcal{K}}}^{(r)})^2$, $\forall m_{\mathcal{K}}$ by \eqref{eq:receive_variance}
-					% \State \phantom{Update} $Q^{(r)}\bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)$, $\forall m_{\mathcal{K}},l$ by \eqref{eq:regularized_incomplete_gamma} or \eqref{eq:regularized_incomplete_gamma_series}
-					% \State \phantom{Update} $I^{(r)}(x_{\mathcal{K}})$ by \eqref{eq:weighted_sum_mutual_information_explicit} \label{st:backtracking_line_search_end}
-					% \While{$I^{(r-1)}(x_{\mathcal{K}})>I^{(r)}(x_{\mathcal{K}})+\alpha\gamma\lVert\nabla_{\boldsymbol{w}^*}I^{(r-1)}(x_{\mathcal{K}})\rVert$}
 					\While{$I^{(r)}(x_{\mathcal{K}})<I^{(r-1)}(x_{\mathcal{K}})+\alpha\gamma\lVert\nabla_{\boldsymbol{w}^*}I^{(r-1)}(x_{\mathcal{K}})\rVert^2$}
 						\State Set $\gamma^{(r)}\gets\beta\gamma^{(r)}$
 						\State Redo step \ref{st:backtracking_line_search_begin}--\ref{st:backtracking_line_search_end}
@@ -762,91 +682,69 @@
 	\end{subsection}
 
 	\begin{subsection}{Decision Threshold}
-		% Once node input distribution $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$ and active beamforming vector $\boldsymbol{w}$ are obtained, problem \eqref{op:weighted_sum_rate}
 		For any given $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$ and $\boldsymbol{w}$, problem \eqref{op:weighted_sum_rate} reduces to
 		\begin{maxi!}
-			{\scriptstyle{\boldsymbol{t}\in\mathbb{R}_+^{L+1}}}{I(x_{\mathcal{K}})}{\label{op:decision_threshold}}{\label{ob:decision_threshold}}
-			\addConstraint{\eqref{co:decision_threshold},}
+			{\scriptstyle{\boldsymbol{t}}}{I(x_{\mathcal{K}})}{\label{op:decision_threshold}}{\label{ob:decision_threshold}}
+			\addConstraint{\eqref{co:sequential_threshold},\eqref{co:nonnegative_threshold},}
 		\end{maxi!}
-		where it is trivial to conclude $t_0^\star=0$ and $t_L^\star=\infty$ for energy-based backscatter detection.
+		which is still non-convex because variable $\boldsymbol{t}$ appears on the limits of integration \eqref{eq:dmtmac}.
+		Fortunately, we can further simplify problem \eqref{op:decision_threshold} as a point-to-point rate-optimal quantizer optimization for a discrete-input continuous-output memoryless channel, thanks to Remark \ref{re:backscatter_decision} and \ref{re:augmented_source}.
 
 		\begin{remark}
-			Backscatter detection (and decision design) has no impact on primary achievable rate.
-			When nodes transmit at non-zero total rate, the user can re-encode backscatter messages to recover coded backscatter tuple $x_{\mathcal{K}}$ at each block.
-			Otherwise, $x_{\mathcal{K}}$ can be fully deterministic and known to the user.
-			% Once backscatter messages are successfully decoded, the user can re-encode backscatter messages to recover coded backscatter tuple $x_{\mathcal{K}}$ at each block.
-			% Upon successful backscatter detection, the user can re-encode backscatter messages to recover coded backscatter tuple $x_{\mathcal{K}}$ at each block.
-			% Therefore, decision design has no impact on primary achievable rate.
-			% Decision threshold only influences backscatter rate instead of primary rate.
-			\label{re:backscatter_detection}
+			Upon successful backscatter decoding, UniScatter receiver can always re-encode node messages to recover their reflection patterns at each primary block.
+			Therefore, backscatter decision design has no impact on the primary achievable rate, and any thresholding scheme maximizing the total backscatter mutual information \eqref{eq:backscatter_mutual_information} is also optimal for problem \eqref{op:decision_threshold}.
+			\label{re:backscatter_decision}
 		\end{remark}
-
-		Remark \ref{re:backscatter_detection} suggests any $\boldsymbol{t}$ maximizes total backscatter mutual information $I^{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}})$ is also optimal for problem \eqref{op:decision_threshold}.
 
 		\begin{remark}
-			% With input distribution of all nodes, we can formulate an equivalent information source with augmented alphabet of tag input combination.
-			% In terms of total backscatter rate, we can formulate an equivalent information source with augmented alphabet of tag input combination.
-			% When input distribution of all nodes are available, we can formulate an equivalent information source in terms of total backscatter rate.
-			% When input distribution of all nodes are available, we can think an equivalent information source with augmented alphabet of state tuple, in terms of total backscatter rate.
-			% In terms of total backscatter rate, we can regard all nodes as an equivalent information source with augmented alphabet of node state tuple $x_{m_{\mathcal{K}}}$.
-			In terms of total backscatter rate, the nodes can be regarded as an equivalent source with augmented alphabet of symbol tuple $x_{m_{\mathcal{K}}}$, and the \gls{dtmac} \eqref{eq:dtmac} essentially reduces to a \gls{dmtc}.
-			% As such, the \gls{dtmac} \eqref{eq:dtmac} is essentially a \gls{dmtc}, and decision threshold design can be simplified accordingly.
+			In terms of total backscatter rate, the dispersed nodes with given input distribution can be viewed as an equivalent source with augmented alphabet of backscatter symbol tuples $\{x_{m_{\mathcal{K}}}\}$.
+			As such, the \gls{dmtmac} \eqref{eq:dmtmac} is essentially a \gls{dmtc}, and problem \eqref{op:decision_threshold} reduces to the rate-optimal quantization design for a discrete-input continuous-output memoryless channel.
+			\label{re:augmented_source}
 		\end{remark}
 
-		Finally, we can employ existing thresholding design for \gls{dmtc} to solve problem \eqref{op:decision_threshold}.
-		For example, \cite{He2021} first discretized the continuous energy $z$ into numerous output bins, then grouped adjacent bins to maximize mutual information using \gls{dp} accelerated by \gls{smawk} algorithm.
-		In \cite{Nguyen2020a}, the authors first proved the optimality condition for any three neighbor thresholds, then fix $t_0$, traverse $t_1$, and sequentially optimizes the others by bisection.
-		Both will be compared with \gls{ml} decision \cite{Qian2019}
+		Next, we constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+^{L+1}$ to finite candidate set (i.e., fine-grained discrete energy levels) $\mathcal{T}^{L+1}$.
+		\begin{figure}[!t]
+			\centering
+			\resizebox{0.9\columnwidth}{!}{
+				\input{assets/illustration/discrete_outputs.tex}
+			}
+			\caption{The decision thresholds are selected from fine-grained discrete energy levels instead of continuous space, and each decision region consists of at least one neighbor energy bins.}
+			\label{fi:discrete_outputs}
+		\end{figure}
+		As shown in Fig. \ref{fi:discrete_outputs}, by introducing the extra analog-to-digital conversion step, we can group adjacent high-resolution energy bins for backscatter decision regions.
+		Thus, problem \eqref{op:decision_threshold} is recast as
+		\begin{maxi!}
+			{\scriptstyle{\boldsymbol{t} \in \mathcal{T}^{L+1}}}{I(x_{\mathcal{K}})}{\label{op:decision_threshold_discrete}}{\label{ob:decision_threshold_discrete}}
+			\addConstraint{\eqref{co:sequential_threshold},}
+		\end{maxi!}
+		which can be solved by existing rate-optimal sequential quantizer designs for \gls{dmc}.
+		To obtain global optimal solution, \cite{He2021} started from the quadrangle inequality and proposed a \gls{dp} method accelerated by the \gls{smawk} algorithm with computational complexity $\mathcal{O}\bigl(L^2(\mathrm{card}(\mathcal{T})-L)\bigr)$, while \cite{Nguyen2020a} started from the optimality condition for three neighbor thresholds and presented a traverse-then-bisect algorithm with complexity $\mathcal{O}\bigl(\mathrm{card}(\mathcal{T})L\log(\mathrm{card}(\mathcal{T})L)\bigr)$.
+		In Section \ref{se:simulation_results}, both schemes will be compared with the \gls{ml} thresholding \cite{Qian2019}
 		\begin{equation}
-			t_{l}^{\mathrm{\gls{ml}}} = N \frac{\sigma_{l-1}^2 \sigma_{l}^2}{\sigma_{l-1}^2 - \sigma_{l}^2} \log \frac{\sigma_{l-1}^2}{\sigma_{l}^2}, \quad l \in \mathcal{L} \setminus \{0,L\},
+			t_{l}^{\mathrm{\gls{ml}}} = N \frac{\sigma_{l-1}^2 \sigma_{l}^2}{\sigma_{l-1}^2 - \sigma_{l}^2} \log \frac{\sigma_{l-1}^2}{\sigma_{l}^2}, \quad l \in \mathcal{L} \setminus \{L\},
 			\label{eq:detection_threshold_maximum_likelihood}
 		\end{equation}
-		which is generally suboptimal for problem \eqref{op:decision_threshold} except for equiprobable inputs at all nodes.
-
-		% \begin{remark}
-		% 	Although the \gls{ml} decision threshold is optimal in terms of the likelihood function, it is not necessarily capacity-achieving, although the performance gap can be negligible in the single-tag \gls{bibo} case.
-		% \end{remark}
-
-		% Interestingly, the optimal threshold design to maximize the mutual information for a general \gls{dmtc} with a fixed number of output letters remains an open issue.
-		% The reason is that each decision region may contain more than one disjoint partitions (i.e., non-convex) and the number of thresholds are unknown.
-		% Fortunately, for the proposed energy detection, we proved that the \gls{dmtc} capacity can be achieved using only convex decision regions.
-		% This conclusion is summarized below.
-
-		% \begin{proposition}
-		% 	For a discrete-input continuous-output channel in Erlang distribution \eqref{eq:energy_distribution}, if the \gls{dmtc} is constructed for detection (i.e., same input/output alphabet) and $L$ input letters are with non-zero probability, then it is possible to achieve the \gls{dmtc} capacity by $L$ non-empty convex decision regions defined by $L+1$ distinct decision thresholds.
-		% 	\label{pr:threshold}
-		% \end{proposition}
-
-		% \begin{proof}
-		% 	Please refer to Appendix \ref{ap:threshold}.
-		% 	\label{pf:threshold}
-		% \end{proof}
-
-		% Once the optimal number of decision threshold is determined, we can first discretize the output energy level into numerous bins, then obtain the optimal decision regions that maximizes the total backscatter rate by \gls{dp} accelerated by \gls{smawk} algorithm \cite{He2021}.
+		which is generally suboptimal for problem \eqref{op:decision_threshold} except when all nodes are with equiprobable inputs.
 	\end{subsection}
 \end{section}
 
 \begin{section}{Simulation Results}
-	% TODO add distribution to initializer to smooth curves?
-	% TODO compare PGD and primary-MRT beamformers
-	In this section, we provide numerical results to evaluate the proposed input, beamforming and decision design over a single-user multi-node UniScatter-enabled network.
-	We assume the distance between \gls{ap} and user is \qty{10}{\meter}, and $K=2$ UniScatter nodes are uniformly dropped within a disk centered at the user of radius \qty{1}{\meter}.
-	% The carrier frequency is $f=\qty{200}{\MHz}$, and we consider \gls{iid} Ricean fading for all channels.
-	The carrier frequency is $f=\qty{200}{\MHz}$, and we consider \gls{iid} Ricean fading between all terminals.
-	For direct, forward and backward links, we set the path loss exponents to \num{2.6}, \num{2.4} and \num{2}, and the Ricean factor to \num{5}, \num{5} and \num{10}, respectively.
-	% For direct, forward and backward links, we choose path loss exponents \num{2.6}, \num{2.4} and \num{2}, and Ricean factor \num{5}, \num{5} and \num{10}, respectively.
-	% and the path loss exponents for direct, forward and backward links are \num{2.6}, \num{2.4} and \num{2}, respectively.
-	% We consider \gls{iid} Ricean fading for all channels with Ricean factor set to \num{5}, \num{5} and \num{10}
-	The \gls{ap} has $Q=4$ antennas with maximum average transmit power $P=\qty{36}{\dBm}$.
-	All nodes have amplitude reflect ratio $\alpha=0.5$, symbol period ratio $N=20$, and perform \gls{qam} with $M=4$ input states.
-	% and we consider amplitude reflect ratio $\alpha=0.5$ and symbol period ratio $N=20$.
-	% The user has a receive antenna gain of \qty{3}{\dBi} and average noise power
-	The user is with average noise power $\sigma_v^2=\qty{70}{\dBm}$ and receive antenna gain \qty{3}{\dBi}.
-	All rate regions are averaged over at least \num{1000} instances, where ``PSP'' and ``BSP'' means primary and backscatter symbol periods, respectively.
-	We choose decision design by \gls{smawk} \cite{He2021} as reference, and select discretize boundaries uniformly over the \qty{95}{\percent} confidence region of edge hypotheses.
-	The parameters remain fixed unless otherwise specified.
+	In this section, we provide numerical results to evaluate the proposed input distribution, active beamforming, and backscatter decision design for the UniScatter system in Fig. \ref{fi:uniscatter_network}.
+	We assume the AP-user distance is \qty{10}{\meter}, $K=2$ UniScatter nodes are randomly dropped within a disk of radius \qty{2}{\meter} centered at the user, the \gls{ap} is with $Q=4$ transmit antennas and an average power budget $P=\qty{36}{\dBm}$, the nodes employs \num{4}-\gls{qam} with amplitude scattering ratio $\alpha=0.5$, the user is with average noise power $\sigma_v^2=\qty{-40}{\dBm}$, and the symbol period ratio is $N=20$.
+	For all channels involved, we consider a distance-dependent path loss model
+	\begin{equation}
+		L(d) = L_0 \biggl(\frac{d_0}{d}\biggr)^\gamma,
+	\end{equation}
+	together with a Ricean fading model
+	\begin{equation}
+		\boldsymbol{H} = \sqrt{\frac{\kappa}{1+\kappa}} \bar{\boldsymbol{H}} + \sqrt{\frac{1}{1+\kappa}} \tilde{\boldsymbol{H}}
+	\end{equation}
+	where $d$ is the transmission distance, $L_0=-\qty{30}{\dB}$ is the reference path loss at distance $d_0=\qty{1}{\meter}$, $\kappa$ is the Ricean $K$-factor, $\bar{\boldsymbol{H}}$ is the deterministic line-of-sight component with entries of unit magnitude, and $\tilde{\boldsymbol{H}}$ is the Rayleigh fading component with entries in standard \gls{iid} \gls{cscg} distribution.
+	We choose $\gamma_{\mathrm{D}}=2.6$, $\gamma_{\mathrm{F}}=2.4$, $\gamma_{\mathrm{B}}=2$, and $\kappa_{\mathrm{D}}=\kappa_{\mathrm{F}}=\kappa_{\mathrm{B}}=5$ for direct, forward and backward links.
+	The finite threshold domain $\mathcal{T}$ comes from $b$-bit uniform discretization over the critical interval defined by the confidence bounds of edge hypotheses (i.e., lower bound of $\mathcal{H}_1$ and upper bound of $\mathcal{H}_L$) with confidence level $1-\varepsilon$, where $b=8$ and $\varepsilon=\num{2.22e-16}$.
+	All achievable rate curves/regions are averaged over \num{3000} realizations, and the parameters remain fixed unless otherwise specified.
 
-	\begin{subsection}{Input Distribution vs. Weight}
+	\begin{subsection}{Input Distribution versus Link Priority}
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Instance 1\label{fi:distribution_weights_1}]{
@@ -859,19 +757,29 @@
 					\input{assets/simulation/distribution_weights_2.tex}
 				}
 			}
-			\caption{Typical input distributions vs. weight $\rho$ for a UniScatter node with $M=4$ inputs.}
+			\caption{Typical instances of node input distribution under different weights.}
 			\label{fi:distribution_weights}
 		\end{figure}
-		% We consider a single UniScatter with $M=4$ inputs in this case of study.
-		In Fig. \ref{fi:distribution_weights}, we present typical input distributions of a single UniScatter node with $M=4$ inputs under different weight $\rho$.
-		Fig. \subref*{fi:distribution_weights_1} and \subref*{fi:distribution_weights_2} are obtained from \gls{iid} drop and channel realizations.
-		We note that even for $\rho=0$ (i.e., best backscatter performance), the optimal input distribution is not equiprobable like \gls{sr}, and adaptive channel coding can further increase total backscatter rate based on \gls{csi}.
-		On the other hand, the optimal input distribution becomes fully deterministic at $\rho=1$ (i.e., best primary performance), where the state maximizes equivalent primary channel \eqref{eq:equivalent_channel} strength is chosen with probability \num{1}.
-		In this case, UniScatter node boils down to a \gls{ris} element with $M$ discrete states.
-		As $\rho$ moves from \num{0} to \num{1}, the optimal input distribution becomes gradually biased to one state and flexibly balances the primary-backscatter tradeoff.
+		The objective of this study is to demonstrate each UniScatter node can adjust its input distribution based on \gls{csi} and link priority to balance backscatter modulation and passive beamforming.
+		For this aim, we evaluate the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution} for a single node under different weights $\rho=\{0,0.1,0.2,0.3,1\}$ in Fig. \ref{fi:distribution_weights}, where \subref*{fi:distribution_weights_1} and \subref*{fi:distribution_weights_2} are two representative instances.
+		We observe that as $\rho$ increases from \num{0} to \num{1}, the \gls{kkt} input distribution
+		gradually progresses from slightly skewed to completely biased.
+		For $\rho=0$ where backscatter performance is absolutely prioritized, the \gls{csi}-adaptive channel coding at the UniScatter node provides higher backscatter rate than conventional \gls{bc} and \gls{sr} nodes with uncoded equiprobable inputs.
+		On the other hand, for $\rho=1$ where primary performance is absolutely prioritized, the input probability is \num{1} at the state that maximizes the primary equivalent channel strength, and \num{0} at the others.
+		In this case, the reflection pattern over time is fully deterministic, and the UniScatter node indeed boils down to a \gls{ris} element with discrete phase shifts.
+		Those observations meet our expectation that UniScatter nodes include scattering sources of \gls{bc}/\gls{sr} and reflecting elements of \gls{ris} as special cases, and generalize backscatter modulation and passive beamforming from the perspective of input distribution design.
 	\end{subsection}
 
-	\begin{subsection}{Rate Region vs. Input, Beamforming, and Decision Schemes}
+	\begin{subsection}{Backscatter Rate versus Output Discretization Bit}
+		Since the transformation from problem \eqref{op:decision_threshold} to \eqref{op:decision_threshold_discrete} introduces performance degradation, we now investigate the impact of threshold domain discretization on the total backscatter rate.
+
+		% TODO Total Backscatter Rate versus Output Discretization Bit
+		TODO
+
+
+	\end{subsection}
+
+	\begin{subsection}{Rate Region under Different Schemes}
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Input Distribution\label{fi:region_distribution}]{
@@ -879,55 +787,86 @@
 					\input{assets/simulation/region_distribution.tex}
 				}
 			}
+			\\
+			\subfloat[Active Beamforming\label{fi:region_beamforming}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_beamforming.tex}
+				}
+			}
 			\subfloat[Decision Threshold\label{fi:region_threshold}]{
 				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_threshold.tex}
 				}
 			}
-			\caption{Average primary-total-backscatter rate regions for different input distribution and decision threshold schemes.}
+			\caption{
+				Average primary-total-backscatter rate regions for different input distribution, active beamforming, and decision threshold schemes.
+				``BSP'' means backscatter symbol period.
+			}
 		\end{figure}
-		Fig. \subref*{fi:region_distribution} compares the achievable rate regions by following input designs.
-		\begin{itemize}
-			% \item ``Exhaustion'' means $K$-dimensional grid search over probability simplex;
-			% \item ``\gls{kkt}'' corresponds to Algorithm \ref{al:input_distribution};
-			% \item ``Cooperation'' assumes backscatter cooperation/joint encoding at all UniScatters, and employs Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} to determine \emph{tuple} input distribution;
-			\item \textbf{Exhaustion:} $K$-dimensional grid search over probability simplex;
-			\item \textbf{\gls{kkt}:} results of Algorithm \ref{al:input_distribution};
-					% \item \textbf{Cooperation:} with backscatter cooperation/joint encoding at all UniScatters, Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a} for \emph{tuple} input distribution;
-					% \item \textbf{Cooperation:} backscatter cooperation/joint encoding at all UniScatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
-					% \item \textbf{Cooperation:} with backscatter cooperation (i.e., joint encoding) at all UniScatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
-			\item \textbf{Cooperation:} backscatter cooperation/joint encoding at all UniScatter nodes, tuple input distribution/joint probability array optimization by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
-					% with backscatter cooperation (i.e., joint encoding) at all UniScatters, \emph{tuple input distribution} by Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a};
-			\item \textbf{Marginalization:} marginal distributions of joint probability array;
-			\item \textbf{Decomposition:} normalized tensors of rank-1 \gls{cp} decomposition of joint probability array;
-			\item \textbf{Randomization:} Gaussian recovery from joint probability array \cite{Calvo2010}.
-		\end{itemize}
+		For the \gls{bcd} algorithm considered in the rest of this paper, we choose the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution}, the \gls{pgd} active beamforming by Algorithm \ref{al:active_beamforming}, and the \gls{smawk} decision threshold by \cite{He2021} as reference.
+		The impacts of different schemes are explored below.
 
-		We notice adaptive joint encoding at all nodes provides the outer bound of rate region.
-		However, it involves arbitrarily dependent codewords, and backscatter cooperation between passive nodes is generally unaffordable.
-		In contrast, the rate region of \gls{kkt} input design in Algorithm \ref{al:input_distribution} approaches that of exhaustive search, and the loss is negligible for $K=2$.
-		% Although the randomization method \cite{Calvo2010} achieves similar performance, the computational complexity is much higher as it involves solving $K+1$ linear programming problems
-		Although the randomization method \cite{Calvo2010} returns similar rate region, it requires solving $K+1$ linear programming problems before applying Gaussian recovery.
-		The marginal distribution is slightly worse than \gls{kkt} despite having the same computational complexity, while the approximation from \gls{cp} decomposition is unsatisfying.
+		\begin{subsubsection}{Input Distribution}
+			We compare the following input distribution designs for problem \eqref{op:input_distribution}:
+			\begin{itemize}
+				\item \emph{Exhaustion:} Exhaustive grid search over the probability $K$-simplex with resolution $\Delta p = \num{1e-3}$;
+				\item \emph{\gls{kkt}:} Numerical \gls{kkt} solution evaluation by Algorithm \ref{al:input_distribution};
+				\item \emph{Cooperation:} Numerical symbol tuple distribution (i.e., $K$-dimensional joint probability array) evaluation by the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a}.
+			\end{itemize}
 
-		% TODO: beamforming
+			Since \emph{Cooperation} involves full transmit cooperation of all nodes, to support independent backscatter encoding, we also propose the following methods to recover individual input distributions from the joint probability array:
+			\begin{itemize}
+				\item \emph{Marginalization:} Marginal probability distributions;
+				\item \emph{Decomposition:} Normalized rank-\num{1} \gls{cp} decomposition tensors;
+				\item \emph{Randomization:} Random search guided with correlation matrix \cite{Calvo2010}.
+			\end{itemize}
 
-		Fig. \subref*{fi:region_threshold} compares the achievable rate region by following threshold schemes.
-		\begin{itemize}
-			\item \textbf{\gls{dp}:} sequential quantizer grouping by dynamic programming \cite{He2021};
-			\item \textbf{\gls{smawk}:} above accelerated by \gls{smawk} algorithm;
-			\item \textbf{Bisection:} sequential bisection threshold design \cite{Nguyen2020a};
-			\item \textbf{\gls{ml}:} maximum likelihood decision \eqref{eq:detection_threshold_maximum_likelihood} \cite{Qian2019}.
-		\end{itemize}
+			Fig. \subref*{fi:region_distribution} shows the achievable rate regions for those input distribution schemes.
+			We observe that \emph{Cooperation} provides the outer bound for all achievable rate regions, which suggests transmit cooperation between UniScatter nodes can be generally helpful.
+			However, it requires joint encoding with arbitrarily dependent codewords, and the extra coordination burden may be unaffordable for a large $K$.
+			We also notice the average performance of \emph{\gls{kkt}} input distribution design by Algorithm \ref{al:input_distribution} is extremely close to that of \emph{Exhaustion}, and the loss is indistinguishable for $K=2$.
+			This verified our claim in Remark \ref{re:input_kkt_distribution} that the average performance of \gls{kkt} solutions can be reasonably good for a moderate $K$.
+			Despite \emph{Randomization} yields a similar result, the computational complexity is much higher (loops over $K+1$ linear programming problems) and the performance is backed by numerous randomly generated instances.
+			In contrast, the low-complexity \emph{Marginalization} returns a comparable result and the rate loss is insignificant when $K$ is small.
+			Finally, \emph{Decomposition} suffers from much lower average total backscatter rate, as the rank-\num{1} \gls{cp} approximation can be inaccurate for some channel-drop realizations.
+			Those observations demonstrated the performance and complexity advantages of the proposed \gls{kkt} input distribution design, and reveals the potential of joint encoding at UniScatter nodes.
+		\end{subsubsection}
 
-		We observe that input distribution-adaptive threshold designs achieve higher total backscatter rate than \gls{ml}.
-		This is because the decision regions can be flexibly adjusted to enhance the capacity of \gls{dtmac} \eqref{eq:dtmac}.
-		For example, the tuples with negligible input probability should have narrower decision regions than those frequently employed, in order to improve detection performance.
-		It emphasizes the importance of joint input distribution and decision region design.
 
-		% We note that ideal joint adaptive encoding at all UniScatters can further boost the total backscatter rate.
-		% However, this ideal upper bound requires real-time feedback
-		% ``Exhaustion'' means $K$-dimensional grid search over probability simplex, ``KKT'' corresponds to Algorithm \ref{ap:input_kkt_solution}, ``Cooperation'' assumes full backscatter cooperation and joint encoding at all UniScatters
+		\begin{subsubsection}{Active Beamforming}
+			% It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable inputs of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the proposed \gls{pgd} beamforming achieves larger rate region than \gls{mrt} to ergodic primary equivalent channel; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
+			We compare the following active beamforming schemes for problem \eqref{op:active_beamforming}:
+			\begin{itemize}
+				\item \emph{\gls{pgd}:} Iterative \gls{pgd} optimization by Algorithm \ref{al:active_beamforming};
+				\item \emph{\gls{mrt}:} Maximum ratio transmission to the ergodic primary equivalent channel $\sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})$.
+			\end{itemize}
+
+			Fig. \subref*{fi:region_beamforming} plots the achievable regions for both active beamforming schemes.
+			In the low-$\rho$ regime, we observe the proposed \emph{\gls{pgd}} design by Algorithm \ref{al:active_beamforming} outperforms \emph{\gls{mrt}} in terms of backscatter rate.
+			This is because the performance of energy detection depends on the \emph{difference} of received variances under different backscatter symbol tuples.
+			Such a diversity of variance is not fully exploited by \emph{\gls{mrt}} that simply maximizes the ergodic \gls{snr}, but can be properly controlled by \emph{\gls{pgd}} to further boost the total backscatter rate.
+			As $\rho$ further increases, the input distribution becomes more biased to one state, and the primary equivalent \gls{snr} outweighs the backscatter variance difference in the weighted sum-rate expression \eqref{eq:weighted_sum_mutual_information_explicit}.
+			Therefore, the result of \emph{\gls{pgd}} approaches that of \emph{\gls{mrt}}.
+			For the extreme case $\rho=1$, the UniScatter nodes reduce to \gls{ris} elements and both active beamforming schemes boil down to \gls{mrt} to the deterministic primary equivalent channel.
+			Therefore, we conclude the proposed \emph{\gls{pgd}} active beamforming design by Algorithm \ref{al:active_beamforming} is more powerful than ergodic \emph{\gls{mrt}}.
+		\end{subsubsection}
+
+		\begin{subsubsection}{Decision Threshold}
+			We compare the following decision thresholds for problem \eqref{op:decision_threshold_discrete}:
+			\begin{itemize}
+				\item \emph{\gls{dp}:} Benchmark \gls{dp} method for sequential quantizer \cite{He2021};
+				\item \emph{\gls{smawk}:} \gls{dp} accelerated by the \gls{smawk} algorithm \cite{He2021};
+				\item \emph{Bisection:} The traverse-then-bisect algorithm \cite{Nguyen2020a};
+				\item \emph{\gls{ml}:} Maximum likelihood detector \eqref{eq:detection_threshold_maximum_likelihood} \cite{Qian2019}.
+			\end{itemize}
+
+			Fig. \subref*{fi:region_threshold} presents the achievable rate region for those decision threshold schemes.
+			We observe that input distribution-adaptive threshold designs achieve higher total backscatter rate than \gls{ml}.
+			This is because the decision regions can be flexibly adjusted to enhance the capacity of \gls{dmtmac} \eqref{eq:dmtmac}.
+			For example, the tuples with negligible input probability should have narrower decision regions than those frequently employed, in order to improve detection performance.
+			It emphasizes the importance of joint input distribution and decision region design.
+		\end{subsubsection}
+
 	\end{subsection}
 
 
@@ -1001,6 +940,7 @@
 		In Fig. \subref*{fi:region_frequency}, we observe that passive UniScatter nodes achieve higher backscatter rate at lower carrier frequency because of preferable propagation loss.
 		Finally, \subref*{fi:region_noise} prove the performance of energy detection is robust for a wide range of noise power.
 	\end{subsection}
+	\label{se:simulation_results}
 \end{section}
 
 \begin{section}{Conclusion}
@@ -1018,16 +958,9 @@
 	\begin{subsection}{Proof of Proposition \ref{pr:input_kkt_condition}}
 		Denote the Lagrange multipliers associated with \eqref{co:sum_probability} and \eqref{co:nonnegative_probability} as $\{\nu_k\}_{k \in \mathcal{K}}$ and $\{\lambda_{k,m_k}\}_{k \in \mathcal{K},m_k \in \mathcal{M}}$, respectively.
 		The Lagrangian function of problem \eqref{op:input_distribution} is
-		\begin{align}
-			% L(\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\{\nu_k\},\{\lambda_{k,m_k}\})
-			L
-			%  & = - I(x_{\mathcal{K}}) + \sum_{k \in \mathcal{K}} \nu_k \left( \sum_{m_k \in \mathcal{M}} P_k(x_{m_k}) - 1 \right)\nonumber \\
-			 & = - I(x_{\mathcal{K}}) + \sum_k \nu_k \left( \sum_{m_k \in \mathcal{M}} P_k(x_{m_k}) - 1 \right)\nonumber \\
-			%  & \quad - \sum_{k \in \mathcal{K}} \sum_{m_k \in \mathcal{M}} \lambda_{k,m_k} P_k(x_{m_k}),
-			 & \quad - \sum_k \sum_{m_k} \lambda_{k,m_k} P_k(x_{m_k}),
-		\end{align}
-		% and the \gls{kkt} conditions on the optimal primal and dual variables are, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
-		% and the \gls{kkt} conditions are, $\forall m_k \in \mathcal{M}$ and $\forall k \in \mathcal{K}$,
+		\begin{equation}
+			- I(x_{\mathcal{K}}) + \sum_k \nu_k \biggl( \sum_{m_k} P_k(x_{m_k}) - 1 \biggr) - \sum_k \sum_{m_k} \lambda_{k,m_k} P_k(x_{m_k})
+		\end{equation}
 		and the \gls{kkt} conditions are, $\forall k,m_k$,
 		\begin{subequations}
 			\label{eq:input_kkt_condition_original}
@@ -1038,10 +971,10 @@
 				\lambda_{k,m_k}^\star = 0, \quad P_k^\star(x_{m_k}) > 0,
 			\end{equation}
 			\begin{equation}
-				\lambda_{k,m_k}^\star \ge 0, \quad P_k^\star(x_{m_k}) = 0.
+				\lambda_{k,m_k}^\star \ge 0, \quad P_k^\star(x_{m_k}) = 0,
 			\end{equation}
 		\end{subequations}
-		The directional derivative can be explicitly expressed as
+		where directional derivative is explicitly written as
 		\begin{equation}
 			\nabla_{P_k^\star(x_{m_k})} I^\star(x_{\mathcal{K}}) = I_k^\star(x_{m_k}) - (1 - \rho).
 			\label{eq:input_directional_derivative}
@@ -1054,12 +987,12 @@
 				I_k^\star(x_{m_k}) & \le \nu_k^\star + (1 - \rho), \quad &  & P_k^\star(x_{m_k}) = 0,\label{eq:dropped_states_marginal}
 			\end{alignat}
 		\end{subequations}
-		which suggests
+		such that
 		\begin{equation}
 			\sum_{m_k} P_k^\star(x_{m_k}) I_k^\star(x_{m_k}) = \nu_k^\star + (1 - \rho).
 			\label{eq:input_kkt_condition_implied}
 		\end{equation}
-		On the other hand, by definition of weighted sum marginal information \eqref{eq:weighted_sum_marginal_information},
+		On the other hand, by definition \eqref{eq:weighted_sum_marginal_information} we have
 		\begin{equation}
 			\sum_{m_k} P_k^\star(x_{m_k}) I_k^\star(x_{m_k}) = I^\star(x_{\mathcal{K}}),
 			\label{eq:weighted_sum_marginal_information_implied}
@@ -1071,22 +1004,17 @@
 
 	\begin{subsection}{Proof of Proposition \ref{pr:input_kkt_solution}}
 		We first prove sequence \eqref{eq:input_kkt_solution} is non-decreasing in weighted sum mutual information.
-		Let $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(x_{m_q})$ and $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) = P_k'(x_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(x_{m_q})$ be two probability distributions with potentially different marginal for tag $k \in \mathcal{K}$ at state $m_k \in \mathcal{M}$, and define an intermediate function $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)$ as \eqref{eq:intermediate_information_function} at the end of page \pageref{eq:intermediate_information_function}.
+		Let $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(x_{m_q})$ and $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) = P_k'(x_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(x_{m_q})$ be two probability distributions with potentially different marginal for tag $k$ at state $m_k$, and define an intermediate function $J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr)$ as \eqref{eq:intermediate_information_function} at the end of page \pageref{eq:intermediate_information_function}.
 		\begin{figure*}[!b]
 			\hrule
-			% \begin{equation}
-			% 	J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right) \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \log \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\right) + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})}.
-			% 	\label{eq:intermediate_information_function}
-			% \end{equation}
-			\begin{align}
-				J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)
-				 & \triangleq \rho \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \log \left(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\right)\nonumber                                                                                                                    \\
-				 & \quad + (1 - \rho) \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})}.
+			\begin{equation}
+				J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr) \triangleq \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}})
+				\Biggl( \rho \log \Bigl(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\Bigr) + (1 - \rho) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P_{\mathcal{K}}'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})} \Biggr).
 				\label{eq:intermediate_information_function}
-			\end{align}
+			\end{equation}
 		\end{figure*}
-		It is straightforward to verify $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \right) = I(x_{\mathcal{K}})$ and $J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)$ is a concave function for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$.
-		By choosing $\nabla_{P_k^\star(x_{m_k})} J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right) = 0$, we have
+		It is straightforward to verify $J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \bigr) = I(x_{\mathcal{K}})$ and $J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr)$ is a concave function for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$.
+		Setting $\nabla_{P_k^\star(x_{m_k})} J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr) = 0$, we have
 		\begin{equation}
 			S_k'(x_{m_k}) - S_k'(x_{i_k}) + (1 - \rho) \log \frac{P_k(x_{i_k})}{P_k^\star(x_{m_k})} = 0,
 			\label{eq:optimal_intermediate_information_condition}
@@ -1099,40 +1027,34 @@
 		\end{align}
 		Evidently, $\forall m_k \ne i_k$, \eqref{eq:optimal_intermediate_information_condition} boils down to
 		\begin{equation}
-			P_k^\star(x_{m_k}) = \frac{P_k'(x_{m_k}) \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k}) \right)}{\sum_{m_k'} P_k'(x_{m_k'}) \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k'}) \right)}.
+			P_k^\star(x_{m_k}) = \frac{P_k'(x_{m_k}) \exp \Bigl( \frac{\rho}{1 - \rho} I_k'(x_{m_k}) \Bigr)}{\sum_{m_k'} P_k'(x_{m_k'}) \exp \Bigl( \frac{\rho}{1 - \rho} I_k'(x_{m_k'}) \Bigr)}.
 			\label{eq:optimal_relative_distribution}
 		\end{equation}
-		We also notice $P_k(x_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^\star(x_{m_k})$ has exactly the same expression as \eqref{eq:optimal_relative_distribution}.
-		% We also notice $P_k(x_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^\star(x_{m_k})$ is in the same expression as \eqref{eq:optimal_relative_distribution}.
-		Therefore, the result is irrelevant to the choice of reference state, and \eqref{eq:optimal_relative_distribution} is indeed optimal $\forall m_k \in \mathcal{M}$.
-		% It implies the selection of reference state does not matter and \eqref{eq:optimal_relative_distribution} is indeed optimal $\forall m_k \in \mathcal{M}$.
+		Since $P_k(x_{i_k}) = 1 - \sum_{m_k \ne i_k} P_k^\star(x_{m_k})$ has exactly the same form as \eqref{eq:optimal_relative_distribution}, the choice of reference state $i_k$ does not matter and \eqref{eq:optimal_relative_distribution} is indeed optimal $\forall m_k \in \mathcal{M}$.
 		That is, for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$, choosing $P_k(x_{m_k})$ by \eqref{eq:optimal_relative_distribution} ensures
 		\begin{equation}
-			J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right) \ge I'(x_{\mathcal{K}}).
+			J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr) \ge I'(x_{\mathcal{K}}).
 			\label{eq:information_difference_lower}
 		\end{equation}
-		On the other hand, it also guarantees
+		On the other hand, we also have
 		\begin{subequations}
 			\label{eq:information_difference_upper}
 			\begin{align}
 				\Delta
-				 & \triangleq I(x_{\mathcal{K}}) - J \left( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \right)                                                                                \\
-				 & = (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k})\nonumber                             \\
-				 & \quad \times \log \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k'})}               \\
-				 & \ge (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k})\nonumber                           \\
-				 & \quad \times \left( 1 - \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k'})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k})} \right) \\
+				 & \triangleq I(x_{\mathcal{K}}) - J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr)                                                                                  \\
+				 & = (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k})\nonumber                              \\
+				 & \quad \times \log \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k'})}                \\
+				 & \ge (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k})\nonumber                            \\
+				 & \quad \times \Biggl( 1 - \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k'})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k})} \Biggr) \\
 				 & = 0,
 			\end{align}
 		\end{subequations}
-		where $f_k'(x_{m_k}) \triangleq \exp \left( \frac{\rho}{1 - \rho} I_k'(x_{m_k}) \right)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges.
+		where $f_k'(x_{m_k}) \triangleq \exp \bigl( \frac{\rho}{1 - \rho} I_k'(x_{m_k}) \bigr)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges.
 		\eqref{eq:information_difference_lower} and \eqref{eq:information_difference_upper} together imply $I(x_{\mathcal{K}}) \ge I'(x_{\mathcal{K}})$.
 		Since mutual information is bounded above, we conclude the sequence \eqref{eq:input_kkt_solution} is non-decreasing and convergent in mutual information.
 
 		Next, we prove any converging point of sequence \eqref{eq:input_kkt_solution}, denoted as $P_k^\star(x_{m_k})$, fulfills \gls{kkt} conditions \eqref{eq:input_kkt_condition}.
-		% Next, we prove that sequence \eqref{eq:input_kkt_solution} fulfills \gls{kkt} conditions \eqref{eq:input_kkt_condition} on convergence.
-		% To see this, recall $P_k^{(0)}(x_{m_k}) > 0$ and define
-		To see this, define
-		% To see this, we define
+		To see this, let
 		\begin{equation}
 			D_k^{(r)}(x_{m_k}) \triangleq \frac{P_k^{(r+1)}(x_{m_k})}{P_k^{(r)}(x_{m_k})} = \frac{f_k^{(r)}(x_{m_k})}{\sum_{m_k'} P_k^{(r)}(x_{m_k'}) f_k^{(r)}(x_{m_k'})}.
 		\end{equation}
@@ -1141,20 +1063,19 @@
 			I_k^\star(x_{m_k}) = \frac{1 - \rho}{\rho} \log \sum_{m_k'} P_k^\star(x_{m_k'}) f_k^\star(x_{m_k'}),
 		\end{equation}
 		which is reminiscent of \eqref{eq:probable_states_marginal} and \eqref{eq:probable_states}.
-		That is to say, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) > 0$ must satisfy \eqref{eq:probable_states}.
+		That is, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) > 0$ must satisfy \eqref{eq:probable_states}.
 		On the other hand, we assume $P_k^\star(x_{m_k})$ does not satisfy \eqref{eq:dropped_states}, such that for any state with $P_k^\star(x_{m_k}) = 0$,
-		% On the other hand, we show if $P_k^\star(x_{m_k})$ does not satisfy \eqref{eq:dropped_states}, then it is not a converging point of sequence \eqref{eq:input_kkt_solution}. By this assumption, for any state with $P_k^\star(x_{m_k}) = 0$,
 		\begin{equation}
 			I_k^\star(x_{m_k}) > I^\star(x_{\mathcal{K}}) = \sum_{m_k'} P_k^\star(x_{m_k'}) I_k^\star(x_{m_k'}),
 		\end{equation}
 		where the equality inherits from \eqref{eq:weighted_sum_mutual_information}.
-		Since exponential function is monotonically increasing, we have $f_k^\star(x_{m_k}) > \sum_{m_k'} P_k^\star(x_{m_k'}) f_k^\star(x_{m_k'})$ and $D_k^\star(x_{m_k}) > 1$.
+		Since the exponential function is monotonically increasing, we have $f_k^\star(x_{m_k}) > \sum_{m_k'} P_k^\star(x_{m_k'}) f_k^\star(x_{m_k'})$ and $D_k^\star(x_{m_k}) > 1$.
 		Considering $P_k^{(0)}(x_{m_k}) > 0$ and $P_k^\star(x_{m_k}) = 0$, it contradicts with
 		\begin{equation}
 			P_k^{(r)}(x_{m_k}) = P_k^{(0)}(x_{m_k}) \prod_{n=1}^r D_k^{(n)}(x_{m_k}).
 		\end{equation}
-		Therefore, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) = 0$ must satisfy \eqref{eq:dropped_states}.
-		This completes the proof.
+		That is, given $P_k^{(0)}(x_{m_k}) > 0$, any converging point with $P_k^\star(x_{m_k}) = 0$ must satisfy \eqref{eq:dropped_states}.
+		The proof is thus completed.
 		\label{ap:input_kkt_solution}
 	\end{subsection}
 
@@ -1163,7 +1084,7 @@
 	% 	On the other hand, the optimal decision regions are apparently empty for those unused letters.
 
 	% 	Suppose the optimal number of thresholds is $S+1$ where $S \ge L$.
-	% 	Let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{(S+1) \times 1}$ be the optimal threshold vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.
+	% 	Let $\boldsymbol{t} \triangleq [t_0,\ldots,t_S]^T \in \mathbb{R}_{+}^{(S+1)}$ be the optimal threshold vector where $t_{s-1} < t_s$, $\forall s \in \mathcal{S} \triangleq \{1,\ldots,S\}$.
 	% 	Since the optimal decision region for any letter may consist of multiple partitions, without loss of generality, we assume the mapping from threshold vector to decision region $l' \in \mathcal{L} \triangleq \{1,\ldots,L\}$ is given by $\mathcal{R}_{l'} = \bigcup_{s \equiv l' \pmod L} [t_{s-1},t_s)$.
 	% 	\begin{footnote}
 	% 		The proof holds for any valid mapping from threshold vector to decision regions, and we consider this specific case for the ease of presentation.

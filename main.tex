@@ -74,7 +74,6 @@
 \newacronym{dmc}{DMC}{Discrete Memoryless Channel}
 \newacronym{dmtc}{DMTC}{Discrete Memoryless Thresholding Channel}
 \newacronym{dmtmac}{DMTMAC}{Discrete Memoryless Thresholding Multiple Access Channel}
-% \newacronym{dtmac}{DTMAC}{Discrete Thresholding Multiple Access Channel}
 \newacronym{dp}{DP}{Dynamic Programming}
 \newacronym{fdma}{FDMA}{Frequency-Division Multiple Access}
 \newacronym{iid}{i.i.d.}{independent and identically distributed}
@@ -88,6 +87,7 @@
 \newacronym{mimo}{MIMO}{Multiple-Input Multiple-Output}
 \newacronym{ml}{ML}{Maximum-Likelihood}
 \newacronym{mrt}{MRT}{Maximum Ratio Transmission}
+% \newacronym{emrt}{EMRT}{ergodic \gls{mrt}}
 \newacronym{noma}{NOMA}{Non-Orthogonal Multiple Access}
 \newacronym{ofdm}{OFDM}{Orthogonal Frequency-Division Multiplexing}
 \newacronym{pdf}{PDF}{Probability Density Function}
@@ -212,7 +212,7 @@
 	A suboptimal \gls{bcd} algorithm is then proposed, where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is iteratively updated by \gls{pgd} accelerated by backtracking line search, and the decision regions are refined by existing thresholding designs.
 
 	\emph{Fifth,} we provide numerical results to demonstrate the benefits of UniScatter and proposed algorithms.
-	It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable inputs of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the proposed \gls{pgd} beamforming achieves larger rate region than \gls{mrt} to ergodic primary equivalent channel; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
+	It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable inputs of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the proposed \gls{pgd} beamforming provides larger rate region than \gls{mrt}-based schemes; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
 
 	\emph{Notations:}
 	Italic, bold lower-case, and bold upper-case letters denote scalars, vectors and matrices, respectively.
@@ -764,7 +764,7 @@
 		For this aim, we evaluate the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution} for a single node under different weights $\rho=\{0,0.1,0.2,0.3,1\}$ in Fig. \ref{fi:distribution_weights}, where \subref*{fi:distribution_weights_1} and \subref*{fi:distribution_weights_2} are two representative instances.
 		We observe that as $\rho$ increases from \num{0} to \num{1}, the \gls{kkt} input distribution
 		gradually progresses from slightly skewed to completely biased.
-		For $\rho=0$ where backscatter performance is absolutely prioritized, the \gls{csi}-adaptive channel coding at the UniScatter node provides higher backscatter rate than conventional \gls{bc} and \gls{sr} nodes with uncoded equiprobable inputs.
+		For $\rho=0$ where backscatter performance is absolutely prioritized, the \gls{csi}-adaptive channel coding at the UniScatter node provides higher backscatter rate than conventional \gls{bc} and \gls{sr} nodes with uncoded equiprobable inputs, and some states may end up unused since they cannot produce enough energy difference over the existing alphabet.
 		On the other hand, for $\rho=1$ where primary performance is absolutely prioritized, the input probability is \num{1} at the state that maximizes the primary equivalent channel strength, and \num{0} at the others.
 		In this case, the reflection pattern over time is fully deterministic, and the UniScatter node indeed boils down to a \gls{ris} element with discrete phase shifts.
 		Those observations meet our expectation that UniScatter nodes include scattering sources of \gls{bc}/\gls{sr} and reflecting elements of \gls{ris} as special cases, and generalize backscatter modulation and passive beamforming from the perspective of input distribution design.
@@ -779,7 +779,7 @@
 
 	\end{subsection}
 
-	\begin{subsection}{Rate Region under Different Schemes}
+	\begin{subsection}{Rate Region of Different Schemes}
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Input Distribution\label{fi:region_distribution}]{
@@ -829,42 +829,44 @@
 			Despite \emph{Randomization} yields a similar result, the computational complexity is much higher (loops over $K+1$ linear programming problems) and the performance is backed by numerous randomly generated instances.
 			In contrast, the low-complexity \emph{Marginalization} returns a comparable result and the rate loss is insignificant when $K$ is small.
 			Finally, \emph{Decomposition} suffers from much lower average total backscatter rate, as the rank-\num{1} \gls{cp} approximation can be inaccurate for some channel-drop realizations.
-			Those observations demonstrated the performance and complexity advantages of the proposed \gls{kkt} input distribution design, and reveals the potential of joint encoding at UniScatter nodes.
+			% Those observations demonstrate the performance and complexity advantages of the proposed \gls{kkt} input distribution design, and reveal the potential of joint encoding at UniScatter nodes.
+			Those observations demonstrate the high performance and low complexity of the proposed \gls{kkt} input distribution design, and reveal the potential of joint encoding at UniScatter nodes.
 		\end{subsubsection}
 
 
 		\begin{subsubsection}{Active Beamforming}
-			% It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable inputs of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the proposed \gls{pgd} beamforming achieves larger rate region than \gls{mrt} to ergodic primary equivalent channel; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
+			% It is concluded that 1) UniScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, UniScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than uncoded equiprobable inputs of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the proposed \gls{pgd} beamforming provides larger rate region than \gls{mrt}-based schemes; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scatter nodes to replace high-resolution \gls{ris}.
 			We compare the following active beamforming schemes for problem \eqref{op:active_beamforming}:
 			\begin{itemize}
 				\item \emph{\gls{pgd}:} Iterative \gls{pgd} optimization by Algorithm \ref{al:active_beamforming};
-				\item \emph{\gls{mrt}:} Maximum ratio transmission to the ergodic primary equivalent channel $\sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})$.
+				\item \emph{E-\gls{mrt}:} \gls{mrt} towards the ergodic primary equivalent channel $\sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})$;
+				\item \emph{D-\gls{mrt}:} \gls{mrt} towards the direct channel $\boldsymbol{h}_{\mathrm{D}}^H$.
 			\end{itemize}
 
-			Fig. \subref*{fi:region_beamforming} plots the achievable regions for both active beamforming schemes.
-			In the low-$\rho$ regime, we observe the proposed \emph{\gls{pgd}} design by Algorithm \ref{al:active_beamforming} outperforms \emph{\gls{mrt}} in terms of backscatter rate.
-			This is because the performance of energy detection depends on the \emph{difference} of received variances under different backscatter symbol tuples.
-			Such a diversity of variance is not fully exploited by \emph{\gls{mrt}} that simply maximizes the ergodic \gls{snr}, but can be properly controlled by \emph{\gls{pgd}} to further boost the total backscatter rate.
-			As $\rho$ further increases, the input distribution becomes more biased to one state, and the primary equivalent \gls{snr} outweighs the backscatter variance difference in the weighted sum-rate expression \eqref{eq:weighted_sum_mutual_information_explicit}.
-			Therefore, the result of \emph{\gls{pgd}} approaches that of \emph{\gls{mrt}}.
-			For the extreme case $\rho=1$, the UniScatter nodes reduce to \gls{ris} elements and both active beamforming schemes boil down to \gls{mrt} to the deterministic primary equivalent channel.
-			Therefore, we conclude the proposed \emph{\gls{pgd}} active beamforming design by Algorithm \ref{al:active_beamforming} is more powerful than ergodic \emph{\gls{mrt}}.
+			Fig. \subref*{fi:region_beamforming} plots the achievable rate regions for those active beamforming schemes.
+			In the low-$\rho$ regime, we observe the proposed \emph{\gls{pgd}} design by Algorithm \ref{al:active_beamforming} outperforms \emph{E-\gls{mrt}} and \emph{D-\gls{mrt}} in terms of backscatter rate.
+			This is because backscatter decoding relies on the \emph{difference} of received energy expectations under different backscatter symbol tuples.
+			Such an energy diversity is not fully exploited by simply maximizing the direct/ergodic equivalent \gls{snr}, but can be properly controlled by \emph{\gls{pgd}} for enhanced detection performance.
+			As $\rho$ further increases, the primary equivalent \gls{snr} outweighs the backscatter energy difference in the weighted sum-rate expression \eqref{eq:weighted_sum_mutual_information_explicit}, and the input distribution is gradually biased to the state that roughly align direct and scattered components.
+			Therefore, the advantages of distribution-adaptive schemes \emph{\gls{pgd}} and \emph{E-\gls{mrt}} become marginal, the ergodic equivalent and direct channels are closer in direction, and the bounds of all schemes approach each other.
+			For the extreme case $\rho=1$, both distribution-adaptive schemes boil down to \gls{mrt} towards the deterministic primary equivalent channel, as considered in \gls{ris} literatures.
+			Those observations prove the proposed \emph{\gls{pgd}} active beamforming design can balance the primary equivalent \gls{snr} and backscatter energy diversity for enlarged rate regions.
 		\end{subsubsection}
 
 		\begin{subsubsection}{Decision Threshold}
 			We compare the following decision thresholds for problem \eqref{op:decision_threshold_discrete}:
 			\begin{itemize}
 				\item \emph{\gls{dp}:} Benchmark \gls{dp} method for sequential quantizer \cite{He2021};
-				\item \emph{\gls{smawk}:} \gls{dp} accelerated by the \gls{smawk} algorithm \cite{He2021};
+				\item \emph{\gls{smawk}:} \emph{\gls{dp}} accelerated by the \gls{smawk} algorithm \cite{He2021};
 				\item \emph{Bisection:} The traverse-then-bisect algorithm \cite{Nguyen2020a};
 				\item \emph{\gls{ml}:} Maximum likelihood detector \eqref{eq:detection_threshold_maximum_likelihood} \cite{Qian2019}.
 			\end{itemize}
 
 			Fig. \subref*{fi:region_threshold} presents the achievable rate region for those decision threshold schemes.
-			We observe that input distribution-adaptive threshold designs achieve higher total backscatter rate than \gls{ml}.
-			This is because the decision regions can be flexibly adjusted to enhance the capacity of \gls{dmtmac} \eqref{eq:dmtmac}.
-			For example, the tuples with negligible input probability should have narrower decision regions than those frequently employed, in order to improve detection performance.
-			It emphasizes the importance of joint input distribution and decision region design.
+			We observe that the distribution-adaptive schemes \emph{\gls{dp}}, \emph{\gls{smawk}} and \emph{Bisection} achieve higher total backscatter rate than the non-adaptive \emph{\gls{ml}}.
+			This is because the total backscatter mutual information \eqref{eq:backscatter_mutual_information} is a function of both input distribution and decision regions, and the rate-optimal threshold design depends heavily on input distribution.
+			For example, the backscatter symbol tuples with zero input probability should never be detected and use empty decision regions, in order to increase the success detection chance of other tuples.
+			Those observations highlight the importance of joint input distribution and decision threshold design.
 		\end{subsubsection}
 
 	\end{subsection}
@@ -944,6 +946,7 @@
 \end{section}
 
 \begin{section}{Conclusion}
+	% TODO  binary input and signal output (BISO) channel, ML figure
 	This paper introduced UniScatter that adapts input distribution of passive backscatter nodes to simultaneously transmit and assist over existing wireless systems.
 	Starting from backscatter principles, we showed how UniScatter nodes bridges and generalizes parasitic source of \gls{sr} and reflecting element of \gls{ris} via smart input design.
 	An application scenario was considered where multiple UniScatter nodes ride over a point-to-point transmission to simultaneously encode self message and perform passive beamforming.

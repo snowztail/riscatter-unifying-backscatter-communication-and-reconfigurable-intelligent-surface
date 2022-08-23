@@ -38,13 +38,14 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		tolerance = 1e-3;
 		Options.Distribution {mustBeMember(Options.Distribution, ['exhaustion', 'kkt', 'sca', 'cooperation'])};
 		Options.Threshold {mustBeMember(Options.Threshold, ['smawk', 'dp', 'bisection', 'ml'])};
-		Options.Beamforming {mustBeMember(Options.Beamforming, ['pgd', 'mrt'])};
+		Options.Beamforming {mustBeMember(Options.Beamforming, ['pgd', 'emrt', 'mrt'])};
 		Options.Recovery {mustBeMember(Options.Recovery, ['marginalization', 'decomposition', 'randomization'])};
 	end
 
 	% * Get data
 	nInputs = size(equivalentChannel, 2);
 	nStates = nthroot(nInputs, nTags);
+	directChannel = sum(equivalentChannel, 2);
 
 	% ! Initialize distribution and beamforming by previous solutions
 	persistent Initializer
@@ -55,8 +56,10 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		switch Options.Beamforming
 		case 'pgd'
 			ric = sum(cascadedChannel, 2);
+		case 'emrt'
+			ric = directChannel;
 		case 'mrt'
-			ric = sum(equivalentChannel, 2);
+			ric = directChannel;
 		end
 		Initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
 	end
@@ -121,8 +124,10 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		switch Options.Beamforming
 		case 'pgd'
 			beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold);
+		case 'emrt'
+			beamforming = beamforming_emrt(transmitPower, equivalentChannel, equivalentDistribution);
 		case 'mrt'
-			beamforming = beamforming_mrt(transmitPower, equivalentChannel, equivalentDistribution);
+			beamforming = beamforming_mrt(transmitPower, directChannel);
 		end
 
 		% * Decision threshold

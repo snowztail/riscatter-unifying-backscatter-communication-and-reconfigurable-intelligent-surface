@@ -1,11 +1,10 @@
-function [beamforming] = beamforming_mrt(transmitPower, equivalentChannel, equivalentDistribution)
+function [beamforming] = beamforming_mrt(transmitPower, directChannel)
 	% Function:
-	%	- obtain MRT beamformer to equivalent primary channel
+	%	- obtain MRT beamformer to direct channel
     %
     % Input:
 	%	- transmitPower: average transmit power
-	%	- equivalentChannel [nTxs x nInputs]: equivalent primary channel for each tag state tuple
-	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
+	%	- directChannel [nTxs x 1]: direct AP-user channel
     %
     % Output:
 	%	- beamforming [nTxs x 1]: transmit beamforming vector
@@ -15,6 +14,5 @@ function [beamforming] = beamforming_mrt(transmitPower, equivalentChannel, equiv
 	%
     % Author & Date: Yang (i@snowztail.com), 22 Jul 25
 
-	ric = equivalentChannel * equivalentDistribution;
-	beamforming = sqrt(transmitPower) * ric / norm(ric);
+	beamforming = sqrt(transmitPower) * directChannel / norm(directChannel);
 end

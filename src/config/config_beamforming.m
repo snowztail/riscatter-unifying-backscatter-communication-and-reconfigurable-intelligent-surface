@@ -41,7 +41,7 @@ nWeights = length(weightSet);
 nBins = 2 ^ 8;
 
 %% * Variable
-Variable = struct('Beamforming', {'pgd', 'emrt', 'mrt'});
+Variable = struct('Beamforming', {'pgd', 'emrt', 'dmrt'});
 nVariables = length(Variable);
 
 %% * PBS

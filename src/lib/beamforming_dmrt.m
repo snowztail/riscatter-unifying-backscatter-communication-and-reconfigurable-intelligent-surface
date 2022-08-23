@@ -1,4 +1,4 @@
-function [beamforming] = beamforming_mrt(transmitPower, directChannel)
+function [beamforming] = beamforming_dmrt(transmitPower, directChannel)
 	% Function:
 	%	- obtain MRT beamformer to direct channel
     %

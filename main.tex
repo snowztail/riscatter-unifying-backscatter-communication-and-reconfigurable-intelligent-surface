@@ -757,7 +757,7 @@
 					\input{assets/simulation/distribution_weights_2.tex}
 				}
 			}
-			\caption{Typical instances of node input distribution under different weights.}
+			\caption{Typical instances of node input distribution for different weights.}
 			\label{fi:distribution_weights}
 		\end{figure}
 		The objective of this study is to demonstrate each UniScatter node can adjust its input distribution based on \gls{csi} and link priority to balance backscatter modulation and passive beamforming.
@@ -768,9 +768,24 @@
 		On the other hand, for $\rho=1$ where primary performance is absolutely prioritized, the input probability is \num{1} at the state that maximizes the primary equivalent channel strength, and \num{0} at the others.
 		In this case, the reflection pattern over time is fully deterministic, and the UniScatter node indeed boils down to a \gls{ris} element with discrete phase shifts.
 		Those observations meet our expectation that UniScatter nodes include scattering sources of \gls{bc}/\gls{sr} and reflecting elements of \gls{ris} as special cases, and generalize backscatter modulation and passive beamforming from the perspective of input distribution design.
+		For the \gls{bcd} algorithm, we choose the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution}, the \gls{pgd} active beamforming by Algorithm \ref{al:active_beamforming}, and the \gls{smawk} decision threshold by \cite{He2021} as reference.
 	\end{subsection}
 
-	\begin{subsection}{Backscatter Rate versus Output Discretization Bit}
+	\begin{subsection}{Backscatter Rate versus Energy Discretization Bits}
+		\begin{figure}[!t]
+			\subfloat[Instance 1\label{fi:rate_bits_primary}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/rate_bits_primary.tex}
+				}
+			}
+			\subfloat[Instance 2\label{fi:rate_bits_backscatter}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/rate_bits_backscatter.tex}
+				}
+			}
+			\caption{Average achievable primary and total backscatter rates for different energy discretization bits.}
+			\label{fi:rate_bits}
+		\end{figure}
 		Since the transformation from problem \eqref{op:decision_threshold} to \eqref{op:decision_threshold_discrete} introduces performance degradation, we now investigate the impact of threshold domain discretization on the total backscatter rate.
 
 		% TODO Total Backscatter Rate versus Output Discretization Bit
@@ -779,7 +794,7 @@
 
 	\end{subsection}
 
-	\begin{subsection}{Rate Region of Different Schemes}
+	\begin{subsection}{Rate Region by Different Schemes}
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Input Distribution\label{fi:region_distribution}]{
@@ -803,8 +818,7 @@
 				``BSP'' means backscatter symbol period.
 			}
 		\end{figure}
-		For the \gls{bcd} algorithm considered in the rest of this paper, we choose the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution}, the \gls{pgd} active beamforming by Algorithm \ref{al:active_beamforming}, and the \gls{smawk} decision threshold by \cite{He2021} as reference.
-		The impacts of different schemes are explored below.
+		The impacts of different input distribution, active beamforming, and decision threshold schemes on the average primary-backscatter rate region are explored in this study.
 
 		\begin{subsubsection}{Input Distribution}
 			We compare the following input distribution designs for problem \eqref{op:input_distribution}:
@@ -872,10 +886,10 @@
 	\end{subsection}
 
 
-	\begin{subsection}{Rate Region vs. System Configuration}
+	\begin{subsection}{Rate Region versus Configuration}
 		\begin{figure}[!t]
 			\centering
-			\subfloat[Metscatter Nodes\label{fi:region_tags}]{
+			\subfloat[Nodes\label{fi:region_tags}]{
 				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_tags.tex}
 				}
@@ -891,56 +905,44 @@
 					\input{assets/simulation/region_txs.tex}
 				}
 			}
-			\subfloat[Scatter Ratio\label{fi:region_scatter}]{
-				\resizebox{0.48\columnwidth}{!}{
-					\input{assets/simulation/region_scatter.tex}
-				}
-			}
-			\caption{Average primary-total-backscatter rate regions.}
-			\label{fi:region_config_1}
-		\end{figure}
-
-		% Fig. \ref{fi:region_config_1} reveals the impact of UniScatter nodes, input states, transmit antennas and scatter ratio on the achievable rate region.
-		We present in \ref{fi:region_config_1} the impact of UniScatter nodes, input states, transmit antennas and scatter ratio on the achievable rate region.
-		For the specified scenario, Fig. \subref*{fi:region_tags} shows the total backscatter rate almost scales proportionally with the number of UniScatter nodes, and the decrease of individual backscatter rate is unobvious.
-		Besides, we conclude from \subref*{fi:region_states} that increasing the reflection states has a marginal effect on both primary and backscatter rates.
-		Those two facts motivates the use of numerous elementary/uncomplicated backscatter nodes, instead of high-order transponders or programmable high-resolution surfaces.
-		Figs. \subref*{fi:region_txs} and \subref*{fi:region_scatter} also prove increasing transmit antennas or scatter ratio can improve both primary and backscatter performance.
-
-		\begin{figure}[!t]
-			\centering
-			\subfloat[Node Coverage\label{fi:region_coverage}]{
-				\resizebox{0.48\columnwidth}{!}{
-					\input{assets/simulation/region_coverage.tex}
-				}
-			}
 			\subfloat[Symbol Period Ratio\label{fi:region_duration}]{
 				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_duration.tex}
 				}
 			}
 			\\
-			\subfloat[Carrier Frequency\label{fi:region_frequency}]{
-				\resizebox{0.48\columnwidth}{!}{
-					\input{assets/simulation/region_frequency.tex}
-				}
-			}
 			\subfloat[Average Noise Power\label{fi:region_noise}]{
 				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_noise.tex}
 				}
 			}
-			\caption{Average primary-total-backscatter rate regions.}
-			\label{fi:region_config_2}
+			\subfloat[Coverage Radius\label{fi:region_coverage}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_coverage.tex}
+				}
+			}
+			\caption{
+				Average primary-total-backscatter rate regions for different system configurations.
+				``PSP'' means primary symbol period.
+			}
+			\label{fi:region_config}
 		\end{figure}
 
-		Fig. \subref*{fi:region_coverage} shows the tradeoff between coverage disk radius $r$ and achievable rate region.
-		When nodes are far from the user, both primary and backscatter rates decrease due to the product pass loss of forward and backward channels.
-		Under the assumption of ideal backscatter decoding and re-encoding, Fig. \subref*{fi:region_duration} suggests using lower symbol period ratio $N$ can boost total backscatter rate per primary symbol.
-		However, it requires more frequent detection and re-encoding at the user to maintain the primary rate.
-		When $N$ becomes sufficiently large, total backscatter rate approaches \num{0} and UniScatter nodes boil down to conventional \gls{ris} elements with fixed reflection pattern during whole channel block.
-		In Fig. \subref*{fi:region_frequency}, we observe that passive UniScatter nodes achieve higher backscatter rate at lower carrier frequency because of preferable propagation loss.
-		Finally, \subref*{fi:region_noise} prove the performance of energy detection is robust for a wide range of noise power.
+		% % Fig. \ref{fi:region_config_1} reveals the impact of UniScatter nodes, input states, transmit antennas and scatter ratio on the achievable rate region.
+		% We present in \ref{fi:region_config_1} the impact of UniScatter nodes, input states, transmit antennas and scatter ratio on the achievable rate region.
+		% For the specified scenario, Fig. \subref*{fi:region_tags} shows the total backscatter rate almost scales proportionally with the number of UniScatter nodes, and the decrease of individual backscatter rate is unobvious.
+		% Besides, we conclude from \subref*{fi:region_states} that increasing the reflection states has a marginal effect on both primary and backscatter rates.
+		% Those two facts motivates the use of numerous elementary/uncomplicated backscatter nodes, instead of high-order transponders or programmable high-resolution surfaces.
+		% Figs. \subref*{fi:region_txs} and \subref*{fi:region_scatter} also prove increasing transmit antennas or scatter ratio can improve both primary and backscatter performance.
+
+
+		% Fig. \subref*{fi:region_coverage} shows the tradeoff between coverage disk radius $r$ and achievable rate region.
+		% When nodes are far from the user, both primary and backscatter rates decrease due to the product pass loss of forward and backward channels.
+		% Under the assumption of ideal backscatter decoding and re-encoding, Fig. \subref*{fi:region_duration} suggests using lower symbol period ratio $N$ can boost total backscatter rate per primary symbol.
+		% However, it requires more frequent detection and re-encoding at the user to maintain the primary rate.
+		% When $N$ becomes sufficiently large, total backscatter rate approaches \num{0} and UniScatter nodes boil down to conventional \gls{ris} elements with fixed reflection pattern during whole channel block.
+		% In Fig. \subref*{fi:region_frequency}, we observe that passive UniScatter nodes achieve higher backscatter rate at lower carrier frequency because of preferable propagation loss.
+		% Finally, \subref*{fi:region_noise} prove the performance of energy detection is robust for a wide range of noise power.
 	\end{subsection}
 	\label{se:simulation_results}
 \end{section}

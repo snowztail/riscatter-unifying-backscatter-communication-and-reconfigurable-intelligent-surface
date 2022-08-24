@@ -15,6 +15,6 @@ function [beamforming] = beamforming_emrt(transmitPower, equivalentChannel, equi
 	%
     % Author & Date: Yang (i@snowztail.com), 22 Jul 25
 
-	ric = equivalentChannel * equivalentDistribution;
-	beamforming = sqrt(transmitPower) * ric / norm(ric);
+	ergodicChannel = equivalentChannel * equivalentDistribution;
+	beamforming = sqrt(transmitPower) * ergodicChannel / norm(ergodicChannel);
 end

@@ -1,4 +1,4 @@
-function [rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, tolerance, Options)
+function [rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, tolerance, Options)
 	% Function:
 	%	- iteratively update the input distribution, detection threshold, and beamforming vector to maximize weighted sum rate
     %
@@ -10,7 +10,6 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	%	- nBins: number of receive energy quantization bins
 	%	- weight: relative priority of primary link
 	%	- equivalentChannel [nTxs x nInputs]: equivalent primary channel for each tag state tuple
-	%	- cascadedChannel [nTxs x nTags]: cascaded forward-backward channel of all tags
     %   - tolerance: minimum rate gain ratio per iteration
 	%	- Options: algorithm options as structure of name-value pairs
     %
@@ -34,8 +33,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		nBins;
 		weight;
 		equivalentChannel;
-		cascadedChannel;
-		tolerance = 1e-3;
+		tolerance = 1e-6;
 		Options.Distribution {mustBeMember(Options.Distribution, ['exhaustion', 'kkt', 'sca', 'cooperation'])};
 		Options.Threshold {mustBeMember(Options.Threshold, ['smawk', 'dp', 'bisection', 'ml'])};
 		Options.Beamforming {mustBeMember(Options.Beamforming, ['pgd', 'emrt', 'dmrt'])};
@@ -50,18 +48,10 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	% ! Initialize distribution and beamforming by previous solutions
 	persistent Initializer
 
-	% * No previous solutions, use uniform distribution and MRT to sum-cascaded or direct channel
+	% * No previous solutions, use uniform distribution and MRT towards direct/ergodic channels (equal under uniform distribution)
 	if isempty(Initializer)
 		Initializer.distribution = normalize(ones(nStates, nTags), 'norm', 1);
-		switch Options.Beamforming
-		case 'pgd'
-			ric = sum(cascadedChannel, 2);
-		case 'emrt'
-			ric = directChannel;
-		case 'dmrt'
-			ric = directChannel;
-		end
-		Initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
+		Initializer.beamforming = sqrt(transmitPower) * directChannel / norm(directChannel);
 	end
 
 	% * Apply initializer
@@ -123,7 +113,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		% * Transmit beamforming
 		switch Options.Beamforming
 		case 'pgd'
-			beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold);
+			beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, equivalentDistribution, threshold);
 		case 'emrt'
 			beamforming = beamforming_emrt(transmitPower, equivalentChannel, equivalentDistribution);
 		case 'dmrt'

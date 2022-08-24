@@ -1,4 +1,4 @@
-function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold, tolerance, maxStep, alpha, beta)
+function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, equivalentDistribution, threshold, tolerance, maxStep, alpha, beta)
 	% Function:
 	%	- optimize beamforming vector by projected gradient descent with step size determined by backtracking line search
     %
@@ -8,7 +8,6 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 	%	- transmitPower: average transmit power
 	%	- noisePower: average noise power
 	%	- equivalentChannel [nTxs x nInputs]: equivalent primary channel for each tag state tuple
-	%	- cascadedChannel [nTxs x nTags]: cascaded forward-backward channel of all tags
 	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
 	%	- threshold [1 x (nOutputs + 1)]: boundaries of quantization bins or decision regions (including 0 and Inf)
     %	- tolerance: minimum rate gain ratio per iteration
@@ -33,23 +32,21 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		transmitPower;
 		noisePower;
 		equivalentChannel;
-		cascadedChannel;
 		equivalentDistribution;
 		threshold;
-		tolerance = 1e-3;
-		maxStep = 1e3;
+		tolerance = 1e-6;
+		maxStep = 1e6;
 		alpha = 1e-3;
-		beta = 0.5;
+		beta = 0.99;
 	end
 
 	% ! Initialize beamforming by previous solution
 	persistent Initializer
 
-	% * No previous solution, use MRT initializer
+	% * No previous solution, use MRT initializer towards ergodic channel
 	if isempty(Initializer)
-		ric = sum(cascadedChannel, 2);
-		Initializer.beamforming = sqrt(transmitPower) * ric / norm(ric);
-% 		Initializer.beamforming = sqrt(transmitPower) * equivalentChannel * equivalentDistribution / norm(equivalentChannel * equivalentDistribution);
+		ergodicChannel = equivalentChannel * equivalentDistribution;
+		Initializer.beamforming = sqrt(transmitPower) * ergodicChannel / norm(ergodicChannel);
 	end
 
 	% * Apply initializer
@@ -76,7 +73,6 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		snrPgd = receivePowerPgd / noisePower;
 		dmacPgd = dmc_integration(symbolRatio, receivePowerPgd, threshold);
 		wsrPgd = rate_weighted(weight, snrPgd, equivalentDistribution, dmacPgd);
-% 		while wsr > wsrPgd + alpha * step * norm(gradient) ^ 2 && step > eps
 		while wsrPgd < wsr + alpha * step * norm(gradient) ^ 2 && step > eps
 			step = beta * step;
 			beamformingPgd = beamforming_projection(transmitPower, beamforming + step * gradient);
@@ -87,10 +83,9 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		end
 
 		% * Test convergence (gradient can be non-zero due to norm constraint)
-% 		isConverged = (wsrPgd - wsr) / wsr <= tolerance || any(dmacPgd < tolerance, 'all') || isnan(wsrPgd);
-		% isConverged = norm(beamformingPgd - beamforming) <= tolerance || any(dmacPgd < tolerance, 'all') || isnan(wsrPgd);
 		if ~isnan(wsrPgd)
-			isConverged = norm(beamformingPgd - beamforming) <= tolerance || norm(beamformingPgd + beamforming) <= tolerance || any(dmacPgd < tolerance, 'all');
+			% isConverged = norm(beamformingPgd - beamforming) <= tolerance || norm(beamformingPgd + beamforming) <= tolerance || any(dmacPgd < tolerance, 'all');
+			isConverged = norm(beamformingPgd - beamforming) <= tolerance || norm(beamformingPgd + beamforming) <= tolerance;
 			beamforming = beamformingPgd;
 			wsr = wsrPgd;
 		else
@@ -136,4 +131,5 @@ end
 
 function [beamforming] = beamforming_projection(transmitPower, beamforming)
 	beamforming = sqrt(transmitPower) * beamforming / max(sqrt(transmitPower), norm(beamforming));
+% 	beamforming = sqrt(transmitPower) * beamforming / norm(beamforming);
 end

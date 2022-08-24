@@ -1,4 +1,4 @@
-clear; setup; cvx_begin; cvx_end; clc; run(strcat('config_', erase(mfilename, 'region_')));
+clear; setup; cvx_begin; cvx_end; clc; run(strcat('config_', erase(mfilename, 'rate_')));
 
 % * Initialize struct
 Result(nVariables, nWeights) = struct('weight', [], 'rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
@@ -14,12 +14,12 @@ equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(c
 % * Evaluate rate region vs number of output quantization bits
 for iVariable = 1 : nVariables
 	% * Set quantization bins
-	nBins = Variable(iVariable).nBins;
+	nBins = 2 ^ Variable(iVariable).nBits;
 
 	% * Clear persistent variables
 	clear block_coordinate_descent distribution_kkt distribution_cooperation beamforming_pgd threshold_bisection;
 
-	% * Evaluate rate region
+	% * Evaluate achievable primary and total backscatter rates
 	for iWeight = 1 : nWeights
 		weight = weightSet(iWeight);
 		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');

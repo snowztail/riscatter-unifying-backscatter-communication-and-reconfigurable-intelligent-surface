@@ -34,14 +34,14 @@ backwardFactor = 5;
 
 %% * Algorithm
 % relative priority of primary link
-weightSet = [0 : 0.01 : 0.05, 0.075, 0.1 : 0.05 : 0.25, 0.3 : 0.1 : 0.5, 0.75, 1];
+weightSet = [0, 1];
 % number of weights on rate region boundary
 nWeights = length(weightSet);
 % % number of quantization bins
 % nBins = 2 ^ 8;
 
 %% * Variable
-Variable = struct('nBins', num2cell(2 .^ (5 : 8)));
+Variable = struct('nBits', num2cell(4 : 7));
 nVariables = length(Variable);
 
 %% * PBS

@@ -19,7 +19,7 @@ for iVariable = 1 : nVariables
 	% * Evaluate rate region
 	for iWeight = 1 : nWeights
 		weight = weightSet(iWeight);
-		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, 'Distribution', Variable(iVariable).Distribution, 'Beamforming', 'pgd', 'Threshold', 'smawk', 'Recovery', Variable(iVariable).Recovery);
+		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, 'Distribution', Variable(iVariable).Distribution, 'Beamforming', 'pgd', 'Threshold', 'smawk', 'Recovery', Variable(iVariable).Recovery);
 		Result(iVariable, iWeight) = struct('weight', weight, 'rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 	end
 end

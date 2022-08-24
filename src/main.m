@@ -17,7 +17,7 @@ clear block_coordinate_descent distribution_kkt distribution_cooperation beamfor
 % * Evaluate rate region
 for iWeight = 1 : nWeights
 	weight = weightSet(iWeight);
-	[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
+	[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
 	Result(iWeight) = struct('weight', weight, 'rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 end
 
@@ -35,5 +35,5 @@ object = plot(region(1, :) / log(2), region(2, :) / log(2), 'DisplayName', strca
 hold off; legend('Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatte Rate [bits/BSP]');
-xlim([5, Inf]);
+xlim([8, Inf]);
 style_plot(object);

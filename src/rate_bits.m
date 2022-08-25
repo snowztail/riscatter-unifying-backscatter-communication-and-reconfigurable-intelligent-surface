@@ -1,7 +1,7 @@
 clear; setup; cvx_begin; cvx_end; clc; run(strcat('config_', erase(mfilename, 'rate_')));
 
 % * Initialize struct
-Result(nVariables, nWeights) = struct('weight', [], 'rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
+Result(nVariables, 1) = struct('weight', [], 'rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
 % * Generate channels
 directChannel = sqrt(path_loss(directDistance, directExponent)) * fading_ricean(nTxs, nRxs, directFactor);
@@ -11,20 +11,29 @@ for iTag = 1 : nTags
 end
 equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
-% * Evaluate rate region vs number of output quantization bits
+% * Fix input distribution and active beamforming
+distribution = normalize(ones(nStates, nTags), 'norm', 1);
+beamforming = sqrt(transmitPower) * directChannel / norm(directChannel);
+equivalentDistribution = prod(tuple_tag(distribution), 2);
+receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
+snr = receivePower / noisePower;
+
+% * Evaluate achievable rates vs number of output quantization bits
 for iVariable = 1 : nVariables
 	% * Set quantization bins
 	nBins = 2 ^ Variable(iVariable).nBits;
 
-	% * Clear persistent variables
-	clear block_coordinate_descent distribution_kkt distribution_cooperation beamforming_pgd threshold_bisection;
+	% * Update thresholds
+	thresholdDomain = domain_threshold(symbolRatio, nBins, receivePower);
+	binDmc = dmc_integration(symbolRatio, receivePower, thresholdDomain);
+	threshold = threshold_smawk(equivalentDistribution, thresholdDomain, binDmc);
 
-	% * Evaluate achievable primary and total backscatter rates
-	for iWeight = 1 : nWeights
-		weight = weightSet(iWeight);
-		[rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
-		Result(iVariable, iWeight) = struct('weight', weight, 'rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
-	end
+	% * Construct DMTC and recover i/o mapping
+	dmac = dmc_integration(symbolRatio, receivePower, threshold);
+	[~, sortIndex] = sort(receivePower);
+	dmac(:, sortIndex) = dmac;
+	[wsr, rate] = rate_weighted(weight, snr, equivalentDistribution, dmac);
+	Result(iVariable) = struct('weight', weight, 'rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 end
 
 directory = strcat('data/', mfilename, '/');

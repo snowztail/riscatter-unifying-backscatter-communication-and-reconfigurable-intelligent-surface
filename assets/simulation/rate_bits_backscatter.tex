@@ -10,16 +10,16 @@
 
 \begin{axis}[%
 width=3.972in,
-height=3.353in,
-at={(0.666in,0.453in)},
+height=3.362in,
+at={(0.666in,0.454in)},
 scale only axis,
 xmin=4,
 xmax=7,
 xtick={4, 5, 6, 7},
 xlabel style={font=\color{white!15!black}},
 xlabel={Energy Discretization Bits},
-ymin=0,
-ymax=1,
+ymin=0.213966869419165,
+ymax=0.218473997098467,
 ylabel style={font=\color{white!15!black}},
 ylabel={Total Backscatte Rate [bits/BSP]},
 axis background/.style={fill=white},
@@ -31,14 +31,14 @@ label style={font=\huge},
 ticklabel style={font=\LARGE},
 legend style={font=\LARGE},
 scaled y ticks=false,
-y tick label style={/pgf/number format/.cd, fixed, precision=2}
+y tick label style={/pgf/number format/.cd, fixed, precision=3}
 ]
 \addplot [color=mycolor1, dashed, line width=2.0pt, mark=+, mark options={solid, mycolor1}]
   table[row sep=crcr]{%
-4	0.0398393854476695\\
-5	0.655086014342697\\
-6	0.655095223157023\\
-7	0.647363955350682\\
+4	0.213966869419165\\
+5	0.218383940375522\\
+6	0.218443547035828\\
+7	0.218473997098467\\
 };
 \addlegendentry{Total backscatter rate}
 

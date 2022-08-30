@@ -1,0 +1,13 @@
+\begin{tikzpicture}[every node/.style={draw}]
+	\node at (0,0) [isosceles triangle,isosceles triangle stretches,shape border rotate=+90,minimum size=1cm,minimum height=1cm,anchor=north] {};
+	\node at (7,4) [rectangle,minimum size=1cm] {};
+	\node at (10,0) [isosceles triangle,isosceles triangle stretches,shape border rotate=+270,minimum size=1cm,minimum height=1cm,anchor=north] {};
+
+	\node[draw=none] at (0,-1.5) {Carrier Emitter};
+	\node[draw=none] at (7,5) {Scattering Node};
+	\node[draw=none] at (10,-1.5) {Backscatter Reader};
+
+	\draw[-latex] (1,-1) -- (9.5,-1);
+	\draw[-latex] (0.5,0) -- (6,4);
+	\draw[loosely dotted,-latex] (8,4) -- (10,0.5);
+\end{tikzpicture}

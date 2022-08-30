@@ -1,0 +1,17 @@
+\begin{tikzpicture}[every node/.style={draw}]
+	\node at (0,0) [trapezium,minimum height=0.75cm,anchor=center] {};
+	\node at (3,4.5) [isosceles triangle,isosceles triangle stretches,shape border rotate=+270,minimum size=1cm,minimum height=1cm,anchor=north] {};
+	\node at (7,4) [rectangle,minimum size=1cm] {};
+	\node at (10,0) [trapezium,rotate=180,minimum height=0.75cm,anchor=center] {};
+
+	\node[draw=none] at (0,-0.75) {Legacy Transmitter};
+	\node[draw=none] at (3,5) {Backscatter Reader};
+	\node[draw=none] at (7,5) {Scattering Node};
+	\node[draw=none] at (10,-0.75) {Legacy Receiver};
+
+	\draw[loosely dashed,-latex] (1,0) -- (9,0);
+	\draw[loosely dashed,-latex] (0,0.75) -- (2.5,4);
+	\draw[loosely dashed,-latex] (0.75,0.5) -- (6.25,3.5);
+	\draw[dashdotted,-latex] (6.25,4.5) -- (3.75,4.5);
+	\draw[dashdotted,-latex] (7.75,4) -- (10,0.75);
+\end{tikzpicture}

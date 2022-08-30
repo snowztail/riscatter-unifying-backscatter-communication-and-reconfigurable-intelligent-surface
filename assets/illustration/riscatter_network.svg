@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
-   sodipodi:docname="uniscatter_network.svg"
+   sodipodi:docname="riscatter_network.svg"
    id="svg1077"
    version="1.1"
    viewBox="0 0 210 297"
@@ -55,19 +55,19 @@
   </defs>
   <sodipodi:namedview
      inkscape:window-maximized="1"
-     inkscape:window-y="285"
-     inkscape:window-x="2200"
-     inkscape:window-height="1048"
-     inkscape:window-width="1920"
+     inkscape:window-y="0"
+     inkscape:window-x="0"
+     inkscape:window-height="1890"
+     inkscape:window-width="1080"
      showguides="false"
      showborder="false"
      showgrid="true"
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
-     inkscape:cy="418.06721"
-     inkscape:cx="389.69645"
-     inkscape:zoom="3.7362414"
+     inkscape:cy="421.56814"
+     inkscape:cx="289.3727"
+     inkscape:zoom="5.2838433"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -111,12 +111,12 @@
      inkscape:label="Layer 1">
     <text
        id="text12630"
-       y="111.95988"
+       y="112.00995"
        x="60.343464"
        style="font-style:normal;font-weight:normal;font-size:0.705556px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        xml:space="preserve"><tspan
          style="font-size:0.705556px;stroke-width:0.264583"
-         y="111.95988"
+         y="112.00995"
          x="60.343464"
          id="tspan12628"
          sodipodi:role="line">AP</tspan></text>
@@ -203,12 +203,12 @@
        y="109.80209" />
     <text
        id="text12656"
-       y="108.61638"
+       y="108.56631"
        x="98.590729"
        style="font-style:normal;font-weight:normal;font-size:0.705556px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        xml:space="preserve"><tspan
          style="font-size:0.705556px;stroke-width:0.264583"
-         y="108.61638"
+         y="108.56631"
          x="98.590729"
          id="tspan12654"
          sodipodi:role="line">User</tspan></text>

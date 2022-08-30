@@ -1,0 +1,12 @@
+\begin{tikzpicture}[every node/.style={draw}]
+	\node at (0,0) [dart,shape border rotate=90,minimum width=1cm] {};
+	\node at (7,4) [circle,minimum size=1cm] {};
+	\node at (10,0.35) [dart,shape border rotate=270,minimum width=1cm] {};
+
+	\node[draw=none] at (0,-0.75) {Primary Transmitter};
+	\node[draw=none] at (7,5) {RIScatter Node};
+	\node[draw=none] at (10,-0.75) {Cooperative Receiver};
+	\draw[loosely dashed,-latex] (0.75,0) -- (9.25,0);
+	\draw[loosely dashed,-latex] (0.5,0.5) -- (6.25,4);
+	\draw[dashdotted,-latex] (7.75,4) -- (10,1);
+\end{tikzpicture}

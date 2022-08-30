@@ -1,0 +1,10 @@
+\begin{tikzpicture}[every node/.style={draw}]
+	\node at (0,0) [kite,minimum size=0.75cm,kite vertex angles=60] {};
+	\node at (7,4) [rectangle,minimum size=1cm] {};
+
+	\node[draw=none] at (0,-1) {Interrogator};
+	\node[draw=none] at (7,5) {Scattering Node};
+
+	\draw[-latex] (0.5,1) -- (6,4);
+	\draw[loosely dotted,-latex] (6.25,3) -- (0.75,0);
+\end{tikzpicture}

@@ -1,0 +1,13 @@
+\begin{tikzpicture}[every node/.style={draw}]
+	\node at (0,0) [trapezium,minimum height=0.75cm,anchor=center] {};
+	\node at (7,4) [rectangle,minimum size=1cm] {};
+	\node at (10,0) [trapezium,rotate=180,minimum height=0.75cm,anchor=center] {};
+
+	\node[draw=none] at (0,-0.75) {Transmitter};
+	\node[draw=none] at (7,5) {Reflecting Element};
+	\node[draw=none] at (10,-0.75) {Receiver};
+
+	\draw[loosely dashed,-latex] (1,0) -- (9,0);
+	\draw[loosely dashed,-latex] (0.75,0.5) -- (6.25,4);
+	\draw[loosely dashed,-latex] (7.75,4) -- (10,0.75);
+\end{tikzpicture}

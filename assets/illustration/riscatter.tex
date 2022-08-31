@@ -1,12 +1,16 @@
-\begin{tikzpicture}[every node/.style={draw}]
-	\node at (0,0) [dart,shape border rotate=90,minimum width=1cm] {};
-	\node at (7,4) [circle,minimum size=1cm] {};
-	\node at (10,0.35) [dart,shape border rotate=270,minimum width=1cm] {};
+\begin{tikzpicture}[font=\LARGE,every node/.style={draw,ultra thick},every path/.style={ultra thick},every text node part/.style={align=center}]
+	\node at (0,0) [circular sector,shape border rotate=90,minimum width=2cm] {};
+	\node at (5,3) [circle,minimum size=1.25cm] {};
+	\node at (8,0.55) [circular sector,shape border rotate=270,minimum width=2cm] {};
 
-	\node[draw=none] at (0,-0.75) {Primary Transmitter};
-	\node[draw=none] at (7,5) {RIScatter Node};
-	\node[draw=none] at (10,-0.75) {Cooperative Receiver};
-	\draw[loosely dashed,-latex] (0.75,0) -- (9.25,0);
-	\draw[loosely dashed,-latex] (0.5,0.5) -- (6.25,4);
-	\draw[dashdotted,-latex] (7.75,4) -- (10,1);
+	\node[draw=none] at (0,-1.25) {Primary\\Transmitter};
+	\node[draw=none] at (5,4.5) {RIScatter\\Node};
+	\node[draw=none] at (8,-1.25) {Cooperative\\Receiver};
+
+	\draw[decorate,decoration={waves,segment length=5mm}] (1,-0.25) -- (7.375,-0.25);
+	\draw[decorate,decoration={waves,segment length=5mm}] (0.5,0.75) -- (4,3);
+	\draw[decorate,decoration={triangles,segment length=2.5mm}] (6,3) -- (8,1.25);
+
+	\node[draw=none] at (4,0.875) {Modulated\\Signal};
+	\node[draw=none] at (7.8,2.9) {Superimposed\\Signal};
 \end{tikzpicture}

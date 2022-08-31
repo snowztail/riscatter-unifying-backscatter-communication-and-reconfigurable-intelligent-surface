@@ -1,10 +1,15 @@
-\begin{tikzpicture}[every node/.style={draw}]
+\begin{tikzpicture}[font=\LARGE,every node/.style={draw,ultra thick},every path/.style={ultra thick},every text node part/.style={align=center}]
 	\node at (0,0) [kite,minimum size=0.75cm,kite vertex angles=60] {};
-	\node at (7,4) [rectangle,minimum size=1cm] {};
+	\node at (8,3) [rectangle,minimum size=1cm] {};
 
-	\node[draw=none] at (0,-1) {Interrogator};
-	\node[draw=none] at (7,5) {Scattering Node};
+	\node[draw=none] at (0,-1.125) {Interrogator};
+	\node[draw=none] at (8,4.375) {Scattering\\Node};
 
-	\draw[-latex] (0.5,1) -- (6,4);
-	\draw[loosely dotted,-latex] (6.25,3) -- (0.75,0);
+	\draw[decorate,decoration={snake,post length=2.5mm},-latex] (0.5,0.75) -- (7,3);
+	\draw[decorate,decoration={snake,pre length=2cm,post length=2cm},-latex] (7.25,2.25) -- (0.75,0);
+
+	\node[draw=none] at (3.5,2.625) {Carrier};
+	\node[draw=none] at (4.2,0.5) {1};
+	\node[draw=none] at (2,-0.125) {0};
+	\node[draw=none] at (6.4,1.3) {0};
 \end{tikzpicture}

@@ -1,18 +1,18 @@
 \begin{tikzpicture}[font=\LARGE,every node/.style={draw,ultra thick},every path/.style={ultra thick},every text node part/.style={align=center}]
 	\node at (0,0) [isosceles triangle,isosceles triangle stretches,shape border rotate=+90,minimum size=1cm,minimum height=1cm,anchor=north] {};
-	\node at (5,3) [rectangle,minimum size=1cm] {};
+	\node at (5,2) [rectangle,minimum size=1cm] {};
 	\node at (8,0) [isosceles triangle,isosceles triangle stretches,shape border rotate=+270,minimum size=1cm,minimum height=1cm,anchor=north] {};
 
-	\node[draw=none] at (0,-2) {Carrier\\Emitter};
-	\node[draw=none] at (5,4.5) {Scattering\\Node};
-	\node[draw=none] at (8,-2) {Backscatter\\Reader};
+	\node[draw=none] at (0,-1.95) {Carrier\\Emitter};
+	\node[draw=none] at (5,3.35) {Scattering\\Node};
+	\node[draw=none] at (8,-1.95) {Backscatter\\Reader};
 
 	\draw[decorate,decoration={snake,post length=2.5mm},-latex] (1,-1) -- (7.5,-1);
-	\draw[decorate,decoration={snake,post length=2.5mm},-latex] (0.5,0) -- (4,3);
-	\draw[decorate,decoration={snake,pre length=1cm,post length=1cm},-latex] (6,3) -- (8,0.35);
+	\draw[decorate,decoration={snake,post length=2.5mm},-latex] (0.5,0) -- (4,2);
+	\draw[decorate,decoration={snake,pre length=7.5mm,post length=7.5mm},-latex] (6,2) -- (8,0.35);
 
-	\node[draw=none] at (1.5,2.2) {Carrier};
-	\node[draw=none] at (7.25,2.2) {1};
-	\node[draw=none] at (6.55,3.1) {0};
-	\node[draw=none] at (7.95,1.3) {0};
+	\node[draw=none] at (1.5,1.75) {Carrier};
+	\node[draw=none] at (7.2,1.7) {1};
+	\node[draw=none] at (6.6,2.25) {0};
+	\node[draw=none] at (7.8,1.15) {0};
 \end{tikzpicture}

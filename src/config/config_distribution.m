@@ -6,7 +6,7 @@ nSxs = 1;
 % number of receive antennas
 nRxs = 1;
 % number of tags
-nTags = 2;
+nTags = 4;
 % number of available states at tags (i.e., modulation order)
 nStates = 2;
 % constellation diagram at tags
@@ -38,10 +38,10 @@ weightSet = [0 : 0.01 : 0.05, 0.075, 0.1 : 0.05 : 0.25, 0.3 : 0.1 : 0.5, 0.75, 1
 % number of weights on rate region boundary
 nWeights = length(weightSet);
 % number of quantization bins
-nBins = 2 ^ 8;
+nBins = 2 ^ 9;
 
 %% * Variable
-Variable = struct('Distribution', {'exhaustion', 'kkt', 'cooperation', 'cooperation', 'cooperation', 'cooperation'}, 'Recovery', {[], [], [], 'marginalization', 'decomposition', 'randomization'});
+Variable = struct('Distribution', {'exhaustion', 'kkt', 'cooperation', 'cooperation', 'cooperation', 'cooperation', 'uniform'}, 'Recovery', {[], [], [], 'marginalization', 'decomposition', 'randomization', []});
 nVariables = length(Variable);
 
 %% * PBS

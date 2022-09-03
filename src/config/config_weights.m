@@ -38,4 +38,4 @@ weightSet = [0 : 0.1 : 0.3, 1];
 % number of weights on rate region boundary
 nWeights = length(weightSet);
 % number of quantization bins
-nBins = 2 ^ 8;
+nBins = 2 ^ 9;

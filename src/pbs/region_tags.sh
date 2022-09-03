@@ -1,4 +1,4 @@
-#PBS -l walltime=24:00:00,select=1:ncpus=1:ompthreads=1:mem=16gb
+#PBS -l walltime=24:00:00,select=1:ncpus=1:ompthreads=1:mem=64gb
 #PBS -J 1-3000
 
 module load matlab/R2021a

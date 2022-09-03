@@ -37,7 +37,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		tolerance = 1e-6;
 		maxStep = 1e6;
 		alpha = 1e-3;
-		beta = 0.99;
+		beta = 0.9;
 	end
 
 	% ! Initialize beamforming by previous solution

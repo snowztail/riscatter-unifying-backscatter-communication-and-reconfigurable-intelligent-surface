@@ -32,7 +32,7 @@ legend('Location', 'se'); grid on; box on; axis tight;
 xticks(bits);
 % ylim([0, 1]);
 xlabel('Energy Discretization Bits');
-ylabel('Total Backscatte Rate [bits/BSP]');
+ylabel('Total Backscatter Rate [bits/BSP]');
 style_plot(object);
 savefig('figures/rate_bits_backscatter.fig');
 matlab2tikz('../../assets/simulation/rate_bits_backscatter.tex', 'extraaxisoptions', {'title style={font=\huge}', 'label style={font=\huge}', 'ticklabel style={font=\LARGE}', 'legend style={font=\LARGE}', 'scaled y ticks=false', 'y tick label style={/pgf/number format/.cd, fixed, precision=3}'});

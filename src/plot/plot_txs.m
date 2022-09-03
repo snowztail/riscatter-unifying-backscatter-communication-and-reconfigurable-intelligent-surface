@@ -27,7 +27,7 @@ for iVariable = 1 : nVariables
 end
 hold off; legend('Location', 'se'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
-ylabel('Total Backscatte Rate [bits/BSP]');
+ylabel('Total Backscatter Rate [bits/BSP]');
 xlim([4, Inf]);
 style_plot(object);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));

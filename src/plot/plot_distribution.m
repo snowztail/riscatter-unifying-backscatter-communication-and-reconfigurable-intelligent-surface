@@ -26,7 +26,7 @@ for iVariable = 1 : nVariables
 end
 hold off; legend({'Exhaustion', 'KKT', 'Cooperation', 'Marginalization', 'Decomposition', 'Randomization'}, 'Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
-ylabel('Total Backscatte Rate [bits/BSP]');
+ylabel('Total Backscatter Rate [bits/BSP]');
 xlim([5.8, Inf]);
 style_plot(object);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));

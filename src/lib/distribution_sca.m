@@ -36,8 +36,7 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, weight
 	stateTuple = tuple_tag(repmat(transpose(1 : nStates), [1, nTags]));
 
 	% * Initialize input distribution as uniform
-	distribution = normalize(ones(nStates, nTags), 'norm', 1);
-	equivalentDistribution = prod(tuple_tag(distribution), 2);
+	[distribution, equivalentDistribution] = distribution_uniform(nTags, nStates);
 	wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
 
 	% * Iteratively update input distribution by SCA
@@ -50,7 +49,7 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, weight
 			expression equivalentDistributionSca(nInputs, 1);
 			for iInput = 1 : nInputs
 				for iTag = 1 : nTags
-					equivalentDistributionSca(iInput) = equivalentDistributionSca(iInput) + distribution(stateTuple(iInput, iTag), iTag) * prod(distribution_(sub2ind(size(distribution_), stateTuple(iInput, setdiff(1 : nTags, iTag)), setdiff(1 : nTags, iTag))), 2);
+					equivalentDistributionSca(iInput) = equivalentDistributionSca(iInput) + distribution(stateTuple(iInput, iTag), iTag) * prod(distribution_(sub2ind(size(distribution_), stateTuple(iInput, [1 : iTag - 1, iTag + 1 : nTags]), [1 : iTag - 1, iTag + 1 : nTags])), 2);
 				end
 				equivalentDistributionSca(iInput) = equivalentDistributionSca(iInput) - (nTags - 1) * prod(distribution_(sub2ind(size(distribution_), stateTuple(iInput, :), 1 : nTags)), 2);
 			end

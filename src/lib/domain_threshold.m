@@ -28,10 +28,11 @@ function [thresholdDomain] = domain_threshold(symbolRatio, nBins, receivePower, 
 		confidence = 1 - 1e-3;
 	end
 
-	% * Compute lower and upper critical thresholds
+	% * Compute lower, upper, and infinite critical thresholds
 	tlb = icdf('Gamma', 1 - confidence, symbolRatio, min(receivePower));
 	tub = icdf('Gamma', confidence, symbolRatio, max(receivePower));
+	tib = icdf('Gamma', 1 - eps, symbolRatio, max(receivePower));
 
 	% * Design threshold domain
-	thresholdDomain = [0, linspace(tlb, tub, nBins)];
+	thresholdDomain = [0, linspace(tlb, tub, nBins - 1), tib];
 end

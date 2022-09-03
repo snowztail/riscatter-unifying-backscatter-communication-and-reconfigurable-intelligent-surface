@@ -18,7 +18,7 @@ function [distribution, equivalentDistribution] = recovery_marginalization(joint
 	% * Obtain marginal distribution
 	distribution = zeros(nStates, nTags);
 	for iTag = 1 : nTags
-		distribution(:, iTag) = vec(sum(jointDistribution, setdiff(1 : nTags, iTag)));
+		distribution(:, iTag) = vec(sum(jointDistribution, [1 : iTag - 1, iTag + 1 : nTags]));
 	end
 	equivalentDistribution = prod(tuple_tag(distribution), 2);
 end

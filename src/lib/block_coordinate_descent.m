@@ -34,7 +34,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		weight;
 		equivalentChannel;
 		tolerance = 1e-6;
-		Options.Distribution {mustBeMember(Options.Distribution, ['exhaustion', 'kkt', 'sca', 'cooperation'])};
+		Options.Distribution {mustBeMember(Options.Distribution, ['exhaustion', 'kkt', 'sca', 'cooperation', 'uniform'])};
 		Options.Threshold {mustBeMember(Options.Threshold, ['smawk', 'dp', 'bisection', 'ml'])};
 		Options.Beamforming {mustBeMember(Options.Beamforming, ['pgd', 'emrt', 'dmrt'])};
 		Options.Recovery {mustBeMember(Options.Recovery, ['marginalization', 'decomposition', 'randomization'])};
@@ -50,7 +50,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 
 	% * No previous solutions, use uniform distribution and MRT towards direct/ergodic channels (equal under uniform distribution)
 	if isempty(Initializer)
-		Initializer.distribution = normalize(ones(nStates, nTags), 'norm', 1);
+		Initializer.distribution = distribution_uniform(nTags, nStates);
 		Initializer.beamforming = sqrt(transmitPower) * directChannel / norm(directChannel);
 	end
 
@@ -108,6 +108,8 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 					[distribution, equivalentDistribution] = recovery_randomization(weight, snr, jointDistribution, dmac);
 				end
 			end
+		case 'uniform'
+			[distribution, equivalentDistribution] = distribution_uniform(nTags, nStates);
 		end
 
 		% * Transmit beamforming

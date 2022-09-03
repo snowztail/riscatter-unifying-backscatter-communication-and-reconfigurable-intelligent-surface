@@ -12,9 +12,8 @@ end
 equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
 % * Fix input distribution and active beamforming
-distribution = normalize(ones(nStates, nTags), 'norm', 1);
+[distribution, equivalentDistribution] = distribution_uniform(nTags, nStates);
 beamforming = sqrt(transmitPower) * directChannel / norm(directChannel);
-equivalentDistribution = prod(tuple_tag(distribution), 2);
 receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
 snr = receivePower / noisePower;
 

@@ -38,7 +38,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 
 	% * No previous solution, use uniform initializer
 	if isempty(Initializer)
-		Initializer.distribution = normalize(ones(nStates, nTags), 'norm', 1);
+		Initializer.distribution = distribution_uniform(nTags, nStates);
 	end
 
 	% * Apply initializer
@@ -83,7 +83,7 @@ function [marginalInformation] = marginal_information(distributionTuple, informa
 	for iState = 1 : nStates
 		for iTag = 1 : nTags
 			iInput = find(stateTuple(:, iTag) == iState);
-			marginalInformation(iState, iTag, iInput) = prod(distributionTuple(iInput, setdiff(1 : nTags, iTag)), 2) .* informationFunction(iInput);
+			marginalInformation(iState, iTag, iInput) = prod(distributionTuple(iInput, [1 : iTag - 1, iTag + 1 : nTags]), 2) .* informationFunction(iInput);
 		end
 	end
 	marginalInformation = sum(marginalInformation, 3);

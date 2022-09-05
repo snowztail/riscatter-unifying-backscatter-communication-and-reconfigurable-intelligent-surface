@@ -321,10 +321,19 @@
 		\emph{First,} we propose RIScatter nodes to adapt the input probability distribution of a finite-state passive scatter device based on link priority and \gls{csi}.
 		The reflection pattern over time is no longer fully random or deterministic, but can be flexibly distributed to unify and balance backscatter modulation with passive beamforming.
 		Scattering source of \gls{bc}/\gls{sr} and reflecting element of \gls{ris} can be regarded as its extreme cases, where the input distribution boils down to equiprobable and degenerate, respectively.
-		Like aforementioned \gls{ris}-empowered \gls{bc}/\gls{sr} schemes, the passive nodes require regular coordination with active devices, but the advantages are 1) RIScatter nodes can be built over conventional load-switching scatterers instead of composite metamaterial; 2) the optimization cost of input distribution is much lower than that of \gls{ris} reflection coefficients; 3) adaptive backscatter channel coding can exploit \gls{csi} to achieve higher instantaneous rate than conventional equiprobable line coding in \gls{bc}/\gls{sr}; 4) the potentially dispersed characteristics of RIScatter nodes (and legacy users) avoids the development optimization and allows uniformly good performance for both links.
+		Like aforementioned \gls{ris}-empowered \gls{bc}/\gls{sr} schemes, the passive nodes require regular coordination with ambient devices, but the advantages are
+		1) RIScatter nodes can be built over universal load-switching scatterers instead of composite metamaterial;
+		2) backscatter modulation and passive beamforming are unified by input distribution instead of advanced hardware architecture;
+		3) optimization cost of input distribution is much lower than that of \gls{ris} reflection coefficients;
+		4) adaptive backscatter channel coding can exploit \gls{csi} to achieve higher instantaneous rate than conventional equiprobable line coding in \gls{bc}/\gls{sr};
+		5) the potentially dispersed characteristics of RIScatter nodes (and legacy users) avoids the development optimization and allows uniformly good performance for both links.
 
 		\emph{Second,} we propose a practical RIScatter receiver that semi-coherently decodes RIScatter nodes from the received energy per backscatter block, re-encodes for their reflection patterns, retrieves primary equivalent channel as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
-		The proposed receiver 1) preserves the benefits of backscatter modulation and passive beamforming; 2) enjoys lower computational and operational complexities than joint \gls{ml} and \gls{sic} schemes; 3) accommodates the link difference and suits for diverse symbol period ratios; 4) requires minor modification over legacy hardware.
+		The proposed receiver
+		1) preserves the benefits of backscatter modulation and passive beamforming;
+		2) enjoys lower computational and operational complexities than joint \gls{ml} and \gls{sic} schemes;
+		3) accommodates the link difference and suits for diverse symbol period ratios;
+		4) requires minor modification over legacy hardware.
 
 		\emph{Third,} we consider an application scenario where multiple RIScatter nodes ride over a point-to-point \gls{miso} transmission, performing backscatter modulation and passive beamforming to a nearby user using shared spectrum, energy, and infrastructures.
 		To investigate how RIScatter unifies \gls{bc}, \gls{sr} and \gls{ris} for the benefits of both coexisting subsystems, we provide primary and backscatter rate analyses and emphasize the contributions of input distribution at RIScatter nodes, active beamforming at the \gls{ap}, and backscatter decision regions at the user.
@@ -336,7 +345,15 @@
 		A suboptimal \gls{bcd} algorithm is then proposed, where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is iteratively updated by \gls{pgd} accelerated by backtracking line search, and the decision regions are refined by existing thresholding designs.
 
 		\emph{Fifth,} we provide numerical results to demonstrate the benefits of RIScatter and proposed algorithms.
-		It is concluded that 1) RIScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design; 2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris}; 3) when backscatter link is absolutely prioritized, RIScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than conventional equiprobable inputs of \gls{bc}/\gls{sr}; 4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal; 5) the proposed \gls{pgd} beamforming provides larger rate region than \gls{mrt}-based schemes; 6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector; 7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate; 8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scattering nodes to replace high-resolution \gls{ris}.
+		It is concluded that
+		1) RIScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design;
+		2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris};
+		3) when backscatter link is absolutely prioritized, RIScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than conventional equiprobable inputs of \gls{bc}/\gls{sr};
+		4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal;
+		5) the proposed \gls{pgd} beamforming provides larger rate region than \gls{mrt}-based schemes;
+		6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector;
+		7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate;
+		8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scattering nodes to replace high-resolution \gls{ris}.
 	\end{subsection}
 
 	\emph{Notations:}

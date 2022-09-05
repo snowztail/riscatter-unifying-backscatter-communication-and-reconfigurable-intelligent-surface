@@ -1,4 +1,4 @@
-function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, equivalentDistribution, threshold, tolerance, maxStep, alpha, beta)
+function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold, tolerance, maxStep, alpha, beta)
 	% Function:
 	%	- optimize beamforming vector by projected gradient descent with step size determined by backtracking line search
     %
@@ -8,6 +8,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 	%	- transmitPower: average transmit power
 	%	- noisePower: average noise power
 	%	- equivalentChannel [nTxs x nInputs]: equivalent primary channel for each tag state tuple
+	%	- cascadedChannel [nTxs x nTags]: cascaded forward-backward channel of all tags
 	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
 	%	- threshold [1 x (nOutputs + 1)]: boundaries of quantization bins or decision regions (including 0 and Inf)
     %	- tolerance: minimum rate gain ratio per iteration
@@ -32,6 +33,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 		transmitPower;
 		noisePower;
 		equivalentChannel;
+		cascadedChannel;
 		equivalentDistribution;
 		threshold;
 		tolerance = 1e-6;
@@ -43,10 +45,9 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 	% ! Initialize beamforming by previous solution
 	persistent Initializer
 
-	% * No previous solution, use MRT initializer towards ergodic channel
+	% * No previous solution, use MRT initializer towards sum cascaded channel
 	if isempty(Initializer)
-		ergodicChannel = equivalentChannel * equivalentDistribution;
-		Initializer.beamforming = sqrt(transmitPower) * ergodicChannel / norm(ergodicChannel);
+		Initializer.beamforming = sqrt(transmitPower) * sum(cascadedChannel, 2) / norm(sum(cascadedChannel, 2));
 	end
 
 	% * Apply initializer

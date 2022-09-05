@@ -41,9 +41,9 @@ nWeights = length(weightSet);
 nBins = 2 ^ 9;
 
 %% * Variable
-Variable = struct('nStates', {2, 4, 8, 16, 32});
+Variable = struct('nStates', num2cell(2 .^ (1 : 4)));
 nVariables = length(Variable);
 
 %% * PBS
 % number of instances
-nInstances = 3e3;
+nInstances = 1e3;

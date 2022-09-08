@@ -6,7 +6,7 @@ nSxs = 1;
 % number of receive antennas
 nRxs = 1;
 % number of tags
-nTags = 8;
+nTags = 4;
 % number of available states at tags (i.e., modulation order)
 nStates = 2;
 % constellation diagram at tags

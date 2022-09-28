@@ -10,7 +10,7 @@ nRxs = 1;
 % number of available states at tags (i.e., modulation order)
 nStates = 2;
 % constellation diagram at tags
-constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
+constellation = pskmod(transpose(0 : nStates - 1), nStates);
 % amplitude scatter ratio at tags
 scatterRatio = 0.5;
 % backscatter/primary symbol duration ratio

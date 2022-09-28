@@ -14,7 +14,7 @@ end
 for iVariable = 1 : nVariables
 	% * Set constellation and update equivalent channel
 	nStates = Variable(iVariable).nStates;
-	constellation = normalize(qammod(transpose(0 : nStates - 1), nStates), 'norm', Inf);
+	constellation = pskmod(transpose(0 : nStates - 1), nStates);
 	equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
 	% * Clear persistent variables

@@ -25,10 +25,10 @@ for iVariable = 1 : nVariables
 	nTxs = Variable(iVariable).nTxs;
 	object(iVariable) = plot(region{iVariable}(1, :) / log(2), region{iVariable}(2, :) / log(2), 'DisplayName', strcat('$Q = ', num2str(nTxs), '$'));
 end
-hold off; legend('Location', 'se'); grid on; box on; axis tight;
+hold off; legend('Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatter Rate [bits/BSP]');
-xlim([4, Inf]);
+% xlim([4, Inf]);
 style_plot(object);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
 matlab2tikz(strcat('../../assets/simulation/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', {'title style={font=\huge}', 'label style={font=\huge}', 'ticklabel style={font=\LARGE}', 'legend style={font=\LARGE}', 'scaled y ticks=false', 'y tick label style={/pgf/number format/.cd, fixed, precision=2}'});

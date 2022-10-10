@@ -27,7 +27,7 @@ end
 hold off; legend({'PGD', 'E-MRT', 'D-MRT'}, 'Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatter Rate [bits/BSP]');
-xlim([5.8, Inf]);
+% xlim([5.8, Inf]);
 style_plot(object);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
 matlab2tikz(strcat('../../assets/simulation/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', {'title style={font=\huge}', 'label style={font=\huge}', 'ticklabel style={font=\LARGE}', 'legend style={font=\LARGE}', 'scaled y ticks=false', 'y tick label style={/pgf/number format/.cd, fixed, precision=2}'});

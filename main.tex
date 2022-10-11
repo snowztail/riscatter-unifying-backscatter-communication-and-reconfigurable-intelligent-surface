@@ -8,6 +8,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{bookmark}
+\usepackage{booktabs}
 \usepackage[american]{circuitikz}
 \usepackage{cite}
 \usepackage{fixmath}
@@ -22,6 +23,7 @@
 \usepackage{siunitx}
 \usepackage{stfloats}
 \usepackage[caption=false,font=footnotesize,subrefformat=parens,labelformat=parens]{subfig}
+\usepackage{tabularx}
 \usepackage{tikz}
 \usepackage{xcolor}
 
@@ -110,7 +112,8 @@
 \newacronym{wit}{WIT}{Wireless Information Transfer}
 \newacronym{wpcn}{WPCN}{Wireless Powered Communication Network}
 \newacronym{wpt}{WPT}{Wireless Power Transfer}
-
+\newacronym{mbc}{MBC}{Monostatic Backscatter Communications}
+\newacronym{bbc}{BBC}{Bistatic Backscatter Communications}
 
 \begin{document}
 \title{RIScatter: Unifying\\Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
@@ -172,7 +175,7 @@
 		As an emerging low-power communication technique, \gls{bc} separates conventional transmitter into a \gls{rf} carrier emitter with power-hungry elements (e.g., synthesizer and amplifier) and an information-bearing node with power-efficient components (e.g., harvester and modulator) \cite{Boyer2014}.
 		The node harvests energy from impinging wave and embeds information over scattered signal in a sustainable and controllable manner.
 		% The backscatter reader can be either co-located or separated with the carrier emitter, known as monostatic and bistatic \gls{bc}.
-		The backscatter reader can be either co-located or separated with the carrier emitter, known as monostatic and bistatic \gls{bc} in Fig. \subref*{fi:monostatic_backscatter_communication} and \subref*{fi:bistatic_backscatter_communication}, respectively.
+		The backscatter reader can be either co-located or separated with the carrier emitter, known as \gls{mbc} and \gls{bbc} in Fig. \subref*{fi:monostatic_backscatter_communication} and \subref*{fi:bistatic_backscatter_communication}, respectively.
 		Its applications such as \gls{rfid} \cite{Dobkin2012,Landt2005} and passive sensor network \cite{Vannucci2008,Assimonis2016} have been extensively researched, standardized, and commercialized to support \gls{iot} and \gls{m2m} networks.
 		% ? Specifically, a dedicated emitter generates a sinusoidal carrier at reserved frequency, and \gls{rfid} tags reports their identifier to a nearby \gls{rfid} reader.
 		% ? With the upsurge of wireless devices and the downtrend of circuit power consumption, \gls{rfid} has experienced great success in \gls{ioe} and \gls{m2m} networks.
@@ -229,13 +232,13 @@
 
 		\begin{figure}[!t]
 			\centering
-			\subfloat[Monostatic \gls{bc}]{
+			\subfloat[\gls{mbc}]{
 				\resizebox{0.48\linewidth}{!}{
 					\input{assets/illustration/monostatic_backscatter_communication.tex}
 				}
 				\label{fi:monostatic_backscatter_communication}
 			}
-			\subfloat[Bistatic \gls{bc}]{
+			\subfloat[\gls{bbc}]{
 				\resizebox{0.48\linewidth}{!}{
 					\input{assets/illustration/bistatic_backscatter_communication.tex}
 				}
@@ -268,11 +271,27 @@
 				\label{fi:riscatter}
 			}
 			\caption{
-				Paradigms for various scattering applications.
+				Illustration of scattering applications.
+				% Paradigms for various scattering applications.
 			}
 			\label{fi:scatter_comparison}
 		\end{figure}
 	\end{subsection}
+
+	\begin{table*}[]
+		\caption{Comparison of Scattering Applications}
+		\begin{tabularx}{\textwidth}{XXXXXXX}
+			\toprule
+			                              & \gls{mbc}               & \gls{bbc}               & \gls{ambc}                                      & \gls{sr}                                     & \gls{ris}                       & RIScatter                                         \\ \midrule
+			Coexisting systems            & 1                       & 1                       & 2 (competitive)                                 & 2 (collaborative)                            & 1                               & 2 (collaborative)                                 \\ \midrule
+			Scatterer contribution        & Backscatter modulation  & Backscatter modulation  & Backscatter modulation and primary interference & Backscatter modulation and primary multipath & Passive beamforming             & Backscatter modulation and passive beamforming    \\ \midrule
+			Cooperative transmission      & ---                     & ---                     & No                                              & Active beamforming                           & ---                             & Active beamforming and smart reflection           \\ \midrule
+			Cooperative reception         & ---                     & ---                     & No                                              & Joint detection or \gls{sic}                 & ---                             & Backscatter detection as primary channel training \\ \midrule
+			Backscatter detection         & Coherent or noncoherent & Coherent or noncoherent & Semi-coherent or noncoherent                    & Coherent                                     & ---                             & Semi-coherent                                     \\ \midrule
+			Reflection state distribution & Equiprobable            & Equiprobable            & Equiprobable                                    & Gaussian or Equiprobable                     & Degenerate (\gls{csi}-adaptive) & Flexible (\gls{csi}- and link priority-adaptive)  \\ \midrule
+			Load-switching frequency      & Fast or slow            & Fast or slow            & Fast or slow                                    & Slow                                         & Slow (dynamic) or very slow     & Fast or slow                                      \\ \bottomrule
+		\end{tabularx}
+	\end{table*}
 
 	\begin{subsection}{Related Works}
 		Similar to \gls{cr}, the coexistence of primary and backscatter links in \gls{sr} can be classified into commensal, parasitic, and competitive relationships, whose instantaneous rates, power schemes, and outage probabilities were acquired in \cite{Guo2019b,Ding2020}.
@@ -320,9 +339,14 @@
 	% TODO Using RIS to encode is not very interesting as controller is anyway usable
 	% TODO Wi-Fi sampling rate 20 MHz (symbol period 50 nS), RFID symbol rate/load switching speed 100s KHz to 10s MHz [Backscatter Communications], fast load switching speed is key for high data rate - symbol ratio is not very large
 	% TODO Beamforming can cancel direct interference to avoid the collapse of non-coherent energy detection and enlarge energy gap.
-	%[Reconfigurable Intelligent Surface-Assisted Ambient Backscatter Communications Experimental Assessment]the authors of [5] show that, even in line-of-sight (LOS), the interferences and the desired signal can combine in such a way that the received signals at the reader side in the two states are close in power and only differ by their phases
+	% ? [Reconfigurable Intelligent Surface-Assisted Ambient Backscatter Communications Experimental Assessment]the authors of [5] show that, even in line-of-sight (LOS), the interferences and the desired signal can combine in such a way that the received signals at the reader side in the two states are close in power and only differ by their phases
 	% TODO Input probability distribution for discrete-value reflection (backscatter), constellation design for continue-value reflection (RIS)
 	% TODO convergence
+	% TODO channel coding: general non-adaptive (book) adaptive (DMC)
+	% ? [Turbocharging] Since averaging must be done over a significant period of time to smooth out the variation in the TV transmissions, averaging does not allow rates much higher than 10 kbps [24].
+	% TODO mu-code: use multiple Rxs for noncoherent direct interference cancellation (instead of receive diversity)
+	% TODO backscatter modulation <-> passive beamforming; add adaptive channel coding over (NRZ) line coding.
+	% TODO semicoherent: known CSI, unknown primary/backscatter symbols
 
 
 	% To the best of our knowledge, all relevant literatures assumed at backscatter information sources either Gaussian codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} or finite equiprobable inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a}.
@@ -336,7 +360,7 @@
 		Scattering source of \gls{bc}/\gls{sr} and reflecting element of \gls{ris} can be regarded as its extreme cases, where the input distribution boils down to equiprobable and degenerate, respectively.
 		Like aforementioned \gls{ris}-empowered \gls{bc}/\gls{sr} schemes, the passive nodes require regular coordination with ambient devices, but the advantages are
 		1) RIScatter nodes can be built over universal load-switching scatterers instead of composite metamaterial;
-		2) backscatter modulation and passive beamforming are unified by input distribution instead of advanced hardware architecture;
+		2) backscatter modulation and passive beamforming are unified by adaptive input distribution instead of advanced hardware architecture;
 		3) optimization cost of input distribution is much lower than that of \gls{ris} reflection coefficients;
 		4) adaptive backscatter channel coding can exploit \gls{csi} to achieve higher instantaneous rate than conventional equiprobable line coding in \gls{bc}/\gls{sr};
 		5) the potentially dispersed characteristics of RIScatter nodes (and legacy users) avoids the development optimization and allows uniformly good performance for both links.

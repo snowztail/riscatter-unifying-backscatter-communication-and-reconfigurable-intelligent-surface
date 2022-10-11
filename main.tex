@@ -19,6 +19,7 @@
 \usepackage{microtype}
 \usepackage[short]{optidef}
 \usepackage{pgfplots}
+\usepackage{ragged2e}
 \usepackage[subtle]{savetrees}
 \usepackage{siunitx}
 \usepackage{stfloats}
@@ -45,6 +46,12 @@
 \usetikzlibrary{decorations.pathmorphing,decorations.pathreplacing,decorations.shapes,shapes.geometric}
 \usepgfplotslibrary{groupplots,patchplots}
 \pgfplotsset{compat=newest}
+
+% tabularx, ragged2e
+\newcolumntype{L}{>{\RaggedRight}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\renewcommand\tabularxcolumn[1]{m{#1}}
+
 % algpseudocode
 \makeatletter
 \renewcommand{\fnum@algorithm}{\fname@algorithm{} \thealgorithm:}
@@ -280,7 +287,18 @@
 
 	\begin{table*}[]
 		\caption{Comparison of Scattering Applications}
-		\begin{tabularx}{\textwidth}{XXXXXXX}
+		% \begin{tabularx}{\textwidth}{LLLLLLL}
+		% 	\toprule
+		% 	                              & \gls{mbc}               & \gls{bbc}               & \gls{ambc}                                      & \gls{sr}                                     & \gls{ris}                       & RIScatter                                         \\ \midrule
+		% 	Coexisting systems            & 1                       & 1                       & 2 (competitive)                                 & 2 (collaborative)                            & 1                               & 2 (collaborative)                                 \\ \midrule
+		% 	Scatterer contribution        & Backscatter modulation  & Backscatter modulation  & Backscatter modulation and primary interference & Backscatter modulation and primary multipath & Passive beamforming             & Backscatter modulation and passive beamforming    \\ \midrule
+		% 	Cooperative transmission      & ---                     & ---                     & No                                              & Active beamforming                           & ---                             & Active beamforming and smart reflection           \\ \midrule
+		% 	Cooperative reception         & ---                     & ---                     & No                                              & Joint detection or \gls{sic}                 & ---                             & Backscatter detection as primary channel training \\ \midrule
+		% 	Backscatter detection         & Coherent or noncoherent & Coherent or noncoherent & Semi-coherent or noncoherent                    & Coherent                                     & ---                             & Semi-coherent                                     \\ \midrule
+		% 	Reflection state distribution & Equiprobable            & Equiprobable            & Equiprobable                                    & Gaussian or Equiprobable                     & Degenerate (\gls{csi}-adaptive) & Flexible (\gls{csi}- and link priority-adaptive)  \\ \midrule
+		% 	Load-switching frequency      & Fast or slow            & Fast or slow            & Fast or slow                                    & Slow                                         & Slow (dynamic) or very slow     & Fast or slow                                      \\ \bottomrule
+		% \end{tabularx}
+		\begin{tabularx}{\textwidth}{CCCCCCC}
 			\toprule
 			                              & \gls{mbc}               & \gls{bbc}               & \gls{ambc}                                      & \gls{sr}                                     & \gls{ris}                       & RIScatter                                         \\ \midrule
 			Coexisting systems            & 1                       & 1                       & 2 (competitive)                                 & 2 (collaborative)                            & 1                               & 2 (collaborative)                                 \\ \midrule

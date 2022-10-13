@@ -29,7 +29,7 @@
 \usepackage{xcolor}
 
 % dark mode
-\usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
+% \usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
 
 % amsthm
 \newtheorem{proposition}{Proposition}
@@ -182,16 +182,16 @@
 		As an emerging low-power communication technique, \gls{bc} separates conventional transmitter into a \gls{rf} carrier emitter with power-hungry elements (e.g., synthesizer and amplifier) and an information-bearing node with power-efficient components (e.g., harvester and modulator) \cite{Boyer2014}.
 		The node harvests energy from impinging wave and embeds information over scattered signal in a sustainable and controllable manner.
 		% The backscatter reader can be either co-located or separated with the carrier emitter, known as monostatic and bistatic \gls{bc}.
-		The backscatter reader can be either co-located or separated with the carrier emitter, known as \gls{mbc} and \gls{bbc} in Fig. \subref*{fi:monostatic_backscatter_communication} and \subref*{fi:bistatic_backscatter_communication}, respectively.
+		The backscatter reader can be either co-located or separated with the carrier emitter, known as \gls{mbc} and \gls{bbc} in Fig. \subref*{fi:mbc} and \subref*{fi:bbc}, respectively.
 		Its applications such as \gls{rfid} \cite{Dobkin2012,Landt2005} and passive sensor network \cite{Vannucci2008,Assimonis2016} have been extensively researched, standardized, and commercialized to support \gls{iot} and \gls{m2m} networks.
 		% ? Specifically, a dedicated emitter generates a sinusoidal carrier at reserved frequency, and \gls{rfid} tags reports their identifier to a nearby \gls{rfid} reader.
 		% ? With the upsurge of wireless devices and the downtrend of circuit power consumption, \gls{rfid} has experienced great success in \gls{ioe} and \gls{m2m} networks.
 		However, traditional \gls{bc} nodes only respond when externally inquired.
 		In \gls{ambc} \cite{Liu2013b}, interactive nodes recycle ambient signals from legacy transmitters (e.g., radio, television and Wi-Fi) to harvest energy and establish connections.
-		As illustrated in Fig. \subref*{fi:ambient_backscatter_communication}, it eliminates the need of dedicated power supply, carrier emitter and frequency spectrum, bringing more opportunities to low-power communications.
+		As illustrated in Fig. \subref*{fi:ambc}, it eliminates the need of dedicated power supply, carrier emitter and frequency spectrum, bringing more opportunities to low-power communications.
 		To combat the strong direct-link interference of \gls{ambc}, \cite{Yang2018} proposed a co-located receiver that cooperatively decodes both primary (legacy) and backscatter links.
 		% The authors evaluated the error performance of \gls{ml}, linear, and \gls{sic} detectors for flat fading channel, and proposed a low-complexity detector for frequency-selective fading channel.
-		The concept of cooperative \gls{ambc} was further refined as \gls{sr} in Fig. \subref*{fi:symbiotic_radio} that cognitively incorporates \gls{ambc} with existing systems \cite{Liang2020}.
+		The concept of cooperative \gls{ambc} was further refined as \gls{sr} in Fig. \subref*{fi:sr} that cognitively incorporates \gls{ambc} with existing systems \cite{Liang2020}.
 		% In \gls{sr}, the primary transmitter generates active radio carrying primary information, the backscatter node modulates own information onto the scattered wave, and the co-located receiver decodes both links from two propagation paths.
 		% In \gls{sr}, the primary transmitter generates active radio and modulates primary information, the passive node scatters incoming wave and superimposes backscatter information, and the co-located receiver decodes both links from two propagation paths.
 		In \gls{sr}, the primary transmitter generates active radio and modulates primary information, the passive node scatters incoming wave and superimposes backscatter information, while the co-located receiver decodes both links from both propagation paths.
@@ -217,7 +217,7 @@
 		% This enables backscatter \gls{fdma} at the cost of extra bandwidth and higher power consumption.
 		% To reduce coordination between passive nodes, \cite{Han2021} proposed a random code-assisted multiple access for \gls{sr} and evaluated the asymptotic \gls{sinr} using random matrix theory.
 		% However, it suffers from imperfect synchronization and the near-far problem.
-		On the other hand, \gls{ris} in Fig. \subref*{fi:reconfigurable_intelligent_surface} is a promising technology that evolves wireless propagation environment using numerous passive reflecting elements (e.g., scattering antenna or programmable metamaterial) with adjustable amplitudes and/or phases \cite{Wu2021b}.
+		On the other hand, \gls{ris} in Fig. \subref*{fi:ris} is a promising technology that evolves wireless propagation environment using numerous passive reflecting elements (e.g., scattering antenna or programmable metamaterial) with adjustable amplitudes and/or phases \cite{Wu2021b}.
 		With proper phase shift design, the scattered components can add constructively/destructively with the direct component for signal enhancement/interference suppression.
 		% Compared with scattering nodes of \gls{bc}/\gls{sr}, \gls{ris} elements embed no additional information and use deterministic reflection pattern priorly known at the transmitter and receiver.
 		Compared with scattering nodes of \gls{bc}/\gls{sr}, \gls{ris} elements embed no additional information and use fixed reflection pattern over time, which can be optimized and fed back to the transmitter and receiver during coordination phase.
@@ -241,35 +241,35 @@
 			\centering
 			\subfloat[\gls{mbc}]{
 				\resizebox{0.48\linewidth}{!}{
-					\input{assets/illustration/monostatic_backscatter_communication.tex}
+					\input{assets/illustration/mbc.tex}
 				}
-				\label{fi:monostatic_backscatter_communication}
+				\label{fi:mbc}
 			}
 			\subfloat[\gls{bbc}]{
 				\resizebox{0.48\linewidth}{!}{
-					\input{assets/illustration/bistatic_backscatter_communication.tex}
+					\input{assets/illustration/bbc.tex}
 				}
-				\label{fi:bistatic_backscatter_communication}
+				\label{fi:bbc}
 			}
 			\\
 			\subfloat[\gls{ambc}]{
 				\resizebox{0.48\linewidth}{!}{
-					\input{assets/illustration/ambient_backscatter_communication.tex}
+					\input{assets/illustration/ambc.tex}
 				}
-				\label{fi:ambient_backscatter_communication}
+				\label{fi:ambc}
 			}
 			\subfloat[\gls{sr}]{
 				\resizebox{0.48\linewidth}{!}{
-					\input{assets/illustration/symbiotic_radio.tex}
+					\input{assets/illustration/sr.tex}
 				}
-				\label{fi:symbiotic_radio}
+				\label{fi:sr}
 			}
 			\\
 			\subfloat[\gls{ris}]{
 				\resizebox{0.48\linewidth}{!}{
-					\input{assets/illustration/reconfigurable_intelligent_surface.tex}
+					\input{assets/illustration/ris.tex}
 				}
-				\label{fi:reconfigurable_intelligent_surface}
+				\label{fi:ris}
 			}
 			\subfloat[RIScatter]{
 				\resizebox{0.48\linewidth}{!}{
@@ -287,27 +287,17 @@
 
 	\begin{table*}[]
 		\caption{Comparison of Scattering Applications}
-		% \begin{tabularx}{\textwidth}{LLLLLLL}
-		% 	\toprule
-		% 	                              & \gls{mbc}               & \gls{bbc}               & \gls{ambc}                                      & \gls{sr}                                     & \gls{ris}                       & RIScatter                                         \\ \midrule
-		% 	Coexisting systems            & 1                       & 1                       & 2 (competitive)                                 & 2 (collaborative)                            & 1                               & 2 (collaborative)                                 \\ \midrule
-		% 	Scatterer contribution        & Backscatter modulation  & Backscatter modulation  & Backscatter modulation and primary interference & Backscatter modulation and primary multipath & Passive beamforming             & Backscatter modulation and passive beamforming    \\ \midrule
-		% 	Cooperative transmission      & ---                     & ---                     & No                                              & Active beamforming                           & ---                             & Active beamforming and smart reflection           \\ \midrule
-		% 	Cooperative reception         & ---                     & ---                     & No                                              & Joint detection or \gls{sic}                 & ---                             & Backscatter detection as primary channel training \\ \midrule
-		% 	Backscatter detection         & Coherent or noncoherent & Coherent or noncoherent & Semi-coherent or noncoherent                    & Coherent                                     & ---                             & Semi-coherent                                     \\ \midrule
-		% 	Reflection state distribution & Equiprobable            & Equiprobable            & Equiprobable                                    & Gaussian or Equiprobable                     & Degenerate (\gls{csi}-adaptive) & Flexible (\gls{csi}- and link priority-adaptive)  \\ \midrule
-		% 	Load-switching frequency      & Fast or slow            & Fast or slow            & Fast or slow                                    & Slow                                         & Slow (dynamic) or very slow     & Fast or slow                                      \\ \bottomrule
-		% \end{tabularx}
 		\begin{tabularx}{\textwidth}{CCCCCCC}
 			\toprule
-			                              & \gls{mbc}               & \gls{bbc}               & \gls{ambc}                                      & \gls{sr}                                     & \gls{ris}                       & RIScatter                                         \\ \midrule
-			Coexisting systems            & 1                       & 1                       & 2 (competitive)                                 & 2 (collaborative)                            & 1                               & 2 (collaborative)                                 \\ \midrule
-			Scatterer contribution        & Backscatter modulation  & Backscatter modulation  & Backscatter modulation and primary interference & Backscatter modulation and primary multipath & Passive beamforming             & Backscatter modulation and passive beamforming    \\ \midrule
-			Cooperative transmission      & ---                     & ---                     & No                                              & Active beamforming                           & ---                             & Active beamforming and smart reflection           \\ \midrule
-			Cooperative reception         & ---                     & ---                     & No                                              & Joint detection or \gls{sic}                 & ---                             & Backscatter detection as primary channel training \\ \midrule
-			Backscatter detection         & Coherent or noncoherent & Coherent or noncoherent & Semi-coherent or noncoherent                    & Coherent                                     & ---                             & Semi-coherent                                     \\ \midrule
-			Reflection state distribution & Equiprobable            & Equiprobable            & Equiprobable                                    & Gaussian or Equiprobable                     & Degenerate (\gls{csi}-adaptive) & Flexible (\gls{csi}- and link priority-adaptive)  \\ \midrule
-			Load-switching frequency      & Fast or slow            & Fast or slow            & Fast or slow                                    & Slow                                         & Slow (dynamic) or very slow     & Fast or slow                                      \\ \bottomrule
+			                              & \gls{mbc}                 & \gls{bbc}                 & \gls{ambc}                                      & \gls{sr}                                     & \gls{ris}                               & RIScatter                                         \\ \midrule
+			Coexisting systems            & 1                         & 1                         & 2 (competitive)                                 & 2 (collaborative)                            & 1                                       & 2 (collaborative)                                 \\ \midrule
+			Scatterer contribution        & Backscatter modulation    & Backscatter modulation    & Backscatter modulation and primary interference & Backscatter modulation and primary multipath & Passive beamforming                     & Backscatter modulation and passive beamforming    \\ \midrule
+			Cooperative transmission      & ---                       & ---                       & No                                              & Active beamforming                           & ---                                     & Active beamforming and smart reflection           \\ \midrule
+			Cooperative reception         & ---                       & ---                       & No (separated receivers)                        & Joint detection or \gls{sic}                 & ---                                     & Backscatter detection as primary channel training \\ \midrule
+			Primary detection             & ---                       & ---                       & Semi-coherent                                   & Coherent or semi-coherent                    & Coherent                                & Coherent                                          \\ \midrule
+			Backscatter detection         & Coherent                  & Coherent                  & Semi-coherent or noncoherent                    & Coherent                                     & ---                                     & Semi-coherent                                     \\ \midrule
+			Reflection state distribution & Equiprobable (line-coded) & Equiprobable (line-coded) & Equiprobable (line-coded)                       & Equiprobable or Gaussian                     & Degenerate (\gls{csi}-adaptive)         & Flexible (\gls{csi}- and link priority-adaptive)  \\ \midrule
+			Load-switching frequency      & Fast or slow              & Fast or slow              & Fast or slow                                    & Slow                                         & Slow (dynamic) or very slow (blockwise) & Fast or slow                                      \\ \bottomrule
 		\end{tabularx}
 	\end{table*}
 

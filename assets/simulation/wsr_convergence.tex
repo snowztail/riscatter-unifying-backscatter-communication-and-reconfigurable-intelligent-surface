@@ -1,0 +1,118 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44706,0.74118}%
+\definecolor{mycolor2}{rgb}{0.85098,0.32549,0.09804}%
+\definecolor{mycolor3}{rgb}{0.92941,0.69412,0.12549}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.079in,
+height=0.945in,
+at={(0.684in,2.95in)},
+scale only axis,
+xmin=0,
+xmax=120,
+ymin=0.113244880454575,
+ymax=0.116102304831398,
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={at={(0.97,0.03)}, anchor=south east, legend cell align=left, align=left, draw=white!15!black},
+title style={font=\Large}, label style={font=\Large}, ticklabel style={font=\large}, legend style={font=\large}, yticklabel=\pgfkeys{/pgf/number format/.cd,fixed,precision=3}\pgfmathprintnumber{\tick}
+]
+\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+0	0.113244880454575\\
+10	0.114358992707155\\
+20	0.114956255981364\\
+30	0.115310191711237\\
+40	0.115536251457935\\
+50	0.11568965371294\\
+60	0.115799285291346\\
+70	0.115881218617581\\
+80	0.115944814587431\\
+90	0.115995739004593\\
+100	0.116037546854275\\
+110	0.116072549598378\\
+120	0.116102304831398\\
+};
+\addlegendentry{KKT (First Call)}
+
+\end{axis}
+
+\begin{axis}[%
+width=4.079in,
+height=0.945in,
+at={(0.684in,1.707in)},
+scale only axis,
+xmin=0,
+xmax=14,
+ymin=0.116354276985174,
+ymax=0.157617738080098,
+ylabel style={font=\color{white!15!black}},
+ylabel={Weighed Sum-Rate},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={at={(0.97,0.03)}, anchor=south east, legend cell align=left, align=left, draw=white!15!black},
+title style={font=\Large}, label style={font=\Large}, ticklabel style={font=\large}, legend style={font=\large}, yticklabel=\pgfkeys{/pgf/number format/.cd,fixed,precision=3}\pgfmathprintnumber{\tick}
+]
+\addplot [color=mycolor2, dashed, line width=2.0pt, mark=+, mark options={solid, mycolor2}]
+  table[row sep=crcr]{%
+0	0.116354276985174\\
+1	0.134986216301261\\
+2	0.137045463164113\\
+3	0.14221149883543\\
+4	0.143513293823474\\
+5	0.148182976472748\\
+6	0.148354041018766\\
+7	0.150388146565952\\
+8	0.151376635136393\\
+9	0.15160915733737\\
+10	0.15291935995385\\
+11	0.156743857286177\\
+12	0.157617738080098\\
+13	0.157617738080098\\
+};
+\addlegendentry{PGD (First Call)}
+
+\end{axis}
+
+\begin{axis}[%
+width=4.079in,
+height=0.945in,
+at={(0.684in,0.463in)},
+scale only axis,
+xmin=0,
+xmax=8,
+xlabel style={font=\color{white!15!black}},
+xlabel={Number of Iterations},
+ymin=0,
+ymax=0.765555326497281,
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={at={(0.97,0.03)}, anchor=south east, legend cell align=left, align=left, draw=white!15!black},
+title style={font=\Large}, label style={font=\Large}, ticklabel style={font=\large}, legend style={font=\large}, yticklabel=\pgfkeys{/pgf/number format/.cd,fixed,precision=3}\pgfmathprintnumber{\tick}
+]
+\addplot [color=mycolor3, dotted, line width=2.0pt, mark=square, mark options={solid, mycolor3}]
+  table[row sep=crcr]{%
+0	0.113244880454575\\
+1	0.159820508450486\\
+2	0.271161604498627\\
+3	0.403558255259651\\
+4	0.594995557319089\\
+5	0.748644776092643\\
+6	0.764477923292286\\
+7	0.765555325740019\\
+8	0.765555326497281\\
+};
+\addlegendentry{BCD}
+
+\end{axis}
+\end{tikzpicture}%

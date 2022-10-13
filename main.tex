@@ -355,6 +355,7 @@
 	% TODO mu-code: use multiple Rxs for noncoherent direct interference cancellation (instead of receive diversity)
 	% TODO backscatter modulation <-> passive beamforming; add adaptive channel coding over (NRZ) line coding.
 	% TODO semicoherent: known CSI, unknown primary/backscatter symbols
+	% TODO initialization, convergence
 
 
 	% To the best of our knowledge, all relevant literatures assumed at backscatter information sources either Gaussian codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} or finite equiprobable inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a}.
@@ -929,6 +930,16 @@
 	We choose $\gamma_{\mathrm{D}}=2.6$, $\gamma_{\mathrm{F}}=2.4$, $\gamma_{\mathrm{B}}=2$, and $\kappa_{\mathrm{D}}=\kappa_{\mathrm{F}}=\kappa_{\mathrm{B}}=5$ for direct, forward and backward links.
 	The finite threshold domain $\mathcal{T}$ comes from $b$-bit uniform discretization over the critical interval defined by the confidence bounds of edge hypotheses (i.e., lower bound of $\mathcal{H}_1$ and upper bound of $\mathcal{H}_L$) with confidence level $1-\varepsilon$, where $b=7$ and $\varepsilon=\num{1e-3}$.
 	All achievable rate curves/regions are averaged over \num{3000} realizations, and the parameters remain fixed unless otherwise specified.
+
+
+	\begin{figure}[!t]
+		\centering
+		\resizebox{0.75\columnwidth}{!}{
+			\input{assets/simulation/wsr_convergence.tex}
+		}
+		\caption{Convergence behavior of the proposed algorithms.}
+		\label{fi:wsr_convergence}
+	\end{figure}
 
 	\begin{subsection}{Input Distribution versus Link Priority}
 		\begin{figure}[!t]

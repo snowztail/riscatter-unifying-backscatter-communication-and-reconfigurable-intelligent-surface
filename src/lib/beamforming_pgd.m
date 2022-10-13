@@ -1,4 +1,4 @@
-function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold, tolerance, maxStep, alpha, beta)
+function [beamforming, convergence] = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold, tolerance, maxStep, alpha, beta)
 	% Function:
 	%	- optimize beamforming vector by projected gradient descent with step size determined by backtracking line search
     %
@@ -18,6 +18,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
     %
     % Output:
 	%	- beamforming [nTxs x 1]: transmit beamforming vector
+	%	- convergence [1 x nIterations]: weighted sum-rate at each iteration
     %
 	% Comment:
 	%	- complex gradient w.r.t. beamforming vector is obtained in closed form
@@ -60,6 +61,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 	dmac = dmc_integration(symbolRatio, receivePower, threshold);
 	dmac(:, sortIndex) = dmac;
 	wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
+	convergence = wsr;
 
 	% * Projected gradient descent
 	isConverged = false;
@@ -89,6 +91,7 @@ function [beamforming] = beamforming_pgd(symbolRatio, weight, transmitPower, noi
 			isConverged = norm(beamformingPgd - beamforming) <= tolerance || norm(beamformingPgd + beamforming) <= tolerance;
 			beamforming = beamformingPgd;
 			wsr = wsrPgd;
+			convergence = [convergence, wsr];
 		else
 			error('PGD failed. Is any DMAC entry approaching 0?');
 		end

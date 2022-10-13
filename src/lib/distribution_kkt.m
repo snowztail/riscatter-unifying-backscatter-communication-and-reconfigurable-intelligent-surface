@@ -1,4 +1,4 @@
-function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight, snr, dmac, tolerance)
+function [distribution, equivalentDistribution, convergence] = distribution_kkt(nTags, weight, snr, dmac, tolerance)
 	% Function:
 	%	- obtain KKT tag input probability distribution for maximizing weighted sum of primary and total backscatter rate
     %
@@ -12,6 +12,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
     % Output:
 	%	- distribution [nStates x nTags]: tag input (i.e., state) probability distribution
 	%	- equivalentDistribution [nInputs x 1]: equivalent single-source distribution for each tag input distribution tuple
+	%	- convergence [1 x nIterations]: weighted sum-rate at each iteration
     %
     % Comment:
     %	- iteratively update input distribution of each tag by coordinate descent
@@ -48,6 +49,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 	informationFunction = weight * information_primary(snr) + (1 - weight) * information_backscatter(equivalentDistribution, dmac);
 	marginalInformation = marginal_information(distributionTuple, informationFunction);
 	wsr = equivalentDistribution' * informationFunction;
+	convergence = wsr;
 
 	% * Iteratively update input distribution for all tags
 	isConverged = false;
@@ -62,6 +64,7 @@ function [distribution, equivalentDistribution] = distribution_kkt(nTags, weight
 			marginalInformation = marginal_information(distributionTuple, informationFunction);
 			wsr = equivalentDistribution' * informationFunction;
 		end
+		convergence = [convergence, wsr];
 		isConverged = (wsr - wsr_) / wsr <= tolerance || isnan(wsr);
 	end
 

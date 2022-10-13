@@ -1,4 +1,4 @@
-function [rate, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, tolerance, Options)
+function [rate, distribution, threshold, beamforming, convergence] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, tolerance, Options)
 	% Function:
 	%	- iteratively update the input distribution, detection threshold, and beamforming vector to maximize weighted sum rate
     %
@@ -19,6 +19,7 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	%	- distribution [nStates x nTags]: tag input (i.e., state) probability distribution
 	%	- threshold [1 x (nOutputs + 1)]: boundaries of decision regions (including 0 and Inf)
 	%	- beamforming [nTxs x 1]: transmit beamforming vector
+	%	- convergence [1 x nIterations]: weighted sum-rate at each iteration of BCD, (first) KKT and PGD
     %
     % Comment:
 	%	- user first jointly decode all tags by energy detection, then model backscatter contribution within equivalent channel
@@ -85,6 +86,8 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 	% * Block coordinate descent
 	wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
 	isConverged = false;
+	isInitialized = true;
+	convergence.bcd = wsr;
 
 	while ~isConverged
 		% * Update iteration index
@@ -95,7 +98,11 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		case 'exhaustion'
 			[distribution, equivalentDistribution] = distribution_exhaustion(nTags, weight, snr, dmac);
 		case 'kkt'
-			[distribution, equivalentDistribution] = distribution_kkt(nTags, weight, snr, dmac);
+			if ~isInitialized
+				[distribution, equivalentDistribution] = distribution_kkt(nTags, weight, snr, dmac);
+			else
+				[distribution, equivalentDistribution, convergence.kkt] = distribution_kkt(nTags, weight, snr, dmac);
+			end
 		case 'sca'
 			[distribution, equivalentDistribution] = distribution_sca(nTags, weight, snr, dmac);
 		case 'cooperation'
@@ -117,7 +124,11 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 		% * Transmit beamforming
 		switch Options.Beamforming
 		case 'pgd'
-			beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold);
+			if ~isInitialized
+				beamforming = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold);
+			else
+				[beamforming, convergence.pgd] = beamforming_pgd(symbolRatio, weight, transmitPower, noisePower, equivalentChannel, cascadedChannel, equivalentDistribution, threshold);
+			end
 		case 'emrt'
 			beamforming = beamforming_emrt(transmitPower, equivalentChannel, equivalentDistribution);
 		case 'dmrt'
@@ -147,7 +158,9 @@ function [rate, distribution, threshold, beamforming] = block_coordinate_descent
 
 		% * Test convergence
 		[wsr, rate] = rate_weighted(weight, snr, equivalentDistribution, dmac);
+		convergence.bcd = [convergence.bcd, wsr];
 		isConverged = (wsr - wsr_) / wsr <= tolerance || isnan(wsr);
+		isInitialized = false;
 	end
 
 	% * Update initializer

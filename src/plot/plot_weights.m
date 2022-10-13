@@ -1,7 +1,7 @@
-clear; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc; close all;
+clear; run('../setup'); config_weights; clc; close all;
 
 %% * Load data
-distribution = horzcat(load(strcat('../data/distribution_', erase(mfilename, 'plot_')), 'Result').Result.distribution);
+distribution = horzcat(load('distribution_weights', 'Result').Result.distribution);
 
 %% * Draw reflection state distributions
 figure('Name', 'Tag Input Distribution vs Weight', 'Position', [0, 0, 500, 400]);

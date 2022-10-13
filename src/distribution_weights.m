@@ -1,4 +1,4 @@
-clear; setup; cvx_begin; cvx_end; clc; run(strcat('config_', erase(mfilename, 'distribution_')));
+clear; setup; cvx_begin; cvx_end; clc; config_weights;
 
 % * Initialize struct
 Result(nWeights) = struct('weight', [], 'rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);

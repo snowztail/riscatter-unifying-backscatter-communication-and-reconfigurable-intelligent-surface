@@ -930,7 +930,7 @@
 	We assume the AP-user distance is \qty{10}{\meter}, $K=2$ RIScatter nodes are randomly dropped within a disk of radius \qty{2}{\meter} centered at the user, the \gls{ap} is with $Q=4$ transmit antennas and an average power budget $P=\qty{36}{\dBm}$, the nodes employs \num{4}-\gls{qam} with amplitude scattering ratio $\alpha=0.5$, the user is with average noise power $\sigma_v^2=\qty{-40}{\dBm}$, and the symbol period ratio is $N=20$.
 	For all channels involved, we consider a distance-dependent path loss model
 	\begin{equation}
-		L(d) = L_0 \biggl(\frac{d_0}{d}\biggr)^\gamma
+		L(d) = L_0 \biggl(\frac{d_0}{d}\biggr)^\gamma,
 	\end{equation}
 	together with a Rician fading model
 	\begin{equation}
@@ -962,13 +962,16 @@
 			For $K=8$ and $M=2$, Algorithm \ref{al:input_distribution} typically takes around \num{100} fast iterations of closed-form expression \eqref{eq:input_kkt_solution} to converge to the \gls{kkt} input distribution.
 			For $Q=4$, around \num{10} iterations are required for Algorithm \ref{al:active_beamforming} to converge, where the gradient needs to be evaluated by \eqref{eq:weighted_sum_mutual_information_gradient} and the step size needs to be refined by \gls{bls}.
 			In comparison, the \gls{bcd} algorithm typically requires no more than \num{5} iterations to converge.
-			At the following points (not shown here), the convergence of all three algorithms are much faster thanks to the progressive initialization.
+			At the following points (not presented), the convergence of all three algorithms are much faster thanks to the progressive initialization.
 			Overall, we conclude the proposed algorithms are able to converge within moderate iterations and provide significant rate benefits for the RIScatter system.
 		\end{subsubsection}
 	\end{subsection}
 
 	\begin{subsection}{Comparison of Scattering Applications}
-		For a fair comparison, we consider the setup in Fig. \ref{fi:riscatter_network} and employ \gls{ml} backscatter energy detection for these scattering applications:
+		% TODO SR analysis can achieve large rate at the cost of large N; RIScatter can achieve slightly lower rate at the same N, but also preserves primary performance for smaller N
+		% TODO tradeoff between primary (RIScatter, no SIC) and backscatter (SR, SIC)
+		% For a fair comparison, we consider the setup in Fig. \ref{fi:riscatter_network} and employ \gls{ml} backscatter energy detection for these scattering applications:
+		For a fair comparison, we consider the setup in Fig. \ref{fi:riscatter_network} with \gls{ml} backscatter energy detection for these scattering applications (except \gls{sr}):
 		\begin{itemize}
 			\item \emph{\gls{bbc}:}
 			The primary symbol $s[n]$ becomes deterministic and the receive signal at each primary block is
@@ -977,7 +980,7 @@
 				y^{\text{\gls{bbc}}}[n] = \Bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k\Bigr) \boldsymbol{w} + v[n],
 			\end{equation}
 			% which follows non-zero mean complex Gaussian distribution $\mathcal{CN}\bigl(\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w},\sigma_v^2\bigr)$ under hypothesis $\mathcal{H}_{m_{\mathcal{K}}}$.
-			which follows non-zero mean complex Gaussian distribution $\mathcal{CN}\bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_{m_k} \boldsymbol{w},\sigma_v^2\bigr)$ under hypothesis $\mathcal{H}_{m_{\mathcal{K}}}$.
+			which follows non-zero mean complex Gaussian distribution $\mathcal{CN}\bigl((\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_{m_k}) \boldsymbol{w},\sigma_v^2\bigr)$ under hypothesis $\mathcal{H}_{m_{\mathcal{K}}}$.
 			% \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k
 			The corresponding \gls{pdf} of accumulated receive energy over $N$ primary blocks is
 			\begin{equation}
@@ -997,22 +1000,23 @@
 				I_P^{\text{\gls{ambc}}}(s;y) \approx \log \Bigl(1 + \frac{\lvert\boldsymbol{h}_{\mathrm{D}}^H\boldsymbol{w}\rvert^2}{\sum_{k}\lvert \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H \boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr),
 			\end{equation}
 			while the total backscatter rate follows \eqref{eq:backscatter_mutual_information} with uniform input distribution.
-			\item \emph{\gls{sr}:} When $N$ is sufficiently large, the primary ergodic rate under semi-coherent detection can be approximated by \eqref{eq:primary_mutual_information} with uniform input distribution \cite{Long2020a}.
-			When $s[n]$ is successfully decoded and the direct interference $\boldsymbol{h}_{\mathrm{D}}^H \boldsymbol{w} s[n]$ is perfectly cancelled, the intermediate signal used for backscatter detection is
+			\item \emph{\gls{sr}:}\footnote{Existing } For a sufficiently large $N$, the primary ergodic rate under semi-coherent detection can be approximated by \eqref{eq:primary_mutual_information} with uniform input distribution \cite{Long2020a}.
+			When $s[n]$ is successfully decoded and the direct interference $\boldsymbol{h}_{\mathrm{D}}^H \boldsymbol{w} s[n]$ is perfectly cancelled, the intermediate signal for backscatter detection is
 			\begin{equation}
 				\hat{y}^{\text{\gls{sr}}}[n] = \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k \boldsymbol{w} s[n] + v[n],
 			\end{equation}
 			which, under hypothesis $\mathcal{H}_{m_{\mathcal{K}}}$, is only subject to the noise uncertainty and follows non-zero mean complex Gaussian distribution $\mathcal{CN}\bigl(\sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k \boldsymbol{w} s[n],\sigma_v^2\bigr)$.
-			By the law of large numbers, as $N$ goes to infinity, the \gls{pdf} of accumulated intermediate energy approaches
-			\begin{equation}
-				f^{\text{\gls{sr}}}(z|\mathcal{H}_{m_{\mathcal{K}}}) = \frac{(z-\mu_{m_{\mathcal{K}}}^{\text{\gls{sr}}})^{N-1} \exp \bigl(-(z-\mu_{m_{\mathcal{K}}}^{\text{\gls{sr}}})/\sigma_v^2 \bigr)}{\sigma_v^{2N} (N-1)!},
-				\label{eq:energy_distribution_sr}
-			\end{equation}
-			where $\mu_{m_{\mathcal{K}}}^{\text{\gls{sr}}} \triangleq N \bigl\lvert \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_{m_k} \boldsymbol{w} \bigr\rvert^2$. The \gls{ml} decision threshold is, $\forall l \in \mathcal{L} \setminus \{L\}$,
-			\begin{equation}
-				t_l^{\text{\gls{sr}}} = \frac{\mu_{l-1}^{\text{\gls{sr}}} \exp \bigl((\mu_{l-1}^{\text{\gls{sr}}}-\mu_{l}^{\text{\gls{sr}}})/\sigma_v^2 (N-1)\bigr) - \mu_{l}^{\text{\gls{sr}}}}{\exp \bigl((\mu_{l-1}^{\text{\gls{sr}}}-\mu_{l}^{\text{\gls{sr}}})/\sigma_v^2 (N-1)\bigr) - 1}.
-				\label{eq:detection_threshold_ml_sr}
-			\end{equation}
+			Energy detection is generally suboptimal in this case
+			% By the law of large numbers, for a very large $N$, the \gls{pdf} of accumulated intermediate energy approaches
+			% \begin{equation}
+			% 	f^{\text{\gls{sr}}}(z|\mathcal{H}_{m_{\mathcal{K}}}) = \frac{(z-\mu_{m_{\mathcal{K}}}^{\text{\gls{sr}}})^{N-1} \exp \bigl(-(z-\mu_{m_{\mathcal{K}}}^{\text{\gls{sr}}})/\sigma_v^2 \bigr)}{\sigma_v^{2N} (N-1)!},
+			% 	\label{eq:energy_distribution_sr}
+			% \end{equation}
+			% where $\mu_{m_{\mathcal{K}}}^{\text{\gls{sr}}} \triangleq N \bigl\lvert \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_{m_k} \boldsymbol{w} \bigr\rvert^2$. The \gls{ml} decision threshold is, $\forall l \in \mathcal{L} \setminus \{L\}$,
+			% \begin{equation}
+			% 	t_l^{\text{\gls{sr}}} = \frac{\mu_{l-1}^{\text{\gls{sr}}} \exp \bigl((\mu_{l-1}^{\text{\gls{sr}}}-\mu_{l}^{\text{\gls{sr}}})/\sigma_v^2 (N-1)\bigr) - \mu_{l}^{\text{\gls{sr}}}}{\exp \bigl((\mu_{l-1}^{\text{\gls{sr}}}-\mu_{l}^{\text{\gls{sr}}})/\sigma_v^2 (N-1)\bigr) - 1}.
+			% 	\label{eq:detection_threshold_ml_sr}
+			% \end{equation}
 		\end{itemize}
 	\end{subsection}
 

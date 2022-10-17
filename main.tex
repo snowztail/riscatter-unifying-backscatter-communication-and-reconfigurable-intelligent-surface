@@ -122,6 +122,7 @@
 \newacronym{mbc}{MBC}{Monostatic Backscatter Communications}
 \newacronym{bbc}{BBC}{Bistatic Backscatter Communications}
 \newacronym{bls}{BLS}{Backtracking Line Search}
+\newacronym{mrc}{MRC}{Maximal Ratio Combining}
 
 \begin{document}
 \title{RIScatter: Unifying\\Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
@@ -357,6 +358,7 @@
 	% TODO backscatter modulation <-> passive beamforming; add adaptive channel coding over (NRZ) line coding.
 	% TODO semicoherent: known CSI, unknown primary/backscatter symbols
 	% TODO initialization, convergence
+	% TODO Base e, use 2 in simulation
 
 
 	% To the best of our knowledge, all relevant literatures assumed at backscatter information sources either Gaussian codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} or finite equiprobable inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a}.
@@ -439,7 +441,7 @@
 		\begin{subsubsection}{Metamaterial-Based Scatterer}
 			A typical metamaterial-based scatterer consists of multiple material layers and a smart controller \cite{Wu2020}.
 			The outer metamaterial layer involves numerous sub-wavelength structural units made of metallic or dielectric materials.
-			The properties of unit cells can be artificially tuned for unconventional effective permittivity $\epsilon$ and permeability $\mu$, producing customizable response to the electromagnetic field \cite{Zhou2021}.
+			The properties of unit cells can be artificially tuned for unconventional effective permittivity (epsilon) and permeability (mu), producing customizable response to the electromagnetic field \cite{Zhou2021}.
 			Using epsilon-negative material (e.g., conducing rods) or mu-negative material (e.g., split-ring resonators), ideal metamaterial-based scatterers can reflect the incident waves at the boundary between free space and metamaterial without receiving them \cite{Huang2021a}.
 			This mainly applies a phase shift on the reflected wave and any propagation into the metamaterial would be evanescent.
 			Depending on the type of metamaterial, its equivalent impedance can be controlled by voltage (for functional materials \cite{Singh2020} and tunable diodes \cite{Costa2021}) or architecture (for resonant elements \cite{Bialkowski2008}).
@@ -780,7 +782,7 @@
 			\caption{Numerical \gls{kkt} Input Distribution Evaluation by Limits of Sequence}
 			\label{al:input_distribution}
 			\begin{algorithmic}[1]
-				\Require $K$, $N$, $\boldsymbol{h}_{\mathrm{D}}^H$, $\boldsymbol{H}_{\mathrm{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $\sigma_v^2$, $\rho$, $\boldsymbol{w}$, $\boldsymbol{t}$, $\epsilon$
+				\Require $K$, $N$, $\boldsymbol{h}_{\mathrm{D}}^H$, $\boldsymbol{H}_{\mathrm{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $\sigma_v^2$, $\rho$, $\boldsymbol{w}$, $\boldsymbol{t}$, $\varepsilon$
 				\Ensure $\{\boldsymbol{p}_k^\star\}_{k \in \mathcal{K}}$
 				\State Set $\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_channel}
 				\State \phantom{Set} $\sigma^2_{m_{\mathcal{K}}}$, $\forall m_{\mathcal{K}}$ by \eqref{eq:receive_variance}
@@ -796,7 +798,7 @@
 					\State Update $r \gets r+1$
 					\State \phantom{Update} $\boldsymbol{p}_k^{(r)}$, $\forall k$ by \eqref{eq:input_kkt_solution}
 					\State Redo step \ref{st:input_distribution_begin}--\ref{st:input_distribution_end}
-				\Until $I^{(r)}(x_{\mathcal{K}}) - I^{(r-1)}(x_{\mathcal{K}}) \le \epsilon$
+				\Until $I^{(r)}(x_{\mathcal{K}}) - I^{(r-1)}(x_{\mathcal{K}}) \le \varepsilon$
 			\end{algorithmic}
 		\end{algorithm}
 	\end{subsection}
@@ -851,7 +853,7 @@
 			\caption{Iterative Active Beamforming Optimization by \gls{pgd} with \gls{bls}}
 			\label{al:active_beamforming}
 			\begin{algorithmic}[1]
-				\Require $Q$, $N$, $\boldsymbol{h}_{\mathrm{D}}^H$, $\boldsymbol{H}_{\mathrm{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $P$, $\sigma_v^2$, $\rho$, $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{t}$, $\alpha$, $\beta$, $\gamma$, $\epsilon$
+				\Require $Q$, $N$, $\boldsymbol{h}_{\mathrm{D}}^H$, $\boldsymbol{H}_{\mathrm{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $P$, $\sigma_v^2$, $\rho$, $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{t}$, $\alpha$, $\beta$, $\gamma$, $\varepsilon$
 				\Ensure $\boldsymbol{w}^\star$
 				\State Set $\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_channel}
 				\State \phantom{Set} $P_{\mathcal{K}}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_distribution}
@@ -873,7 +875,7 @@
 						\State Redo step \ref{st:backtracking_line_search_begin}--\ref{st:backtracking_line_search_end}
 					\EndWhile
 					\State Redo step \ref{st:gradient_update_start}, \ref{st:gradient_update_end}
-				\Until $\lVert\boldsymbol{w}^{(r)}-\boldsymbol{w}^{(r-1)}\rVert \le \epsilon$
+				\Until $\lVert\boldsymbol{w}^{(r)}-\boldsymbol{w}^{(r-1)}\rVert \le \varepsilon$
 			\end{algorithmic}
 		\end{algorithm}
 	\end{subsection}
@@ -970,11 +972,15 @@
 	\begin{subsection}{Comparison of Scattering Applications}
 		% TODO SR analysis can achieve large rate at the cost of large N; RIScatter can achieve slightly lower rate at the same N, but also preserves primary performance for smaller N
 		% TODO tradeoff between primary (RIScatter, no SIC) and backscatter (SR, SIC)
+		% ! SR assume very large N for primary rate analysis. However, in such cases SIC is questionable as energy detection over received signal as BBC is already good enough and non-coherent detection can also achieve reasonable performance?
+		% TODO when primary symbols are determined, optimal input distribution at high backscatter SNR is equiprobable for any detection (signal/energy)
 		% For a fair comparison, we consider the setup in Fig. \ref{fi:riscatter_network} and employ \gls{ml} backscatter energy detection for these scattering applications:
-		For a fair comparison, we consider the setup in Fig. \ref{fi:riscatter_network} with \gls{ml} backscatter energy detection for these scattering applications (except \gls{sr}):
+		% For a fair comparison, we consider the setup in Fig. \ref{fi:riscatter_network} with \gls{ml} backscatter energy detection for these scattering applications (except \gls{sr}):
+		% For a fair comparison with RIScatter, we consider the setup in Fig. \ref{fi:riscatter_network} and evaluate the achievable rate pairs for these scattering applications:
+		We consider the setup in Fig. \ref{fi:riscatter_network} and compare the achievable rate pairs of RIScatter and these scattering applications:
 		\begin{itemize}
 			\item \emph{\gls{bbc}:}
-			The primary symbol $s[n]$ becomes deterministic and the receive signal at each primary block is
+			The primary symbol becomes deterministic $s[n]=1$ and the receive signal at each primary block is
 			\begin{equation}
 				% y^{\text{\gls{bbc}}}[n] = \boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \boldsymbol{w} + v[n],
 				y^{\text{\gls{bbc}}}[n] = \Bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k\Bigr) \boldsymbol{w} + v[n],
@@ -995,28 +1001,29 @@
 				\label{eq:detection_threshold_ml_bbc}
 			\end{equation}
 			\item \emph{\gls{ambc}:} The user decodes both links independently and semi-coherently by treating the other as interference or uncertainty.
-			Hence, the primary achievable rate can be approximated by\footnote{To provide a preliminary benchmark, we approximate the scattered signal components from finite-input backscatter sources by independent interference from Gaussian sources.}
+			Hence, the primary achievable rate can be approximated by\footnote{To provide a preliminary benchmark, we approximate the unknown signal components from finite-input backscatter sources by independent interference from Gaussian sources.}
 			\begin{equation}
 				I_P^{\text{\gls{ambc}}}(s;y) \approx \log \Bigl(1 + \frac{\lvert\boldsymbol{h}_{\mathrm{D}}^H\boldsymbol{w}\rvert^2}{\sum_{k}\lvert \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H \boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr),
 			\end{equation}
 			while the total backscatter rate follows \eqref{eq:backscatter_mutual_information} with uniform input distribution.
-			\item \emph{\gls{sr}:}\footnote{Existing } For a sufficiently large $N$, the primary ergodic rate under semi-coherent detection can be approximated by \eqref{eq:primary_mutual_information} with uniform input distribution \cite{Long2020a}.
+			\item \emph{\gls{sr}:} For a sufficiently large $N$, the primary ergodic rate under semi-coherent detection asymptotically approaches \eqref{eq:primary_mutual_information} with uniform input distribution \cite{Long2020a}.
 			When $s[n]$ is successfully decoded and the direct interference $\boldsymbol{h}_{\mathrm{D}}^H \boldsymbol{w} s[n]$ is perfectly cancelled, the intermediate signal for backscatter detection is
 			\begin{equation}
 				\hat{y}^{\text{\gls{sr}}}[n] = \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k \boldsymbol{w} s[n] + v[n],
 			\end{equation}
-			which, under hypothesis $\mathcal{H}_{m_{\mathcal{K}}}$, is only subject to the noise uncertainty and follows non-zero mean complex Gaussian distribution $\mathcal{CN}\bigl(\sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k \boldsymbol{w} s[n],\sigma_v^2\bigr)$.
-			Energy detection is generally suboptimal in this case
-			% By the law of large numbers, for a very large $N$, the \gls{pdf} of accumulated intermediate energy approaches
-			% \begin{equation}
-			% 	f^{\text{\gls{sr}}}(z|\mathcal{H}_{m_{\mathcal{K}}}) = \frac{(z-\mu_{m_{\mathcal{K}}}^{\text{\gls{sr}}})^{N-1} \exp \bigl(-(z-\mu_{m_{\mathcal{K}}}^{\text{\gls{sr}}})/\sigma_v^2 \bigr)}{\sigma_v^{2N} (N-1)!},
-			% 	\label{eq:energy_distribution_sr}
-			% \end{equation}
-			% where $\mu_{m_{\mathcal{K}}}^{\text{\gls{sr}}} \triangleq N \bigl\lvert \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_{m_k} \boldsymbol{w} \bigr\rvert^2$. The \gls{ml} decision threshold is, $\forall l \in \mathcal{L} \setminus \{L\}$,
-			% \begin{equation}
-			% 	t_l^{\text{\gls{sr}}} = \frac{\mu_{l-1}^{\text{\gls{sr}}} \exp \bigl((\mu_{l-1}^{\text{\gls{sr}}}-\mu_{l}^{\text{\gls{sr}}})/\sigma_v^2 (N-1)\bigr) - \mu_{l}^{\text{\gls{sr}}}}{\exp \bigl((\mu_{l-1}^{\text{\gls{sr}}}-\mu_{l}^{\text{\gls{sr}}})/\sigma_v^2 (N-1)\bigr) - 1}.
-			% 	\label{eq:detection_threshold_ml_sr}
-			% \end{equation}
+			which only involves noise uncertainty under hypothesis $\mathcal{H}_{m_{\mathcal{K}}}$.
+			% and follows non-zero mean complex Gaussian distribution $\mathcal{CN}\bigl(\sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k \boldsymbol{w} s[n],\sigma_v^2\bigr)$.
+			By \gls{mrc} over $N$ primary blocks, the effective backscatter \gls{snr} is increased by $N$ times, and the total achievable for nodes with equiprobable inputs is \cite{Wang2014a}
+			\begin{equation}
+				I_{\mathrm{B}}(x_{\mathcal{K}};\hat{y}_{\text{\gls{sr}}}) = K \log M - \frac{\epsilon}{M^K},
+			\end{equation}
+			where $\epsilon \triangleq \sum_{m_{\mathcal{K}}} \mathbb{E}_{\hat{v}} \log \sum_{m_{\mathcal{K}}'} \exp ( - {\lvert x_{m_{\mathcal{K}}} - x_{m_{\mathcal{K}}'} + \hat{v} \rvert^2}/{2 \sigma^2} )$ and $\hat{v} \sim \mathcal{CN}(0,\sigma_v^2/N)$.
+			For a sufficiently large $N$, $\epsilon$ is negligible and the total backscatter rate approaches $K \log M$.
+			\item \emph{\gls{ris}:} Since the backscatter symbol tuple $x_{\mathcal{K}}$ becomes deterministic, the total backscatter rate is zero and the primary achievable rate boils down to a special case of \eqref{eq:primary_mutual_information}
+			\begin{equation}
+				I_P^{\text{\gls{ris}}}(s;y|x_{\mathcal{K}}) = I_P(s;y|x_{m_{\mathcal{K}}^{\star}}) = \log \Bigl(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}^{\star}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\Bigr),
+			\end{equation}
+			where $m_{\mathcal{K}}^{\star} = \arg \max_{m_{\mathcal{K}}} I_P(s;y|x_{m_{\mathcal{K}}})$.
 		\end{itemize}
 	\end{subsection}
 
@@ -1105,6 +1112,7 @@
 				\item \emph{Exhaustion:} Exhaustive grid search over the $M$-dimensional probability simplex with resolution $\Delta p = \num{1e-3}$;
 				\item \emph{\gls{kkt}:} Numerical \gls{kkt} solution evaluation by Algorithm \ref{al:input_distribution};
 				\item \emph{Cooperation:} Numerical symbol tuple distribution (i.e., $K$-dimensional joint probability array) evaluation by the Blahut-Arimoto algorithm \cite{Arimoto1972,Blahut1972a}.
+				% TODO MODIFIED BLAHUT-ARIMOTO, or modified algorithm 1 by treating as a single source
 			\end{itemize}
 
 			Since \emph{Cooperation} involves full transmit cooperation of all nodes, to support independent backscatter encoding, we also propose the following methods to recover individual input distributions from the joint probability array:

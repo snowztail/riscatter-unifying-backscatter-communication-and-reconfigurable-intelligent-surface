@@ -63,8 +63,9 @@ function [rate, distribution, threshold, beamforming, convergence] = block_coord
 	equivalentDistribution = prod(tuple_tag(distribution), 2);
 
 	% * Initialize decision threshold
-	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
-	snr = receivePower / noisePower;
+	signalPower = abs(equivalentChannel' * beamforming) .^ 2;
+	receivePower = signalPower + noisePower;
+	snr = signalPower / noisePower;
 	thresholdDomain = domain_threshold(symbolRatio, nBins, receivePower);
 	binDmc = dmc_integration(symbolRatio, receivePower, thresholdDomain);
 	switch Options.Threshold
@@ -84,7 +85,7 @@ function [rate, distribution, threshold, beamforming, convergence] = block_coord
 	dmac(:, sortIndex) = dmac;
 
 	% * Block coordinate descent
-	wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
+	wsr = rate_weighted(snr, equivalentDistribution, dmac, weight);
 	isConverged = false;
 	isInitialized = true;
 	convergence.bcd = wsr;
@@ -136,8 +137,9 @@ function [rate, distribution, threshold, beamforming, convergence] = block_coord
 		end
 
 		% * Decision threshold
-		receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
-		snr = receivePower / noisePower;
+		signalPower = abs(equivalentChannel' * beamforming) .^ 2;
+		receivePower = signalPower + noisePower;
+		snr = signalPower / noisePower;
 		thresholdDomain = domain_threshold(symbolRatio, nBins, receivePower);
 		binDmc = dmc_integration(symbolRatio, receivePower, thresholdDomain);
 		switch Options.Threshold
@@ -157,7 +159,7 @@ function [rate, distribution, threshold, beamforming, convergence] = block_coord
 		dmac(:, sortIndex) = dmac;
 
 		% * Test convergence
-		[wsr, rate] = rate_weighted(weight, snr, equivalentDistribution, dmac);
+		[wsr, rate] = rate_weighted(snr, equivalentDistribution, dmac, weight);
 		convergence.bcd = [convergence.bcd, wsr];
 		isConverged = (wsr - wsr_) / wsr <= tolerance || isnan(wsr);
 		isInitialized = false;

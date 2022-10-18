@@ -55,12 +55,13 @@ function [beamforming, convergence] = beamforming_pgd(symbolRatio, weight, trans
 	beamforming = Initializer.beamforming;
 
 	% * Construct DMTC and recover i/o mapping
-	receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
-	snr = receivePower / noisePower;
+	signalPower = abs(equivalentChannel' * beamforming) .^ 2;
+	receivePower = signalPower + noisePower;
+	snr = signalPower / noisePower;
 	[~, sortIndex] = sort(receivePower);
 	dmac = dmc_integration(symbolRatio, receivePower, threshold);
 	dmac(:, sortIndex) = dmac;
-	wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
+	wsr = rate_weighted(snr, equivalentDistribution, dmac, weight);
 	convergence = wsr;
 
 	% * Projected gradient descent
@@ -75,14 +76,14 @@ function [beamforming, convergence] = beamforming_pgd(symbolRatio, weight, trans
 		receivePowerPgd = abs(equivalentChannel' * beamformingPgd) .^ 2 + noisePower;
 		snrPgd = receivePowerPgd / noisePower;
 		dmacPgd = dmc_integration(symbolRatio, receivePowerPgd, threshold);
-		wsrPgd = rate_weighted(weight, snrPgd, equivalentDistribution, dmacPgd);
+		wsrPgd = rate_weighted(snrPgd, equivalentDistribution, dmacPgd, weight);
 		while wsrPgd < wsr + alpha * step * norm(gradient) ^ 2 && step > eps
 			step = beta * step;
 			beamformingPgd = beamforming_projection(transmitPower, beamforming + step * gradient);
 			receivePowerPgd = abs(equivalentChannel' * beamformingPgd) .^ 2 + noisePower;
 			snrPgd = receivePowerPgd / noisePower;
 			dmacPgd = dmc_integration(symbolRatio, receivePowerPgd, threshold);
-			wsrPgd = rate_weighted(weight, snrPgd, equivalentDistribution, dmacPgd);
+			wsrPgd = rate_weighted(snrPgd, equivalentDistribution, dmacPgd, weight);
 		end
 
 		% * Test convergence (gradient can be non-zero due to norm constraint)

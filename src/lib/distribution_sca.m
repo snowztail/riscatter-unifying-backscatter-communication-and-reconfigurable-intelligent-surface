@@ -37,7 +37,7 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, weight
 
 	% * Initialize input distribution as uniform
 	[distribution, equivalentDistribution] = distribution_uniform(nTags, nStates);
-	wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
+	wsr = rate_weighted(snr, equivalentDistribution, dmac, weight);
 
 	% * Iteratively update input distribution by SCA
 	isConverged = false;
@@ -53,7 +53,7 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, weight
 				end
 				equivalentDistributionSca(iInput) = equivalentDistributionSca(iInput) - (nTags - 1) * prod(distribution_(sub2ind(size(distribution_), stateTuple(iInput, :), 1 : nTags)), 2);
 			end
-			wsrSca = rate_weighted(weight, snr, equivalentDistributionSca, dmac);
+			wsrSca = rate_weighted(snr, equivalentDistributionSca, dmac, weight);
 			maximize wsrSca
 			subject to
 				for iTag = 1 : nTags
@@ -63,7 +63,7 @@ function [distribution, equivalentDistribution] = distribution_sca(nTags, weight
 
 		% * Compute actual weighted sum rate
 		equivalentDistribution = prod(tuple_tag(distribution), 2);
-		wsr = rate_weighted(weight, snr, equivalentDistribution, dmac);
+		wsr = rate_weighted(snr, equivalentDistribution, dmac, weight);
 
 		% * Test convergence
 		isConverged = (wsr - wsr_) / wsr <= tolerance || isnan(wsr);

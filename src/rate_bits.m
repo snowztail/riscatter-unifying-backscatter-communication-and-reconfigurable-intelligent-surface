@@ -14,8 +14,9 @@ equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(c
 % * Fix input distribution and active beamforming
 [distribution, equivalentDistribution] = distribution_uniform(nTags, nStates);
 beamforming = sqrt(transmitPower) * directChannel / norm(directChannel);
-receivePower = abs(equivalentChannel' * beamforming) .^ 2 + noisePower;
-snr = receivePower / noisePower;
+signalPower = abs(equivalentChannel' * beamforming) .^ 2;
+receivePower = signalPower + noisePower;
+snr = signalPower / noisePower;
 
 % * Evaluate achievable rates vs number of output quantization bits
 for iVariable = 1 : nVariables
@@ -31,7 +32,7 @@ for iVariable = 1 : nVariables
 	dmac = dmc_integration(symbolRatio, receivePower, threshold);
 	[~, sortIndex] = sort(receivePower);
 	dmac(:, sortIndex) = dmac;
-	[wsr, rate] = rate_weighted(weight, snr, equivalentDistribution, dmac);
+	[wsr, rate] = rate_weighted(snr, equivalentDistribution, dmac, weight);
 	Result(iVariable) = struct('weight', weight, 'rate', rate, 'distribution', distribution, 'threshold', threshold, 'beamforming', beamforming);
 end
 

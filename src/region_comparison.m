@@ -1,7 +1,7 @@
 clear; setup; cvx_begin; cvx_end; clc; config_comparison;
 
 % * Initialize struct
-Result(nWeights) = struct('weight', [], 'rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
+ResultRiscatter(nWeights) = struct('weight', [], 'rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
 % * Generate channels
 directChannel = sqrt(path_loss(directDistance, directExponent)) * fading_ricean(nTxs, nRxs, directFactor);
@@ -14,14 +14,15 @@ equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(c
 % * Clear persistent variables
 clear block_coordinate_descent distribution_kkt distribution_cooperation beamforming_pgd threshold_bisection;
 
+% * Obtain achievable rates for BBC, AmBC, SR, RIS and RIScatter
 [rateBbc, distributionBbc, thresholdBbc] = benchmark_bbc(nTags, symbolRatio, transmitPower, noisePower, equivalentChannel);
 [rateAmbc, distributionAmbc, thresholdAmbc] = benchmark_ambc(nTags, symbolRatio, transmitPower, noisePower, equivalentChannel, scatterRatio, directChannel, cascadedChannel);
 [rateSr, distributionSr] = benchmark_sr(nTags, transmitPower, noisePower, equivalentChannel);
-[rateRis, distributionRis] = benchmark_ris(nTags, transmitPower, noisePower, equivalentChannel);
-% * Evaluate rate region
+[rateRis, distributionRis] = benchmark_ris(nTags, transmitPower, noisePower, equivalentChannel);% * Evaluate rate region
 for iWeight = 1 : nWeights
 	weight = weightSet(iWeight);
 	[rateRiscatter, distributionRiscatter, thresholdRiscatter, beamformingRiscatter] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
-	Result(iWeight) = struct('weight', weight, 'rate', rateRiscatter, 'distribution', distributionRiscatter, 'threshold', thresholdRiscatter, 'beamforming', beamformingRiscatter);
+	ResultRiscatter(iWeight) = struct('weight', weight, 'rate', rateRiscatter, 'distribution', distributionRiscatter, 'threshold', thresholdRiscatter, 'beamforming', beamformingRiscatter);
 end
-flag = 1;
+
+save(strcat('data/', mfilename));

@@ -1,7 +1,7 @@
 function style_plot(varargin)
 	c = {'#0072BD'; '#D95319'; '#EDB120'; '#7E2F8E'; '#77AC30'; '#4DBEEE'; '#A2142F'};
 	l = {'-'; '--'; ':'; '-.'};
-	m = {'o'; '+'; 'p'; 'x'; '^'; 'v'; '>'; '<'};
+	m = {'o'; '+'; 's'; 'x'; '^'; 'v'; '>'; '<'};
 	h = varargin{1};
 
 	if nargin == 1

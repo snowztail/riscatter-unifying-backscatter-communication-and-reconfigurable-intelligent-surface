@@ -1,4 +1,5 @@
-clear; setup; cvx_begin; cvx_end; clc; config_comparison;
+clear; setup; cvx_begin; cvx_end; clc; config_comparison; 
+close all;
 
 % * Initialize struct
 ResultRiscatter(nWeights) = struct('weight', [], 'rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);

@@ -24,4 +24,4 @@ xlabel('Number of Iterations');
 style_plot(plotHandle);
 
 savefig('figures/wsr_convergence');
-matlab2tikz('../../assets/simulation/wsr_convergence.tex', 'extraaxisoptions', ['title style={font=\Large}, ' 'label style={font=\Large}, ' 'ticklabel style={font=\large}, ' 'legend style={font=\large}, ' 'yticklabel=\pgfkeys{/pgf/number format/.cd,fixed,precision=3}\pgfmathprintnumber{\tick}']);
+matlab2tikz('../../assets/simulation/wsr_convergence.tex', 'extraaxisoptions', {'title style={font=\Large}', 'label style={font=\Large}', 'ticklabel style={font=\large}', 'legend style={font=\large}', 'yticklabel=\pgfkeys{/pgf/number format/.cd,fixed,precision=3}\pgfmathprintnumber{\tick}'});

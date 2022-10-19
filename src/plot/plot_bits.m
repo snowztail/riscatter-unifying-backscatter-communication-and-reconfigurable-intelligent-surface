@@ -3,7 +3,6 @@ clear; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc; 
 %% * Load data
 directory = strcat('../data/rate_', erase(mfilename, 'plot_'), '/');
 data_load;
-% Result = load(strcat(directory, 'instance_0'), 'Result').Result;
 
 %% * Obtain average total backscatter rate
 bits = cat(2, Variable.nBits);
@@ -19,7 +18,6 @@ figure('Name', 'Average Primary Rate vs Energy Discretization Bits', 'Position',
 object(1) = plot(bits, rate(1, :) / log(2), 'DisplayName', 'Primary rate');
 legend('Location', 'se'); grid on; box on; axis tight;
 xticks(bits);
-% ylim([6, 10]);
 xlabel('Energy Discretization Bits');
 ylabel('Primary Rate [bits/s/Hz]');
 style_plot(object);
@@ -30,7 +28,6 @@ figure('Name', 'Average Total Backscatter Rate vs Energy Discretization Bits', '
 object(2) = plot(bits, rate(2, :) / log(2), 'DisplayName', 'Total backscatter rate');
 legend('Location', 'se'); grid on; box on; axis tight;
 xticks(bits);
-% ylim([0, 1]);
 xlabel('Energy Discretization Bits');
 ylabel('Total Backscatter Rate [bits/BSP]');
 style_plot(object);

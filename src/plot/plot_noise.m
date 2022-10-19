@@ -3,7 +3,6 @@ clear; run('../setup'); run(strcat('config_', erase(mfilename, 'plot_'))); clc; 
 %% * Load data
 directory = strcat('../data/region_', erase(mfilename, 'plot_'), '/');
 data_load;
-% Result = load(strcat(directory, 'instance_0'), 'Result').Result;
 
 %% * Average over instances and retrieve rate regions
 region = cell(nVariables, 1);

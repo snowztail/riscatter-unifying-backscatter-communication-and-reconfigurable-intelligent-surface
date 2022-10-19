@@ -22,4 +22,4 @@ xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatter Rate [bits/BSP]');
 
 savefig('figures/region_comparison');
-matlab2tikz('../../assets/simulation/region_comparison.tex', 'extraaxisoptions', ['title style={font=\Large}, ' 'label style={font=\Large}, ' 'ticklabel style={font=\large}, ' 'legend style={font=\large}, ' 'reverse legend, ' 'every axis plot/.append style={line width=2pt}']);
+matlab2tikz('../../assets/simulation/region_comparison.tex', 'extraaxisoptions', {'title style={font=\LARGE}', 'label style={font=\LARGE}', 'ticklabel style={font=\Large}', 'legend style={font=\Large}', 'reverse legend', 'every axis plot/.append style={line width=2pt}'});

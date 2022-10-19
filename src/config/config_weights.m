@@ -1,6 +1,6 @@
 %% * System
 % number of transmit antennas
-nTxs = 4;
+nTxs = 1;
 % number of scatter antennas
 nSxs = 1;
 % number of receive antennas
@@ -34,8 +34,8 @@ backwardFactor = 5;
 
 %% * Algorithm
 % relative priority of primary link
-weightSet = [0 : 0.1 : 0.3, 1];
+weightSet = [0, 0.1, 0.25, 1];
 % number of weights on rate region boundary
 nWeights = length(weightSet);
 % number of quantization bins
-nBins = 2 ^ 9;
+nBins = 2 ^ 6;

@@ -29,9 +29,14 @@ axis background/.style={fill=white},
 xmajorgrids,
 ymajorgrids,
 legend style={at={(0.03,0.03)}, anchor=south west, legend cell align=left, align=left, draw=white!15!black},
-title style={font=\Large}, label style={font=\Large}, ticklabel style={font=\large}, legend style={font=\large}, reverse legend, every axis plot/.append style={line width=2pt}
+title style={font=\LARGE},
+label style={font=\LARGE},
+ticklabel style={font=\Large},
+legend style={font=\Large},
+reverse legend,
+every axis plot/.append style={line width=2pt}
 ]
-\addplot [color=mycolor1, mark=triangle, mark options={solid, mycolor1}]
+\addplot [color=mycolor1, line width=2.0pt, mark=triangle, mark options={solid, mycolor1}]
   table[row sep=crcr]{%
 6.41670947751651	1.6054968458145\\
 0	1.6054968458145\\

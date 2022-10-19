@@ -122,6 +122,7 @@
 \newacronym{bbc}{BBC}{Bistatic Backscatter Communications}
 \newacronym{bls}{BLS}{Backtracking Line Search}
 \newacronym{mrc}{MRC}{Maximal Ratio Combining}
+\newacronym{sdma}{SDMA}{Space-Division Multiple Access}
 
 \begin{document}
 \title{RIScatter: Unifying\\Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
@@ -1018,7 +1019,7 @@
 			\end{equation}
 			which only involves noise uncertainty under hypothesis $\mathcal{H}_{m_{\mathcal{K}}}$.
 			% and follows non-zero mean complex Gaussian distribution $\mathcal{CN}\bigl(\sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k \boldsymbol{w} s[n],\sigma_v^2\bigr)$.
-			By \gls{mrc} over $N$ primary blocks, the effective backscatter \gls{snr} is increased by $N$ times, and the total achievable for nodes with equiprobable inputs is \cite{Wang2014a}
+			By \gls{mrc} over $N$ primary blocks, the total achievable for nodes with equiprobable inputs is \cite{Wang2014a}
 			\begin{equation}
 				I_{\mathrm{B}}(x_{\mathcal{K}};\hat{y}_{\text{\gls{sr}}}) = K \log M - \frac{\epsilon}{M^K},
 			\end{equation}
@@ -1032,34 +1033,45 @@
 		\end{itemize}
 		\begin{figure}[!t]
 			\centering
-			\resizebox{0.75\columnwidth}{!}{
+			\resizebox{0.65\columnwidth}{!}{
 				\input{assets/simulation/region_comparison.tex}
 			}
 			\caption{Typical achievable rate points of scattering applications for $Q=1$, $K=1$, $M=4$ and $N=1000$.}
 			\label{fi:region_comparison}
 		\end{figure}
 
-		Fig. \ref{fi:region_comparison} presents the achieve rate points by different scattering applications when $Q=1$, $K=1$, $M=4$ and $N=1000$.
+		Fig. \ref{fi:region_comparison} presents the typical achieve rate points of different scattering applications for $Q=1$, $K=1$, $M=4$ and $N=1000$.
+		First, we observe both \gls{bbc} and \gls{sr} can achieve the highest backscatter rate with coherent detection over the receive energy and intermediate signal, respectively.
+		This is because repetition coding with \gls{mrc} over $N$ primary blocks effectively increases the backscatter \gls{snr} by $N$ times, and the information loss due to the signal-to-energy conversion on top may be insignificant.
+		However, the asymptotic primary and backscatter rate analysis only provides upper bounds for \gls{sr}.
+		Using a very large $N$ not only reduces the system throughput\footnote{For example, Wi-Fi sampling rate is \qty{20}{\MHz} while \gls{rfid} load switching speed varies between \num{100}s of \unit{\kHz} to \num{10}s of \unit{\MHz} \cite{Torres2021}, corresponding to a typical symbol period ratio $N$ between \num{1} and \num{100}.} but also requires the operation-intensive \gls{sic} over each primary block.
+		When the duration of primary and backscatter symbol are comparable, the randomly scattered signals should be modelled as interference to primary link rather than quasi-static multipath components, and the achievable rate point of \gls{sr} will move towards the origin.
+		On the other hand, RIScatter provides a lower backscatter rate than \gls{bbc} and \gls{sr} due to semi-coherent detection, but preserves the primary rate benefit for arbitrary $N$.
+
+
+
+		% TODO SR analysis can achieve large rate at the cost of large N; RIScatter can achieve slightly lower rate at the same N, but also preserves primary performance for smaller N
+		% TODO tradeoff between primary (RIScatter, no SIC) and backscatter (SR, SIC)
+		% ! SR assume very large N for primary rate analysis. However, in such cases SIC is questionable as energy detection over received signal as BBC is already good enough and non-coherent detection can also achieve reasonable performance?
+		% TODO when primary symbols are determined, optimal input distribution at high backscatter SNR is equiprobable for any detection (signal/energy)
+		% TODO Wi-Fi sampling rate 20 MHz (symbol period 50 nS), RFID symbol rate/load switching speed 100s KHz to 10s MHz [Backscatter Communications], fast load switching speed is key for high data rate - symbol ratio is not very large
+
+		Backscatter advantage of SR using SIC is prominent for a smaller N
+		% correlation by double modulation improves the detection performance
+		% when $N$ is sufficiently large.
 	\end{subsection}
 
-	\begin{subsection}{Input Distribution versus Link Priority}
+	\begin{subsection}{Input Distribution under Different Weights}
 		\begin{figure}[!t]
 			\centering
-			\subfloat[Instance 1\label{fi:distribution_weights_1}]{
-				\resizebox{0.48\columnwidth}{!}{
-					\input{assets/simulation/distribution_weights_1.tex}
-				}
+			\resizebox{0.65\columnwidth}{!}{
+				\input{assets/simulation/distribution_weights.tex}
 			}
-			\subfloat[Instance 2\label{fi:distribution_weights_2}]{
-				\resizebox{0.48\columnwidth}{!}{
-					\input{assets/simulation/distribution_weights_2.tex}
-				}
-			}
-			\caption{Typical instances of node input distribution for different weights.}
+			\caption{Typical reflection state distribution under different weights for $Q=1$, $K=1$, $M=4$ and $N=20$.}
 			\label{fi:distribution_weights}
 		\end{figure}
 		The objective of this study is to demonstrate each RIScatter node can adjust its input distribution based on \gls{csi} and link priority to balance backscatter modulation and passive beamforming.
-		For this aim, we evaluate the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution} for a single node under different weights $\rho=\{0,0.1,0.2,0.3,1\}$ in Fig. \ref{fi:distribution_weights}, where \subref*{fi:distribution_weights_1} and \subref*{fi:distribution_weights_2} are two representative instances.
+		For this aim, we evaluate the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution} for a single node under different weights in Fig. \ref{fi:distribution_weights}.
 		We observe that as $\rho$ increases from \num{0} to \num{1}, the \gls{kkt} input distribution
 		gradually progresses from slightly skewed to completely biased.
 		For $\rho=0$ where backscatter performance is absolutely prioritized, the \gls{csi}-adaptive channel coding at the RIScatter node provides higher backscatter rate than conventional \gls{bc} and \gls{sr} nodes with equiprobable inputs, and some states may end up unused since they cannot produce enough energy difference over the existing alphabet.
@@ -1069,48 +1081,71 @@
 		For the \gls{bcd} algorithm, we choose the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution}, the \gls{pgd} active beamforming by Algorithm \ref{al:active_beamforming}, and the \gls{smawk} decision threshold by \cite{He2021} as reference.
 	\end{subsection}
 
-	\begin{subsection}{Achievable Rates versus Energy Discretization Bits}
-		\begin{figure}[!t]
-			\subfloat[Primary Rate\label{fi:rate_bits_primary}]{
-				\resizebox{0.48\columnwidth}{!}{
-					\input{assets/simulation/rate_bits_primary.tex}
-				}
-			}
-			\subfloat[Total Backscatter Rate\label{fi:rate_bits_backscatter}]{
-				\resizebox{0.48\columnwidth}{!}{
-					\input{assets/simulation/rate_bits_backscatter.tex}
-				}
-			}
-			\caption{Average achievable primary and total backscatter rates for different energy discretization bits for $\rho=0$.}
-			\label{fi:rate_bits}
-		\end{figure}
-		We now reveal how the analog-to-digital conversion of feasible threshold domain from $\mathbb{R}_+^{L+1}$ to $\mathcal{T}^{L+1}$ affects the average RIScatter performance.
-		For a fixed input distribution and active beamforming, Fig. \ref{fi:rate_bits} shows the impact of energy discretization bits $b$ on the average achievable rates when $\rho=0$.
-		We observe the primary rate is a constant for different $b$ as expected from Remark \ref{re:backscatter_decision}.
-		This conclusion holds for arbitrary $\rho$ because the randomness of reflection patterns over time can always be eliminated upon successful backscatter decoding.
-		When the nodes transmit at non-zero total rate, the user can re-encode backscatter messages to recover their reflection patterns at each primary block.
-		Otherwise, the reflection patterns of all nodes are fully deterministic, and the state index tuple can be fed back to the user together with \gls{csi}.
-		We also notice increasing $b$ boosts the total backscatter rate and the benefit becomes marginal when $b$ is sufficiently large ($2^b \gg \mathrm{card}(\mathcal{L})$).
-		This is because a larger $b$ allows the decision regions to be constructed from narrower energy bins, which mitigates the transformation loss from problem \eqref{op:decision_threshold} to \eqref{op:decision_threshold_discrete}.
-		Therefore, we conclude a proper selection of $b$ is the key to balance backscatter performance and computational complexity.
-	\end{subsection}
+	% \begin{subsection}{Achievable Rates versus Energy Discretization Bits}
+	% 	\begin{figure}[!t]
+	% 		\subfloat[Primary Rate\label{fi:rate_bits_primary}]{
+	% 			\resizebox{0.48\columnwidth}{!}{
+	% 				\input{assets/simulation/rate_bits_primary.tex}
+	% 			}
+	% 		}
+	% 		\subfloat[Total Backscatter Rate\label{fi:rate_bits_backscatter}]{
+	% 			\resizebox{0.48\columnwidth}{!}{
+	% 				\input{assets/simulation/rate_bits_backscatter.tex}
+	% 			}
+	% 		}
+	% 		\caption{Average achievable primary and total backscatter rates for different energy discretization bits for $\rho=0$.}
+	% 		\label{fi:rate_bits}
+	% 	\end{figure}
+	% 	We now reveal how the analog-to-digital conversion of feasible threshold domain from $\mathbb{R}_+^{L+1}$ to $\mathcal{T}^{L+1}$ affects the average RIScatter performance.
+	% 	For a fixed input distribution and active beamforming, Fig. \ref{fi:rate_bits} shows the impact of energy discretization bits $b$ on the average achievable rates when $\rho=0$.
+	% 	We observe the primary rate is a constant for different $b$ as expected from Remark \ref{re:backscatter_decision}.
+	% 	This conclusion holds for arbitrary $\rho$ because the randomness of reflection patterns over time can always be eliminated upon successful backscatter decoding.
+	% 	When the nodes transmit at non-zero total rate, the user can re-encode backscatter messages to recover their reflection patterns at each primary block.
+	% 	Otherwise, the reflection patterns of all nodes are fully deterministic, and the state index tuple can be fed back to the user together with \gls{csi}.
+	% 	We also notice increasing $b$ boosts the total backscatter rate and the benefit becomes marginal when $b$ is sufficiently large ($2^b \gg \mathrm{card}(\mathcal{L})$).
+	% 	This is because a larger $b$ allows the decision regions to be constructed from narrower energy bins, which mitigates the transformation loss from problem \eqref{op:decision_threshold} to \eqref{op:decision_threshold_discrete}.
+	% 	Therefore, we conclude a proper selection of $b$ is the key to balance backscatter performance and computational complexity.
+	% \end{subsection}
 
 	\begin{subsection}{Rate Region by Different Schemes}
-		\begin{figure}[!t]
+		% \begin{figure}[!t]
+		% 	\centering
+		% 	\subfloat[Input Distribution\label{fi:region_distribution}]{
+		% 		\resizebox{0.65\columnwidth}{!}{
+		% 			\input{assets/simulation/region_distribution.tex}
+		% 		}
+		% 	}
+		% 	\\
+		% 	\subfloat[Active Beamforming\label{fi:region_beamforming}]{
+		% 		\resizebox{0.65\columnwidth}{!}{
+		% 			\input{assets/simulation/region_beamforming.tex}
+		% 		}
+		% 	}
+		% 	\\
+		% 	\subfloat[Decision Threshold\label{fi:region_threshold}]{
+		% 		\resizebox{0.65\columnwidth}{!}{
+		% 			\input{assets/simulation/region_threshold.tex}
+		% 		}
+		% 	}
+		% 	\caption{
+		% 		Average primary-total-backscatter rate regions for different input distribution, active beamforming, and decision threshold schemes.
+		% 		``BSP'' means backscatter symbol period.
+		% 	}
+		% \end{figure}
+		\begin{figure*}[!t]
 			\centering
 			\subfloat[Input Distribution\label{fi:region_distribution}]{
-				\resizebox{0.48\columnwidth}{!}{
+				\resizebox{0.32\textwidth}{!}{
 					\input{assets/simulation/region_distribution.tex}
 				}
 			}
-			\\
 			\subfloat[Active Beamforming\label{fi:region_beamforming}]{
-				\resizebox{0.48\columnwidth}{!}{
+				\resizebox{0.32\textwidth}{!}{
 					\input{assets/simulation/region_beamforming.tex}
 				}
 			}
 			\subfloat[Decision Threshold\label{fi:region_threshold}]{
-				\resizebox{0.48\columnwidth}{!}{
+				\resizebox{0.32\textwidth}{!}{
 					\input{assets/simulation/region_threshold.tex}
 				}
 			}
@@ -1118,7 +1153,7 @@
 				Average primary-total-backscatter rate regions for different input distribution, active beamforming, and decision threshold schemes.
 				``BSP'' means backscatter symbol period.
 			}
-		\end{figure}
+		\end{figure*}
 		The average achievable primary-total-backscatter rate regions of various input distribution, active beamforming, and decision threshold schemes are explored in this study.
 
 		\begin{subsubsection}{Input Distribution}
@@ -1187,7 +1222,7 @@
 	\end{subsection}
 
 
-	\begin{subsection}{Rate Region versus Configuration}
+	\begin{subsection}{Rate Region under Different Configurations}
 		\begin{figure}[!t]
 			\centering
 			\subfloat[RIScatter Nodes\label{fi:region_tags}]{

@@ -149,7 +149,7 @@
 % TODO Redefine RIS using book
 % TODO Using RIS to encode is not very interesting as controller is anyway usable
 % TODO Wi-Fi sampling rate 20 MHz (symbol period 50 nS), RFID symbol rate/load switching speed 100s KHz to 10s MHz [Backscatter Communications], fast load switching speed is key for high data rate - symbol ratio is not very large
-% TODO Beamforming can cancel direct interference to avoid the collapse of non-coherent energy detection and enlarge energy gap.
+% TODO Beamforming can cancel direct interference to avoid the collapse of noncoherent energy detection and enlarge energy gap.
 % ? [Reconfigurable Intelligent Surface-Assisted Ambient Backscatter Communications Experimental Assessment]the authors of [5] show that, even in line-of-sight (LOS), the interferences and the desired signal can combine in such a way that the received signals at the reader side in the two states are close in power and only differ by their phases
 % TODO Input probability distribution for discrete-value reflection (backscatter), constellation design for continue-value reflection (RIS)
 % * TODO convergence
@@ -162,7 +162,7 @@
 % TODO Base e, use 2 in simulation
 % TODO SR analysis can achieve large rate at the cost of large N; RIScatter can achieve slightly lower rate at the same N, but also preserves primary performance for smaller N
 % TODO tradeoff between primary (RIScatter, no SIC) and backscatter (SR, SIC)
-% ! SR assume very large N for primary rate analysis. However, in such cases SIC is questionable as energy detection over received signal as BBC is already good enough and non-coherent detection can also achieve reasonable performance?
+% ! SR assume very large N for primary rate analysis. However, in such cases SIC is questionable as energy detection over received signal as BBC is already good enough and noncoherent detection can also achieve reasonable performance?
 % TODO when primary symbols are determined, optimal input distribution at high backscatter SNR is equiprobable for any detection (signal/energy)
 % TODO (I(X_1;Y_1),I(X_2;Y_2))
 \begin{abstract}
@@ -244,9 +244,9 @@
 		% Due to physical constraints at the load-switching modulator, backscatter symbol period is typically longer than primary.
 		% Ideal joint \gls{ml} decoding achieves optimal performance with prohibitive computational complexity \cite{Yang2018,Liang2020,Zhang2022}.
 		% For sequential decoding from primary to backscatter, \cite{Long2020a} pointed out the randomness from backscatter modulation can be modelled as either interference or channel uncertainty, depending on the symbol period ratio.
-		% The authors concluded if this ratio is sufficiently large, the non-coherent primary achievable rate would asymptotically approach its coherent counterpart.
+		% The authors concluded if this ratio is sufficiently large, the noncoherent primary achievable rate would asymptotically approach its coherent counterpart.
 		% This motivated \cite{Long2020a,Liang2020,Guo2019b,Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022} to first decode the primary link, perform \gls{sic}, then decode the backscatter link.
-		% However, the advantage of \gls{sic} is questionable because 1) sufficiently large symbol period ratio is assumed in primary rate analysis and constraints backscatter rate; 2) backscatter pattern and signal characteristics are not fully exploited; 3) non-coherent primary encoding is required at the transmitter, while re-encoding, precoding, and subtraction are required at the receiver; 4) primary and backscatter symbols are superimposed by multiplication instead of superposition.
+		% However, the advantage of \gls{sic} is questionable because 1) sufficiently large symbol period ratio is assumed in primary rate analysis and constraints backscatter rate; 2) backscatter pattern and signal characteristics are not fully exploited; 3) noncoherent primary encoding is required at the transmitter, while re-encoding, precoding, and subtraction are required at the receiver; 4) primary and backscatter symbols are superimposed by multiplication instead of superposition.
 		% Another open issue for \gls{sr} is backscatter multiple access.
 		% \cite{Xu2021a} extended \gls{sic} to multi-node scenario and proposed a backscatter \gls{noma}-based \gls{sr} with decoding order following backscatter signal strength.
 		% However, its performance deteriorates fast when the number of nodes increases.
@@ -350,16 +350,24 @@
 
 	\begin{subsection}{Related Works}
 		Similar to \gls{cr}, the coexistence of primary and backscatter links in \gls{sr} can be classified into commensal, parasitic, and competitive relationships, whose instantaneous rates, power schemes, and outage probabilities were acquired in \cite{Guo2019b,Ding2020}.
-		To evaluate the performance of cooperative receivers, \cite{Yang2018} derived the bit error rates of \gls{ml}, \gls{mrc}, \gls{zf}, \gls{mmse} and \gls{sic} detectors for flat fading channels, and proposed a low-complexity detector for frequency-selective fading channels.
-		However, it assumed equal symbol period of both links with perfect synchronization, which is impractical due to the load-switching speed constraint.
-		Although joint \gls{ml} decoding achieves the optimal detection performance for arbitrary backscatter-over-primary symbol period ratio, the computational complexity is prohibitive especially for high-order constellations \cite{Yang2018,Liang2020,Zhang2022}.
-		For sequential primary-backscatter decoding, the randomness of backscatter modulation can be modelled as either interference or channel uncertainty, depending on the symbol period ratio \cite{Long2020a}.
-		If this ratio is sufficiently large, the authors proved the non-coherent primary achievable rate would approach its coherent counterpart asymptotically.
-		This motivated \cite{Long2020a,Liang2020,Guo2019b,Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022} to perform \gls{sic} from primary to backscatter links.
-		However, the advantages of such \gls{sic} remain questionable as
+		% To evaluate the performance of cooperative receivers, \cite{Yang2018} derived the bit error rates of \gls{ml}, \gls{mrc}, \gls{zf}, \gls{mmse} and \gls{sic} detectors for flat fading channels, and proposed a low-complexity detector for frequency-selective fading channels.
+		To evaluate the performance of cooperative receivers, \cite{Yang2018} derived the bit error rates of \gls{ml} and \gls{sic} detectors for flat fading channels, and proposed a low-complexity detector for frequency-selective fading channels.
+		% However, it assumed equal symbol period of both links with perfect synchronization, which is impractical due to the load-switching speed constraint.
+		% However, it assumed the primary and backscatter symbol periods are equal and
+		% However, it only considered the case where primary and backscatter symbols have the same period.
+		However, it only considered the case where the primary and backscatter symbols of the same period are perfectly aligned in time.
+		Joint \gls{ml} decoding can achieve the best error performance in general, but its computational complexity is prohibitive especially for nodes with high-order constellation \cite{Yang2018,Liang2020,Zhang2022}.
+		One special property of \gls{sr} is the backscatter signal strength is significantly weaker than primary due to the double fading effect.
+		It motivated \cite{Long2020a,Liang2020,Guo2019b,Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022} to view \gls{sr} as a multiplicative \gls{noma} and perform sequential primary-backscatter decoding with \gls{sic}.
+		During primary decoding, the randomness from backscatter modulation can be modelled as either interference or channel uncertainty, depending on the relationship between primary sampling rate and backscatter switching speed.
+		If the former is much higher, then the average primary achievable rate under noncoherent detection would approach its coherent counterpart asymptotically \cite{Long2020a}, and both links may be decoded in an interference-free manner.
+		% For sequential primary-backscatter decoding, the randomness of backscatter modulation can be modelled as either interference or channel uncertainty, depending on the symbol period ratio \cite{Long2020a}.
+		% If this ratio is sufficiently large, the authors proved the noncoherent primary achievable rate would approach its coherent counterpart asymptotically.
+		% This motivated \cite{Long2020a,Liang2020,Guo2019b,Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022} to perform \gls{sic} from primary to backscatter links.
+		However, the disadvantage of such \gls{sic} includes:
 		1) primary rate analysis is backed by long backscatter symbol period that constrains backscatter rate;
 		2) reflection pattern and signal characteristics are not fully exploited;
-		3) non-coherent primary encoding is required at the transmitter while re-encoding, precoding and subtraction are required at the receiver;
+		3) noncoherent primary encoding is required at the transmitter while re-encoding, precoding and subtraction are required at the receiver;
 		4) primary and backscatter symbols are superimposed by multiplication instead of superposition.
 
 		Another open issue for \gls{bc} and \gls{sr} is node multiple access.

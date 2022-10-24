@@ -128,7 +128,8 @@
 \newacronym{mmse}{Minimum Mean-Square-Error}{MMSE}
 
 \begin{document}
-\title{RIScatter: Unifying\\Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
+\title{RIScatter: Unifying Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
+% \title{RIScatter: Unifying\\Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
 \author{
 	\IEEEauthorblockN{
 		Yang~Zhao,~\IEEEmembership{Member,~IEEE,}
@@ -151,7 +152,7 @@
 % TODO Beamforming can cancel direct interference to avoid the collapse of noncoherent energy detection and enlarge energy gap.
 % ? [Reconfigurable Intelligent Surface-Assisted Ambient Backscatter Communications Experimental Assessment]the authors of [5] show that, even in line-of-sight (LOS), the interferences and the desired signal can combine in such a way that the received signals at the reader side in the two states are close in power and only differ by their phases
 % TODO Input probability distribution for discrete-value reflection (backscatter), constellation design for continue-value reflection (RIS)
-% TODO channel coding: general non-adaptive (book) adaptive (DMC)
+% * channel coding: general non-adaptive (book) adaptive (DMC)
 % ? [Turbocharging] Since averaging must be done over a significant period of time to smooth out the variation in the TV transmissions, averaging does not allow rates much higher than 10 kbps [24].
 % TODO mu-code: use multiple Rxs for noncoherent direct interference cancellation (instead of receive diversity)
 % TODO backscatter modulation <-> passive beamforming; add adaptive channel coding over (NRZ) line coding.
@@ -173,7 +174,7 @@
 	The key principle in RIScatter is to render the probability distribution of reflection states as a joint function of the \gls{csi} and input information source.
 	This enables RISscatter to softly bridge, generalize, and outperform \gls{bc}, \gls{sr}, \gls{ris}; boil down to any of those under specific reflection states; or evolve in a mixed form for universal hardware design and heterogeneous traffic control.
 	For a typical setup, we characterize the achievable primary-(total-)backscatter rate region by optimizing input distribution at the nodes, active beamforming at the \gls{ap}, and backscatter detector at the user.
-	Simulation results demonstrate RIScatter nodes can exploit the additional propagation paths to smoothly transition between backscatter modulation and passive beamforming via smart input distribution design, and RIScatter receiver significantly reduces the decoding complexity and effectively accommodates the double modulation and signal characteristics in scatter-based cooperative networks.
+	Simulation results demonstrate RIScatter nodes can exploit the additional propagation paths to smoothly transition between backscatter modulation and passive beamforming via smart input distribution design, and the proposed receiver significantly reduces the decoding complexity and effectively accommodates the double modulation and signal difference in scatter-based cooperative networks.
 \end{abstract}
 
 \glsresetall
@@ -283,7 +284,7 @@
 		It creates artificial channel diversity and enables flexible resource allocation, but misses the opportunity to encode its own message.
 		\gls{ris} can also be used a transmitter when placed in the near field of a carrier emitter, and prototypes for \gls{psk} and \gls{qam} have been implemented in \cite{Tang2019a,Dai2020a}.
 		From an information-theoretic perspective, \cite{Karasik2020} reported using \gls{ris} as a passive beamformer to maximize the \gls{snr} is generally rate-suboptimal for finite input constellations.
-		Instead, the capacity of \gls{ris}-aided channel is achieved by joint transmitter-\gls{ris} encoding, and multiplicative coding with \gls{sic} decoding (i.e., \gls{sic}-based \gls{sr}) can outperform pure passive beamforming at high \gls{snr}.
+		Instead, the capacity of \gls{ris}-aided channel is achieved by joint transmitter-\gls{ris} encoding, and multiplication coding with \gls{sic} decoding (i.e., \gls{sic}-based \gls{sr}) can outperform pure passive beamforming at high \gls{snr}.
 		It inspired \cite{Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hu2021b,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} to combine passive beamforming and backscatter modulation in the overall reflection pattern.
 		In particular, \emph{symbol level precoding} maps backscatter symbols to optimized \gls{ris} coefficient sets \cite{Liu2019d,Bereyhi2020}, \emph{overlay modulation} superposes information-bearing symbols over a common auxiliary matrix \cite{Xu2020b,Zhang2021d,Hu2021b,Hua2022}, \emph{spatial modulation} switches between reflection coefficient sets that maximize \gls{snr} at different receive antennas \cite{Basar2020,Ma2020a,Yuan2021}, and \emph{index modulation} employs dedicated reflection elements for passive beamforming and dedicated information elements for backscatter modulation \cite{Hu2021a}.
 		Those \gls{ris}-empowered \gls{bc}/\gls{sr} designs involve advanced hardware architecture and high optimization complexity.
@@ -295,44 +296,37 @@
 		As presented in Fig. \subref*{fg:riscatter}, we propose RIScatter as a novel scattering protocol that generalizes \gls{bc}, \gls{sr}, and \gls{ris}.
 		The contributions of this paper are summarized as follows.
 
-		\emph{First,} we propose RIScatter nodes that adapt the reflection state distribution of passive scatter devices based on \gls{csi} and link weights to flexibly transition between backscatter modulation and passive beamforming.
-		Scattering sources of \gls{bc}/\gls{sr} and reflecting elements of \gls{ris} can be regarded as special cases where the input distribution becomes equiprobable and degenerate, respectively.
-		On the contrary, adaptive RIScatter encoding can achieve higher backscatter rate than conventional line coding.
-		The RIScatter nodes can be either co-located to enable joint distribution design for improved total backscatter rate, or dispersed to guarantee uniformly good primary and backscatter performances.
+		\emph{First,} we propose RIScatter nodes that adapt the reflection state distribution of passive scatter devices based on \gls{csi} and link weights, in order to flexibly transition between backscatter modulation and passive beamforming.
+		Scattering sources of \gls{bc}/\gls{sr} and reflecting elements of \gls{ris} can be regarded as special cases with uniform and degenerate input distributions, respectively.
+		On the contrary, adaptive RIScatter encoding boils down to deterministic \gls{ris} when primary link is prioritized, and achieves higher backscatter rate than conventional line coding when backscatter link is prioritized.
+		Multiple RIScatter nodes can be either co-located to enable joint distribution design for improved total backscatter rate, or dispersed to guarantee uniformly good performance for both links.
 
-		\emph{Second,} we propose a practical RIScatter receiver that semi-coherently decodes RIScatter nodes from the received energy per backscatter block, re-encodes for their reflection patterns, retrieves primary equivalent channel as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
-		The proposed receiver
-		1) preserves the benefits of backscatter modulation and passive beamforming;
-		2) enjoys lower computational and operational complexities than joint \gls{ml} and \gls{sic} schemes;
-		3) accommodates the link difference and suits for diverse symbol period ratios;
-		4) requires minor modification over legacy hardware.
+		\emph{Second,} we propose a practical receiver that accommodates the double modulation and signal difference in scatter-based cooperative networks.
+		Since the primary and backscatter messages are superimposed by multiplication coding and the backscatter symbol is typically longer than primary, the scattered signals from RIScatter nodes can be treated as multipath components during primary decoding, and the primary message can be viewed as a spreading code during backscatter decoding.
+		Conventional sequential primary-backscatter decoder eliminates primary interference by \gls{sic} at each primary block, while our sequential backscatter-primary detector semi-coherently decodes RIScatter nodes from the received energy, re-encodes to recover exact reflection patterns, and models the deterministic multipath in the primary equivalent channel as dynamic passive beamforming at each backscatter block.
+		It enables backscatter modulation and dynamic passive beamforming at much lower operational complexity, and is suitable for scatter nodes with various load switching speeds.
 
-		\emph{Third,} we consider an application scenario where multiple RIScatter nodes ride over a point-to-point \gls{miso} transmission, performing backscatter modulation and passive beamforming to a nearby user using shared spectrum, energy, and infrastructures.
-		To investigate how RIScatter unifies \gls{bc}, \gls{sr} and \gls{ris} for the benefits of both coexisting subsystems, we provide primary and backscatter rate analyses and emphasize the contributions of input distribution at RIScatter nodes, active beamforming at the \gls{ap}, and backscatter decision regions at the user.
-		This is the first paper to reveal the importance of those factors in joint \gls{ris} and \gls{bc}/\gls{sr} design.
+		\emph{Third,} we consider a scenario where multiple RIScatter nodes ride over an active point-to-point \gls{miso} transmission to perform backscatter modulation and passive beamforming towards a nearby user using shared spectrum, energy, and infrastructures.
+		We provide primary and total backscatter rate analyses and characterize the achievable rate region by optimizing input distribution at RIScatter nodes, active beamforming at the \gls{ap}, and backscatter decision regions at the user.
+		Since the original problem is highly non-convex, we decouple it into individual subproblems and propose a suboptimal \gls{bcd} algorithm, where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is iteratively updated by \gls{pgd} accelerated by \gls{bls}, and the decision regions are refined by existing sequential quantization methods for \gls{dmc}.
+		This is the first paper to reveal the importance of input distribution and decision region designs in relevant literatures.
 
-		\emph{Fourth,} we characterize the achievable primary-total-backscatter rate region of the aforementioned system by optimizing the input distribution, active beamforming, and backscatter decision regions.
-		It is formulated as a weighted sum-rate maximization subject to input probability simplex, average transmit power, and sequential decision threshold constraints.
-		Since the original problem is highly non-convex, we decouple it into individual subproblems and constraint all decision regions to convex (connected) intervals.
-		A suboptimal \gls{bcd} algorithm is then proposed, where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is iteratively updated by \gls{pgd} accelerated by \gls{bls}, and the decision regions are refined by existing thresholding designs.
-
-		\emph{Fifth,} we provide numerical results to demonstrate the benefits of RIScatter and proposed algorithms.
-		It is concluded that
-		1) RIScatter nodes provide flexible transmit-assist tradeoff using adaptive input distribution design;
-		2) when primary link is absolutely prioritized, the input probability of each node is \num{1} at one state and \num{0} at the others, which coincides with discretized \gls{ris};
-		3) when backscatter link is absolutely prioritized, RIScatter nodes can exploit adaptive channel coding to achieve higher instantaneous rate than conventional equiprobable inputs of \gls{bc}/\gls{sr};
-		4) the proposed \gls{kkt} input distribution design converges to stationary points, whose average performance is very close to global optimal;
-		5) the proposed \gls{pgd} beamforming provides larger rate region than \gls{mrt}-based schemes;
-		6) the decision region schemes adapted to input distribution provide higher backscatter rates than the non-adaptive \gls{ml} detector;
-		7) cooperation between passive nodes in terms of joint encoding can further boost the total backscatter rate;
-		8) the low complexity of input distribution design and the marginal effect of increasing reflection states motivates the use of low-order scattering nodes to replace high-resolution \gls{ris}.
+		\emph{Fourth,} we provide numerical results to demonstrate the benefits of RIScatter and proposed algorithms.
+		We conclude:
+		1) adaptive reflection state distribution design can flexibly transition between backscatter modulation and passive beamforming;
+		2) when primary link is prioritized, input distribution becomes degenerate and RIScatter nodes coincide with discrete \gls{ris};
+		3) when backscatter link is prioritized, adaptive RIScatter encoding achieves higher backscatter rate than conventional line coding with equiprobable inputs;
+		4) co-located RIScatter nodes can further leverage total backscatter rate by joint encoding;
+		5) the proposed receiver provides comparable backscatter detection performance than \gls{sic}-based \gls{sr} while significantly reduces the encoding and precoding (and avoids subtraction) costs;
+		6) it also supports fast-switching nodes and allows higher backscatter rate per unit time;
+		7) \gls{pgd} active beamformer enlarges achievable rate region by boosting the receive \gls{snr} and/or widening the energy gap under different reflection states;
+		8) distribution-adaptive backscatter detectors provide higher total backscatter rate than the conventional \gls{ml} detector.
 	\end{subsection}
 
 	\emph{Notations:}
 	Italic, bold lower-case, and bold upper-case letters denote scalars, vectors and matrices, respectively.
 	$\boldsymbol{0}$ and $\boldsymbol{1}$ denote zero and one array of appropriate size, respectively. $\mathbb{I}^{x \times y}$, $\mathbb{R}_+^{x \times y}$, and $\mathbb{C}^{x \times y}$ denote the unit, real nonnegative, and complex spaces of dimension $x \times y$, respectively.
 	$j$ denotes the imaginary unit.
-	% $\arg(\cdot)$, $\mathrm{rank}(\cdot)$, $\mathrm{tr}(\cdot)$, $\mathrm{diag}(\cdot)$ and $\mathrm{diag}^{-1}(\cdot)$ denote the argument, rank, trace, a square matrix with input vector on main diagonal, and a vector retrieving main diagonal of input square matrix, respectively.
 	$\mathrm{diag}(\cdot)$ returns a square matrix with the input vector on its main diagonal and zeros elsewhere.
 	$\mathrm{card}(\cdot)$ returns the cardinality of a set.
 	$(\cdot)^*$, $(\cdot)^T$, $(\cdot)^H$, $\lvert{\cdot}\rvert$, and $\lVert{\cdot}\rVert$ denote the conjugate, transpose, conjugate transpose, absolute value, and Euclidean norm operators, respectively.
@@ -412,24 +406,23 @@
 \begin{section}{RIScatter}
 	Using shared spectrum, energy and infrastructures, RIScatter is a novel passive communication/assistance protocol that generalizes \gls{bc}, \gls{sr} and \gls{ris} from the perspective of input distribution.
 	In particular, the potentially dispersed passive RIScatter nodes ride over an active legacy transmission in a flexible and mutualistic manner, while the practical RIScatter receiver cooperatively decodes both primary and backscatter links under the benefits of backscatter modulation and passive beamforming.
-	% TODO compare BC, SR and IRS
 	\begin{subsection}{RIScatter Nodes}
 		Based on link priority and \gls{csi}, RIScatter nodes adapt the \emph{state input probability distribution} of antenna-based scatterers to unify backscatter modulation and passive beamforming.
 		Conventional line-coded \gls{bc}/\gls{sr} nodes (e.g., EPC Gen 2 UHF \gls{rfid} using FM0) and deterministic \gls{ris} elements can be viewed as its extreme cases, where the input distribution boils down to equiprobable and degenerate, respectively.
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Input Distribution]{
-				\resizebox{0.8\columnwidth}{!}{
+				\resizebox{0.85\columnwidth}{!}{
 					\input{assets/illustration/input_distribution.tex}
 				}
 				\label{fg:input_distribution}
 			}
 			\\
-			\subfloat[Time Block]{
-				\resizebox{0.8\columnwidth}{!}{
-					\input{assets/illustration/time_block.tex}
+			\subfloat[Time Structure]{
+				\resizebox{0.9\columnwidth}{!}{
+					\input{assets/illustration/time_structure.tex}
 				}
-				\label{fg:time_block}
+				\label{fg:time_structure}
 			}
 			\caption{
 				Input probability distribution and time block structure of \gls{bc}, \gls{sr}, \gls{ris}, and RIScatter.

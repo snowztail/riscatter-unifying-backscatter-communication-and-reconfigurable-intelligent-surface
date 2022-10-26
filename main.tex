@@ -337,94 +337,60 @@
 \begin{section}{Scattering Principles}
 	\gls{rf} wave scattering and reflecting are usually realized by a \emph{variable-load antenna} or \emph{programmable metamaterial} and described by a unified signal model \cite{Liang2022}.
 	A typical antenna-based scatterer consists of an integrated antenna, a load-switching modulator, an energy harvester, and on-chip components (e.g., microcontroller and sensors) \cite{Dobkin2012}.
-	It first receives the impinging signals, then reradiates some back to the space and dissipates the remainder.
-	In comparison, a typical metamaterial-based scatterer comprises an outer metamaterial layer of numerous sub-wavelength metallic/dielectric patches with tunable permittivity/permeability, a middle copper plate layer that reflects residual and avoids leakage, an inner circuit board layer that adjusts the amplitude and phase responses of patches, and an integrated microcontroller/\glsentryshort{fpga} that coordinates with the network and controls the circuit \cite{Wu2020}.
-	Ideally, it reflects the incident waves at the air-metamaterial boundary without receiving them and mainly applies a phase shift on the reflected wave.
-	In practice, both kinds of scatterers should have finite reflection states and non-zero reflection loss, and the scatter-absorb tradeoff depends on impedance matching.
+	It first receives the impinging signals, then reradiates some back to the space and dissipates the remaining.
+	In comparison, a typical metamaterial-based scatterer comprises an outer metamaterial layer of numerous sub-wavelength metallic/dielectric patches with tunable permittivity/permeability, a middle copper plate layer that reflects residual to avoid leakage, an inner circuit board layer that adjusts the amplitude and phase responses of patches, and an integrated microcontroller/\glsentryshort{fpga} that coordinates with the network and controls the circuit \cite{Wu2020}.
+	Ideally, it reflects the incident waves at the air-metamaterial boundary without receiving them, and mainly applies a phase shift on the reflected wave.
+	In practice, both kinds of scatterers have finite reflection states with non-zero reflection loss, and the scatter-absorb tradeoff depends on impedance matching.
 	For a scatter node with $M$ reflection states, the reflection coefficient at state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$ is
 	\begin{equation}
 		\Gamma_m = \frac{Z_m - Z^*}{Z_m + Z},
 		\label{eq:reflection_coefficient}
 	\end{equation}
 	where $Z_m$ is the antenna load (resp. metamaterial unit) impedance at state $m$ and $Z$ is the antenna input (resp. medium characteristic) impedance.
-	Both backscatter modulation and passive beamforming are realized by manipulating the reflection coefficient.
-	Specifically, \gls{bc}, \gls{ambc} and \gls{sr} employ scatter nodes as information sources that encode by frequently switching between available states.
-	For $M$-ary \gls{qam}, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{complex constellation point $c_m$} by
-	% \cite{Thomas2012a}
+	Backscatter modulation and passive beamforming are realized by manipulating the reflection coefficient.
+	Specifically, \gls{bc}, \gls{ambc} and \gls{sr} employ scatter nodes as information sources that encode message by \emph{probabilistically switching} between different states.
+	For $M$-ary \gls{qam}, constellation point $c_m$ maps to reflection coefficient $\Gamma_m$ by \cite{Thomas2012a}
 	\begin{equation}
 		\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
 		\label{eq:backscatter_modulation}
 	\end{equation}
 	where $\alpha \in \mathbb{I}$ is the amplitude scattering ratio at the direction of interest.
-
-	% \begin{subsection}{Scatterer Categories}
-	% 	% In \gls{rf} applications such as \gls{bc}, \gls{sr} and \gls{ris}, the scatterer often includes \emph{variable-load antenna} or \emph{programmable metamaterial} with various reflection patterns \cite{Liang2022}.
-	% 	\begin{subsubsection}{Antenna-Based Scatterer}
-	% 		A typical antenna-based scatterer consists of an integrated antenna, a load-switching modulator, an energy harvester, and on-chip components (e.g., microcontroller and sensors) \cite{Dobkin2012}.
-	% 		It first receives the impinging signals, then reradiates some back to the space and dissipates the remainder.
-	% 		According to transmission line theory, the scatter-absorb tradeoff depends on the impedance matching of the load and the antenna.
-	% 		For passive scatterers without dedicated energy source, a majority of incident wave is harvested to support node operation and the reradiated part can be relatively weak \cite{Thomas2012a}.
-	% 		At the receiver, the observed signal can be further decomposed into \emph{structural mode} and \emph{antenna mode} components \cite{Hansen1989}.
-	% 		The former consistently contributes to environment multipath and is modelled within channel estimation, while the latter depends on impedance mismatch and can be used for backscatter modulation \cite{Boyer2014} and/or channel reconfiguration \cite{Liang2022}.
-	% 		For antenna-based scatterers, the reflection coefficient at load state $m$ is%
-	% 		\footnote{It corresponds to a linear scatter model where the reflection coefficient is irrelevant to incident electromagnetic field strength.}
-	% 		\begin{equation}
-	% 			\Gamma_m = \frac{Z_m - Z_{\mathrm{A}}^*}{Z_m + Z_{\mathrm{A}}},
-	% 			\label{eq:reflection_pattern_antenna}
-	% 		\end{equation}
-	% 		where $Z_m$ is the load impedance at state $m$ and $Z_{\mathrm{A}}$ is the antenna input impedance.
-	% 	\end{subsubsection}
-	% 	\begin{subsubsection}{Metamaterial-Based Scatterer}
-	% 		A typical metamaterial-based scatterer consists of multiple material layers and a smart controller \cite{Wu2020}.
-	% 		The outer metamaterial layer involves numerous sub-wavelength structural units made of metallic or dielectric materials.
-	% 		The properties of unit cells can be artificially tuned for unconventional effective permittivity (epsilon) and permeability (mu), producing customizable response to the electromagnetic field \cite{Zhou2021}.
-	% 		Using epsilon-negative material (e.g., conducing rods) or mu-negative material (e.g., split-ring resonators), ideal metamaterial-based scatterers can reflect the incident waves at the boundary between free space and metamaterial without receiving them \cite{Huang2021a}.
-	% 		This mainly applies a phase shift on the reflected wave and any propagation into the metamaterial would be evanescent.
-	% 		Depending on the type of metamaterial, its equivalent impedance can be controlled by voltage (for functional materials \cite{Singh2020} and tunable diodes \cite{Costa2021}) or architecture (for resonant elements \cite{Bialkowski2008}).
-	% 		For metamaterial-based scatterers with a discrete impedance set, the reflection coefficient at metamaterial state $m$ is
-	% 		\begin{equation}
-	% 			\Gamma_m = \frac{Z_m - Z_0}{Z_m + Z_0},
-	% 			\label{eq:reflection_pattern_metamaterial}
-	% 		\end{equation}
-	% 		where $Z_m$ is the equivalent impedance of metamaterial unit at state $m$ and $Z_0 = \qty{377}{\ohm}$ is the characteristic impedance of free space.
-	% 	\end{subsubsection}
-	% \end{subsection}
-
-	% \begin{subsection}{BackCom/SR: Backscatter Modulation}
-	% 	\gls{bc} and \gls{sr} commonly employ antenna-based scatterers as passive information sources.
-	% 	By \emph{frequently switching} between the available states, each scattering node encodes self message over scattered signal and introduces backscatter uncertainty at the receiver.
-	% 	For $M$-ary \gls{qam}, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{complex constellation point $c_m$} by
-	% 	% \cite{Thomas2012a}
-	% 	\begin{equation}
-	% 		\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
-	% 		\label{eq:backscatter_modulation}
-	% 	\end{equation}
-	% 	where $\alpha \in \mathbb{I}$ is the amplitude scattering ratio at the direction of interest.
-	% \end{subsection}
-
-	\begin{subsection}{RIS: Channel Reconfiguration}
-		\gls{ris} typically involves a planar antenna array or metasurface of numerous metamaterial units as a passive channel reconfigurator.
-		By \emph{adaptively choosing} the reflection pattern, each reflecting element alters the phase of scattered signal for constructive/destructive superposition at the receiver.
-		For each unit with $M$ candidate states, reflection coefficient $\Gamma_m$ maps to the corresponding \emph{phase shift $\theta_m$} by
-		% \cite{Wu2018}
-		\begin{equation}
-			\Gamma_m = \beta_m \exp(j \theta_m),
-			\label{eq:passive_beamforming}
-		\end{equation}
-		where $\beta_m \in \mathbb{I}$ is the overall amplitude scattering ratio of state $m$.
-		Lossless \gls{ris} assumes $\beta_m=1$ to maximize the available scattering power.
-	\end{subsection}
-
-	\begin{subsection}{Opportunities}
-		We have seen conventional scattering applications as \gls{bc}, \gls{sr} and \gls{ris} using the reflection pattern \eqref{eq:reflection_pattern_antenna}, \eqref{eq:reflection_pattern_metamaterial} for either backscatter modulation \eqref{eq:backscatter_modulation} or passive beamforming \eqref{eq:passive_beamforming}.
-		A natural but critical question is, for a given scatterer with pre-determined reflection pattern set, \emph{can we softly bridge backscatter modulation and passive beamforming by appropriate reflection design?}
-		This question is answered in Section \ref{st:riscatter}.
-	\end{subsection}
+	In contrast, \gls{ris} employ reflecting elements as channel reconfigurators that enable constructive/destructive signal superposition by \emph{deterministically choosing} the reflection pattern.
+	For a \gls{ris} element with $M$ available states, phase shift $\theta_m$ maps to reflection coefficient $\Gamma_m$ by \cite{Wu2018}
+	\begin{equation}
+		\Gamma_m = \beta_m \exp(j \theta_m),
+		\label{eq:passive_beamforming}
+	\end{equation}
+	where $\beta_m \in \mathbb{I}$ is the amplitude scattering ratio of state $m$.\footnote{Most existing \gls{ris} literatures assume lossless reflection $\beta_m=1$, $\forall m$.}
 \end{section}
 
 \begin{section}{RIScatter}
-	Using shared spectrum, energy and infrastructures, RIScatter is a novel passive communication/assistance protocol that generalizes \gls{bc}, \gls{sr} and \gls{ris} from the perspective of input distribution.
-	In particular, the potentially dispersed passive RIScatter nodes ride over an active legacy transmission in a flexible and mutualistic manner, while the practical RIScatter receiver cooperatively decodes both primary and backscatter links under the benefits of backscatter modulation and passive beamforming.
+	As a generalization of \gls{bc}, \gls{sr} and \gls{ris}, RIScatter is a passive scattering protocol that rides over an active primary link in a flexible and mutualistic manner.
+	Specifically, RIScatter nodes utilize scattered multipath to smoothly transition between backscatter modulation and passive beamforming by \gls{csi}- and weight-based input distribution design, and a tailored cooperative receiver exploits signal properties (i.e., double modulation and symbol period difference) to effectively decode both primary and backscatter links.
+	RIScatter nodes can be implemented by adding an adaptive encoder to off-the-shelf passive backscatter tags with an integrated receiver, and the cascaded \gls{csi} acquisition
+
+	acquisition depends on the geometry of nodes.
+	For co-located RIScatter nodes,
+
+	can be acquired by
+
+	acquisition depends on the geometry of nodes.
+	For co-located
+
+	can be acquired using sequential methods \cite{Bharadia2015,Yang2015b,Guo2019g} or the state-of-the-art parallel approach \cite{Jin2021a}.
+
+
+
+
+	the block diagram, equivalent circuit, and scatter model are illustrated in Fig. \ref{fg:riscatter_node}.
+
+	As shown in Fig. \subref*{fg:block_diagram}, RIScatter nodes can be implemented over readily available passive backscatter devices with energy harvester and information decoder.
+	Its equivalent circuit and scatter model are presented in Fig. \subref*{fg:equivalent_circuit} and \subref*{fg:scatter_model}.
+	When activated by primary transmitter, each node harvests a proportion of the impinging wave for its own operation, decode the embedded coordination information for input distribution control, then applies a potentially random phase shift on the reradiated signal due to backscatter modulation.
+	Energy harvesting and information decoding at passive RIScatter nodes can be realized using conventional power-splitting or time-sharing \gls{swipt} protocols \cite{Clerckx2019} or integrated energy-information receiver with pulse position modulated signal \cite{Kim2021a}.
+	Besides, relevant \gls{csi} can be acquired using either traditional sequential methods \cite{Bharadia2015,Yang2015b,Guo2019g} or the state-of-the-art parallel approach \cite{Jin2021a}.
+	In the following context, we assume perfect primary-total-backscatter coordination and perfect channel estimation for all links.
+
 	\begin{subsection}{RIScatter Nodes}
 		Based on link priority and \gls{csi}, RIScatter nodes adapt the \emph{state input probability distribution} of antenna-based scatterers to unify backscatter modulation and passive beamforming.
 		Conventional line-coded \gls{bc}/\gls{sr} nodes (e.g., EPC Gen 2 UHF \gls{rfid} using FM0) and deterministic \gls{ris} elements can be viewed as its extreme cases, where the input distribution boils down to equiprobable and degenerate, respectively.
@@ -455,12 +421,7 @@
 		Such an adaptive backscatter channel coding coincides with \gls{ris} when primary link is absolutely prioritized, and outperforms the conventional equiprobable line-coded \gls{bc}/\gls{sr} when backscatter link is absolutely prioritized.
 		Besides, the dispersed characteristics of RIScatter nodes (and legacy users) avoids the development optimization and allows uniformly good performance for both links.
 
-		As shown in Fig. \subref*{fg:block_diagram}, RIScatter nodes can be implemented over readily available passive backscatter devices with energy harvester and information decoder.
-		Its equivalent circuit and scatter model are presented in Fig. \subref*{fg:equivalent_circuit} and \subref*{fg:scatter_model}.
-		When activated by primary transmitter, each node harvests a proportion of the impinging wave for its own operation, decode the embedded coordination information for input distribution control, then applies a potentially random phase shift on the reradiated signal due to backscatter modulation.
-		Energy harvesting and information decoding at passive RIScatter nodes can be realized using conventional power-splitting or time-sharing \gls{swipt} protocols \cite{Clerckx2019} or integrated energy-information receiver with pulse position modulated signal \cite{Kim2021a}.
-		Besides, relevant \gls{csi} can be acquired using either traditional sequential methods \cite{Bharadia2015,Yang2015b,Guo2019g} or the state-of-the-art parallel approach \cite{Jin2021a}.
-		In the following context, we assume perfect primary-total-backscatter coordination and perfect channel estimation for all links.
+
 		\begin{figure*}[!t]
 			\centering
 			\subfloat[Block Diagram]{

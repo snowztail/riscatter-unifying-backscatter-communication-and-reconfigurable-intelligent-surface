@@ -303,7 +303,7 @@
 
 		\emph{Second,} we propose a practical receiver that accommodates the double modulation and signal difference in scatter-based multiple access.
 		Since the primary and backscatter messages are superimposed by multiplication coding and the backscatter symbol is typically longer than primary, the scattered signals from RIScatter nodes can be treated as multipath components during primary decoding, and the primary message can be viewed as a spreading code during backscatter decoding.
-		Conventional sequential primary-backscatter decoder eliminates primary interference by \gls{sic} at each primary block, while our sequential backscatter-primary detector semi-coherently decodes RIScatter nodes from the received energy, re-encodes to recover exact reflection patterns, and models the deterministic multipath in the primary equivalent channel as dynamic passive beamforming at each backscatter block.
+		Conventional sequential primary-backscatter decoder eliminates primary interference by \gls{sic} at each primary block, while our sequential backscatter-primary detector semi-coherently decodes RIScatter nodes from the received energy, re-encodes to recover exact reflection patterns, and models the deterministic multipath within primary equivalent channel as dynamic passive beamforming at each backscatter block.
 		It enables backscatter modulation and dynamic passive beamforming at much lower operational complexity, and is suitable for scatter nodes with various load switching speeds.
 
 		\emph{Third,} we consider a scenario where multiple RIScatter nodes ride over an active point-to-point \gls{miso} transmission to perform backscatter modulation and passive beamforming towards a nearby user using shared spectrum, energy, and infrastructures.
@@ -366,33 +366,10 @@
 
 \begin{section}{RIScatter}
 	\begin{subsection}{Concepts}
-		% As a generalization of \gls{bc}, \gls{sr} and \gls{ris}, RIScatter is a passive scattering protocol that cooperatives with an active primary link in a flexible and mutualistic manner.
-		% Specifically, RIScatter nodes utilizes \gls{csi}- and weight-based input distribution design to smoothly transition between backscatter modulation and passive beamforming, and a tailored cooperative receiver exploits signal properties (i.e., double modulation and symbol period difference) to effectively decode both primary and backscatter links.
-		% RIScatter nodes can be implemented by adding an integrated receiver \cite{Kim2021a} and adaptive encoder \cite{He2020e} to off-the-shelf passive backscatter tags, and relevant \gls{csi} can be acquired by existing low-power estimation techniques.
-		% For dispersed RIScatter nodes, the cascaded transmitter-node-receiver channels can be estimated by sequential \cite{Bharadia2015,Yang2015b,Guo2019g} or parallel approaches \cite{Jin2021a} originally proposed for \gls{bc}.
-		% For co-located RIScatter nodes, channel estimation can be simplified by group-based \cite{Zheng2019} and hierarchical \cite{You2019} trainings originally proposed for \gls{ris}.
-		% The block diagram, equivalent circuit, and scatter model of a RIScatter node are illustrated in Fig. \ref{fg:riscatter_node}, while the input distribution and time structure comparison of scattering applications are shown in Fig. \ref{fg:scatter_comparison}.
-		% Instead of using fully random or fully deterministic reflection pattern over time, each RIScatter node semi-randomly chooses the reflection state for each backscatter block with the guidance of input probability distribution $P(\Gamma_m)$ at state $m$.
-		% Such an adaptive backscatter coding boils down to degenerate distribution of \gls{ris} when primary link is prioritized, and outperforms line coding with equiprobable inputs (e.g., FM0 for \gls{rfid}) when backscatter link is prioritized.
-		% Besides, joint encoding over multiple co-located RIScatter nodes can further improve the total backscatter rate.
-
-		As a generalization of \gls{bc}, \gls{sr} and \gls{ris}, RIScatter is a passive scattering protocol that cooperatives with an active primary link in a flexible and mutualistic manner.
+		As a generalization of \gls{bc}, \gls{sr} and \gls{ris}, RIScatter is a passive scattering protocol that coexists with an active primary link in a flexible and mutualistic manner.
 		RIScatter nodes utilizes \gls{csi}- and weight-based input distribution design to smoothly transition between backscatter modulation and passive beamforming.
 		It can be implemented by adding an integrated receiver \cite{Kim2021a} and adaptive encoder \cite{He2020e} to off-the-shelf passive backscatter tags.
 		The block diagram, equivalent circuit, and scatter model of a RIScatter node are illustrated in Fig. \ref{fg:riscatter_node}, while the input distribution and time structure comparison of scattering applications are shown in Fig. \ref{fg:scatter_comparison}.
-		Instead of using fully random or fully deterministic reflection pattern over time, each RIScatter node semi-randomly chooses the reflection state for each backscatter block with guidance of input probability distribution $P(\Gamma_m)$ at state $m$.
-		Such an adaptive backscatter coding boils down to degenerate distribution of \gls{ris} when primary link is prioritized, and outperforms conventional line coding with equiprobable inputs (e.g., FM0 for \gls{rfid}) when backscatter link is prioritized.
-		Besides, joint encoding over multiple co-located RIScatter nodes can further boost the total backscatter rate.
-		Relevant \gls{csi} can be acquired by existing low-power estimation techniques.
-		For dispersed RIScatter nodes, the cascaded transmitter-node-receiver channels can be estimated by sequential \cite{Bharadia2015,Yang2015b,Guo2019g} or parallel approaches \cite{Jin2021a} originally proposed for \gls{bc}.
-		For co-located RIScatter nodes, the estimation can be simplified by group-based \cite{Zheng2019} and hierarchical \cite{You2019} trainings originally proposed for \gls{ris}.
-
-
-		% , and a tailored cooperative receiver exploits signal properties (i.e., double modulation and symbol period difference) to effectively decode both primary and backscatter links.
-		% RIScatter nodes can be implemented by adding an integrated receiver \cite{Kim2021a} and adaptive encoder \cite{He2020e} to off-the-shelf passive backscatter tags, and relevant \gls{csi} can be acquired by existing low-power estimation techniques.
-		% For dispersed RIScatter nodes, the cascaded transmitter-node-receiver channels can be estimated by sequential \cite{Bharadia2015,Yang2015b,Guo2019g} or parallel approaches \cite{Jin2021a} originally proposed for \gls{bc}.
-		% For co-located RIScatter nodes, channel estimation can be simplified by group-based \cite{Zheng2019} and hierarchical \cite{You2019} trainings originally proposed for \gls{ris}.
-
 		\begin{figure*}[!t]
 			\centering
 			\subfloat[Block Diagram]{
@@ -420,7 +397,6 @@
 			}
 			\label{fg:riscatter_node}
 		\end{figure*}
-
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Input Distribution]{
@@ -442,80 +418,41 @@
 			}
 			\label{fg:scatter_comparison}
 		\end{figure}
-		% The block diagram, equivalent circuit, and scatter model of a RIScatter node are illustrated in Fig. \ref{fg:riscatter_node}, while the input distribution and time structure comparison of scattering applications are shown in Fig. \ref{fg:scatter_comparison}.
-		% Instead of using fully random or fully deterministic reflection pattern over time, each RIScatter node semi-randomly chooses the reflection state for each backscatter block with the guidance of input probability distribution $P(\Gamma_m)$ at state $m$.
-		% Such an adaptive backscatter coding boils down to degenerate distribution of \gls{ris} when primary link is prioritized, and outperforms line coding with equiprobable inputs (e.g., FM0 for \gls{rfid}) when backscatter link is prioritized.
-		% Besides, joint encoding over multiple co-located RIScatter nodes can further improve the total backscatter rate.
+		Instead of using fully random or fully deterministic reflection pattern over time, each RIScatter node semi-randomly chooses the reflection state for each backscatter block with guidance of input probability distribution $P(\Gamma_m)$ at state $m$.
+		Such an adaptive backscatter coding boils down to degenerate distribution of \gls{ris} when primary link is prioritized, and outperforms conventional line coding with equiprobable inputs (e.g., FM0 for \gls{rfid}) when backscatter link is prioritized.
+		Besides, joint encoding over multiple co-located RIScatter nodes can further boost the total backscatter rate.
+		Relevant \gls{csi} can be acquired by existing low-power estimation techniques.
+		For dispersed RIScatter nodes, the cascaded transmitter-node-receiver channels can be estimated by sequential \cite{Bharadia2015,Yang2015b,Guo2019g} or parallel approaches \cite{Jin2021a} originally proposed for \gls{bc}.
+		For co-located RIScatter nodes, the estimation can be simplified by group-based \cite{Zheng2019} and hierarchical \cite{You2019} trainings originally proposed for \gls{ris}.
 
 		\begin{remark}
 			Scatter-based multiple access involves a double modulation where the primary and backscatter symbols of different length are superimposed by multiplication coding.
 			The reflection pattern not only encodes the backscatter message, but also affects the primary equivalent channel.
-			% Hence, \gls{sic}, which was originally proposed for superposition coding,
-			It suggests backscatter detection under primary uncertainty can be viewed as part of primary channel training, and novel decoding strategies apart from \gls{sic}
+			Therefore, backscatter detection under primary uncertainty can be viewed as part of primary channel training, and novel decoding strategies apart from \gls{sic}
 			\footnote{
 				Recall that \gls{sic} was proposed to achieve the capacity vertices for \gls{mac} with superposition coding.
-				For scatter-based multiple access, \gls{sic} not only fails to exploit the double modulation effect, but also requires $N$ re-encoding, precoding and subtraction steps with a time-domain \gls{mrc} during each backscatter symbol block.
+				For scatter-based multiple access, \gls{sic} not only fails to utilize the double modulation, but also requires $N$ re-encoding, precoding and subtraction with a time-domain \gls{mrc} during each backscatter block.
 			}
-			is desired to fully exploit signal characteristics and improve the primary-backscatter tradeoff.
-
-			% Since scatter nodes directly modulate their message over the legacy signal, it involves a \emph{double modulation} where the primary and backscatter symbols are superimposed by \emph{multiplication coding} instead of superposition coding.
-			% Besides, the backscatter symbol period is typically longer than primary due to the load switching speed constraint.
-			% Those facts imply \emph{backscatter detection} under primary uncertainty can be viewed as part of \emph{primary channel training}.
-
-			% Metascatter involves a symbiotic MAC where the primary and backscatter symbols of different duration are mixed by Multiplication Coding (MC) instead of Superposition Coding (SC). For each node, the reflection coefficient not only encodes the backscatter message, but also influences the equivalent primary channel (4). To accommodate such signal characteristics, novel receiving strategy apart from SIC is desired to better utilize the reflection pattern and boost the primary-backscatter tradeoff.
+			is desired for RIScatter.
 		\end{remark}
-		Since each passive RIScatter node directly modulates its own message over the legacy signal, it involves a \emph{double modulation} where the primary and backscatter symbols are superimposed by \emph{multiplication coding} instead of superposition coding.
-		Besides, the backscatter symbol period is typically longer than primary due to the load switching speed constraint.
-		Those facts imply \emph{backscatter detection} under primary uncertainty can be viewed as part of \emph{primary channel training}.
-		Hence, we propose a practical RIScatter receiver that semi-coherently decodes RIScatter nodes from the received energy per backscatter block, re-encodes for their reflection patterns, retrieves primary equivalent channel as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
+
+		Next, we propose a cooperative receiver that effectively exploit signal characteristics (i.e., double modulation and symbol period difference) to reduce the decoding complexity and improve the primary-backscatter tradeoff.
+		As illustrated in Fig. \ref{fg:energy_distribution}, conditioned on different reflection state hypotheses, the accumulated receive energy per backscatter block follows Gamma distribution with different scale parameters \cite{Qian2017b}.
 		\begin{figure}[!t]
 			\centering
 			\resizebox{0.9\columnwidth}{!}{
 				\input{assets/illustration/energy_distribution.tex}
 			}
 			\caption{
-				\gls{pdf} of total received energy per backscatter block, conditioned on different input state hypotheses.
-				$t$ and $\mathcal{R}$ denote the energy decision thresholds and regions, respectively.
+				\gls{pdf} of accumulated receive energy per backscatter block conditioned on different reflection state hypotheses.
+				$z$, $t$, $\mathcal{H}$ and $\mathcal{R}$ denote the accumulated receive energy, decision threshold, reflection state hypothesis, and decision regions, respectively.
 			}
 			\label{fg:energy_distribution}
 		\end{figure}
-		As illustrated in Fig. \ref{fg:energy_distribution}, the total received energy per backscatter block is a random variable that follows different distributions conditioned on different input state hypotheses.
-		Compared with conventional joint \gls{ml} and \gls{sic} from stronger primary link to weaker backscatter links, RIScatter receiver not only preserves the benefits of backscatter modulation and passive beamforming, but also enjoys much lower computational and operational complexities.
+		Hence, the receiver can semi-coherently (in the presence of primary uncertainty) decode node messages from the accumulated receive energy, re-encode to recover actual reflection patterns, and model the deterministic multipath within primary equivalent channel.
+		It enables backscatter modulation and dynamic passive beamforming using only one energy level comparison, re-encoding and precoding for each backscatter block (instead of primary block as \gls{sic}), and is suitable for arbitrary primary and backscatter symbol periods.
 	\end{subsection}
 
-
-
-	\begin{subsection}{RIScatter Nodes}
-		Based on link priority and \gls{csi}, RIScatter nodes adapt the \emph{state input probability distribution} of antenna-based scatterers to unify backscatter modulation and passive beamforming.
-		Conventional line-coded \gls{bc}/\gls{sr} nodes (e.g., EPC Gen 2 UHF \gls{rfid} using FM0) and deterministic \gls{ris} elements can be viewed as its extreme cases, where the input distribution boils down to equiprobable and degenerate, respectively.
-
-		As illustrated in Fig. \ref{fg:scatter_comparison}, instead of always using fully random or deterministic reflection pattern over time, each RIScatter node can \emph{flexibly adjust} its input distribution to balance information encoding and channel reconfiguration.
-		That is, it semi-randomly select the reflection state per backscatter symbol block under the guidance of input probability $P(\Gamma_m)$ for state $m$.
-		Such an adaptive backscatter channel coding coincides with \gls{ris} when primary link is absolutely prioritized, and outperforms the conventional equiprobable line-coded \gls{bc}/\gls{sr} when backscatter link is absolutely prioritized.
-		Besides, the dispersed characteristics of RIScatter nodes (and legacy users) avoids the development optimization and allows uniformly good performance for both links.
-
-
-	\end{subsection}
-
-	\begin{subsection}{RIScatter Receiver}
-		Since each passive RIScatter node directly modulates its own message over the legacy signal, it involves a \emph{double modulation} where the primary and backscatter symbols are superimposed by \emph{multiplication coding} instead of superposition coding.
-		Besides, the backscatter symbol period is typically longer than primary due to the load switching speed constraint.
-		Those facts imply \emph{backscatter detection} under primary uncertainty can be viewed as part of \emph{primary channel training}.
-		Hence, we propose a practical RIScatter receiver that semi-coherently decodes RIScatter nodes from the received energy per backscatter block, re-encodes for their reflection patterns, retrieves primary equivalent channel as if dynamic passive beamforming, then coherently decodes the primary link under the enhanced multipath.
-		\begin{figure}[!t]
-			\centering
-			\resizebox{0.9\columnwidth}{!}{
-				\input{assets/illustration/energy_distribution.tex}
-			}
-			\caption{
-				\gls{pdf} of total received energy per backscatter block, conditioned on different input state hypotheses.
-				$t$ and $\mathcal{R}$ denote the energy decision thresholds and regions, respectively.
-			}
-			\label{fg:energy_distribution}
-		\end{figure}
-		As illustrated in Fig. \ref{fg:energy_distribution}, the total received energy per backscatter block is a random variable that follows different distributions conditioned on different input state hypotheses.
-		Compared with conventional joint \gls{ml} and \gls{sic} from stronger primary link to weaker backscatter links, RIScatter receiver not only preserves the benefits of backscatter modulation and passive beamforming, but also enjoys much lower computational and operational complexities.
-	\end{subsection}
 
 	\begin{subsection}{System Model}
 		\begin{figure}[!t]

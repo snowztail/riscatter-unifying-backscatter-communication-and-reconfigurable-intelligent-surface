@@ -1,47 +1,47 @@
 \begin{tikzpicture}
 	% BC/AmBC/SR
 	\foreach \x in {0,...,3}{
-			\draw[blue,fill=blue!30!white,postaction={pattern=horizontal lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.5);
+			\draw[blue,fill=blue!30!white,postaction={pattern=horizontal lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
 		}
 	\foreach \x in {4,...,7}{
-			\draw[blue,fill=blue!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.5);
+			\draw[blue,fill=blue!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
 		}
 	\foreach \x in {8,...,11}{
-			\draw[blue,fill=blue!30!white,postaction={pattern=vertical lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.5);
+			\draw[blue,fill=blue!30!white,postaction={pattern=vertical lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
 		}
 	\foreach \x in {12,...,15}{
-			\draw[blue,fill=blue!30!white,postaction={pattern=north east lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.5);
+			\draw[blue,fill=blue!30!white,postaction={pattern=north east lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
 		}
 
 	% RIS
 	\foreach \x in {0,...,15}{
-			\draw[red,fill=red!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,2) rectangle ++(0.5,0.5);
+			\draw[red,fill=red!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,2) rectangle ++(0.5,0.25);
 		}
 
 	% RIScatter
 	\foreach \x in {0,...,1}{
-			\draw[brown,fill=brown!30!white,postaction={pattern=horizontal lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.5);
+			\draw[brown,fill=brown!30!white,postaction={pattern=horizontal lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.25);
 		}
 	\foreach \x in {2,...,7}{
-			\draw[brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.5);
+			\draw[brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.25);
 		}
 	\foreach \x in {8,...,11}{
-			\draw[brown,fill=brown!30!white,postaction={pattern=vertical lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.5);
+			\draw[brown,fill=brown!30!white,postaction={pattern=vertical lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.25);
 		}
 	\foreach \x in {12,...,15}{
-			\draw[brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.5);
+			\draw[brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.25);
 		}
 
 	\foreach \x in {1,...,7}{
-			\draw[dotted] (\x,0.5) -- (\x,4);
+			\draw[dotted] (\x,1) -- (\x,3.75);
 		}
-	\draw[latex-latex] (0,3.7) -- (0.5,3.7) node[above,midway,yshift=1]{PB};
-	\draw[latex-latex] (0,4.3) -- (1,4.3) node[above,midway,yshift=1]{BB};
-	\draw[latex-latex] (0,4.9) -- (8,4.9) node[above,midway,yshift=1]{Channel Block};
+	\draw[latex-latex] (0,3.5) -- (0.5,3.5) node[above,midway,yshift=1]{PB};
+	\draw[latex-latex] (0,4.1) -- (1,4.1) node[above,midway,yshift=1]{BB};
+	\draw[latex-latex] (0,4.7) -- (8,4.7) node[above,midway,yshift=1]{Channel Block};
 
-	\node at (-2,3.25) {BackCom/AmBC/SR};
-	\node at (-2,2.25) {RIS};
-	\node at (-2,1.25) {RIScatter};
+	\node at (-2,3.125) {BackCom/AmBC/SR};
+	\node at (-2,2.125) {RIS};
+	\node at (-2,1.125) {RIScatter};
 
 	\draw [pattern=horizontal lines](0.15,0) rectangle ++(0.5,0.25) node[xshift=20,yshift=-3.5] {State 1};
 	\draw [pattern=north west lines](2.15,0) rectangle ++(0.5,0.25) node[xshift=20,yshift=-3.5] {State 2};

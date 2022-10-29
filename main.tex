@@ -141,7 +141,7 @@
 }
 \maketitle
 % TODO why not use metamaterial? because high computational complexity and expectations of freedom (flexibility, reliability)
-% TODO cooperative input design can be used for co-located RIScatter nodes.
+% * cooperative input design can be used for co-located RIScatter nodes.
 % * hardward to modulate using RIS is already available.
 % * RIScatter: enhance backscatter signal difference (suppress primary interference) or primary signal strength.
 % ? For Backscatter community: why not adaptive channel coding? For RIS community: why not add randomness for modulation?
@@ -243,7 +243,7 @@
 		\end{figure}
 	\end{subsection}
 
-	\begin{table*}[]
+	\begin{table*}[!t]
 		\caption{Comparison of Scattering Applications}
 		\label{tb:scattering_applications}
 		\begin{tabularx}{\textwidth}{CCCCCCC}
@@ -302,7 +302,7 @@
 		Multiple RIScatter nodes can be either co-located to enable joint distribution design for improved total backscatter rate, or dispersed to guarantee uniformly good performance for both links.
 
 		\emph{Second,} we propose a practical receiver that accommodates the double modulation and signal difference in active-passive coexisting network.
-		Since the primary and backscatter messages are superimposed by multiplication coding and the backscatter symbol is typically longer than primary, the scattered signals from RIScatter nodes can be treated as multipath components during primary decoding, and the primary message can be viewed as a spreading code during backscatter decoding.
+		Since the primary and backscatter messages are superimposed by multiplication coding and the backscatter symbol is typically longer than primary, the scattered signals from RIScatter nodes can be treated as multipath components during primary decoding, and the primary symbols can be viewed as a spreading code during backscatter decoding.
 		Conventional sequential primary-backscatter decoder eliminates primary interference by \gls{sic} at each primary block, while our sequential backscatter-primary detector semi-coherently decodes RIScatter nodes from the received energy, re-encodes to recover exact reflection patterns, and models the deterministic multipath within primary equivalent channel as dynamic passive beamforming at each backscatter block.
 		It enables backscatter modulation and dynamic passive beamforming at much lower operational complexity, and is suitable for scatter nodes with various load switching speeds.
 
@@ -719,7 +719,7 @@
 			\boldsymbol{w} = \sqrt{P} \frac{\bar{\boldsymbol{w}}}{\max\bigl(\sqrt{P},\lVert\bar{\boldsymbol{w}}\rVert\bigr)}.
 			\label{eq:beamforming_projection}
 		\end{equation}
-		The \gls{pgd} active beamforming optimization with step size determined by \gls{bls} is summarized in Algorithm \ref{al:active_beamforming}.
+		The \gls{pgd} active beamforming optimization with adaptive \gls{bls} step size \cite[Section 9.2]{Boyd2004} is summarized in Algorithm \ref{al:active_beamforming}.
 		\begin{algorithm}[!t]
 			\caption{Iterative Active Beamforming Optimization by \gls{pgd} with \gls{bls}}
 			\label{al:active_beamforming}
@@ -799,11 +799,10 @@
 \end{section}
 
 \begin{section}{Simulation Results}
-	In this section, we provide numerical results to evaluate the proposed input distribution, active beamforming, and backscatter decision design for the RIScatter system in Fig. \ref{fg:riscatter_network}.
+	In this section, we provide numerical results to evaluate the proposed input distribution, active beamforming, and backscatter decision designs for the RIScatter system in Fig. \ref{fg:riscatter_network}.
 	We assume the AP-user distance is \qty{10}{\meter} and at least one RIScatter nodes are randomly dropped in a disk centered at the user with radius \qty{2}{\meter}.
-	% The \gls{ap} is with an average power budget $P=\qty{36}{\dBm}$, the nodes employs $M$-\gls{qam} with amplitude scattering ratio $\alpha=0.5$, the user is with average noise power $\sigma_v^2=\qty{-40}{\dBm}$, and the symbol period ratio is $N=20$.
-	The \gls{ap} is with an average transmit power budget $P=\qty{36}{\dBm}$, all nodes employs $M$-\gls{qam} with amplitude scattering ratio $\alpha=0.5$, and the user is with average noise power $\sigma_v^2=\qty{-40}{\dBm}$.
-	% Q=4 and symbol period ratio is $N=20$.
+	% The \gls{ap} is with an average transmit power budget $P=\qty{36}{\dBm}$, all nodes employs $M$-\gls{qam} with amplitude scattering ratio $\alpha=0.5$, and the user is with average noise power $\sigma_v^2=\qty{-40}{\dBm}$.
+	The \gls{ap} is with an average transmit power budget $P=\qty{36}{\dBm}$ and all nodes employs $M$-\gls{qam} with amplitude scattering ratio $\alpha=0.5$.
 	For all channels involved, we consider a distance-dependent path loss model
 	\begin{equation}
 		L(d) = L_0 \biggl(\frac{d_0}{d}\biggr)^\gamma,
@@ -812,16 +811,15 @@
 	\begin{equation}
 		\boldsymbol{H} = \sqrt{\frac{\kappa}{1+\kappa}} \bar{\boldsymbol{H}} + \sqrt{\frac{1}{1+\kappa}} \tilde{\boldsymbol{H}},
 	\end{equation}
-	where $d$ is the transmission distance, $L_0=-\qty{30}{\dB}$ is the reference path loss at distance $d_0=\qty{1}{\meter}$, $\kappa$ is the Rician $K$-factor, $\bar{\boldsymbol{H}}$ is the deterministic line-of-sight component with entries of unit magnitude, and $\tilde{\boldsymbol{H}}$ is the Rayleigh fading component with entries in standard \gls{iid} \gls{cscg} distribution.
+	where $d$ is the transmission distance, $L_0=-\qty{30}{\dB}$ is the reference path loss at $d_0=\qty{1}{\meter}$, $\kappa$ is the Rician $K$-factor, $\bar{\boldsymbol{H}}$ is the deterministic line-of-sight component with unit-magnitude entries, and $\tilde{\boldsymbol{H}}$ is the Rayleigh fading component with standard \gls{iid} \gls{cscg} entries.
 	We choose $\gamma_{\mathrm{D}}=2.6$, $\gamma_{\mathrm{F}}=2.4$, $\gamma_{\mathrm{B}}=2$, and $\kappa_{\mathrm{D}}=\kappa_{\mathrm{F}}=\kappa_{\mathrm{B}}=5$ for direct, forward and backward links.
-	The finite threshold domain $\mathcal{T}$ is obtained by $b$-bit uniform discretization over the critical interval defined by the confidence bounds of edge hypotheses (i.e., lower bound of $\mathcal{H}_1$ and upper bound of $\mathcal{H}_L$) with confidence level $1-\varepsilon$, where $b=9$ and $\varepsilon=\num{1e-3}$.
-	% The achievable primary-(sum-)backscatter rate point is defined as $(I_{\mathrm{P}}(s;y),)$
-	All average achievable rate points/regions are evaluated over \num{1000} realizations, and the parameters remain fixed unless otherwise specified.
+	The finite decision threshold domain $\mathcal{T}$ is obtained by $b$-bit uniform discretization over the critical interval defined by the confidence bounds of edge hypotheses (i.e., lower bound of $\mathcal{H}_1$ and upper bound of $\mathcal{H}_L$) with confidence $1-\varepsilon$, and we choose $b=9$ and $\varepsilon=\num{e-3}$.
+	All achievable rate points/regions are averaged over \num{1000} realizations.
 
 	\begin{subsection}{Evaluation of Proposed Algorithms}
 		\begin{subsubsection}{Initialization}
-			To characterize the achievable rate region, we progressively obtain all boundary points by successively increasing the primary priority $\rho$ and solving problem \eqref{op:weighted_sum_rate}.
-			At $\rho=0$ where backscatter performance is absolutely prioritized, we initialize Algorithm \ref{al:input_distribution} and \ref{al:active_beamforming} by uniform input distribution and \gls{mrt} towards sum cascaded channel $\sum_{k} \boldsymbol{h}_{\mathrm{C},k}^H$, respectively.
+			To characterize each achievable rate region, we progressively obtain all boundary points by successively increasing weight $\rho$ and solving problem \eqref{op:weighted_sum_rate}.
+			For $\rho=0$ where backscatter link is prioritized, we initialize Algorithm \ref{al:input_distribution} and \ref{al:active_beamforming} by uniform input distribution and \gls{mrt} towards sum cascaded channel $\sum_{k} \boldsymbol{h}_{\mathrm{C},k}^H$, respectively.
 			At the following points, both algorithms are initialized by the final solutions at the previous point.
 		\end{subsubsection}
 
@@ -831,68 +829,60 @@
 				\resizebox{0.75\columnwidth}{!}{
 					\input{assets/simulation/wsr_convergence.tex}
 				}
-				\caption{Convergence behavior of the proposed algorithms for $\rho=0$.}
+				\caption{Typical convergence curves at $\rho=0$ for $Q=4$, $K=8$, $M=2$, $N=20$ and $\sigma_v^2=\qty{-40}{\dBm}$.}
 				\label{fg:wsr_convergence}
 			\end{figure}
 
-			In Fig. \ref{fg:wsr_convergence}, we plot the weighted sum of primary and total backscatter rates at $\rho=0$ for \gls{kkt}, \gls{pgd} (on the first call within \gls{bcd}) and \gls{bcd} algorithms in each iteration.
-			For $K=8$ and $M=2$, Algorithm \ref{al:input_distribution} typically takes around \num{100} fast iterations over closed-form expression \eqref{eq:input_kkt_solution} to converge to the \gls{kkt} input distribution.
+			In Fig. \ref{fg:wsr_convergence}, we plot the weighted sum of primary and total backscatter rates at $\rho=0$ for \gls{kkt}, \gls{pgd} and \gls{bcd} algorithms on the first call.
+			For $K=8$ and $M=2$, Algorithm \ref{al:input_distribution} typically takes around \num{100} fast closed-form iterations by \eqref{eq:input_kkt_solution} to converge to the \gls{kkt} input distribution.
 			For $Q=4$, around \num{10} iterations are required for Algorithm \ref{al:active_beamforming} to converge, where the gradient needs to be computed by \eqref{eq:weighted_sum_mutual_information_gradient} and the step size needs to be refined by \gls{bls}.
-			In comparison, the \gls{bcd} algorithm typically requires at most \num{5} iterations to converge.
-			At the following rate points (not presented), the convergence of all three algorithms become much faster thanks to the progressive initialization.
-			Overall, we conclude the proposed algorithms are able to converge within moderate iterations and provide significant rate benefits for the RIScatter system.
+			Overall, the \gls{bcd} algorithm initially requires at most \num{5} iterations to converge.
+			At the following points (not presented here), the convergence of all three algorithms are much faster thanks to the progressive initialization.
+			Hence, we conclude the proposed algorithms are able to converge within moderate iterations and provide significant rate benefits for RIScatter systems.
 		\end{subsubsection}
 	\end{subsection}
 
 	\begin{subsection}{Comparison of Scattering Applications}
-
-		% For a fair comparison, we consider the setup in Fig. \ref{fg:riscatter_network} and employ \gls{ml} backscatter energy detection for these scattering applications:
-		% For a fair comparison, we consider the setup in Fig. \ref{fg:riscatter_network} with \gls{ml} backscatter energy detection for these scattering applications (except \gls{sr}):
-		% For a fair comparison with RIScatter, we consider the setup in Fig. \ref{fg:riscatter_network} and evaluate the achievable rate pairs for these scattering applications:
-		% We consider the setup in Fig. \ref{fg:riscatter_network} and compare the achievable rate pairs of RIScatter and these scattering applications:
-		On top of the setup in Fig. \ref{fg:riscatter_network}, we compare the achievable rate pairs of RIScatter and these scattering applications:
+		Based on the setup in Fig. \ref{fg:riscatter_network}, we compare the achievable rates of RIScatter and different scattering applications:
 		\begin{itemize}
 			\item \emph{\gls{bbc}:}
 			The primary symbol becomes deterministic $s[n]=1$ and the receive signal at each primary block is
 			\begin{equation}
-				% y^{\text{\gls{bbc}}}[n] = \boldsymbol{h}_{\mathrm{E}}^H(x_{\mathcal{K}}) \boldsymbol{w} + v[n],
 				y^{\text{\gls{bbc}}}[n] = \Bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k\Bigr) \boldsymbol{w} + v[n],
 			\end{equation}
-			% which follows non-zero mean complex Gaussian distribution $\mathcal{CN}\bigl(\boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w},\sigma_v^2\bigr)$ under hypothesis $\mathcal{H}_{m_{\mathcal{K}}}$.
 			which follows non-zero mean complex Gaussian distribution $\mathcal{CN}\bigl((\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_{m_k}) \boldsymbol{w},\sigma_v^2\bigr)$ under hypothesis $\mathcal{H}_{m_{\mathcal{K}}}$.
-			% \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k
 			The corresponding \gls{pdf} of accumulated receive energy over $N$ primary blocks is
 			\begin{equation}
 				f^{\text{\gls{bbc}}}(z|\mathcal{H}_{m_{\mathcal{K}}}) = \frac{(z-\mu_{m_{\mathcal{K}}}^{\text{\gls{bbc}}})^{N-1} \exp \bigl(-(z-\mu_{m_{\mathcal{K}}}^{\text{\gls{bbc}}})/\sigma_v^2 \bigr)}{\sigma_v^{2N} (N-1)!},
 				\label{eq:energy_distribution_bbc}
 			\end{equation}
-			% where $\mu_{m_{\mathcal{K}}}^{\text{\gls{bbc}}} \triangleq N \lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2$.
 			where $\mu_{m_{\mathcal{K}}}^{\text{\gls{bbc}}} \triangleq N \bigl\lvert \bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_{m_k}\bigr) \boldsymbol{w} \bigr\rvert^2$.
 			The \gls{ml} decision threshold is derived as, $\forall l \in \mathcal{L} \setminus \{L\}$,
 			\begin{equation}
 				t_l^{\text{\gls{bbc}}} = \frac{\mu_{l-1}^{\text{\gls{bbc}}} \exp \bigl((\mu_{l-1}^{\text{\gls{bbc}}}-\mu_{l}^{\text{\gls{bbc}}})/\sigma_v^2 (N-1)\bigr) - \mu_{l}^{\text{\gls{bbc}}}}{\exp \bigl((\mu_{l-1}^{\text{\gls{bbc}}}-\mu_{l}^{\text{\gls{bbc}}})/\sigma_v^2 (N-1)\bigr) - 1}.
 				\label{eq:detection_threshold_ml_bbc}
 			\end{equation}
-			\item \emph{\gls{ambc}:} The user decodes both links independently and semi-coherently by treating the other as interference or uncertainty.
-			Hence, the primary achievable rate can be approximated by\footnote{To provide a preliminary benchmark, we approximate the unknown signal components from finite-input backscatter sources by independent interference from Gaussian sources.}
+			\item \emph{\gls{ambc}:} The user decodes both links independently and semi-coherently by treating the other as interference.
+			Hence, the primary achievable rate can be approximated by\footnote{To provide a preliminary benchmark, we consider the (correlated) scattered signal from finite-input backscatter sources as independent interference from Gaussian sources during primary decoding.}
 			\begin{equation}
 				I_{\mathrm{P}}^{\text{\gls{ambc}}}(s;y) \approx \log \Bigl(1 + \frac{\lvert\boldsymbol{h}_{\mathrm{D}}^H\boldsymbol{w}\rvert^2}{\sum_{k}\lvert \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H \boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr),
 			\end{equation}
 			while the total backscatter rate follows \eqref{eq:backscatter_mutual_information} with uniform input distribution.
 			\item \emph{\gls{sr}:} For a sufficiently large $N$, the primary ergodic rate under semi-coherent detection asymptotically approaches \eqref{eq:primary_mutual_information} with uniform input distribution \cite{Long2020a}.
-			When $s[n]$ is successfully decoded and the direct interference $\boldsymbol{h}_{\mathrm{D}}^H \boldsymbol{w} s[n]$ is perfectly cancelled, the intermediate signal for backscatter detection is
+			When $s[n]$ is successfully decoded and the direct interference $\boldsymbol{h}_{\mathrm{D}}^H \boldsymbol{w} s[n]$ is perfectly cancelled, the intermediate signal is
 			\begin{equation}
 				\hat{y}^{\text{\gls{sr}}}[n] = \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k \boldsymbol{w} s[n] + v[n],
+				\label{eq:intermediate_signal}
 			\end{equation}
 			which only involves noise uncertainty under hypothesis $\mathcal{H}_{m_{\mathcal{K}}}$.
-			% and follows non-zero mean complex Gaussian distribution $\mathcal{CN}\bigl(\sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k \boldsymbol{w} s[n],\sigma_v^2\bigr)$.
-			By \gls{mrc} over $N$ primary blocks, the total achievable for nodes with equiprobable inputs is \cite{Wang2014a}
+			During backscatter detection, the primary symbols $s[1],\ldots,s[n]$ can be viewed as a spreading code, and the receiver can perform \gls{mrc} over $N$ primary blocks.
+			The total achievable for nodes with equiprobable inputs is \cite{Wang2014a}
 			\begin{equation}
 				I_{\mathrm{B}}(x_{\mathcal{K}};\hat{y}_{\text{\gls{sr}}}) = K \log M - \frac{\epsilon}{M^K},
 			\end{equation}
 			where $\epsilon \triangleq \sum_{m_{\mathcal{K}}} \mathbb{E}_{\hat{v}} \log \sum_{m_{\mathcal{K}}'} \exp ( - {\lvert x_{m_{\mathcal{K}}} - x_{m_{\mathcal{K}}'} + \hat{v} \rvert^2}/{2 \sigma^2} )$ and $\hat{v} \sim \mathcal{CN}(0,\sigma_v^2/N)$.
-			For a sufficiently large $N$, $\epsilon$ is negligible and the total backscatter rate approaches $K \log M$.
-			\item \emph{\gls{ris}:} Since the backscatter symbol tuple $x_{\mathcal{K}}$ becomes deterministic, the total backscatter rate is zero and the primary achievable rate boils down to a special case of \eqref{eq:primary_mutual_information}
+			% For a sufficiently large $N$, $\epsilon$ is negligible and the total backscatter rate approaches $K \log M$.
+			\item \emph{\gls{ris}:} Since the backscatter symbol tuple $x_{\mathcal{K}}$ is deterministic, the total backscatter rate is zero and the primary achievable rate becomes a special case of \eqref{eq:primary_mutual_information}
 			\begin{equation}
 				I_{\mathrm{P}}^{\text{\gls{ris}}}(s;y|x_{\mathcal{K}}) = I_{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}^{\star}}) = \log \Bigl(1 + \frac{\lvert \boldsymbol{h}_{\mathrm{E}}^H(x_{m_{\mathcal{K}}^{\star}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\Bigr),
 			\end{equation}
@@ -907,12 +897,16 @@
 			\label{fg:region_comparison}
 		\end{figure}
 
-		Fig. \ref{fg:region_comparison} presents typical achieve rate points of different scattering applications for $Q=1$, $K=1$, $M=4$ and $N=1000$.
-		First, we observe both \gls{bbc} and \gls{sr} can achieve the highest backscatter rate with coherent detection over the receive energy and intermediate signal, respectively.
-		This is because repetition coding with \gls{mrc} over $N$ primary blocks effectively increases the backscatter \gls{snr} by $N$ times, and the information loss due to the signal-to-energy conversion on top may be insignificant.
-		However, the asymptotic primary and backscatter rate analysis only provides upper bounds for \gls{sr}.
-		Using a very large $N$ not only reduces the system throughput\footnote{For example, Wi-Fi sampling rate is \qty{20}{\MHz} while \gls{rfid} load switching speed varies between \num{100}s of \unit{\kHz} to \num{10}s of \unit{\MHz} \cite{Torres2021}, corresponding to a typical symbol period ratio $N$ between \num{1} and \num{100}.} but also requires the operation-intensive \gls{sic} over each primary block.
-		When the duration of primary and backscatter symbol are comparable, the randomly scattered signals should be modelled as interference to primary link rather than quasi-static multipath components, and the achievable rate point of \gls{sr} will move towards the origin.
+		Fig. \ref{fg:region_comparison} compares typical achieve rate points of different scattering applications.
+		First, we observe both \gls{bbc} and \gls{sr} almost reach the noise-free backscatter rate when $N$ is sufficiently large.
+		For \gls{bbc} with coherent energy detection, the processing loss of signal-to-energy conversion can be insignificant, thanks to the noise hardening effect at large $N$.
+		For \gls{sr}, \gls{mrc} increases the equivalent backscatter \gls{snr} by $N$ times and the penalty term $\epsilon$ becomes negligible at large $N$.
+		However, the backscatter rate benefit requires $N$ \gls{sic} processes per backscatter block, and the primary rate benefit under semi-coherent detection requires a very large $N$.
+		When $N$ is moderate, the randomly scattered signals should be modelled as interference rather than quasi-static multipath components during primary decoding, and the \gls{sr} point will move towards \gls{ambc}.
+		% Using a very large $N$ not only reduces the system throughput but also requires the operation-intensive \gls{sic} over each primary block.
+		% When the primary and backscatter symbol periods are comparable, the randomly scattered signals should be modelled as interference rather than quasi-static multipath components during semi-coherent primary decoding, and the achievable rate point of \gls{sr} will move towards \gls{ambc}.
+		% For a moderate $N$, the randomly scattered signals should be modelled as interference rather than quasi-static multipath components during primary decoding, and the \gls{sr} rate point will move towards \gls{ambc}.
+
 		On the other hand, RIScatter provides a lower backscatter rate than \gls{bbc} and \gls{sr} due to semi-coherent detection, but preserves the primary rate benefit for arbitrary $N$.
 		% Backscatter advantage of SR using SIC is prominent for a smaller N
 		% correlation by double modulation improves the detection performance
@@ -1027,7 +1021,10 @@
 				\item \emph{Decomposition:} Normalized rank-\num{1} \gls{cp} decomposition tensors;
 				\item \emph{Randomization:} Random search guided with correlation matrix \cite{Calvo2010}.
 			\end{itemize}
-
+			% TODO SR analysis can achieve large rate at the cost of large N; RIScatter can achieve slightly lower rate at the same N, but also preserves primary performance for smaller N
+			% TODO tradeoff between primary (RIScatter, no SIC) and backscatter (SR, SIC)
+			% ! SR assume very large N for primary rate analysis. However, in such cases SIC is questionable as energy detection over received signal as BBC is already good enough and noncoherent detection can also achieve reasonable performance?
+			% TODO when primary symbols are determined, optimal input distribution at high backscatter SNR is equiprobable for any detection (signal/energy)
 			Fig. \subref*{fg:region_distribution} shows the achievable rate regions for those input distribution schemes.
 			We observe that \emph{Cooperation} provides the outer bound for all achievable rate regions, which suggests transmit cooperation between RIScatter nodes can be generally helpful.
 			However, it requires joint encoding with arbitrarily dependent codewords, and the extra coordination burden may be unaffordable for a large $K$.

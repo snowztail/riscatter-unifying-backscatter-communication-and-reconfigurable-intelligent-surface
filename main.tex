@@ -400,14 +400,14 @@
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Input Distribution]{
-				\resizebox{0.85\columnwidth}{!}{
+				\resizebox{0.8\columnwidth}{!}{
 					\input{assets/illustration/input_distribution.tex}
 				}
 				\label{fg:input_distribution}
 			}
 			\\
 			\subfloat[Time Structure]{
-				\resizebox{0.9\columnwidth}{!}{
+				\resizebox{0.8\columnwidth}{!}{
 					\input{assets/illustration/time_structure.tex}
 				}
 				\label{fg:time_structure}
@@ -440,7 +440,7 @@
 		As illustrated in Fig. \ref{fg:energy_distribution}, conditioned on different reflection state hypotheses, the accumulated receive energy per backscatter block follows Gamma distribution with different scale parameters \cite{Qian2017b}.
 		\begin{figure}[!t]
 			\centering
-			\resizebox{0.9\columnwidth}{!}{
+			\resizebox{0.8\columnwidth}{!}{
 				\input{assets/illustration/energy_distribution.tex}
 			}
 			\caption{
@@ -457,7 +457,7 @@
 	\begin{subsection}{System Model}
 		\begin{figure}[!t]
 			\centering
-			\def\svgwidth{0.8\columnwidth}
+			\def\svgwidth{0.7\columnwidth}
 			\footnotesize{
 				\import{assets/illustration/}{riscatter_network.pdf_tex}
 			}
@@ -966,22 +966,42 @@
 	% \end{subsection}
 
 	\begin{subsection}{Rate Region by Different Schemes}
-		% \begin{figure}[!t]
+		\begin{figure}[!t]
+			\centering
+			\subfloat[Input Distribution\label{fg:region_distribution}]{
+				\resizebox{0.6\columnwidth}{!}{
+					\input{assets/simulation/region_distribution.tex}
+				}
+			}
+			\\
+			\subfloat[Active Beamforming\label{fg:region_beamforming}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_beamforming.tex}
+				}
+			}
+			\subfloat[Decision Threshold\label{fg:region_threshold}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_threshold.tex}
+				}
+			}
+			\caption{
+				Average primary-total-backscatter rate regions for different input distribution, active beamforming, and decision threshold schemes.
+			}
+		\end{figure}
+		% \begin{figure*}[!t]
 		% 	\centering
 		% 	\subfloat[Input Distribution\label{fg:region_distribution}]{
-		% 		\resizebox{0.65\columnwidth}{!}{
+		% 		\resizebox{0.28\textwidth}{!}{
 		% 			\input{assets/simulation/region_distribution.tex}
 		% 		}
 		% 	}
-		% 	\\
 		% 	\subfloat[Active Beamforming\label{fg:region_beamforming}]{
-		% 		\resizebox{0.65\columnwidth}{!}{
+		% 		\resizebox{0.28\textwidth}{!}{
 		% 			\input{assets/simulation/region_beamforming.tex}
 		% 		}
 		% 	}
-		% 	\\
 		% 	\subfloat[Decision Threshold\label{fg:region_threshold}]{
-		% 		\resizebox{0.65\columnwidth}{!}{
+		% 		\resizebox{0.28\textwidth}{!}{
 		% 			\input{assets/simulation/region_threshold.tex}
 		% 		}
 		% 	}
@@ -989,29 +1009,7 @@
 		% 		Average primary-total-backscatter rate regions for different input distribution, active beamforming, and decision threshold schemes.
 		% 		``BSP'' means backscatter symbol period.
 		% 	}
-		% \end{figure}
-		\begin{figure*}[!t]
-			\centering
-			\subfloat[Input Distribution\label{fg:region_distribution}]{
-				\resizebox{0.28\textwidth}{!}{
-					\input{assets/simulation/region_distribution.tex}
-				}
-			}
-			\subfloat[Active Beamforming\label{fg:region_beamforming}]{
-				\resizebox{0.28\textwidth}{!}{
-					\input{assets/simulation/region_beamforming.tex}
-				}
-			}
-			\subfloat[Decision Threshold\label{fg:region_threshold}]{
-				\resizebox{0.28\textwidth}{!}{
-					\input{assets/simulation/region_threshold.tex}
-				}
-			}
-			\caption{
-				Average primary-total-backscatter rate regions for different input distribution, active beamforming, and decision threshold schemes.
-				``BSP'' means backscatter symbol period.
-			}
-		\end{figure*}
+		% \end{figure*}
 		The average achievable primary-total-backscatter rate regions of various input distribution, active beamforming, and decision threshold schemes are explored in this study.
 
 		\begin{subsubsection}{Input Distribution}

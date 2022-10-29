@@ -19,7 +19,7 @@ plotHandle(2) = scatter(rateAmbc(1, :) / log(2), rateAmbc(2, :) / log(2), 200, [
 plotHandle(1) = scatter(rateBbc(1, :) / log(2), rateBbc(2, :) / log(2), 200, [0 0.4470 0.7410], 'Marker', 'o', 'DisplayName', 'BBC');
 hold off; legend(plotHandle, 'Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
-ylabel('Total Backscatter Rate [bits/BB]');
+ylabel('Backscatter\\Rate [bits/BB]');
 
 savefig('figures/region_comparison');
-matlab2tikz('../../assets/simulation/region_comparison.tex', 'extraaxisoptions', {'title style={font=\LARGE}', 'label style={font=\LARGE}', 'ticklabel style={font=\Large}', 'legend style={font=\Large}', 'reverse legend', 'every axis plot/.append style={line width=2pt}'});
+matlab2tikz('../../assets/simulation/region_comparison.tex', 'extraaxisoptions', {'align=center', 'title style={font=\LARGE}', 'label style={font=\LARGE}', 'ticklabel style={font=\Large}', 'legend style={font=\Large}', 'reverse legend', 'every axis plot/.append style={line width=2pt}'});

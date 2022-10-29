@@ -25,9 +25,9 @@ for iVariable = 1 : nVariables
 end
 hold off; legend({'Exhaustion', 'KKT', 'Cooperation', 'Marginalization', 'Decomposition', 'Randomization', 'Equiprobable'}, 'Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
-ylabel('Total Backscatter Rate [bits/BB]');
+ylabel('Backscatter Rate [bits/BB]');
 xlim([6, Inf]);
 style_plot(plotHandle);
-magnifyOnFigure(figureHandle, 'Mode', 'interactive', 'initialPositionMagnifier', [320 208 10 10], 'initialPositionSecondaryAxes', [150 250 100 100], 'secondaryAxesFaceColor', [0.9 0.9 0.9], 'secondaryAxesXLim', [6.324 6.36], 'secondaryAxesYLim', [0.125 0.15]);
+magnifyOnFigure(figureHandle, 'Mode', 'interactive', 'initialPositionMagnifier', [320 200 10 10], 'initialPositionSecondaryAxes', [150 250 100 100], 'secondaryAxesFaceColor', [0.9 0.9 0.9], 'secondaryAxesXLim', [6.324 6.36], 'secondaryAxesYLim', [0.125 0.15]);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
 matlab2tikz(strcat('../../assets/simulation/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', {'title style={font=\LARGE}', 'label style={font=\LARGE}', 'ticklabel style={font=\Large}', 'legend style={font=\Large}', 'scaled y ticks=false', 'y tick label style={/pgf/number format/.cd, fixed, precision=2}'});

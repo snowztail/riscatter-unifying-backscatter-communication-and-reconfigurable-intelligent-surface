@@ -11,9 +11,9 @@ for iWeight = 1 : nWeights
 end
 hold off; legend('Location', 'ne'); grid on; box on;
 xlabel('Reflection State');
-ylabel('Probability Distribution');
+ylabel('Probability\\Distribution');
 xticks(1 : nStates);
 yticks(0 : 0.2 : 1);
 style_plot(plotHandle);
 savefig(strcat('figures/distribution_', erase(mfilename, 'plot_')));
-matlab2tikz(strcat('../../assets/simulation/distribution_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', {'title style={font=\LARGE}', 'label style={font=\LARGE}', 'ticklabel style={font=\Large}', 'legend style={font=\Large}'});
+matlab2tikz(strcat('../../assets/simulation/distribution_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', {'align=center', 'title style={font=\LARGE}', 'label style={font=\LARGE}', 'ticklabel style={font=\Large}', 'legend style={font=\Large}'});

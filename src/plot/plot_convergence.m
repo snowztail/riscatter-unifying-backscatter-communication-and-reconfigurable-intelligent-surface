@@ -5,14 +5,14 @@ figure('Name', 'Convergence behavior of the proposed algorithms', 'Position', [0
 convergencePlot = tiledlayout(3, 1, 'tilespacing', 'compact');
 plotHandle = gobjects(1, 3);
 
-% * KKT (first call)
+% * KKT
 nexttile;
-plotHandle(1) = plot(0 : 1e1 : 1.2e2, convergence.kkt(1 : 1e1 : 1.2e2 + 1), 'DisplayName', 'KKT (First Call)');
+plotHandle(1) = plot(0 : 1e1 : 1.2e2, convergence.kkt(1 : 1e1 : 1.2e2 + 1), 'DisplayName', 'KKT');
 hold off; legend('Location', 'se'); grid on; box on;
 
-% * PGD (first call)
+% * PGD
 nexttile;
-plotHandle(2) = plot(0 : length(convergence.pgd) - 1, convergence.pgd, 'DisplayName', 'PGD (First Call)');
+plotHandle(2) = plot(0 : length(convergence.pgd) - 1, convergence.pgd, 'DisplayName', 'PGD');
 hold off; legend('Location', 'se'); grid on; box on;
 ylabel('Weighed Sum-Rate');
 

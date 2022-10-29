@@ -11,65 +11,66 @@
 %
 \begin{tikzpicture}
 
-\begin{axis}[%
-width=4.079in,
-height=3.432in,
-at={(0.684in,0.463in)},
-scale only axis,
-xmin=1,
-xmax=4,
-xtick={1, 2, 3, 4},
-xlabel style={font=\color{white!15!black}},
-xlabel={Reflection State},
-ymin=0,
-ymax=1,
-ytick={  0, 0.2, 0.4, 0.6, 0.8,   1},
-ylabel style={font=\color{white!15!black}},
-ylabel={Probability Distribution},
-axis background/.style={fill=white},
-xmajorgrids,
-ymajorgrids,
-legend style={legend cell align=left, align=left, draw=white!15!black},
-title style={font=\LARGE},
-label style={font=\LARGE},
-ticklabel style={font=\Large},
-legend style={font=\Large}
-]
-\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}]
-  table[row sep=crcr]{%
-1	5.58936301883394e-08\\
-2	0.494967846198009\\
-3	0.505032051077508\\
-4	4.68308531955441e-08\\
-};
-\addlegendentry{$\rho =0$}
+	\begin{axis}[%
+			width=4.079in,
+			height=1.587in,
+			at={(0.684in,0.361in)},
+			scale only axis,
+			xmin=1,
+			xmax=4,
+			xtick={1, 2, 3, 4},
+			xlabel style={font=\color{white!15!black}},
+			xlabel={Reflection State},
+			ymin=0,
+			ymax=1,
+			ytick={  0, 0.2, 0.4, 0.6, 0.8,   1},
+			ylabel style={font=\color{white!15!black}},
+			ylabel={Probability\\Distribution},
+			axis background/.style={fill=white},
+			xmajorgrids,
+			ymajorgrids,
+			legend style={legend cell align=left, align=left, draw=white!15!black},
+			title style={font=\LARGE},
+			label style={font=\LARGE},
+			ticklabel style={font=\Large},
+			legend style={font=\Large},
+			align=center
+		]
+		\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}]
+		table[row sep=crcr]{%
+				1	5.58936301883394e-08\\
+				2	0.494967846198009\\
+				3	0.505032051077508\\
+				4	4.68308531955441e-08\\
+			};
+		\addlegendentry{$\rho =0$}
 
-\addplot [color=mycolor2, dashed, line width=2.0pt, mark=+, mark options={solid, mycolor2}]
-  table[row sep=crcr]{%
-1	3.50493170830856e-09\\
-2	0.586489834632108\\
-3	0.413510159250847\\
-4	2.6121135277758e-09\\
-};
-\addlegendentry{$\rho =0.1$}
+		\addplot [color=mycolor2, dashed, line width=2.0pt, mark=+, mark options={solid, mycolor2}]
+		table[row sep=crcr]{%
+				1	3.50493170830856e-09\\
+				2	0.586489834632108\\
+				3	0.413510159250847\\
+				4	2.6121135277758e-09\\
+			};
+		\addlegendentry{$\rho =0.1$}
 
-\addplot [color=mycolor3, dotted, line width=2.0pt, mark=square, mark options={solid, mycolor3}]
-  table[row sep=crcr]{%
-1	1.54239700394178e-10\\
-2	0.770075793479604\\
-3	0.229924206275344\\
-4	9.08124388871134e-11\\
-};
-\addlegendentry{$\rho =0.25$}
+		\addplot [color=mycolor3, dotted, line width=2.0pt, mark=square, mark options={solid, mycolor3}]
+		table[row sep=crcr]{%
+				1	1.54239700394178e-10\\
+				2	0.770075793479604\\
+				3	0.229924206275344\\
+				4	9.08124388871134e-11\\
+			};
+		\addlegendentry{$\rho =0.25$}
 
-\addplot [color=mycolor4, dashdotted, line width=2.0pt, mark=x, mark options={solid, mycolor4}]
-  table[row sep=crcr]{%
-1	1.62167297049731e-12\\
-2	0.999999185020827\\
-3	8.14977502370884e-07\\
-4	4.9209962545264e-14\\
-};
-\addlegendentry{$\rho =1$}
+		\addplot [color=mycolor4, dashdotted, line width=2.0pt, mark=x, mark options={solid, mycolor4}]
+		table[row sep=crcr]{%
+				1	1.62167297049731e-12\\
+				2	0.999999185020827\\
+				3	8.14977502370884e-07\\
+				4	4.9209962545264e-14\\
+			};
+		\addlegendentry{$\rho =1$}
 
-\end{axis}
+	\end{axis}
 \end{tikzpicture}%

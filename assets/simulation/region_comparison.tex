@@ -12,78 +12,79 @@
 %
 \begin{tikzpicture}
 
-\begin{axis}[%
-width=4.079in,
-height=3.432in,
-at={(0.684in,0.463in)},
-scale only axis,
-xmin=0,
-xmax=7.08488905081188,
-xlabel style={font=\color{white!15!black}},
-xlabel={Primary Rate [bits/s/Hz]},
-ymin=0,
-ymax=2,
-ylabel style={font=\color{white!15!black}},
-ylabel={Total Backscatter Rate [bits/BSP]},
-axis background/.style={fill=white},
-xmajorgrids,
-ymajorgrids,
-legend style={at={(0.03,0.03)}, anchor=south west, legend cell align=left, align=left, draw=white!15!black},
-title style={font=\LARGE},
-label style={font=\LARGE},
-ticklabel style={font=\Large},
-legend style={font=\Large},
-reverse legend,
-every axis plot/.append style={line width=2pt}
-]
-\addplot [color=mycolor1, line width=2.0pt, mark=triangle, mark options={solid, mycolor1}]
-  table[row sep=crcr]{%
-6.41670947751651	1.6054968458145\\
-0	1.6054968458145\\
-0	0\\
-7.08488904258997	0\\
-7.08488904258997	4.1836174712136e-07\\
-6.90245078291004	1.01381402853452\\
-6.6407882228124	1.4980015567956\\
-6.57239022993099	1.55479524496005\\
-6.51932412280019	1.58378871636645\\
-6.49722825073873	1.59220191008592\\
-6.4775306470264	1.59794430837116\\
-6.4598927531162	1.60170353740201\\
-6.44402970380102	1.60398330481762\\
-6.43668727400095	1.6046886802456\\
-6.42970223763566	1.60515550025508\\
-6.42700280669212	1.60528273332009\\
-6.42435520073694	1.60537879376922\\
-6.4217579842616	1.60544542043883\\
-6.41920966721981	1.60548425498564\\
-6.41670947751651	1.6054968458145\\
-};
-\addlegendentry{RIScatter}
+	\begin{axis}[%
+			width=4.079in,
+			height=1.587in,
+			at={(0.684in,0.361in)},
+			scale only axis,
+			xmin=0,
+			xmax=7.08488905081188,
+			xlabel style={font=\color{white!15!black}},
+			xlabel={Primary Rate [bits/s/Hz]},
+			ymin=0,
+			ymax=2,
+			ylabel style={font=\color{white!15!black}},
+			ylabel={Total Backscatter\\Rate [bits/BB]},
+			axis background/.style={fill=white},
+			xmajorgrids,
+			ymajorgrids,
+			legend style={at={(0.03,0.03)}, anchor=south west, legend cell align=left, align=left, draw=white!15!black},
+			title style={font=\LARGE},
+			label style={font=\LARGE},
+			ticklabel style={font=\Large},
+			legend style={font=\Large},
+			reverse legend,
+			every axis plot/.append style={line width=2pt},
+			align=center
+		]
+		\addplot [color=mycolor1, line width=2.0pt, mark=triangle, mark options={solid, mycolor1}]
+		table[row sep=crcr]{%
+				6.41670947751651	1.6054968458145\\
+				0	1.6054968458145\\
+				0	0\\
+				7.08488904258997	0\\
+				7.08488904258997	4.1836174712136e-07\\
+				6.90245078291004	1.01381402853452\\
+				6.6407882228124	1.4980015567956\\
+				6.57239022993099	1.55479524496005\\
+				6.51932412280019	1.58378871636645\\
+				6.49722825073873	1.59220191008592\\
+				6.4775306470264	1.59794430837116\\
+				6.4598927531162	1.60170353740201\\
+				6.44402970380102	1.60398330481762\\
+				6.43668727400095	1.6046886802456\\
+				6.42970223763566	1.60515550025508\\
+				6.42700280669212	1.60528273332009\\
+				6.42435520073694	1.60537879376922\\
+				6.4217579842616	1.60544542043883\\
+				6.41920966721981	1.60548425498564\\
+				6.41670947751651	1.6054968458145\\
+			};
+		\addlegendentry{RIScatter}
 
-\addplot[only marks, mark=x, mark options={}, mark size=3.5355pt, draw=mycolor2] table[row sep=crcr]{%
-x	y\\
-7.08488905081188	0\\
-};
-\addlegendentry{RIS}
+		\addplot[only marks, mark=x, mark options={}, mark size=3.5355pt, draw=mycolor2] table[row sep=crcr]{%
+				x	y\\
+				7.08488905081188	0\\
+			};
+		\addlegendentry{RIS}
 
-\addplot[only marks, mark=square, mark options={}, mark size=2.5000pt, draw=mycolor3] table[row sep=crcr]{%
-x	y\\
-6.44440818236646	2\\
-};
-\addlegendentry{SR}
+		\addplot[only marks, mark=square, mark options={}, mark size=2.5000pt, draw=mycolor3] table[row sep=crcr]{%
+				x	y\\
+				6.44440818236646	2\\
+			};
+		\addlegendentry{SR}
 
-\addplot[only marks, mark=+, mark options={}, mark size=3.5355pt, draw=mycolor4] table[row sep=crcr]{%
-x	y\\
-3.85295770698096	1.53088335179488\\
-};
-\addlegendentry{AmBC}
+		\addplot[only marks, mark=+, mark options={}, mark size=3.5355pt, draw=mycolor4] table[row sep=crcr]{%
+				x	y\\
+				3.85295770698096	1.53088335179488\\
+			};
+		\addlegendentry{AmBC}
 
-\addplot[only marks, mark=o, mark options={}, mark size=3.5355pt, draw=mycolor5] table[row sep=crcr]{%
-x	y\\
-0	1.99999999999997\\
-};
-\addlegendentry{BBC}
+		\addplot[only marks, mark=o, mark options={}, mark size=3.5355pt, draw=mycolor5] table[row sep=crcr]{%
+				x	y\\
+				0	1.99999999999997\\
+			};
+		\addlegendentry{BBC}
 
-\end{axis}
+	\end{axis}
 \end{tikzpicture}%

@@ -1,4 +1,4 @@
-\begin{tikzpicture}
+\begin{tikzpicture}[font=\large]
 	% BC/AmBC/SR
 	\foreach \x in {0,...,3}{
 			\draw[blue,fill=blue!30!white,postaction={pattern=horizontal lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
@@ -33,11 +33,13 @@
 		}
 
 	\foreach \x in {1,...,7}{
-			\draw[dotted] (\x,1) -- (\x,3.75);
+			% \draw[dotted] (\x,1) -- (\x,3.75);
+			\draw[dotted] (\x,1) -- (\x,3.25);
 		}
-	\draw[latex-latex] (0,3.5) -- (0.5,3.5) node[above,midway,yshift=1]{PB};
-	\draw[latex-latex] (0,4.1) -- (1,4.1) node[above,midway,yshift=1]{BB};
-	\draw[latex-latex] (0,4.7) -- (8,4.7) node[above,midway,yshift=1]{Channel Block};
+	\draw[latex-latex] (0,1.4) -- (0.5,1.4) node[above,midway,yshift=1]{PB};
+	% \draw[latex-latex] (0,4.1) -- (1,4.1) node[above,midway,yshift=1]{BB};
+	\draw[latex-latex] (0,2.4) -- (1,2.4) node[above,midway,yshift=1]{BB};
+	\draw[latex-latex] (0,3.4) -- (8,3.4) node[above,midway,yshift=1]{Channel Block};
 
 	\node at (-2,3.125) {BackCom/AmBC/SR};
 	\node at (-2,2.125) {RIS};

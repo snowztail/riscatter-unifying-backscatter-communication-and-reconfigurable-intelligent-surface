@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14, custom)"
    sodipodi:docname="riscatter_network.svg"
    id="svg1077"
    version="1.1"
@@ -57,8 +57,8 @@
      inkscape:window-maximized="1"
      inkscape:window-y="0"
      inkscape:window-x="0"
-     inkscape:window-height="1890"
-     inkscape:window-width="1080"
+     inkscape:window-height="1050"
+     inkscape:window-width="1920"
      showguides="false"
      showborder="false"
      showgrid="true"
@@ -256,12 +256,12 @@
     <text
        id="text47600"
        y="100.39132"
-       x="94.38929"
+       x="93.938644"
        style="font-style:normal;font-weight:normal;font-size:0.705556px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        xml:space="preserve"><tspan
          style="font-size:0.705556px;stroke-width:0.264583"
          y="100.39132"
-         x="94.38929"
+         x="93.938644"
          id="tspan47598"
          sodipodi:role="line">$h_{\mathrm{B},k}$</tspan></text>
     <path

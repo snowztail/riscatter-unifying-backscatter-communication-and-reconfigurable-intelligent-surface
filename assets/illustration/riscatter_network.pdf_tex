@@ -1,4 +1,4 @@
-%% Creator: Inkscape 1.2.1 (9c6d41e410, 2022-07-14), www.inkscape.org
+%% Creator: Inkscape 1.2.1 (9c6d41e410, 2022-07-14, custom), www.inkscape.org
 %% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
 %% Accompanies image file 'riscatter_network.pdf' (pdf, eps, ps)
 %%
@@ -60,7 +60,7 @@
     \put(0,0){\includegraphics[width=\unitlength,page=2]{riscatter_network.pdf}}%
     \put(0.4755411,0.27152966){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$\boldsymbol{h}_{\mathrm{D}}^H$\end{tabular}}}}%
     \put(0.4961181,0.35309351){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$\boldsymbol{h}_{\mathrm{F},k}^H$\end{tabular}}}}%
-    \put(0.75620558,0.29955628){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{\mathrm{B},k}$\end{tabular}}}}%
+    \put(0.74848067,0.29955628){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}$h_{\mathrm{B},k}$\end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=3]{riscatter_network.pdf}}%
     \put(0.69096569,0.06684215){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}Node $k'$ \end{tabular}}}}%
     \put(0,0){\includegraphics[width=\unitlength,page=4]{riscatter_network.pdf}}%

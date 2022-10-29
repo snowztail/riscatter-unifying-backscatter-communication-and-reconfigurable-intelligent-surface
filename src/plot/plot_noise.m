@@ -18,15 +18,15 @@ save(strcat('../data/region_', erase(mfilename, 'plot_')));
 
 %% * Draw primary-(sum-)backscatter rate regions
 figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Average Noise Power', 'Position', [0, 0, 500, 400]);
-object = gobjects(nVariables, 1);
+plotHandle = gobjects(nVariables, 1);
 hold all;
 for iVariable = 1 : nVariables
 	noisePower = Variable(iVariable).noisePower;
-	object(iVariable) = plot(region{iVariable}(1, :) / log(2), region{iVariable}(2, :) / log(2), 'DisplayName', strcat('$\sigma_n^2 = ', num2str(pow2db(noisePower) + 30), '$ dBm'));
+	plotHandle(iVariable) = plot(region{iVariable}(1, :) / log(2), region{iVariable}(2, :) / log(2), 'DisplayName', strcat('$\sigma_n^2 = ', num2str(pow2db(noisePower) + 30), '$ dBm'));
 end
 hold off; legend('Location', 'se'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
-ylabel('Total Backscatter Rate [bits/BSP]');
-style_plot(object);
+ylabel('Total Backscatter Rate [bits/BB]');
+style_plot(plotHandle);
 savefig(strcat('figures/region_', erase(mfilename, 'plot_')));
 matlab2tikz(strcat('../../assets/simulation/region_', erase(mfilename, 'plot_'), '.tex'), 'extraaxisoptions', {'title style={font=\huge}', 'label style={font=\huge}', 'ticklabel style={font=\LARGE}', 'legend style={font=\LARGE}', 'scaled y ticks=false', 'y tick label style={/pgf/number format/.cd, fixed, precision=2}'});

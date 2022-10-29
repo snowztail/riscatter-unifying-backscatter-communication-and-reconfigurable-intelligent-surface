@@ -2,7 +2,7 @@ clear; run('../setup'); load('distribution_weights'); clc; close all;
 distribution = horzcat(Result.distribution);
 
 %% * Draw reflection state distributions
-figure('Name', 'Tag Input Distribution vs Weight', 'Position', [0, 0, 500, 400]);
+figure('Name', 'Tag Input Distribution vs Weight', 'Position', [0, 0, 500, 200]);
 plotHandle = gobjects(nWeights, 1);
 hold all;
 for iWeight = 1 : nWeights

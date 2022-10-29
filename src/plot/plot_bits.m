@@ -15,21 +15,21 @@ save(strcat('../data/rate_', erase(mfilename, 'plot_')));
 %% * Draw rate curves
 % * Primary rate
 figure('Name', 'Average Primary Rate vs Energy Discretization Bits', 'Position', [0, 0, 500, 400]);
-object(1) = plot(bits, rate(1, :) / log(2), 'DisplayName', 'Primary rate');
+plotHandle(1) = plot(bits, rate(1, :) / log(2), 'DisplayName', 'Primary rate');
 legend('Location', 'se'); grid on; box on; axis tight;
 xticks(bits);
 xlabel('Energy Discretization Bits');
 ylabel('Primary Rate [bits/s/Hz]');
-style_plot(object);
+style_plot(plotHandle);
 savefig('figures/rate_bits_primary.fig');
 matlab2tikz('../../assets/simulation/rate_bits_primary.tex', 'extraaxisoptions', {'title style={font=\huge}', 'label style={font=\huge}', 'ticklabel style={font=\LARGE}', 'legend style={font=\LARGE}', 'scaled y ticks=false', 'y tick label style={/pgf/number format/.cd, fixed, precision=2}'});
 % * Total backscatter rate
 figure('Name', 'Average Total Backscatter Rate vs Energy Discretization Bits', 'Position', [0, 0, 500, 400]);
-object(2) = plot(bits, rate(2, :) / log(2), 'DisplayName', 'Total backscatter rate');
+plotHandle(2) = plot(bits, rate(2, :) / log(2), 'DisplayName', 'Total backscatter rate');
 legend('Location', 'se'); grid on; box on; axis tight;
 xticks(bits);
 xlabel('Energy Discretization Bits');
-ylabel('Total Backscatter Rate [bits/BSP]');
-style_plot(object);
+ylabel('Total Backscatter Rate [bits/BB]');
+style_plot(plotHandle);
 savefig('figures/rate_bits_backscatter.fig');
 matlab2tikz('../../assets/simulation/rate_bits_backscatter.tex', 'extraaxisoptions', {'title style={font=\huge}', 'label style={font=\huge}', 'ticklabel style={font=\LARGE}', 'legend style={font=\LARGE}', 'scaled y ticks=false', 'y tick label style={/pgf/number format/.cd, fixed, precision=3}'});

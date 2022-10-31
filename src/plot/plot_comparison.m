@@ -10,13 +10,14 @@ regionRiscatter = rate(:, convhull(transpose(rate)));
 
 %% * Plot achievable rates
 figure('Name', 'Achievable Rates of Different Scattering Applications', 'Position', [0, 0, 500, 200]);
-plotHandle = gobjects(1, 5);
+plotHandle = gobjects(1, 6);
 hold all;
-plotHandle(5) = plot(regionRiscatter(1, :) / log(2), regionRiscatter(2, :) / log(2), 'Color', '#77AC30', 'Marker', '^', 'DisplayName', 'RIScatter');
-plotHandle(4) = scatter(rateRis(1, :) / log(2), rateRis(2, :) / log(2), 200, [0.4940 0.1840 0.5560], 'Marker', 'x', 'DisplayName', 'RIS');
-plotHandle(3) = scatter(rateSr(1, :) / log(2), rateSr(2, :) / log(2), 200, [0.9290 0.6940 0.1250], 'Marker', 's', 'DisplayName', 'SR');
-plotHandle(2) = scatter(rateAmbc(1, :) / log(2), rateAmbc(2, :) / log(2), 200, [0.8500 0.3250 0.0980], 'Marker', '+', 'DisplayName', 'AmBC');
-plotHandle(1) = scatter(rateBbc(1, :) / log(2), rateBbc(2, :) / log(2), 200, [0 0.4470 0.7410], 'Marker', 'o', 'DisplayName', 'BBC');
+plotHandle(6) = plot(regionRiscatter(1, :) / log(2), regionRiscatter(2, :) / log(2), 'Color', [0.3010, 0.7450, 0.9330], 'Marker', 'v', 'DisplayName', 'RIScatter');
+plotHandle(5) = scatter(rateRis(1, :) / log(2), rateRis(2, :) / log(2), 200, [0.4660, 0.6740, 0.1880], 'Marker', '^', 'DisplayName', 'RIS');
+plotHandle(4) = scatter(rateSr(1, :) / log(2), rateSr(2, :) / log(2), 200, [0.4940 0.1840 0.5560], 'Marker', '+', 'DisplayName', 'SR');
+plotHandle(3) = scatter(rateAmbc(1, :) / log(2), rateAmbc(2, :) / log(2), 200, [0.9290 0.6940 0.1250], 'Marker', 'x', 'DisplayName', 'AmBC');
+plotHandle(2) = scatter(rateBbc(1, :) / log(2), rateBbc(2, :) / log(2), 200, [0.8500 0.3250 0.0980], 'Marker', 's', 'DisplayName', 'BBC');
+plotHandle(1) = scatter(rateLegacy(1, :) / log(2), rateLegacy(2, :) / log(2), 120, [0 0.4470 0.7410], 'Marker', 'o', 'DisplayName', 'Legacy');
 hold off; legend(plotHandle, 'Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Backscatter\\Rate [bits/BB]');

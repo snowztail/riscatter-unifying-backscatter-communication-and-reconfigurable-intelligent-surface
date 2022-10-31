@@ -15,11 +15,12 @@ equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(c
 % * Clear persistent variables
 clear block_coordinate_descent distribution_kkt distribution_cooperation beamforming_pgd threshold_bisection;
 
-% * Obtain achievable rates for BBC, AmBC, SR, RIS and RIScatter
+% * Obtain achievable rates for legacy, BBC, AmBC, SR, RIS and RIScatter
+[rateLegacy] = benchmark_legacy(transmitPower, noisePower, directChannel);
 [rateBbc, distributionBbc, thresholdBbc] = benchmark_bbc(nTags, symbolRatio, transmitPower, noisePower, equivalentChannel);
 [rateAmbc, distributionAmbc, thresholdAmbc] = benchmark_ambc(nTags, symbolRatio, transmitPower, noisePower, equivalentChannel, scatterRatio, directChannel, cascadedChannel);
 [rateSr, distributionSr] = benchmark_sr(nTags, transmitPower, noisePower, equivalentChannel);
-[rateRis, distributionRis] = benchmark_ris(nTags, transmitPower, noisePower, equivalentChannel);% * Evaluate rate region
+[rateRis, distributionRis] = benchmark_ris(nTags, transmitPower, noisePower, equivalentChannel);
 for iWeight = 1 : nWeights
 	weight = weightSet(iWeight);
 	[rateRiscatter, distributionRiscatter, thresholdRiscatter, beamformingRiscatter] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannel, cascadedChannel, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');

@@ -4,21 +4,22 @@
 %  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
 %where you can also make suggestions and rate matlab2tikz.
 %
-\definecolor{mycolor1}{rgb}{0.46667,0.67451,0.18824}%
-\definecolor{mycolor2}{rgb}{0.49400,0.18400,0.55600}%
-\definecolor{mycolor3}{rgb}{0.92900,0.69400,0.12500}%
-\definecolor{mycolor4}{rgb}{0.85000,0.32500,0.09800}%
-\definecolor{mycolor5}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor1}{rgb}{0.30100,0.74500,0.93300}%
+\definecolor{mycolor2}{rgb}{0.46600,0.67400,0.18800}%
+\definecolor{mycolor3}{rgb}{0.49400,0.18400,0.55600}%
+\definecolor{mycolor4}{rgb}{0.92900,0.69400,0.12500}%
+\definecolor{mycolor5}{rgb}{0.85000,0.32500,0.09800}%
+\definecolor{mycolor6}{rgb}{0.00000,0.44700,0.74100}%
 %
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=4.036in,
-height=1.566in,
-at={(0.677in,0.361in)},
+width=4.079in,
+height=1.587in,
+at={(0.684in,0.361in)},
 scale only axis,
 xmin=0,
-xmax=7.08488905081188,
+xmax=6.5227548374066,
 xlabel style={font=\color{white!15!black}},
 xlabel={Primary Rate [bits/s/Hz]},
 ymin=0,
@@ -37,54 +38,60 @@ legend style={font=\Large},
 reverse legend,
 every axis plot/.append style={line width=2pt}
 ]
-\addplot [color=mycolor1, line width=2.0pt, mark=triangle, mark options={solid, mycolor1}]
+\addplot [color=mycolor1, line width=2.0pt, mark=triangle, mark options={solid, rotate=180, mycolor1}]
   table[row sep=crcr]{%
-6.41670947751651	1.6054968458145\\
-0	1.6054968458145\\
+6.33724402501803	1.39764296268229\\
+0	1.39764296268229\\
 0	0\\
-7.08488904258997	0\\
-7.08488904258997	4.1836174712136e-07\\
-6.90245078291004	1.01381402853452\\
-6.6407882228124	1.4980015567956\\
-6.57239022993099	1.55479524496005\\
-6.51932412280019	1.58378871636645\\
-6.49722825073873	1.59220191008592\\
-6.4775306470264	1.59794430837116\\
-6.4598927531162	1.60170353740201\\
-6.44402970380102	1.60398330481762\\
-6.43668727400095	1.6046886802456\\
-6.42970223763566	1.60515550025508\\
-6.42700280669212	1.60528273332009\\
-6.42435520073694	1.60537879376922\\
-6.4217579842616	1.60544542043883\\
-6.41920966721981	1.60548425498564\\
-6.41670947751651	1.6054968458145\\
+6.52275483678685	0\\
+6.52275483678685	2.37312052924553e-08\\
+6.38739454470992	1.3235811846854\\
+6.35422040211439	1.38916612409166\\
+6.34857862205488	1.39386686170527\\
+6.3445353675389	1.39608085009443\\
+6.34291602910554	1.3966977322109\\
+6.34149846039129	1.39711118534274\\
+6.34024731759122	1.39737797077851\\
+6.3391350240222	1.3975379071887\\
+6.33862394227692	1.39758701988787\\
+6.33813974610465	1.39761939115801\\
+6.33795313341839	1.39762818964178\\
+6.33777036860279	1.39763482338317\\
+6.3375913342378	1.3976394187338\\
+6.33741590881855	1.39764209463684\\
+6.33724402501803	1.39764296268229\\
 };
 \addlegendentry{RIScatter}
 
-\addplot[only marks, mark=x, mark options={}, mark size=3.5355pt, draw=mycolor2] table[row sep=crcr]{%
+\addplot[only marks, mark=triangle, mark options={}, mark size=2.3570pt, draw=mycolor2] table[row sep=crcr]{%
 x	y\\
-7.08488905081188	0\\
+6.5227548374066	0\\
 };
 \addlegendentry{RIS}
 
-\addplot[only marks, mark=square, mark options={}, mark size=2.5000pt, draw=mycolor3] table[row sep=crcr]{%
+\addplot[only marks, mark=+, mark options={}, mark size=3.5355pt, draw=mycolor3] table[row sep=crcr]{%
 x	y\\
-6.44440818236646	2\\
+6.34321982467796	2\\
 };
 \addlegendentry{SR}
 
-\addplot[only marks, mark=+, mark options={}, mark size=3.5355pt, draw=mycolor4] table[row sep=crcr]{%
+\addplot[only marks, mark=x, mark options={}, mark size=3.5355pt, draw=mycolor4] table[row sep=crcr]{%
 x	y\\
-3.85295770698096	1.53088335179488\\
+5.90778796357092	1.34857377961699\\
 };
 \addlegendentry{AmBC}
 
-\addplot[only marks, mark=o, mark options={}, mark size=3.5355pt, draw=mycolor5] table[row sep=crcr]{%
+\addplot[only marks, mark=square, mark options={}, mark size=2.5000pt, draw=mycolor5] table[row sep=crcr]{%
 x	y\\
 0	1.99999999999997\\
 };
 \addlegendentry{BBC}
+
+\addplot[only marks, mark=o, mark options={}, mark size=2.7386pt, draw=mycolor6] table[row sep=crcr]{%
+x	y\\
+6.34314881160129	0\\
+};
+\addlegendentry{Legacy}
 
 \end{axis}
 \end{tikzpicture}%

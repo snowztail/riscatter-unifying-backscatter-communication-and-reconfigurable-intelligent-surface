@@ -131,7 +131,9 @@
 
 \begin{document}
 % \title{RIScatter: Unifying Scattering Techniques From a Distribution Perspective}
-\title{RIScatter: Unifying BackCom, AmBC, SR and RIS From a Distribution Perspective}
+% \title{RIScatter: Unifying BackCom, AmBC, SR and RIS From a Distribution Perspective}
+% \title{RIScatter: Unifying Backscatter Communications and Reconfigurable Intelligent Surface From a Probabilistic Perspective}
+\title{RIScatter: Unifying BackCom and RIS From a Probabilistic Perspective}
 % \title{RIScatter: Unifying Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
 \author{
 	\IEEEauthorblockN{
@@ -327,7 +329,7 @@
 		3) when backscatter link is prioritized, adaptive RIScatter encoding achieves higher backscatter rate than conventional line coding with equiprobable inputs;
 		4) co-located RIScatter nodes can further leverage total backscatter rate by joint encoding;
 		5) the proposed receiver provides comparable backscatter detection performance than \gls{sic}-based \gls{sr} while significantly reduces the encoding and precoding (and avoids subtraction) costs;
-		6) it also supports fast-switching nodes and allows higher backscatter rate per unit time;
+		6) it also supports fast-switching nodes for higher backscatter throughput per unit time;
 		7) \gls{pgd} active beamformer enlarges achievable rate region by boosting the receive \gls{snr} and/or widening the energy gap under different reflection states;
 		8) distribution-adaptive backscatter detectors provide higher total backscatter rate than the conventional \gls{ml} detector.
 	\end{subsection}
@@ -460,7 +462,7 @@
 			\label{fg:energy_distribution}
 		\end{figure}
 		Hence, the receiver can semi-coherently (in the presence of primary uncertainty) decode node messages from the accumulated receive energy, re-encode to recover actual reflection patterns, and model the deterministic multipath within primary equivalent channel.
-		It enables simultaneous backscatter modulation and dynamic passive beamforming by only one energy level comparison, re-encoding and precoding for each backscatter block (instead of primary block), and is suitable for arbitrary primary sampling rate and backscatter switching speed.
+		It enables simultaneous backscatter modulation and dynamic passive beamforming by only one energy comparison, re-encoding, and precoding operations for each backscatter block (instead of primary block), and is suitable for arbitrary primary sampling rate and backscatter switching speed.
 	\end{subsection}
 
 
@@ -573,7 +575,7 @@
 			I_{\mathrm{P},k}(s;y|x_{m_k}) \triangleq \sum_{m_{\mathcal{K} \setminus \{k\}}} P_{\mathcal{K} \setminus \{k\}}(x_{m_{\mathcal{K} \setminus \{k\}}}) I_{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}),
 			\label{eq:primary_marginal_information}
 		\end{equation}
-		and the primary ergodic mutual information is
+		and the average primary mutual information is
 		\begin{equation}
 			I_{\mathrm{P}}(s;y|x_{\mathcal{K}}) = \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) I_{\mathrm{P}}(s;y|x_{m_{\mathcal{K}}}).
 			\label{eq:primary_mutual_information}
@@ -589,7 +591,7 @@
 			 & \triangleq \rho I_{\mathrm{P}}(s;y|x_{\mathcal{K}}) + (1 - \rho) I_{\mathrm{B}}(x_{\mathcal{K}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_mutual_information}
 		\end{align}
 		where $\rho \in \mathbb{I}$ is the weight of the primary link.
-		We notice the primary ergodic rate \eqref{eq:primary_mutual_information} depends on the input distribution and active beamforming, while the total backscatter rate depends on the input distribution and \gls{dmtmac} \eqref{eq:dmtmac} that relates to active beamforming and decision thresholds.
+		We notice the average primary rate \eqref{eq:primary_mutual_information} depends on the input distribution and active beamforming, while the total backscatter rate depends on the input distribution and \gls{dmtmac} \eqref{eq:dmtmac} that relates to active beamforming and decision thresholds.
 		\label{st:information_theory}
 	\end{subsection}
 	\label{st:riscatter}
@@ -853,7 +855,7 @@
 	\end{subsection}
 
 	\begin{subsection}{Comparison of Scattering Applications}
-		Based on the setup in Fig. \ref{fg:riscatter_network}, we compare the achievable rates of RIScatter for different applications:
+		On top of the setup in Fig. \ref{fg:riscatter_network}, we consider RIScatter and the following benchmark applications:
 		\begin{itemize}
 			\item \emph{Legacy:} Conventional active transmission without antenna mode scattering, $\alpha=0$.
 			\item \emph{\gls{bbc}:} The primary symbol becomes deterministic $s[n]=1$ and the receive signal at each primary block is
@@ -878,7 +880,7 @@
 				I_{\mathrm{P}}^{\text{\gls{ambc}}}(s;y) \approx \log \Bigl(1 + \frac{\lvert\boldsymbol{h}_{\mathrm{D}}^H\boldsymbol{w}\rvert^2}{\sum_{k}\lvert \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H \boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr),
 			\end{equation}
 			while the total backscatter rate follows \eqref{eq:backscatter_mutual_information} with uniform input distribution.
-			\item \emph{\gls{sr}:} For a sufficiently large $N$, the primary ergodic rate under semi-coherent detection asymptotically approaches \eqref{eq:primary_mutual_information} with uniform input distribution \cite{Long2020a}.
+			\item \emph{\gls{sr}:} For a sufficiently large $N$, the average primary rate under semi-coherent detection asymptotically approaches \eqref{eq:primary_mutual_information} with uniform input distribution \cite{Long2020a}.
 			When $s[n]$ is successfully decoded and the direct interference $\boldsymbol{h}_{\mathrm{D}}^H \boldsymbol{w} s[n]$ is perfectly cancelled, the intermediate signal is
 			\begin{equation}
 				\hat{y}^{\text{\gls{sr}}}[n] = \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k \boldsymbol{w} s[n] + v[n],
@@ -903,7 +905,7 @@
 			\resizebox{0.65\columnwidth}{!}{
 				\input{assets/simulation/region_comparison.tex}
 			}
-			\caption{Typical achievable rate points of scattering applications for $Q=1$, $K=1$, $M=4$ and $N=1000$.}
+			\caption{Typical achievable rate region/points of scattering applications for $Q=1$, $K=1$, $M=4$ and $N=1000$.}
 			\label{fg:region_comparison}
 		\end{figure}
 
@@ -911,41 +913,21 @@
 		% TODO tradeoff between primary (RIScatter, no SIC) and backscatter (SR, SIC)
 		% ! SR assume very large N for primary rate analysis. However, in such cases SIC is questionable as energy detection over received signal as BBC is already good enough and noncoherent detection can also achieve reasonable performance?
 		% TODO when primary symbols are determined, optimal input distribution at high backscatter SNR is equiprobable for any detection (signal/energy)
-
-		The simulation results are shown in Fig. \ref{fg:region_comparison}.
-		First, we observe both \gls{bbc} and \gls{sr} almost achieve noise-free backscatter transmission when $N$ is sufficiently large.
-		For \gls{bbc} using coherent energy detection, the conditional \gls{pdf} of accumulated receive energy \eqref{eq:energy_distribution_bbc} is more skewed at a large $N$, such that the equivalent \gls{dmtmac} \eqref{eq:dmtmac} becomes more reliable.
+		Fig. \ref{fg:region_comparison} compares the typical achievable rate region/points of RIScatter and those applications.
+		\emph{First,} we observe both \gls{bbc} and \gls{sr} almost ensure noise-free backscatter transmission when $N$ is sufficiently large.
+		For \gls{bbc} with coherent energy detection, the conditional \gls{pdf} of accumulated receive energy \eqref{eq:energy_distribution_bbc} is more skewed at a large $N$, such that the equivalent \gls{dmtmac} \eqref{eq:dmtmac} becomes more reliable.
 		For \gls{sr} with \gls{sic} and \gls{mrc}, the effective backscatter \gls{snr} is increased by $N$ times and the penalty term $\epsilon$ becomes insignificant.
-		However, such an \gls{sr} requires $N$ \gls{sic} processes to detect one backscatter symbol (tuple), and the semi-coherent primary rate benefit only appears at a very large $N$.
-		When $N$ is moderate, the randomly scattered signals should be modelled as primary interference rather than quasi-static multipath components, and the \gls{sr} point will move towards the \gls{ambc} point.
-		% \footnote{\gls{sr} is essentially a multiplicative \gls{noma} that cancels interference, while \gls{ambc} is essentially a multiplicative \gls{sdma} that treats interference as noise.}
-		% Besides, the deterministic reflection pattern of \gls{ris} provides constructive primary signal superposition
-		% \gls{ris} achieves the highest primary achievable rate using deterministic reflection pattern.
-		% Second, the passive beamforming gain by a single \gls{ris} node
-		% Second, the average primary achievable rate decreases in the presence of a \gls{ambc} node and subtly/notably increases in the presence of a \gls{sr}/\gls{ris} node.
-		Second, the average primary rate slightly increases/decreases in the presence of a \gls{ambc}/\gls{ris} node, while the multipath benefit of \gls{sr} is indistinguishable for a small $K$.
-		This is because the cascaded channel strength can be orders of magnitude lower than the direct channel strength due to the double fading effect.
-		\gls{ris} always ensures constructive superposition of direct and scattered signal components, while \gls{sr} only creates a rich-scattering environment that stochastically enhances the average primary rate.
-
-		Third, RIScatter enables flexible
-		% adapt the reflection state distribution of passive scatter devices based on \gls{csi} and link weights, in order to flexibly transition between backscatter modulation and passive beamforming.
-
-
-
-		% the inter \gls{ambc} node decreases
-
-		In comparison, RIScatter performs semi-coherent backscatter detection and coherent primary detection to enable backscatter modulation and passive beamforming for arbitrary $N$, and the primary-backscatter tradeoff can be controlled by \gls{csi}- and weight-adaptive input distribution design.
-
-		% , and different rate points can be achieved by different node input distributions.
-
-		% coherent primary detection, and the
-
-		% RIScatter includes
-
-		% On the other hand, RIScatter provides a lower backscatter rate than \gls{bbc} and \gls{sr} due to semi-coherent detection, but preserves the primary rate benefit for arbitrary $N$.
-		% Backscatter advantage of SR using SIC is prominent for a smaller N
-		% correlation by double modulation improves the detection performance
-		% when $N$ is sufficiently large.
+		Such an \gls{sr} requires a sufficiently large $N$ to guarantee the primary performance, but decreases the backscatter symbol rate by a factor of $N$ and requires $N$ \gls{sic} processes to decode each backscatter symbol (tuple).
+		\emph{Second,} the average primary rate slightly increases/decreases in the presence of a \gls{ambc}/\gls{ris} node, but the multipath benefit of \gls{sr} is unobvious.
+		This is because the cascaded channel can be orders of magnitude weaker than the direct channel due to the double fading effect.
+		\gls{ris} always ensures constructive superposition of direct and scattered components, but \gls{sr} only creates a quasi-static rich-scattering environment that stochastically enhances the average primary rate.
+		When $N$ is moderate, the randomly scattered signals should be modelled as primary interference rather than multipath components, and the \gls{sr} point will move towards the \gls{ambc} point.
+		\emph{Third,} RIScatter enables a flexible primary-backscatter tradeoff by smart input distribution design.
+		In terms of maximum primary achievable rate, RIScatter coincides with \gls{ris} and outperforms the others using deterministic reflection pattern (no need for backscatter detection) when the primary link is prioritized.
+		On the other hand, for a large $N$, the maximum backscatter achievable rate of RIScatter is higher than \gls{ambc} but lower than \gls{bbc} and \gls{sr}.
+		This is because both RIScatter and \gls{ambc} employ semi-coherent (instead of coherent) energy detection in the presence of primary uncertainty, and RIScatter with adaptive channel coding achieves higher backscatter rate than \gls{ambc} with equiprobable inputs.
+		Importantly, such a semi-coherent backscatter detection is feasible for arbitrary $N$, and using a fast-switching node with small $N$ can increase the backscatter throughput per unit time and preserve the dynamic passive beamforming gain.
+		% It only requires one energy comparison, re-encoding, and precoding operations to decode each backscatter symbol (tuple).
 	\end{subsection}
 
 	\begin{subsection}{Input Distribution under Different Weights}

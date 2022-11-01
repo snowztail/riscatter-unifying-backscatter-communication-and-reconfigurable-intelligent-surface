@@ -27,6 +27,7 @@
 \usepackage{tabularx}
 \usepackage{tikz}
 \usepackage{xcolor}
+\usepackage{colortbl}
 % dark mode
 % \usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
 
@@ -129,7 +130,9 @@
 \newacronym{fpga}{FPGA}{Field-Programmable Gate Array}
 
 \begin{document}
-\title{RIScatter: Unifying Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
+% \title{RIScatter: Unifying Scattering Techniques From a Distribution Perspective}
+\title{RIScatter: Unifying BackCom, AmBC, SR and RIS From a Distribution Perspective}
+% \title{RIScatter: Unifying Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
 \author{
 	\IEEEauthorblockN{
 		Yang~Zhao,~\IEEEmembership{Member,~IEEE,}
@@ -246,16 +249,22 @@
 	\begin{table*}[!t]
 		\caption{Comparison of Scattering Applications}
 		\label{tb:scattering_applications}
+		\renewcommand{\arraystretch}{1.25}
 		\begin{tabularx}{\textwidth}{CCCCCCC}
 			\toprule
+			% \rowcolor{gray!25}
 			                              & \gls{mbc}                 & \gls{bbc}                 & \gls{ambc}                                      & \gls{sr}                                     & \gls{ris}                                  & RIScatter                                         \\ \midrule
-			Coexisting systems            & 1                         & 1                         & 2 (competitive)                                 & 2 (collaborative)                            & 1                                          & 2 (collaborative)                                 \\ \midrule
-			Scatterer contribution        & Backscatter modulation    & Backscatter modulation    & Backscatter modulation and primary interference & Backscatter modulation and primary multipath & Passive beamforming                        & Backscatter modulation and passive beamforming    \\ \midrule
-			Cooperative transmissions     & ---                       & ---                       & No (individual transmitters)                    & Active beamforming                           & ---                                        & Active beamforming and smart reflection           \\ \midrule
-			Cooperative reception         & ---                       & ---                       & No (separated receivers)                        & Joint detection or \gls{sic}                 & ---                                        & Backscatter detection as primary channel training \\ \midrule
-			Primary detection             & ---                       & ---                       & Semi-coherent                                   & Coherent or semi-coherent                    & Coherent                                   & Coherent                                          \\ \midrule
-			Backscatter detection         & Coherent                  & Coherent                  & Semi-coherent or noncoherent                    & Coherent                                     & ---                                        & Semi-coherent                                     \\ \midrule
-			Reflection state distribution & Equiprobable (line-coded) & Equiprobable (line-coded) & Equiprobable (line-coded)                       & Equiprobable or Gaussian                     & Degenerate (\gls{csi}-adaptive)            & Flexible (\gls{csi}- and traffic-adaptive)        \\ \midrule
+			Coexisting systems            & 1                         & 1                         & 2 (competitive)                                 & 2 (collaborative)                            & 1                                          & 2 (collaborative)                                 \\
+			\rowcolor{gray!25}
+			Scatterer contribution        & Backscatter modulation    & Backscatter modulation    & Backscatter modulation and primary interference & Backscatter modulation and primary multipath & Passive beamforming                        & Backscatter modulation and passive beamforming    \\
+			Cooperative transmissions     & ---                       & ---                       & No (individual transmitters)                    & Active beamforming                           & ---                                        & Active beamforming and smart reflection           \\
+			\rowcolor{gray!25}
+			Cooperative reception         & ---                       & ---                       & No (separated receivers)                        & Joint detection or \gls{sic}                 & ---                                        & Backscatter detection as primary channel training \\
+			Primary detection             & ---                       & ---                       & Semi-coherent                                   & Coherent or semi-coherent                    & Coherent                                   & Coherent                                          \\
+			\rowcolor{gray!25}
+			Backscatter detection         & Coherent                  & Coherent                  & Semi-coherent or noncoherent                    & Coherent                                     & ---                                        & Semi-coherent                                     \\
+			Reflection state distribution & Equiprobable (line-coded) & Equiprobable (line-coded) & Equiprobable (line-coded)                       & Equiprobable or Gaussian                     & Degenerate (\gls{csi}-adaptive)            & Flexible (\gls{csi}- and traffic-adaptive)        \\
+			\rowcolor{gray!25}
 			Load-switching frequency      & Fast or slow              & Fast or slow              & Fast or slow                                    & Slow                                         & Slow (dynamic) or quasi-static (blockwise) & Fast or slow                                      \\ \bottomrule
 		\end{tabularx}
 	\end{table*}
@@ -340,15 +349,16 @@
 	It first receives the impinging signals, then reradiates some back to the space and dissipates the remaining.
 	In comparison, a typical metamaterial-based scatterer comprises an outer metamaterial layer of numerous sub-wavelength metallic/dielectric patches with tunable permittivity/permeability, a middle copper plate layer that reflects residual to avoid leakage, an inner circuit board layer that adjusts the amplitude and phase responses of patches, and an integrated microcontroller/\glsentryshort{fpga} that coordinates with the network and controls the circuit \cite{Wu2020}.
 	Ideally, it reflects the incident waves at the air-metamaterial boundary without receiving them, and mainly applies a phase shift on the reflected wave.
-	In practice, both kinds of scatterers have finite reflection states with non-zero reflection loss, and the scatter-absorb tradeoff depends on impedance matching.
+	In practice, both types of scatterers have finite reflection states with non-zero reflection loss, and the scattered signal can be decomposed into the \emph{structural} and \emph{antenna} mode components \cite{Hansen1989}.
+	The former consistently contributes to environment multipath and can be modelled within \gls{csi}, while the latter depends on impedance mismatch and can be used for backscatter modulation and/or passive beamforming.
 	For a scatter node with $M$ reflection states, the reflection coefficient at state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$ is
 	\begin{equation}
 		\Gamma_m = \frac{Z_m - Z^*}{Z_m + Z},
 		\label{eq:reflection_coefficient}
 	\end{equation}
 	where $Z_m$ is the antenna load (resp. metamaterial unit) impedance at state $m$ and $Z$ is the antenna input (resp. medium characteristic) impedance.
-	Backscatter modulation and passive beamforming are realized by manipulating the reflection coefficient.
-	Specifically, \gls{bc}, \gls{ambc} and \gls{sr} employ scatter nodes as information sources that encode message by \emph{probabilistically switching} between different states.
+	% Backscatter modulation and passive beamforming are realized by manipulating the reflection coefficient.
+	\gls{bc}, \gls{ambc} and \gls{sr} employ scatter nodes as information sources that encode message by \emph{probabilistically switching} between different states.
 	For $M$-ary \gls{qam}, constellation point $c_m$ maps to reflection coefficient $\Gamma_m$ by \cite{Thomas2012a}
 	\begin{equation}
 		\Gamma_m = \alpha \frac{c_m}{\max_{m'} \lvert c_{m'} \rvert},
@@ -843,10 +853,10 @@
 	\end{subsection}
 
 	\begin{subsection}{Comparison of Scattering Applications}
-		Based on the setup in Fig. \ref{fg:riscatter_network}, we compare the achievable rates of RIScatter and different scattering applications:
+		Based on the setup in Fig. \ref{fg:riscatter_network}, we compare the achievable rates of RIScatter for different applications:
 		\begin{itemize}
-			\item \emph{\gls{bbc}:}
-			The primary symbol becomes deterministic $s[n]=1$ and the receive signal at each primary block is
+			\item \emph{Legacy:} Conventional active transmission without antenna mode scattering, $\alpha=0$.
+			\item \emph{\gls{bbc}:} The primary symbol becomes deterministic $s[n]=1$ and the receive signal at each primary block is
 			\begin{equation}
 				y^{\text{\gls{bbc}}}[n] = \Bigl(\boldsymbol{h}_{\mathrm{D}}^H + \sum_{k} \alpha_k \boldsymbol{h}_{\mathrm{C},k}^H x_k\Bigr) \boldsymbol{w} + v[n],
 			\end{equation}
@@ -902,7 +912,7 @@
 		% ! SR assume very large N for primary rate analysis. However, in such cases SIC is questionable as energy detection over received signal as BBC is already good enough and noncoherent detection can also achieve reasonable performance?
 		% TODO when primary symbols are determined, optimal input distribution at high backscatter SNR is equiprobable for any detection (signal/energy)
 
-		Fig. \ref{fg:region_comparison} compares typical achieve rate points of different scattering applications.
+		The simulation results are shown in Fig. \ref{fg:region_comparison}.
 		First, we observe both \gls{bbc} and \gls{sr} almost achieve noise-free backscatter transmission when $N$ is sufficiently large.
 		For \gls{bbc} using coherent energy detection, the conditional \gls{pdf} of accumulated receive energy \eqref{eq:energy_distribution_bbc} is more skewed at a large $N$, such that the equivalent \gls{dmtmac} \eqref{eq:dmtmac} becomes more reliable.
 		For \gls{sr} with \gls{sic} and \gls{mrc}, the effective backscatter \gls{snr} is increased by $N$ times and the penalty term $\epsilon$ becomes insignificant.
@@ -911,6 +921,19 @@
 		% \footnote{\gls{sr} is essentially a multiplicative \gls{noma} that cancels interference, while \gls{ambc} is essentially a multiplicative \gls{sdma} that treats interference as noise.}
 		% Besides, the deterministic reflection pattern of \gls{ris} provides constructive primary signal superposition
 		% \gls{ris} achieves the highest primary achievable rate using deterministic reflection pattern.
+		% Second, the passive beamforming gain by a single \gls{ris} node
+		% Second, the average primary achievable rate decreases in the presence of a \gls{ambc} node and subtly/notably increases in the presence of a \gls{sr}/\gls{ris} node.
+		Second, the average primary rate slightly increases/decreases in the presence of a \gls{ambc}/\gls{ris} node, while the multipath benefit of \gls{sr} is indistinguishable for a small $K$.
+		This is because the cascaded channel strength can be orders of magnitude lower than the direct channel strength due to the double fading effect.
+		\gls{ris} always ensures constructive superposition of direct and scattered signal components, while \gls{sr} only creates a rich-scattering environment that stochastically enhances the average primary rate.
+
+		Third, RIScatter enables flexible
+		% adapt the reflection state distribution of passive scatter devices based on \gls{csi} and link weights, in order to flexibly transition between backscatter modulation and passive beamforming.
+
+
+
+		% the inter \gls{ambc} node decreases
+
 		In comparison, RIScatter performs semi-coherent backscatter detection and coherent primary detection to enable backscatter modulation and passive beamforming for arbitrary $N$, and the primary-backscatter tradeoff can be controlled by \gls{csi}- and weight-adaptive input distribution design.
 
 		% , and different rate points can be achieved by different node input distributions.

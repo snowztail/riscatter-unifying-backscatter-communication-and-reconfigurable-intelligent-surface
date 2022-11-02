@@ -132,8 +132,8 @@
 \begin{document}
 % \title{RIScatter: Unifying Scattering Techniques From a Distribution Perspective}
 % \title{RIScatter: Unifying BackCom, AmBC, SR and RIS From a Distribution Perspective}
-% \title{RIScatter: Unifying Backscatter Communications and Reconfigurable Intelligent Surface From a Probabilistic Perspective}
-\title{RIScatter: Unifying BackCom and RIS From a Probabilistic Perspective}
+\title{RIScatter: Unifying Backscatter Communications and Reconfigurable Intelligent Surface From a Probabilistic Perspective}
+% \title{RIScatter: Unifying BackCom and RIS From a Probabilistic Perspective}
 % \title{RIScatter: Unifying Backscatter Communications, Symbiotic Radio, and Reconfigurable Intelligent Surface}
 \author{
 	\IEEEauthorblockN{
@@ -923,11 +923,10 @@
 		\gls{ris} always ensures constructive superposition of direct and scattered components, but \gls{sr} only creates a quasi-static rich-scattering environment that stochastically enhances the average primary rate.
 		When $N$ is moderate, the randomly scattered signals should be modelled as primary interference rather than multipath components, and the \gls{sr} point will move towards the \gls{ambc} point.
 		\emph{Third,} RIScatter enables a flexible primary-backscatter tradeoff by smart input distribution design.
-		In terms of maximum primary achievable rate, RIScatter coincides with \gls{ris} and outperforms the others using deterministic reflection pattern (no need for backscatter detection) when the primary link is prioritized.
+		In terms of maximum primary achievable rate, RIScatter coincides with \gls{ris} and outperforms the others by deterministic reflection pattern (no need for backscatter detection).
 		On the other hand, for a large $N$, the maximum backscatter achievable rate of RIScatter is higher than \gls{ambc} but lower than \gls{bbc} and \gls{sr}.
 		This is because both RIScatter and \gls{ambc} employ semi-coherent (instead of coherent) energy detection in the presence of primary uncertainty, and RIScatter with adaptive channel coding achieves higher backscatter rate than \gls{ambc} with equiprobable inputs.
-		Importantly, such a semi-coherent backscatter detection is feasible for arbitrary $N$, and using a fast-switching node with small $N$ can increase the backscatter throughput per unit time and preserve the dynamic passive beamforming gain.
-		% It only requires one energy comparison, re-encoding, and precoding operations to decode each backscatter symbol (tuple).
+		Importantly, such a practical RIScatter detection is feasible for arbitrary $N$, and using a fast-switching node with smaller $N$ can increase the backscatter throughput per unit time while preserving the dynamic passive beamforming gain on the primary link.
 	\end{subsection}
 
 	\begin{subsection}{Input Distribution under Different Weights}
@@ -936,18 +935,24 @@
 			\resizebox{0.65\columnwidth}{!}{
 				\input{assets/simulation/distribution_weights.tex}
 			}
-			\caption{Typical reflection state distribution under different weights for $Q=1$, $K=1$, $M=4$ and $N=20$.}
+			\caption{Typical RIScatter reflection state distribution under different weights for $Q=1$, $K=1$, $M=4$ and $N=20$.}
 			\label{fg:distribution_weights}
 		\end{figure}
-		The objective of this study is to demonstrate each RIScatter node can adjust its input distribution based on \gls{csi} and link priority to balance backscatter modulation and passive beamforming.
-		For this aim, we evaluate the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution} for a single node under different weights in Fig. \ref{fg:distribution_weights}.
-		We observe that as $\rho$ increases from \num{0} to \num{1}, the \gls{kkt} input distribution
-		gradually progresses from slightly skewed to completely biased.
-		For $\rho=0$ where backscatter performance is absolutely prioritized, the \gls{csi}-adaptive channel coding at the RIScatter node provides higher backscatter rate than conventional \gls{bc} and \gls{sr} nodes with equiprobable inputs, and some states may end up unused since they cannot produce enough energy difference over the existing alphabet.
-		On the other hand, for $\rho=1$ where primary performance is absolutely prioritized, the input probability is \num{1} at the state that maximizes the primary equivalent channel strength, and \num{0} at the others.
-		In this case, the reflection pattern over time is fully deterministic, and the RIScatter node indeed boils down to a \gls{ris} element with discrete phase shifts.
-		Those observations meet our s that RIScatter nodes include scattering sources of \gls{bc}/\gls{sr} and reflecting elements of \gls{ris} as special cases, and generalize backscatter modulation and passive beamforming from the perspective of input distribution design.
-		For the \gls{bcd} algorithm, we choose the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution}, the \gls{pgd} active beamforming by Algorithm \ref{al:active_beamforming}, and the \gls{smawk} decision threshold by \cite{He2021} as reference.
+		The objective of this study is to demonstrate RIScatter nodes can leverage \gls{csi}- and weight-adaptive input distribution design to balance backscatter modulation and passive beamforming.
+		For one RIScatter node with $M=4$, we evaluate the \gls{kkt} input distribution\footnote{Since problem \eqref{op:input_distribution} is convex when $K=1$, the \gls{kkt} solution is also global optimal in this example.} under different weights and present the result in Fig. \ref{fg:distribution_weights}.
+		At $\rho=0$ where backscatter performance is prioritized, the optimal input distribution is zero on two states and nearly uniform on the other two.
+		This is because, due to the weak scattered signal, the conditional energy \gls{pdf} under different hypotheses can be closely spaced as illustrated in Fig. \ref{fg:energy_distribution}.
+		In such cases, the extreme states producing the lowest/highest energy are always assigned with non-zero probability, while the others may not provide enough energy difference and end up unused.
+		At $\rho=1$ where primary performance is prioritized, the optimal input distribution is \num{1} at the state that maximizes the primary \gls{snr} and \num{0} at the others.
+		That is, the reflection pattern becomes deterministic and the RIScatter node boils down to a discrete \gls{ris} element.
+		Increasing $\rho$ from \num{0} to \num{1} provides a smooth transition from backscatter modulation to passive beamforming, which demonstrates RIScatter unifies \gls{bc} and \gls{ris} from a probabilistic perspective.
+
+		% gradually progresses from slightly skewed to completely biased.
+		% For $\rho=0$ where backscatter performance is absolutely prioritized, the \gls{csi}-adaptive channel coding at the RIScatter node provides higher backscatter rate than conventional \gls{bc} and \gls{sr} nodes with equiprobable inputs, and some states may end up unused since they cannot produce enough energy difference over the existing alphabet.
+		% On the other hand, for $\rho=1$ where primary performance is absolutely prioritized, the input probability is \num{1} at the state that maximizes the primary equivalent channel strength, and \num{0} at the others.
+		% In this case, the reflection pattern over time is fully deterministic, and the RIScatter node indeed boils down to a \gls{ris} element with discrete phase shifts.
+		% Those observations meet our s that RIScatter nodes include scattering sources of \gls{bc}/\gls{sr} and reflecting elements of \gls{ris} as special cases, and generalize backscatter modulation and passive beamforming from the perspective of input distribution design.
+		% For the \gls{bcd} algorithm, we choose the \gls{kkt} input distribution by Algorithm \ref{al:input_distribution}, the \gls{pgd} active beamforming by Algorithm \ref{al:active_beamforming}, and the \gls{smawk} decision threshold by \cite{He2021} as reference.
 	\end{subsection}
 
 	% \begin{subsection}{Achievable Rates versus Energy Discretization Bits}

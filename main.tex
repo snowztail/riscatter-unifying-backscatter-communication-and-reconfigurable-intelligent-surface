@@ -257,22 +257,22 @@
 		\caption{Comparison of Scattering Applications}
 		\label{tb:scattering_applications}
 		\renewcommand{\arraystretch}{1.25}
-		\begin{tabularx}{\textwidth}{CCCCCCC}
+		\begin{tabularx}{\textwidth}{CCCCCC}
 			\toprule
 			% \rowcolor{gray!25}
-			                              & \gls{mbc}                 & \gls{bbc}                 & \gls{ambc}                                      & \gls{sr}                                     & \gls{ris}                                  & RIScatter                                         \\ \midrule
-			Coexisting systems            & 1                         & 1                         & 2 (competitive)                                 & 2 (collaborative)                            & 1                                          & 2 (collaborative)                                 \\
+			                              & \gls{mbc}/\gls{bbc}       & \gls{ambc}                                      & \gls{sr}                                     & \gls{ris}                                  & RIScatter                                         \\ \midrule
+			Coexisting systems            & 1                         & 2 (competitive)                                 & 2 (collaborative)                            & 1                                          & 2 (collaborative)                                 \\
 			\rowcolor{gray!25}
-			Scatterer contribution        & Backscatter modulation    & Backscatter modulation    & Backscatter modulation and primary interference & Backscatter modulation and primary multipath & Passive beamforming                        & Backscatter modulation and passive beamforming    \\
-			Cooperative transmissions     & ---                       & ---                       & No (individual transmitters)                    & Active beamforming                           & ---                                        & Active beamforming and smart reflection           \\
+			Scatterer contribution        & Backscatter modulation    & Backscatter modulation and primary interference & Backscatter modulation and primary multipath & Passive beamforming                        & Backscatter modulation and passive beamforming    \\
+			Cooperative transmissions     & ---                       & No (individual transmitters)                    & Active beamforming                           & ---                                        & Active beamforming and smart reflection           \\
 			\rowcolor{gray!25}
-			Cooperative reception         & ---                       & ---                       & No (separated receivers)                        & Joint detection or \gls{sic}                 & ---                                        & Backscatter detection as primary channel training \\
-			Primary detection             & ---                       & ---                       & Semi-coherent                                   & Coherent or semi-coherent                    & Coherent                                   & Coherent                                          \\
+			Cooperative reception         & ---                       & No (separated receivers)                        & Joint detection or \gls{sic}                 & ---                                        & Backscatter detection as primary channel training \\
+			Primary detection             & ---                       & Semi-coherent                                   & Coherent or semi-coherent                    & Coherent                                   & Coherent                                          \\
 			\rowcolor{gray!25}
-			Backscatter detection         & Coherent                  & Coherent                  & Semi-coherent or noncoherent                    & Coherent                                     & ---                                        & Semi-coherent                                     \\
-			Reflection state distribution & Equiprobable (line-coded) & Equiprobable (line-coded) & Equiprobable (line-coded)                       & Equiprobable or Gaussian                     & Degenerate (\gls{csi}-adaptive)            & Flexible (\gls{csi}- and traffic-adaptive)        \\
+			Backscatter detection         & Coherent                  & Semi-coherent or noncoherent                    & Coherent                                     & ---                                        & Semi-coherent                                     \\
+			Reflection state distribution & Equiprobable (line-coded) & Equiprobable (line-coded)                       & Equiprobable or Gaussian                     & Degenerate (\gls{csi}-adaptive)            & Flexible (\gls{csi}- and traffic-adaptive)        \\
 			\rowcolor{gray!25}
-			Load-switching frequency      & Fast or slow              & Fast or slow              & Fast or slow                                    & Slow                                         & Slow (dynamic) or quasi-static (blockwise) & Fast or slow                                      \\ \bottomrule
+			Load-switching frequency      & Fast or slow              & Fast or slow                                    & Slow                                         & Slow (dynamic) or quasi-static (blockwise) & Fast or slow                                      \\ \bottomrule
 		\end{tabularx}
 	\end{table*}
 
@@ -1076,8 +1076,8 @@
 		\begin{subsubsection}{Number of Nodes}
 			Fig. \subref*{fg:region_tags} reveals how the number RIScatter nodes $K$ influence the primary-backscatter tradeoff.
 			Interestingly, we observe that increasing $K$ has a larger benefit on the total backscatter rate than primary.
-			When multiple nodes are present, each RIScatter node is indeed performing passive beamforming for primary as well as other backscatter links.
-			To maximize the total backscatter rate, some nodes closer to the user may need to sacrifice their own rate and use the state that minimizes the primary equivalent channel strength, in order to enlarge the relative energy difference under different hypotheses of other nodes (and increase their rates).
+			This is because each RIScatter node not only affects the primary equivalent \gls{snr} but also influences the relative energy difference that other nodes can create.
+			To maximize the total backscatter rate, some nodes closer to the user may need to sacrifice their own rate and use the state that \emph{minimizes} the primary equivalent channel strength, in order to increase the backscatter rate of other nodes.
 			This accounts for the significant primary rate decrease in the low-$\rho$ regime.
 			On the other hand, when the primary link is prioritized, the RIScatter nodes boil down to \gls{ris} elements and enjoy a passive array gain of $N^2$.
 		\end{subsubsection}

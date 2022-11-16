@@ -314,7 +314,7 @@
 		In particular, \emph{symbol level precoding} maps the information symbols to the optimized \gls{ris} coefficient sets \cite{Liu2019d,Bereyhi2020}, \emph{overlay modulation} superposes the information symbols over a common auxiliary matrix \cite{Xu2020b,Zhang2021d,Hu2021b,Hua2022}, \emph{spatial modulation} switches between the reflection coefficient sets that maximize \gls{snr} at different receive antennas \cite{Basar2020,Ma2020a,Yuan2021}, and \emph{index modulation} employs dedicated reflection elements (resp. information elements) for passive beamforming (resp. backscatter modulation) \cite{Hu2021a}.
 		% Those smart passive reflect elements/scatter nodes can recycle electromagnetic wave on the air to boost wireless channels and establish new connections, but incurs advanced hardware architecture and high optimization complexity.
 		% Those \gls{ris}-empowered \gls{bc} can recycle electromagnetic wave on the air to simultaneously boost wireless channels and establish new connections, but the reflect elements or scatter nodes incurs advanced hardware architecture and high optimization complexity.
-		Those \gls{ris}-empowered \gls{bc} designs can recycle electromagnetic wave on the air to simultaneously boost wireless channels and establish new connections, but incurs advanced hardware architecture and high optimization complexity.
+		Those \gls{ris}-empowered \gls{bc} designs can recycle electromagnetic wave on the air and employ scattered paths to boost wireless channels and establish new connections, but incurs advanced hardware architecture and high optimization complexity.
 		% the reflect elements or scatter nodes incurs advanced hardware architecture and high optimization complexity.
 		% For backscatter information sources,
 		% Besides,
@@ -328,29 +328,22 @@
 		% We envision RIScatter in Fig. \subref*{fg:riscatter} as a novel scatter protocol that generalizes \gls{bc} and \gls{ris}.
 		% The contributions of this paper are summarized below.
 
-		\emph{First,} we propose RIScatter nodes that adapt the reflection state distribution of passive scatter devices based on \gls{csi} and link weights, in order to flexibly transition between backscatter modulation and passive beamforming.
-		Scatter node of \gls{bc} and reflect elements of \gls{ris} can be regarded as special cases with uniform and degenerate input distributions, respectively.
-		On the contrary, adaptive RIScatter encoding boils down to deterministic \gls{ris} when primary link is prioritized, and achieves higher backscatter rate than conventional line coding when backscatter link is prioritized.
-		Multiple RIScatter nodes can be either co-located to enable joint distribution design for improved total backscatter rate, or dispersed to guarantee uniformly good performance for both links.
+		% \emph{First,} we propose RIScatter nodes that adapt the reflection state distribution of passive scatter devices based on \gls{csi} and link weights, in order to flexibly transition between backscatter modulation and passive beamforming.
+		% Scatter node of \gls{bc} and reflect elements of \gls{ris} can be regarded as special cases with uniform and degenerate input distributions, respectively.
+		% On the contrary, adaptive RIScatter encoding boils down to deterministic \gls{ris} when primary link is prioritized, and achieves higher backscatter rate than conventional line coding when backscatter link is prioritized.
+		% Multiple RIScatter nodes can be either co-located to enable joint distribution design for improved total backscatter rate, or dispersed to guarantee uniformly good performance for both links.
 
 
-		\emph{First,} we propose RIScatter that unifies \gls{bc} and \gls{ris} and leverages their benefits from an input distribution perspective.
-		The concept is presented in Fig. \subref*{fg:riscatter}.
-		In part
+		\emph{First,} we propose RIScatter as a novel scatter protocol that unifies \gls{bc} and \gls{ris} from a distribution perspective.
+		As shown in Fig. \subref*{fg:riscatter}, the passive RIScatter node rides over an active transmission and controls the scattered wave to
+		partially engineer the wireless channel and partially modulate its own information.
+		This is accomplished by incorporating both the \gls{csi} and link weights into the reflection state distribution design.
+		As such, RIScatter can generalize \gls{bc} (uniform distribution) and \gls{ris} (degenerate distribution) to create a tradeoff between backscatter modulation and passive beamforming.
+		This is the first paper to associate \gls{bc} and \gls{ris} from a distribution perspective.
+		% heterogeneous traffic control and universal hardware design
 
-		multiple dispersed or co-located passive scatter nodes whose
-
-
-		\gls{bc} nodes harvest energy from and modulate information over an external electromagnetic wave.
-		% \gls{sr} incorporates a passive scatter node into existing radio networks to create additional propagation path and ride its own information towards the cooperative receiver.
-		% \gls{ris} is a programmable reflector array that adapts the phase shift response to enhance or suppress signal strength in specific directions.
-		\gls{ris} adapts its phase shift response to enhance or suppress signal strength in specific directions.
-		In this paper, we show how both seemingly different technologies and their derivatives can be unified to leverage their benefits simultaneously into a single architecture called RIScatter.
-		Envisioned as a scatter protocol, RIScatter consists of multiple dispersed or co-located passive scatter nodes whose reflection states can be adapted to partially engineer the wireless channel and partially modulate information onto the scattered wave.
-		This contrasts with \gls{bc} (resp. \gls{ris}) where reflection states are exclusively a function of information symbols (resp. \gls{csi}).
-		The key principle in RIScatter is to render the probability distribution of reflection states as a joint function of the \gls{csi} and input information source.
-		This enables RISscatter to softly bridge, generalize, and outperform \gls{bc} and \gls{ris}; boil down to any of those under specific reflection states; or evolve in a mixed form for heterogeneous traffic control and universal hardware design.
-
+		% I think you need to reemphasize what is the abstract and explain it further in light of the general observations you have drawn from the related works
+		% IScatter design compared to backcom and RIS. How to tackle those challenges would then be explained in the subsequent contributions.
 
 		\emph{Second,} we propose a practical receiver that accommodates the double modulation and signal difference in active-passive coexisting networks.
 		Since the primary and backscatter messages are superimposed by multiplication coding and the backscatter symbol is typically longer than primary, the scattered signals from RIScatter nodes can be treated as multipath components during primary decoding, and the primary symbols can be viewed as a spreading code during backscatter decoding.

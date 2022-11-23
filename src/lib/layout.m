@@ -20,7 +20,7 @@ function [forwardDistance, backwardDistance] = layout(directDistance, nTags, cov
 	% * Coordinates
 	ap = [directDistance; 0];
 	user = [0; 0];
-	[tag(1, :), tag(2, :)] = pol2cart(2 * pi * rand(1, nTags), sqrt(coverage * rand(1, nTags)));
+	[tag(1, :), tag(2, :)] = pol2cart(2 * pi * rand(1, nTags), sqrt(coverage ^ 2 * rand(1, nTags)));
 	% tag(1, :) = ones(1, nTags);
 	% tag(2, :) = (1 : nTags) - mean(1 : nTags);
 

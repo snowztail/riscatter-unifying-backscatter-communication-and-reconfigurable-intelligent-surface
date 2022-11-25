@@ -4,18 +4,20 @@
 	\node at (6.5,3) [rectangle,minimum size=1cm] {};
 	\node at (8,0.35) [dart,shape border rotate=270,minimum width=1cm] {};
 
-	\node[draw=none] at (0,-1.375) {Legacy\\Transmitter};
+	\node[draw=none] at (0,-1.375) {Primary\\Transmitter};
 	\node[draw=none] at (1,4.375) {Backscatter\\Reader};
-	\node[draw=none] at (7,4.375) {Scattering\\Node};
-	\node[draw=none] at (8,-1.375) {Legacy\\Receiver};
+	\node[draw=none] at (7,4.375) {Scatter\\Node};
+	\node[draw=none] at (8,-1.375) {Primary\\Receiver};
 
-	\draw[decorate,decoration={waves,segment length=5mm}] (1,-0.5) -- (7.5,-0.5);
-	\draw[decorate,decoration={waves,segment length=5mm}] (0.25,1) -- (0.75,3);
-	\draw[decorate,decoration={waves,segment length=5mm}] (0.75,0.25) -- (5.5,2.5);
-	\draw[decorate,decoration={triangles,segment length=5mm,shape size=1.5mm}] (5.5,3.5) -- (2.5,3.5);
-	\draw[decorate,decoration={triangles,segment length=5mm,shape size=1.5mm}] (7.5,3) -- (8,1);
+	\draw[blue,decorate,decoration={waves,segment length=4mm,radius=2mm}] (1,-0.5) -- (7.5,-0.5);
+	\draw[lightgray,decorate,decoration={waves,segment length=4mm,radius=2mm}] (0.25,1) -- (0.75,3);
+	\draw[lightgray,decorate,decoration={waves,segment length=4mm,radius=2mm}] (0.75,0.25) -- (5.5,2.5);
+	\draw[lightgray,decorate,decoration={waves,segment length=4mm,radius=2mm}] (5.5,3.5) -- (2.5,3.5);
+	\draw[magenta,decorate,decoration={crosses,segment length=8mm,shape size=1.5mm}] (5.11,3.5) -- (2.5,3.5);
+	\draw[lightgray,decorate,decoration={waves,segment length=4mm,radius=2mm}] (7.43,3.28) -- (8,1);
+	\draw[lightgray,decorate,decoration={crosses,segment length=8mm,shape size=1.5mm}] (7.525,2.9) -- (8,1);
 
-	\node[draw=none] at (4,0.35) {Modulated\\Signal};
-	\node[draw=none] at (4,3.95) {Superimposed};
-	\node[draw=none] at (4,3) {Signal};
+	\node[draw=none] at (4,0.35) {Modulated};
+	\node[draw=none] at (4,3.95) {Doubly-};
+	\node[draw=none] at (4,3) {Modulated};
 \end{tikzpicture}

@@ -1,5 +1,5 @@
 \begin{tikzpicture}
-	\begin{axis}[width=10cm,height=5cm,xmin=0,xmax=6.5,xlabel=$z$,axis x line=middle,axis y line=none,xtick={0,2,3,4,6},xticklabels={$t_0$,$t_1$,$t_2$,$t_3$,$t_4$},xtick style={draw=none},every axis x label/.style={at=(current axis.right of origin),anchor=west},domain=0:6]
+	\begin{axis}[width=10cm,height=5cm,xmin=0,xmax=6.5,ymin=-0.1,ymax=0.1,xlabel=$z$,axis x line=middle,axis y line=none,xtick={0,2,3,4,6},xticklabels={$t_0$,$t_1$,$t_2$,$t_3$,$t_4$},xtick style={draw=none},every axis x label/.style={at=(current axis.right of origin),anchor=west},domain=0:6]
 		\addplot[mark=*,mark size=0.5pt,only marks,color=gray] {0};
 		\addplot[mark=*,mark size=1pt,only marks,color=black] coordinates{(0,0) (2,0) (3,0) (4,0) (6,0)};
 		\draw[decorate,decoration={brace,amplitude=10}] (0,0) -- (2,0) node[above,midway,yshift=10]{$\mathcal{R}_1$};

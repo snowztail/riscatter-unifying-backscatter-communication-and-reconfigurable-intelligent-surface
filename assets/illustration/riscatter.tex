@@ -5,12 +5,13 @@
 
 	\node[draw=none] at (0,-1.25) {Primary\\Transmitter};
 	\node[draw=none] at (5,4.5) {RIScatter\\Node};
-	\node[draw=none] at (8,-1.25) {Cooperative\\Receiver};
+	\node[draw=none] at (8,-1.25) {Co-located\\Receiver};
 
-	\draw[decorate,decoration={waves,segment length=5mm}] (1,-0.25) -- (7.375,-0.25);
-	\draw[decorate,decoration={waves,segment length=5mm}] (0.5,0.75) -- (4,3);
-	\draw[decorate,decoration={crosses,segment length=5mm,shape size=2mm}] (6,3) -- (8,1.25);
+	\draw[blue,decorate,decoration={waves,segment length=4mm,radius=2mm}] (1,-0.25) -- (7.375,-0.25);
+	\draw[blue,decorate,decoration={waves,segment length=4mm,radius=2mm}] (0.5,0.75) -- (4,3);
+	\draw[blue,decorate,decoration={waves,segment length=4mm,radius=2mm}] (6,3.1625) -- (8,1.25);
+	\draw[green,decorate,decoration={crosses,segment length=8mm,shape size=1.5mm}] (6.29,2.885) -- (8,1.25);
 
-	\node[draw=none] at (4,0.875) {Modulated\\Signal};
-	\node[draw=none] at (7.8,2.9) {Controllable\\Signal};
+	\node[draw=none] at (3.5,0.75) {Modulated};
+	\node[draw=none] at (8,2.76) {Flexible};
 \end{tikzpicture}

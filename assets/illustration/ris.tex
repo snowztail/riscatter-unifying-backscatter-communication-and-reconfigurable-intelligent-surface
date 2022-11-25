@@ -4,12 +4,12 @@
 	\node at (8,0.35) [dart,shape border rotate=270,minimum width=1cm] {};
 
 	\node[draw=none] at (0,-1) {Transmitter};
-	\node[draw=none] at (5,4.4375) {Reflecting\\Element};
+	\node[draw=none] at (5,4.4375) {Reflect\\Element};
 	\node[draw=none] at (8,-1) {Receiver};
 
-	\draw[decorate,decoration={waves,segment length=5mm}] (1,-0.25) -- (7.375,-0.25);
-	\draw[decorate,decoration={waves,segment length=5mm}] (0.5,0.75) -- (4,3);
-	\draw[decorate,decoration={waves,segment length=5mm}] (6,3) -- (8,1.25);
+	\draw[blue,decorate,decoration={waves,segment length=4mm,radius=2mm}] (1,-0.25) -- (7.375,-0.25);
+	\draw[blue,decorate,decoration={waves,segment length=4mm,radius=2mm}] (0.5,0.75) -- (4,3);
+	\draw[blue,decorate,decoration={waves,segment length=4mm,radius=2mm}] (6,3.1625) -- (8,1.25);
 
-	\node[draw=none] at (4.875,1.125) {Modulated\\Signal};
+	\node[draw=none] at (4.625,1) {Modulated};
 \end{tikzpicture}

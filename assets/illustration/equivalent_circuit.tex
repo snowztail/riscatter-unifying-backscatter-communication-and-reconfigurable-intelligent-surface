@@ -2,22 +2,22 @@
 	\tikzstyle{every node}=[font=\Large]
 	\draw (0,0) coordinate(O)
 	to [sV,l=$V_0$] ++(0,1.5)
-	to [L,l=$X_{\mathrm{A}}$] ++(0,1.5)
-	to [R=$R_{\mathrm{A}}$,-*] ++(3,0) coordinate(AM)
+	to [L,l=$X_{\text{A}}$] ++(0,1.5)
+	to [R=$R_{\text{A}}$,-*] ++(3,0) coordinate(AM)
 	to [sI,l_=$I_0$,-*] ++(0,-3)
 	to [short] (O);
 	\draw (AM)
 	to [short] ++(0.5,0)
 	to [L,l=$X_m$,-*] ++(3,0) coordinate(M)
-	to [R=$R_m^{\mathrm{S}}$] ++(3,0) coordinate(MH);
+	to [R=$R_{\text{S},m}$] ++(3,0) coordinate(MH);
 	\draw (M)
-	to [R=$R_m^{\mathrm{P}}$,-*] ++(0,-3);
+	to [R=$R_{\text{P},m}$,-*] ++(0,-3);
 	\draw (MH)
 	to [D,-*] ++(1.5,0) coordinate(H)
-	to [C=$X_{\mathrm{H}}$,-*] ++(0,-3);
+	to [C=$X_{\text{H}}$,-*] ++(0,-3);
 	\draw (H)
 	to [short] ++(1.5,0)
-	to [R=$R_{\mathrm{H}}$] ++(0,-3)
+	to [R=$R_{\text{H}}$] ++(0,-3)
 	to [short] (O);
 
 	\draw [dashed] (-1.125,-0.5) rectangle (3.5,4);
@@ -28,7 +28,7 @@
 	\draw (6.5,4.25) node[]{Modulator};
 	\draw (11.5,4.25) node[]{Harvester \& Chip};
 
-	\draw (3.375,2.675) to [short] (3.375,3.175) to [short] (3.25,3.175) to [short,i_=$Z_{\mathrm{A}}$] (3.125,3.175);
+	\draw (3.375,2.675) to [short] (3.375,3.175) to [short] (3.25,3.175) to [short,i_=$Z_{\text{A}}$] (3.125,3.175);
 	\draw (4.125,-0.125) to [short] (4.125,0.375) to [short] (4.25,0.375) to [short,i=$Z_m$] (4.375,0.375);
-	\draw (9.625,-0.125) to [short] (9.625,0.375) to [short] (9.75,0.375) to [short,i=$Z_{\mathrm{H}}$] (9.875,0.375);
+	\draw (9.625,-0.125) to [short] (9.625,0.375) to [short] (9.75,0.375) to [short,i=$Z_{\text{H}}$] (9.875,0.375);
 \end{circuitikz}

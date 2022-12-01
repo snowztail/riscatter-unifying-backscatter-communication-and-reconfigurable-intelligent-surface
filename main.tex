@@ -130,7 +130,8 @@
 \newacronym{fpga}{FPGA}{Field-Programmable Gate Array}
 
 \begin{document}
-\title{RIScatter: Unifying Backscatter Communication and Reconfigurable Intelligent Surface From a Distribution Perspective}
+% \title{RIScatter: Unifying Backscatter Communication and Reconfigurable Intelligent Surface From a Distribution Perspective}
+\title{RIScatter: Unifying Backscatter Communication and Reconfigurable Intelligent Surface}
 \author{
 	\IEEEauthorblockN{
 		Yang~Zhao,~\IEEEmembership{Member,~IEEE,}
@@ -179,14 +180,14 @@
 	% \gls{sr} incorporates a passive scatter node into existing radio networks to create additional propagation path and ride its own information towards the cooperative receiver.
 	% \gls{ris} is a programmable reflector array that adapts the phase shift response to enhance or suppress signal strength in specific directions.
 	\gls{bc} nodes harvest energy from and modulate information over an external electromagnetic wave.
-	\gls{ris} adapts its phase shift response to enhance or suppress equivalent channel strength in specific directions.
+	\gls{ris} adapts its phase shift response to enhance channel strength in specific directions.
 	In this paper, we show how both seemingly different technologies and their derivatives can be unified to leverage their benefits simultaneously into a single architecture called RIScatter.
-	Envisioned as a next-generation communication protocol, RIScatter consists of multiple dispersed or co-located scatter nodes whose reflection states can be adapted to partially engineer the equivalent channel of the existing link and partially modulate their own information onto the scattered wave.
+	RIScatter consists of multiple dispersed or co-located scatter nodes whose reflection states can be adapted to partially engineer the channel of the existing link and partially modulate their own information onto the scattered wave.
 	This contrasts with \gls{bc} (resp. \gls{ris}) where the reflection pattern is exclusively a function of the information symbol (resp. \gls{csi}).
 	The key principle in RIScatter is to render the probability distribution of reflection states as a joint function of the information source, \gls{csi}, and \gls{qos} of both coexisting links.
 	This enables RISscatter to softly bridge, generalize, and outperform \gls{bc} and \gls{ris}; boil down to either under specific input distribution; or evolve in a mixed form for heterogeneous traffic control and universal hardware design.
 	For a single-user multi-node RIScatter network, we characterize the achievable primary-(total-)backscatter rate region by optimizing the input distribution at the nodes, the active beamforming at the \gls{ap}, and the backscatter detection regions at the user.
-	Simulation results demonstrate RIScatter nodes can exploit the additional propagation paths to smoothly transition between backscatter modulation and passive beamforming via smart input distribution design, and the tailored receiver effectively accommodates the double modulation and signal difference in active-passive coexisting networks without \gls{sic}.
+	Simulation results demonstrate RIScatter nodes can exploit the additional propagation paths to smoothly transition between backscatter modulation and passive beamforming via smart input distribution design, and the proposed practical receiver effectively accommodates the double modulation and signal difference in active-passive coexisting networks without \gls{sic}.
 \end{abstract}
 
 \glsresetall
@@ -368,8 +369,7 @@
 		Since the original problem is highly non-convex, we decouple it into individual subproblems and propose a suboptimal \gls{bcd} algorithm, where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is iteratively updated by \gls{pgd} accelerated by \gls{bls}, and the decision regions are refined by existing sequential quantization methods for \gls{dmtc}.
 		This is the first paper to reveal the importance of input distribution and decision region designs in relevant literatures.
 
-		\emph{Fourth,} we provide numerical results to demonstrate the benefits of RIScatter and proposed algorithms.
-		We conclude:
+		\emph{Fourth,} we provide numerical results to demonstrate the benefits of RIScatter and proposed algorithms and make the following conclusions:
 		1) adaptive reflection state distribution design can flexibly transition between backscatter modulation and passive beamforming;
 		2) when primary link is prioritized, input distribution becomes degenerate and RIScatter nodes coincide with discrete \gls{ris};
 		3) when backscatter link is prioritized, adaptive RIScatter encoding achieves higher backscatter rate than conventional line coding with equiprobable inputs;
@@ -767,7 +767,7 @@
 			\end{equation}
 			\begin{align}
 				\nabla_{\boldsymbol{w}^*} I(x_{\mathcal{K}})
-				 & = \sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\frac{\boldsymbol{h}_{\text{E}}(x_{m_{\mathcal{K}}})\boldsymbol{h}_{\text{E}}^\mathsf{H}(x_{m_{\mathcal{K}}})\boldsymbol{w}}{\sigma_{m_{\mathcal{K}}}^2}+(1-\rho)\sum_l\biggl(\log\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}+1\biggr)\nonumber                                                                  \\
+				 & = \sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\frac{\boldsymbol{h}_{\text{E}}(x_{m_{\mathcal{K}}})\boldsymbol{h}_{\text{E}}^\mathsf{H}(x_{m_{\mathcal{K}}})\boldsymbol{w}}{\sigma_{m_{\mathcal{K}}}^2}+(1-\rho)\sum_l\biggl(\log\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}+1\biggr)\nonumber                                                             \\
 				 & \qquad \times \nabla_{\boldsymbol{w}^*} Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)-\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})\nabla_{\boldsymbol{w}^*}Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}\Biggr)
 				\label{eq:weighted_sum_mutual_information_gradient}
 			\end{align}

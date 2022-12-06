@@ -312,7 +312,7 @@
 		This code-domain solution suffers from the near-far problem and imperfect synchronization, both can be very severe in low-power backscatter scenarios.
 
 		Conventional \gls{ris} design with fixed reflection coefficients during each channel block has been extensively studied in communication, sensing, and power literatures \cite{Wu2018,Zhang2019a,Lin2022,Liu2022,Feng2022,Zhao2022}.
-		On the other hand, dynamic \gls{ris} with independent reflection patterns at different transmission phases has gained recent attentions in multi-user and multi-purpose wireless networks.
+		On the other hand, dynamic \gls{ris} with independent reflection patterns at different time slots has gained recent attentions in multi-user and multi-purpose wireless networks.
 		The concept was first proposed in \cite{Yang2020} to fine-tune the \gls{ofdm} resource blocks, then extended to the downlink power and uplink information phases of \gls{wpcn} \cite{Wu2021,Wu2021d,Hua2022a}.
 		It introduces artificial channel diversity and enables flexible resource allocation, but misses the opportunity to encode message at the \gls{ris}.
 		\gls{ris} can also be used as a transmitter when placed in the near field of a carrier emitter, and prototypes for \gls{psk} and \gls{qam} have been implemented in \cite{Tang2019a,Dai2020a}.
@@ -320,32 +320,14 @@
 		Instead, the capacity of \gls{ris}-aided channel is achieved by joint transmitter-\gls{ris} encoding, and multiplication coding with \gls{sic} decoding (i.e., \gls{sic}-based \gls{sr}) can indeed outperform passive beamforming at high \gls{snr}.
 		It inspired \gls{ris}-empowered \gls{bc} \cite{Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hu2021b,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} to combine passive beamforming and backscatter modulation in the overall reflection pattern.
 		In particular, \emph{symbol level precoding} maps the information symbols to the optimized \gls{ris} coefficient sets \cite{Liu2019d,Bereyhi2020}, \emph{overlay modulation} superposes the information symbols over a common auxiliary matrix \cite{Xu2020b,Zhang2021d,Hu2021b,Hua2022}, \emph{spatial modulation} switches between the reflection coefficient sets that maximize \gls{snr} at different receive antennas \cite{Basar2020,Ma2020a,Yuan2021}, and \emph{index modulation} employs dedicated reflection elements (resp. information elements) for passive beamforming (resp. backscatter modulation) \cite{Hu2021a}.
-		However, those \gls{ris}-empowered \gls{bc} designs incurs advanced hardware architecture and high optimization complexity.
-		Relevant literatures also consider either Gaussian codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} or finite equiprobable inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} at backscatter information sources.
-		% The former is impractical for low-power node while the latter does not fully exploit \gls{csi} and signal characteristics in active-passive coexisting networks.
-		The former is impractical for low-power node while the latter does not fully exploit \gls{csi} and signal characteristics.
-
-		% Those \gls{ris}-empowered \gls{bc} designs demonstrate the active-passive coexisting networks
-		It has been observed for active-passive coexisting networks that
-		% 1) the transmitter-scatter-receiver path can be used simultaneously for backscatter modulation and passive beamforming;
-		1) the transmitter-scatter-receiver path can be used to simultaneously control wireless channels and establish passive connections;
-		2) co-located receiver enables cooperative primary and backscatter decoding;
-		3) it involves a double modulation of primary and backscatter symbols with different period;
-
-
-
-
-
-		% Relevant literatures also consider either Gaussian codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} or finite equiprobable inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} at backscatter information sources.
-		% % The former is impractical for low-power node while the latter does not fully exploit \gls{csi} and signal characteristics in active-passive coexisting networks.
-		% The former is impractical for low-power node while the latter does not fully exploit \gls{csi} and signal characteristics.
-		Those \gls{ris}-empowered \gls{bc} designs
-		simultaneously enhance
-		can recycle \gls{rf} wave on the air and employ scattered paths to boost wireless channels and establish new connections, but incurs advanced hardware architecture and high optimization complexity.
-
-		Beyond WPT, [14] uniquely showed that the rectifier nonlinearity brings radical changes to SWIPT design, namely (i) modulated and unmodulated waveforms are not equally suitable for wireless power delivery; (ii) a multi-carrier unmodulated waveform superposed to a multi-carrier modulated waveform can enlarge the R-E region; (iii) a combination of PS and TS is generally the best strategy; (iv) the optimal input distribution is not the conventional Circularly Symmetric Complex Gaussian (CSCG); (v) modeling rectifier nonlinearity is beneficial to system performance and essential to efficient SWIPT design. Those observations, validated experimentally in [9], led to the question: What is the optimal input distribution for SWIPT under nonlinearity? This question was answered in [15] for single-carrier SWIPT, and some attempts were further made in [16] for multi-carrier SWIPT. The answers shed new light to the fundamental limits of SWIPT and practical signaling (e.g., modulation and waveform) strategies. It is now well understood from [14]–[16] that, due to harvester nonlinearity, a combination of CSCG and on-off keying in single-carrier setting and non-zero mean asymmetric inputs in multi-carrier setting lead to significantly larger R-E region compared to conventional CSCG.
-
-		It is now well understood from [14]–[16] that, due to harvester nonlinearity, a combination of CSCG and on-off keying in single-carrier setting and non-zero mean asymmetric inputs in multi-carrier setting lead to significantly larger R-E region compared to conventional CSCG
+		However, those joint designs incur advanced hardware architecture and high optimization complexity.
+		Relevant \gls{bc} literatures also consider either \emph{Gaussian} codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} that is impractical for low-power nodes, or finite equiprobable inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} that does not fully exploit \gls{csi} and signal characteristics.
+		For active-passive coexisting networks, it has been observed that:
+		1) \gls{rf} waves on the air can be effectively recycled by smart scattering;
+		% 2) transmitter-scatter-receiver paths can be used to simultaneously control wireless channels and establish passive connections;
+		2) transmitter-scatter-receiver paths can be exploited simultaneously for backscatter modulation and passive beamforming;
+		3) co-located primary and backscatter receiver enables interference cancellation and cooperative decoding;
+		4) the primary and backscatter symbols are superimposed by multiplication (i.e., double modulation).
 	\end{subsection}
 
 	\begin{subsection}{Contributions}

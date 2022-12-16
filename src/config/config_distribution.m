@@ -41,7 +41,7 @@ nWeights = length(weightSet);
 nBins = 2 ^ 9;
 
 %% * Variable
-Variable = struct('Distribution', {'exhaustion', 'kkt', 'cooperation', 'cooperation', 'cooperation', 'cooperation', 'uniform'}, 'Recovery', {[], [], [], 'marginalization', 'decomposition', 'randomization', []});
+Variable = struct('Distribution', {'cooperation', 'exhaustion', 'kkt', 'uniform', 'cooperation', 'cooperation', 'cooperation'}, 'Recovery', {[], [], [], [], 'marginalization', 'decomposition', 'randomization'});
 nVariables = length(Variable);
 
 %% * PBS

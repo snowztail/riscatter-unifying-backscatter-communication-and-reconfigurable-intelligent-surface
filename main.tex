@@ -709,7 +709,7 @@
 			\caption{Numerical \gls{kkt} Input Distribution Evaluation by Limits of Sequence}
 			\label{al:input_distribution}
 			\begin{algorithmic}[1]
-				\Require $K$, $N$, $\boldsymbol{h}_{\text{D}}^\mathsf{H}$, $\boldsymbol{H}_{\text{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $\sigma_v^2$, $\rho$, $\boldsymbol{w}$, $\boldsymbol{t}$, $\varepsilon$
+				\Require $K$, $N$, $\boldsymbol{h}_{\text{D}}^\mathsf{H}$, $\boldsymbol{H}_{\text{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $\sigma_v^2$, $\rho$, $\boldsymbol{w}$, $\boldsymbol{t}$, $\epsilon$
 				\Ensure $\{\boldsymbol{p}_k^\star\}_{k \in \mathcal{K}}$
 				\State Set $\boldsymbol{h}_{\text{E}}^\mathsf{H}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_channel}
 				\State \phantom{Set} $\sigma^2_{m_{\mathcal{K}}}$, $\forall m_{\mathcal{K}}$ by \eqref{eq:receive_variance}
@@ -725,7 +725,7 @@
 					\State Update $r \gets r+1$
 					\State \phantom{Update} $\boldsymbol{p}_k^{(r)}$, $\forall k$ by \eqref{eq:input_kkt_solution}
 					\State Redo step \ref{st:input_distribution_begin}--\ref{st:input_distribution_end}
-				\Until $I^{(r)}(x_{\mathcal{K}}) - I^{(r-1)}(x_{\mathcal{K}}) \le \varepsilon$
+				\Until $I^{(r)}(x_{\mathcal{K}}) - I^{(r-1)}(x_{\mathcal{K}}) \le \epsilon$
 			\end{algorithmic}
 		\end{algorithm}
 	\end{subsection}
@@ -779,7 +779,7 @@
 			\caption{Iterative Active Beamforming Optimization by \gls{pgd} with \gls{bls}}
 			\label{al:active_beamforming}
 			\begin{algorithmic}[1]
-				\Require $Q$, $N$, $\boldsymbol{h}_{\text{D}}^\mathsf{H}$, $\boldsymbol{H}_{\text{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $P$, $\sigma_v^2$, $\rho$, $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{t}$, $\alpha$, $\beta$, $\gamma$, $\varepsilon$
+				\Require $Q$, $N$, $\boldsymbol{h}_{\text{D}}^\mathsf{H}$, $\boldsymbol{H}_{\text{C}}$, $\boldsymbol{\alpha}$, $\mathcal{X}$, $P$, $\sigma_v^2$, $\rho$, $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{t}$, $\alpha$, $\beta$, $\gamma$, $\epsilon$
 				\Ensure $\boldsymbol{w}^\star$
 				\State Set $\boldsymbol{h}_{\text{E}}^\mathsf{H}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_channel}
 				\State \phantom{Set} $P_{\mathcal{K}}(x_{m_{\mathcal{K}}})$, $\forall m_{\mathcal{K}}$ by \eqref{eq:equivalent_distribution}
@@ -801,7 +801,7 @@
 						\State Redo step \ref{st:backtracking_line_search_begin}--\ref{st:backtracking_line_search_end}
 					\EndWhile
 					\State Redo step \ref{st:gradient_update_start}, \ref{st:gradient_update_end}
-				\Until $\lVert\boldsymbol{w}^{(r)}-\boldsymbol{w}^{(r-1)}\rVert \le \varepsilon$
+				\Until $\lVert\boldsymbol{w}^{(r)}-\boldsymbol{w}^{(r-1)}\rVert \le \epsilon$
 			\end{algorithmic}
 		\end{algorithm}
 	\end{subsection}
@@ -868,7 +868,7 @@
 	\end{equation}
 	where $d$ is the transmission distance, $L_0=-\qty{30}{\dB}$ is the reference path loss at $d_0=\qty{1}{\meter}$, $\kappa$ is the Rician $K$-factor, $\bar{\boldsymbol{H}}$ is the deterministic line-of-sight component with unit-magnitude entries, and $\tilde{\boldsymbol{H}}$ is the Rayleigh fading component with standard \gls{iid} \gls{cscg} entries.
 	We choose $\gamma_{\text{D}}=2.6$, $\gamma_{\text{F}}=2.4$, $\gamma_{\text{B}}=2$, and $\kappa_{\text{D}}=\kappa_{\text{F}}=\kappa_{\text{B}}=5$ for direct, forward and backward links.
-	The finite decision threshold domain $\mathcal{T}$ is obtained by $b$-bit uniform discretization over the critical interval defined by the confidence bounds of edge hypotheses (i.e., lower bound of $\mathcal{H}_1$ and upper bound of $\mathcal{H}_L$) with confidence $1-\varepsilon$, and we choose $b=9$ and $\varepsilon=\num{e-3}$.
+	The finite decision threshold domain $\mathcal{T}$ is obtained by $b$-bit uniform discretization over the critical interval defined by the confidence bounds of edge hypotheses (i.e., lower bound of $\mathcal{H}_1$ and upper bound of $\mathcal{H}_L$) with confidence $1-\epsilon$, and we choose $b=9$ and $\epsilon=\num{e-3}$.
 	All achievable rate points/regions are averaged over \num{1000} channel realizations.
 
 	\begin{subsection}{Evaluation of Proposed Algorithms}
@@ -933,10 +933,10 @@
 			During backscatter detection, the primary symbols $s[1],\ldots,s[n]$ can be viewed as a spreading code, and the receiver employs \gls{mrc} over $N$ primary blocks.
 			The total achievable for nodes with equiprobable inputs is \cite{Wang2014a}
 			\begin{equation}
-				I_{\text{B}}(x_{\mathcal{K}};\hat{y}_{\text{\gls{sr}}}) = K \log M - \frac{\epsilon}{M^K},
+				I_{\text{B}}(x_{\mathcal{K}};\hat{y}^{\text{\gls{sr}}}) = K \log M - \frac{\iota}{M^K},
 			\end{equation}
-			where $\epsilon \triangleq \sum_{m_{\mathcal{K}}} \mathbb{E}_{\hat{v}} \log \sum_{m_{\mathcal{K}}'} \exp ( - {\lvert x_{m_{\mathcal{K}}} - x_{m_{\mathcal{K}}'} + \hat{v} \rvert^2}/{2 \sigma^2} )$ and $\hat{v} \sim \mathcal{CN}(0,\sigma_v^2/N)$.
-			% For a sufficiently large $N$, $\epsilon$ is negligible and the total backscatter rate approaches $K \log M$.
+			where $\iota \triangleq \sum_{m_{\mathcal{K}}} \mathbb{E}_{\hat{v}} \log \sum_{m_{\mathcal{K}}'} \exp ( - {\lvert x_{m_{\mathcal{K}}} - x_{m_{\mathcal{K}}'} + \hat{v} \rvert^2}/{2 \sigma^2} )$ and $\hat{v} \sim \mathcal{CN}(0,\sigma_v^2/N)$.
+			% For a sufficiently large $N$, $\iota$ is negligible and the total backscatter rate approaches $K \log M$.
 			\item \emph{\gls{ris}:} Since the backscatter symbol tuple $x_{\mathcal{K}}$ is deterministic, the total backscatter rate is zero and the primary achievable rate becomes a special case of \eqref{eq:primary_mutual_information}
 			\begin{equation}
 				I_{\text{P}}^{\text{\gls{ris}}}(s;y|x_{\mathcal{K}}) = I_{\text{P}}(s;y|x_{m_{\mathcal{K}}^{\star}}) = \log \Bigl(1 + \frac{\lvert \boldsymbol{h}_{\text{E}}^\mathsf{H}(x_{m_{\mathcal{K}}^{\star}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\Bigr),
@@ -955,7 +955,7 @@
 		Fig.~\ref{fg:region_comparison} compares the typical achievable rate region/points of RIScatter and those applications.
 		\emph{First,} we observe both \gls{bbc} and \gls{sr} almost ensure noise-free backscatter transmission when $N$ is sufficiently large.
 		For \gls{bbc} with coherent energy detection, the conditional \gls{pdf} of accumulated receive energy \eqref{eq:energy_distribution_bbc} is more skewed at a large $N$, such that the equivalent \gls{dmtmac} \eqref{eq:dmtmac} becomes more reliable.
-		For \gls{sr} with \gls{sic} and \gls{mrc}, the effective backscatter \gls{snr} is increased by $N$ times and the penalty term $\epsilon$ becomes insignificant.
+		For \gls{sr} with \gls{sic} and \gls{mrc}, the effective backscatter \gls{snr} is increased by $N$ times and the penalty term $\iota$ becomes insignificant.
 		Such an \gls{sr} only guarantees the primary benefit with a large $N$, but decreases the backscatter symbol rate by a factor of $N$ and requires $N$ \gls{sic} processes to decode each backscatter symbol (tuple).
 		\emph{Second,} the average primary rate slightly increases/decreases in the presence of a \gls{ambc}/\gls{ris} node, and the multipath benefit of \gls{sr} is unobvious.
 		This is because the cascaded channel can be orders of magnitude weaker than the direct channel due to the double fading effect.

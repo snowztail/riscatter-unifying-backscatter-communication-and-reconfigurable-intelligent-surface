@@ -144,6 +144,8 @@
 	\thanks{
 		The authors are with the Department of Electrical and Electronic Engineering, Imperial College London, London SW7 2AZ, U.K. (e-mail: \{yang.zhao18, b.clerckx\}@imperial.ac.uk).
 		B. Clerckx is also with Silicon Austria Labs (SAL), Graz A-8010, Austria.
+
+		This article has been submitted for potential publications.
 	}
 }
 \maketitle
@@ -190,10 +192,14 @@
 	RIScatter consists of multiple dispersed or co-located scatter nodes, whose reflection states can be adapted to partially engineer the wireless channel of the existing link and partially modulate their own information onto the scattered wave.
 	This contrasts with \gls{bc} (resp. \gls{ris}) where the reflection pattern is exclusively a function of the information symbol (resp. \gls{csi}).
 	The key principle in RIScatter is to render the probability distribution of reflection states (i.e., backscatter channel input) as a joint function of the information source, \gls{csi}, and \gls{qos} of the coexisting active primary and passive backscatter links.
-	This enables RISscatter to softly bridge, generalize, and outperform \gls{bc} and \gls{ris}; boil down to either under specific input distribution; or evolve in a mixed form for heterogeneous traffic control and universal hardware design.
+	This enables RIScatter to softly bridge, generalize, and outperform \gls{bc} and \gls{ris}; boil down to either under specific input distribution; or evolve in a mixed form for heterogeneous traffic control and universal hardware design.
 	For a single-user multi-node RIScatter network, we characterize the achievable primary-(total-)backscatter rate region by optimizing the input distribution at the nodes, the active beamforming at the \gls{ap}, and the backscatter detection regions at the user.
 	Simulation results demonstrate RIScatter nodes can exploit the additional propagation paths to smoothly transition between backscatter modulation and passive beamforming, and the proposed practical receiver accommodates the double fading, double modulation, and symbol period difference of active-passive coexisting networks without \gls{sic}.
 \end{abstract}
+
+\begin{IEEEkeywords}
+	Backscatter communication, reconfigurable intelligent surface, ambient backscatter communication, symbiotic radio.
+\end{IEEEkeywords}
 
 \glsresetall
 
@@ -210,7 +216,7 @@
 		The concept was further refined by \cite{Liang2020} as \gls{sr} in Fig.~\subref*{fg:sr} that cognitively incorporates \gls{ambc} with existing systems.
 		In a \gls{sr} system, the active transmitter generates \gls{rf} wave carrying primary information, the passive node creates additional propagation path and ride its information over scattered signal, while the cooperative receiver jointly, individually, or sequentially decodes both links.
 		Those \gls{bc} applications employ scatter nodes as pure information sources, and the active primary transmission (if it exists) can be influenced by the randomness of backscatter modulation.
-		On the other hand, \gls{ris} in Fig.~\ref{fg:ris} is a smart planar signal reflector that consists of numerous compact passive elements with adjustable amplitude and phase responses, whose reflection pattern over time is deterministic and adaptively optimized based on \gls{csi}.
+		On the other hand, \gls{ris} in Fig.~\subref*{fg:ris} is a smart planar signal reflector that consists of numerous compact passive elements with adjustable amplitude and phase responses, whose reflection pattern over time is deterministic and adaptively optimized based on \gls{csi}.
 		\gls{ris} smartly reflects the surrounding \gls{rf} waves to customize the wireless propagation environment for signal enhancement, interference suppression, scattering enrichment and non-line-of-sight bypassing \cite{Wu2021b}.
 		In summary, \gls{mbc}/\gls{bbc} (resp. \gls{ris}) involves a \emph{single} passive backscatter (resp. active primary) link where the passive device modulates information (resp. enhances propagation) and the active device generates carrier wave (resp. modulated signal).
 		On the other hand, \gls{ambc} (resp. \gls{sr}) involves \emph{coexisting} active primary and passive backscatter links in a competitive (resp. collaborative) relationship.
@@ -1015,7 +1021,7 @@
 			\begin{itemize}
 				\item \emph{Marginalization:} Marginal probability distributions;
 				\item \emph{Decomposition:} Normalized rank-\num{1} \gls{cp} decomposition tensors by \texttt{Tensor Toolbox} \cite{Bader2022};
-				\item \emph{Randomization:} Gaussian randomization-based exhaustive search with the guidance of correlation matrix \cite{Calvo2010}.
+				\item \emph{Randomization:} Gaussian randomization with the guidance of correlation matrix \cite{Calvo2010}.
 				% guided by correlation matrix \cite{Calvo2010}.
 			\end{itemize}
 

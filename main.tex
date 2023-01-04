@@ -308,9 +308,9 @@
 		3) backscatter \emph{symbol period} is longer than primary due to the load switching constraint.
 		% ! double modulation, double fading, symbol period difference
 		The second property motivated \cite{Long2020a,Liang2020,Guo2019b,Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022} to view \gls{sr} as a multiplicative \gls{noma} and perform \gls{sic} from primary to backscatter link.
-		During primary decoding, the randomness of backscatter modulation can be modelled as channel uncertainty or multiplicative interference when the backscatter-over-primary symbol period ratio $N$ is large or small\footnote{For state-of-the-art low-power \gls{rfid} tags, the load-switching speed usually varies between \num{100}s of \unit{\kHz} to \num{10}s of \unit{\MHz} \cite{Torres2021}, corresponding to a typical $N$ between \num{10} and \num{1000}.}.
+		During primary decoding, the randomness of backscatter modulation can be modelled as either channel uncertainty or multiplicative interference, when the spreading factor (i.e., backscatter-over-primary symbol period ratio) $N$ is large or small, respectively\footnote{For state-of-the-art low-power \gls{rfid} tags, the load-switching speed usually varies between \num{100}s of \unit{\kHz} to \num{10}s of \unit{\MHz} \cite{Torres2021}, corresponding to a typical spreading factor between \num{10} and \num{1000}.}.
 		Such a \gls{sic} receiver is operation-intensive and \gls{csi}-sensitive because it involves $N$ re-encoding, precoding, subtraction together with a time-domain \gls{mrc} to decode each backscatter symbol.
-		When $N$ is sufficiently large (i.e., commensal \gls{sr}), the average primary achievable rate under semi-coherent detection\footnote{In this paper, semi-coherent detection refers to the primary/backscatter decoding based on known \gls{csi} and unknown backscatter/primary symbols.} asymptotically approaches its coherent counterpart, and both links may be decoded in an interference-free manner \cite{Long2020a}.
+		When the spreading factor is sufficiently large (i.e., commensal \gls{sr}), the average primary achievable rate under semi-coherent detection\footnote{In this paper, semi-coherent detection refers to the primary/backscatter decoding based on known \gls{csi} and unknown backscatter/primary symbols.} asymptotically approaches its coherent counterpart, and both links may be decoded in an interference-free manner \cite{Long2020a}.
 		On the other hand, efficient backscatter multiple access design remains an open issue for \gls{bc}.
 		\cite{Xu2021a} proposed a \gls{noma}-based \gls{sr} where the \gls{sic} order depends on the backscatter channel strength, but the performance deteriorates fast as the number of nodes increases.
 		\gls{tdma}-based \gls{sr} was also considered in \cite{Yang2021a} where each node transmits information during its dedicated slot and harvests energy otherwise.
@@ -348,7 +348,7 @@
 		Specifically, the decoding of each backscatter symbol requires $N$ re-encoding, precoding, subtraction together with a time-domain \gls{mrc}, which can be operation-intensive and \gls{csi}-sensitive.
 		In contrast, the proposed RIScatter receiver semi-coherently decodes the backscatter symbol from the accumulated receive energy, re-encodes to recover the exact reflection pattern, and combine it with relevant \gls{csi} to determine the transmitter-scatter-receiver path response.
 		Thanks to the double modulation and symbol period difference, the backscatter symbol can be modelled within primary channel (similar to \gls{ris}) rather than being re-precoded and cancelled, and the semi-coherent energy-based backscatter detection indeed becomes part of primary channel training.
-		The strategy is suitable for arbitrary primary sampling rate and backscatter load-switching speed (i.e., arbitrary $N$).
+		The strategy is suitable for arbitrary primary sampling rate and backscatter load-switching speed (i.e., arbitrary spreading factor).
 		This is the first paper to consider such a sequential backscatter-primary decoding and treat semi-coherent backscatter detection as part of primary channel training.
 
 		\emph{Third,} we address the second challenge by considering a specific scenario where multiple co-located/dispersed RIScatter nodes ride over an active point-to-point \gls{miso} transmission to perform backscatter modulation and dynamic passive beamforming towards a nearby user.
@@ -463,6 +463,7 @@
 			\caption{
 				Reflection state distribution and reflection pattern over time of \gls{bc}, \gls{ris}, and RIScatter.
 				``PB'' means primary block and ``BB'' means backscatter block.
+				Spreading factor is 2 in this example.
 			}
 			\label{fg:scatter_comparison}
 		\end{figure}
@@ -502,7 +503,7 @@
 		It enjoys a three-fold benefit compared to conventional primary-backscatter decoding with \gls{sic}, namely
 		1) reduces the re-encoding frequencies to $1/N$;
 		2) requires no re-precoding, cancellation, or \gls{mrc};
-		3) preserves backscatter modulation and passive beamforming at smaller $N$ for potentially higher backscatter throughput.
+		3) preserves backscatter modulation and passive beamforming at smaller spreading factors for potentially higher backscatter throughput.
 	\end{subsection}
 
 
@@ -520,7 +521,7 @@
 		In the primary point-to-point system, the \gls{ap} transmits information to the user over the multipath channel enhanced by RIScatter nodes.
 		In the backscatter multiple access system, the \gls{ap} and user become carrier emitter and backscatter reader, and the RIScatter nodes modulate over the scattered \gls{rf} signals.
 		For simplicity, we consider a quasi-static block fading model and focus on a specific block where all \gls{csi} remain constant.
-		Without loss of generality, let the backscatter-over-primary symbol period ratio $N$ be a positive integer.
+		Without loss of generality, let the spreading factor $N$ be a positive integer.
 		We also omit the signal reflected by two or more times and ignore the multipath propagation time difference.
 		Denote the \gls{ap}-user direct channel as $\boldsymbol{h}_{\text{D}}^\mathsf{H} \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-node $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\text{F},k}^\mathsf{H} \in \mathbb{C}^{1 \times Q}$, the node $k$-user backward channel as $h_{\text{B},k}$, and the cascaded \gls{ap}-node $k$-user channel as $\boldsymbol{h}_{\text{C},k}^\mathsf{H} \triangleq h_{\text{B},k} \boldsymbol{h}_{\text{F},k}^\mathsf{H} \in \mathbb{C}^{1 \times Q}$.
 		Let $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ be the coded backscatter symbol of node $k$ and $x_{\mathcal{K}} \triangleq (x_1,\ldots,x_K)$ be the backscatter symbol tuple of all nodes.
@@ -951,10 +952,10 @@
 		\end{figure}
 
 		Fig.~\ref{fg:region_comparison} compares the typical achievable rate region/points of RIScatter and above.
-		\emph{First,} we observe both \gls{bbc} and \gls{sr} almost ensure noise-free backscatter transmission when $N$ is sufficiently large.
+		\emph{First,} we observe both \gls{bbc} and \gls{sr} almost ensure noise-free backscatter transmission when the spreading factor $N$ is sufficiently large.
 		For \gls{bbc} with coherent energy detection, the conditional \gls{pdf} of accumulated receive energy \eqref{eq:energy_distribution_bbc} is more skewed at a large $N$, such that the equivalent \gls{dmtmac} \eqref{eq:dmtmac} has lower error probabilities.
 		For \gls{sic}-based \gls{sr}, the effective backscatter \gls{snr} is increased by $N$ times and the penalty term $\iota$ becomes insignificant.
-		However, the primary rate is only maintained at a very large $N$, which significantly constrains the backscatter \emph{throughput}.
+		However, the primary rate is only maintained at a very large spreading factor, which significantly constrains the backscatter \emph{throughput}.
 		\emph{Second,} the average primary rate slightly increases/decreases in the presence of a \gls{ambc}/\gls{ris} node, and the multipath benefit of \gls{sr} is unobvious.
 		This is because the cascaded channel can be orders of magnitude weaker than the direct channel due to the double fading effect.
 		\gls{ris} always ensures constructive superposition of direct and scattered components, while \gls{sr} only creates a quasi-static rich-scattering environment that \emph{stochastically} enhances the average primary rate.
@@ -963,7 +964,7 @@
 		In terms of maximum primary achievable rate, RIScatter coincides with \gls{ris} and outperforms the others with passive beamforming provided by deterministic reflection pattern.
 		On the other hand, for a large $N$, the maximum backscatter achievable rate of RIScatter is higher than \gls{ambc} but lower than \gls{bbc} and \gls{sr}.
 		This is because both RIScatter and \gls{ambc} (resp. \gls{bbc} and \gls{sr}) employ semi-coherent (resp. coherent) energy detection, while RIScatter with adaptive channel coding can achieve higher backscatter rate than \gls{ambc} with equiprobable inputs.
-		Importantly, such a practical RIScatter detection is feasible for arbitrary $N$, which unleashes the potential of fast-switching nodes.
+		Importantly, such a practical RIScatter detection is feasible for arbitrary spreading factor, which unleashes the potential of fast-switching nodes.
 		% , and using a fast-switching node with smaller $N$ can increase the backscatter throughput per unit time while preserving the dynamic passive beamforming gain on the primary link.
 	\end{subsection}
 
@@ -1090,7 +1091,7 @@
 					\input{assets/simulation/region_txs.tex}
 				}
 			}
-			\subfloat[Symbol Period Ratio\label{fg:region_duration}]{
+			\subfloat[Spreading Factor\label{fg:region_duration}]{
 				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_duration.tex}
 				}
@@ -1137,13 +1138,13 @@
 			It emphasizes the importance of multi-antenna RIScatter systems and demonstrate the effectiveness of the proposed \gls{pgd} design.
 		\end{subsubsection}
 
-		\begin{subsubsection}{Symbol Period Ratio}
-			Fig.~\subref*{fg:region_duration} presents how symbol period ratio $N$ affects the achievable rate region, where the unit of total backscatter rate is bits per primary block (to indicate throughput).
+		\begin{subsubsection}{Spreading factor}
+			Fig.~\subref*{fg:region_duration} presents how the spreading factor $N$ affects the achievable rate region, where the unit of total backscatter rate is bits per primary block (to indicate throughput).
 			Apparently, using a very large $N$ can severely constrain the backscatter throughput, since the gain in energy certainty (by law of large numbers) cannot withstand the loss in gross rate.
 			As $N \to \infty$, RIScatter nodes boil down to \gls{ris} elements with fixed reflection pattern during whole channel block and the total backscatter rate approaches \num{0}.
-			On the other hand, when $N$ is too small, the equivalent \gls{dmtmac} \eqref{eq:dmtmac} has very high error probabilities and the energy detection can be unreliable.
+			On the other hand, when $N$ is too small, the equivalent \gls{dmtmac} \eqref{eq:dmtmac} has very high error probabilities and the energy detection can thus be unreliable.
 			It explains the observation that $N=10$ provides lower backscatter achievable rate than $N=20$, although nodes are encoding at higher gross rate.
-			Therefore, we conclude the design of symbol period ratio $N$ in RIScatter systems should account for multiple factors (e.g., data rate requirements, physical constraints at the nodes, and signal processing capability at the user).
+			Therefore, we conclude the design of spreading factor $N$ in RIScatter systems should account for multiple factors (e.g., data rate requirements, load switching constraints at the nodes, and signal processing capability at the user).
 		\end{subsubsection}
 
 		\begin{subsubsection}{Average Noise Power}

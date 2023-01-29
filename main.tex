@@ -215,7 +215,7 @@
 		Cooperative \gls{ambc} was then proposed where a co-located receiver decodes both active primary and passive backscatter links, and the rate and error performance are evaluated for various detection schemes \cite{Yang2018}.
 		The concept was further refined by \cite{Liang2020} as \gls{sr} in Fig.~\subref*{fg:sr} that cognitively incorporates \gls{ambc} with existing systems.
 		In a \gls{sr} system, the active transmitter generates \gls{rf} wave carrying primary information, the passive node creates additional propagation path and ride its information over scattered signal, while the cooperative receiver jointly, individually, or sequentially decodes both links.
-		Those \gls{bc} applications employ scatter nodes as pure information sources, and the active primary transmission (if it exists) can be influenced by the randomness of backscatter modulation.
+		Those \gls{bc} applications\footnote{In this paper, \gls{bc} refers to \gls{mbc}, \gls{bbc}, \gls{ambc} and \gls{sr}.} employ scatter nodes as pure information sources, and the active primary transmission (if it exists) can be influenced by the randomness of backscatter modulation.
 		On the other hand, \gls{ris} in Fig.~\subref*{fg:ris} is a smart planar signal reflector that consists of numerous compact passive elements with adjustable amplitude and phase responses, whose reflection pattern over time is deterministic and adaptively optimized based on \gls{csi}.
 		\gls{ris} smartly reflects the surrounding \gls{rf} waves to customize the wireless propagation environment for signal enhancement, interference suppression, scattering enrichment and non-line-of-sight bypassing \cite{Wu2021b}.
 		In summary, \gls{mbc}/\gls{bbc} (resp. \gls{ris}) involves a \emph{single} passive backscatter (resp. active primary) link where the passive device modulates information (resp. enhances propagation) and the active device generates carrier wave (resp. modulated signal).
@@ -461,9 +461,9 @@
 				\label{fg:time_structure}
 			}
 			\caption{
-				Reflection state distribution and reflection pattern over time of \gls{bc}, \gls{ris}, and RIScatter.
-				``PB'' means primary block and ``BB'' means backscatter block.
-				Spreading factor is 2 in this example.
+				Reflection state distribution and reflection pattern over time of scattering applications.
+				``PB'', ``BB'', and ``CB'' means primary block, backscatter block, and channel block, respectively.
+				\gls{bc} employs all possible states only as information codewords, \gls{ris} treats them only as beamformer codewords, and RIScatter simultaneously exploits both benefits.
 			}
 			\label{fg:scatter_comparison}
 		\end{figure}

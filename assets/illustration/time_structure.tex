@@ -1,52 +1,60 @@
-\begin{tikzpicture}[font=\large]
-	% BC/AmBC/SR
-	\foreach \x in {0,...,3}{
-			\draw[blue,fill=blue!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
+\begin{tikzpicture}[font=\small]
+	% MBC/BBC
+	\foreach \x in {0}{
+			\draw[blue,ultra thick,postaction={pattern=north west lines},pattern color=.] (2*\x,4) rectangle ++(2,0.25);
 		}
-	\foreach \x in {4,...,7}{
-			\draw[blue,fill=blue!30!white,postaction={pattern=north east lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
+	\foreach \x in {1}{
+			\draw[blue,ultra thick,postaction={pattern=north east lines},pattern color=.] (2*\x,4) rectangle ++(2,0.25);
 		}
-	\foreach \x in {8,...,11}{
-			\draw[blue,fill=blue!30!white,postaction={pattern=vertical lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
+	\foreach \x in {2}{
+			\draw[blue,ultra thick,postaction={pattern=vertical lines},pattern color=.] (2*\x,4) rectangle ++(2,0.25);
 		}
-	\foreach \x in {12,...,15}{
-			\draw[blue,fill=blue!30!white,postaction={pattern=horizontal lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
+	\foreach \x in {3}{
+			\draw[blue,ultra thick,postaction={pattern=horizontal lines},pattern color=.] (2*\x,4) rectangle ++(2,0.25);
 		}
+	\draw[latex-latex] (0,4.35) -- (2,4.35) node[above,midway]{BB};
+	\node at (-1.5,4.125) {MBC/BBC};
+
+	% AmBC/SR
+	\foreach \x in {0,...,7}{
+			\draw[teal,fill=teal!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
+		}
+	\foreach \x in {8,...,15}{
+			\draw[teal,fill=teal!30!white,postaction={pattern=vertical lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
+		}
+	\foreach \x in {0,...,1}{
+			\draw[teal,ultra thick] (4*\x,3) rectangle ++(4,0.25);
+		}
+	\draw[latex-latex] (0,3.35) -- (4,3.35) node[above,midway]{BB};
+	\draw[latex-latex] (0,2.9) -- (0.5,2.9) node[below,midway]{PB};
+	\node at (-1.5,3.125) {AmBC/SR};
 
 	% RIS
 	\foreach \x in {0,...,15}{
 			\draw[red,fill=red!30!white,postaction={pattern=north east lines},pattern color=.] (0.5*\x,2) rectangle ++(0.5,0.25);
 		}
+	\draw[red,ultra thick] (0,2) rectangle ++(8,0.25);
+	\draw[latex-latex] (0,2.35) -- (8,2.35) node[above,midway]{CB};
+	\draw[latex-latex] (0,1.9) -- (0.5,1.9) node[below,midway]{PB};
+	\node at (-1.5,2.125) {RIS};
 
 	% RIScatter
-	\foreach \x in {0,...,1}{
-			\draw[brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.25);
-		}
-	\foreach \x in {2,...,7}{
+	\foreach \x in {0,...,7,12,13,...,15}{
 			\draw[brown,fill=brown!30!white,postaction={pattern=north east lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.25);
 		}
 	\foreach \x in {8,...,11}{
-			\draw[brown,fill=brown!30!white,postaction={pattern=vertical lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.25);
+			\draw[brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.25);
 		}
-	\foreach \x in {12,...,15}{
-			\draw[brown,fill=brown!30!white,postaction={pattern=north east lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.25);
+	\foreach \x in {0,...,3}{
+			\draw[brown,ultra thick] (2*\x,1) rectangle ++(2,0.25);
 		}
+	\draw[latex-latex] (0,1.35) -- (2,1.35) node[above,midway]{BB};
+	\draw[latex-latex] (0,0.9) -- (0.5,0.9) node[below,midway]{PB};
 
-	\foreach \x in {1,...,7}{
-			% \draw[dotted] (\x,1) -- (\x,3.75);
-			\draw[dotted] (\x,1) -- (\x,3.25);
-		}
-	\draw[latex-latex] (0,1.4) -- (0.5,1.4) node[above,midway,yshift=1]{PB};
-	% \draw[latex-latex] (0,4.1) -- (1,4.1) node[above,midway,yshift=1]{BB};
-	\draw[latex-latex] (0,2.4) -- (1,2.4) node[above,midway,yshift=1]{BB};
-	\draw[latex-latex] (0,3.4) -- (8,3.4) node[above,midway,yshift=1]{Channel Block};
+	\node at (-1.5,1.125) {RIScatter};
 
-	\node at (-2,3.125) {BackCom};
-	\node at (-2,2.125) {RIS};
-	\node at (-2,1.125) {RIScatter};
-
-	\draw [pattern=north west lines](0.15,0) rectangle ++(0.5,0.25) node[xshift=20,yshift=-3.5] {State 1};
-	\draw [pattern=north east lines](2.15,0) rectangle ++(0.5,0.25) node[xshift=20,yshift=-3.5] {State 2};
-	\draw [pattern=vertical lines](4.15,0) rectangle ++(0.5,0.25) node[xshift=20,yshift=-3.5] {State 3};
-	\draw [pattern=horizontal lines](6.15,0) rectangle ++(0.5,0.25) node[xshift=20,yshift=-3.5] {State 4};
+	\draw [pattern=north west lines,ultra thick](0.15,5) rectangle ++(0.5,0.25) node[xshift=20,yshift=-3.5] {State 1};
+	\draw [pattern=north east lines,ultra thick](2.15,5) rectangle ++(0.5,0.25) node[xshift=20,yshift=-3.5] {State 2};
+	\draw [pattern=vertical lines,ultra thick](4.15,5) rectangle ++(0.5,0.25) node[xshift=20,yshift=-3.5] {State 3};
+	\draw [pattern=horizontal lines,ultra thick](6.15,5) rectangle ++(0.5,0.25) node[xshift=20,yshift=-3.5] {State 4};
 \end{tikzpicture}

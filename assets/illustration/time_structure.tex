@@ -20,7 +20,7 @@
 			\draw[teal,fill=teal!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
 		}
 	\foreach \x in {8,...,15}{
-			\draw[teal,fill=teal!30!white,postaction={pattern=vertical lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
+			\draw[teal,fill=teal!30!white,postaction={pattern=north east lines},pattern color=.] (0.5*\x,3) rectangle ++(0.5,0.25);
 		}
 	\foreach \x in {0,...,1}{
 			\draw[teal,ultra thick] (4*\x,3) rectangle ++(4,0.25);
@@ -39,11 +39,11 @@
 	\node at (-1.5,2.125) {RIS};
 
 	% RIScatter
-	\foreach \x in {0,...,7,12,13,...,15}{
-			\draw[brown,fill=brown!30!white,postaction={pattern=north east lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.25);
-		}
-	\foreach \x in {8,...,11}{
+	\foreach \x in {0,...,3}{
 			\draw[brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.25);
+		}
+	\foreach \x in {4,...,15}{
+			\draw[brown,fill=brown!30!white,postaction={pattern=north east lines},pattern color=.] (0.5*\x,1) rectangle ++(0.5,0.25);
 		}
 	\foreach \x in {0,...,3}{
 			\draw[brown,ultra thick] (2*\x,1) rectangle ++(2,0.25);

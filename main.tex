@@ -929,8 +929,8 @@
 				\label{eq:intermediate_signal}
 			\end{equation}
 			which only involves noise uncertainty under hypothesis $\mathcal{H}_{m_{\mathcal{K}}}$.
-			During backscatter detection, the primary symbols $s[1],\ldots,s[n]$ can be viewed as a spreading code, and the receiver employs \gls{mrc} over $N$ primary blocks.
-			The total achievable for nodes with equiprobable inputs is \cite{Wang2014a}
+			During backscatter detection, the primary symbols $s[1],\ldots,s[N]$ function as a spreading code and the receiver performs \gls{mrc} on $\hat{y}^{\text{\gls{sr}}}[n]$ over $N$ primary blocks.
+			This essentially formulates a discrete-input continuous-output memoryless channel and the total backscatter achievable rate is maximized with equiprobable inputs as \cite{Ng2006}
 			\begin{equation}
 				I_{\text{B}}(x_{\mathcal{K}};\hat{y}^{\text{\gls{sr}}}) = K \log M - \frac{\iota}{M^K},
 			\end{equation}

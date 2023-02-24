@@ -129,6 +129,7 @@
 \newacronym{zf}{ZF}{Zero-Forcing}
 \newacronym{mmse}{MMSE}{Minimum Mean-Square-Error}
 \newacronym{fpga}{FPGA}{Field-Programmable Gate Array}
+\newacronym{ber}{BER}{Bit Error Rate}
 
 \begin{document}
 % \title{RIScatter: Unifying Backscatter Communication and Reconfigurable Intelligent Surface From a Distribution Perspective}
@@ -145,7 +146,7 @@
 		The authors are with the Department of Electrical and Electronic Engineering, Imperial College London, London SW7 2AZ, U.K. (e-mail: \{yang.zhao18, b.clerckx\}@imperial.ac.uk).
 		B. Clerckx is also with Silicon Austria Labs (SAL), Graz A-8010, Austria.
 
-		This article has been submitted for potential publications.
+		% This article has been submitted for potential publications.
 	}
 }
 \maketitle
@@ -188,89 +189,96 @@
 	% \gls{ris} is a programmable reflector array that adapts the phase shift response to enhance or suppress signal strength in specific directions.
 	\gls{bc} nodes harvest energy from and modulate information over an external electromagnetic wave.
 	\gls{ris} adapts its phase shift response to enhance or attenuate channel strength in specific directions.
-	In this paper, we show how those two seemingly different technologies (and their derivatives) can be unified to leverage their benefits simultaneously into a single architecture called RIScatter.
-	RIScatter consists of multiple dispersed or co-located scatter nodes, whose reflection states can be adapted to partially engineer the wireless channel of the existing link and partially modulate their own information onto the scattered wave.
-	This contrasts with \gls{bc} (resp. \gls{ris}) where the reflection pattern is exclusively a function of the information symbol (resp. \gls{csi}).
-	The key principle in RIScatter is to render the probability distribution of reflection states (i.e., backscatter channel input) as a joint function of the information source, \gls{csi}, and \gls{qos} of the coexisting active primary and passive backscatter links.
-	This enables RIScatter to softly bridge, generalize, and outperform \gls{bc} and \gls{ris}; boil down to either under specific input distribution; or evolve in a mixed form for heterogeneous traffic control and universal hardware design.
-	For a single-user multi-node RIScatter network, we characterize the achievable primary-(total-)backscatter rate region by optimizing the input distribution at the nodes, the active beamforming at the \gls{ap}, and the backscatter detection regions at the user.
-	Simulation results demonstrate RIScatter nodes can exploit the additional propagation paths to smoothly transition between backscatter modulation and passive beamforming, and the proposed practical receiver accommodates the double fading, double modulation, and symbol period difference of active-passive coexisting networks without \gls{sic}.
+	In this paper, we show how those two seemingly different technologies (and their derivatives) can be unified into a single architecture called RIScatter.
+	RIScatter consists of multiple dispersed or co-located scatter nodes, whose reflection states are adapted to partially modulate their own information and partially engineer the wireless channel.
+	% This contrasts with \gls{bc} (resp. \gls{ris}) where the reflection pattern is exclusively a function of the information symbol (resp. \gls{csi}).
+	The key principle is to render the probability distribution of reflection states as a joint function of the information source, \gls{csi}, and \gls{qos} of coexisting active primary and passive backscatter links.
+	This enables RIScatter to softly bridge \gls{bc} and \gls{ris}; boil down to either under specific input distribution; or evolve in a mixed form for heterogeneous traffic control and universal hardware design.
+	% To accommodate the characteristics of active-passive coexisting networks, we propose a practical \gls{sic}-free receiver
+	To reap the benefits of RIScatter, we also propose a co-located \gls{sic}-free receiver that semi-coherently decodes the backscatter information, recovers the reflection pattern, and coherently decodes the primary link.
+	For a single-user multi-node RIScatter network, we characterize the achievable primary-(total-)backscatter rate region by designing the input distribution at scatter nodes, the active beamforming at the \gls{ap}, and the energy detection regions at the user.
+	Simulation results demonstrate RIScatter nodes can exploit the scattered paths to smoothly shift between backscatter modulation and passive beamforming.
 \end{abstract}
 
 \begin{IEEEkeywords}
-	Backscatter communication, reconfigurable intelligent surface, ambient backscatter communication, symbiotic radio.
+	Input distribution design, energy detection, \gls{sic}-free receiver, active-passive coexisting network, backscatter communication, reconfigurable intelligent surface, ambient backscatter communication, symbiotic radio.
 \end{IEEEkeywords}
 
 \glsresetall
 
 \begin{section}{Introduction}
-	\begin{subsection}{Fundamentals}
-		\IEEEPARstart{F}{uture} wireless network is envisioned to provide high throughput, uniform coverage, pervasive connectivity, heterogeneous control, and cognitive intelligence for trillions of portable devices.
-		As a mature low-power communication technique, \gls{bc} separates a conventional transmitter into a \gls{rf} carrier emitter with power-hungry elements (e.g., synthesizer and amplifier) and an information-bearing node with power-efficient components (e.g., harvester and modulator) \cite{Boyer2014}.
-		In particular, the node harvests energy from impinging wave and embeds information over scattered signal, and the backscatter reader can be either co-located or separated with the carrier emitter, known as \gls{mbc} in Fig.~\subref*{fg:mbc} and \gls{bbc} in Fig.~\subref*{fg:bbc}.
-		Relevant applications such as \gls{rfid} \cite{Dobkin2012,Landt2005} and passive sensor network \cite{Vannucci2008,Assimonis2016} have been extensively researched, standardized, and commercialized in the era of \gls{ioe}.
-		However, conventional \gls{bc} nodes only respond when externally inquired by a nearby reader.
-		To tackle this, \cite{Liu2013b} proposed \gls{ambc} where battery-free nodes recycle ambient signals (e.g., radio, television and Wi-Fi) to harvest energy and establish connection in between.
-		As shown in Fig.~\subref*{fg:ambc}, it eliminates the need of dedicated power supply, carrier emitter and frequency spectrum for \gls{bc}, but the decoding is subject to a strong interference from the primary (legacy) link.
-		Cooperative \gls{ambc} was then proposed where a co-located receiver decodes both active primary and passive backscatter links, and the rate and error performance are evaluated for various detection schemes \cite{Yang2018}.
-		The concept was further refined by \cite{Liang2020} as \gls{sr} in Fig.~\subref*{fg:sr} that cognitively incorporates \gls{ambc} with existing systems.
-		In a \gls{sr} system, the active transmitter generates \gls{rf} wave carrying primary information, the passive node creates additional propagation path and ride its information over scattered signal, while the cooperative receiver jointly, individually, or sequentially decodes both links.
-		Those \gls{bc} applications\footnote{In this paper, \gls{bc} refers to \gls{mbc}, \gls{bbc}, \gls{ambc} and \gls{sr}.} employ scatter nodes as pure information sources, and the active primary transmission (if it exists) can be influenced by the randomness of backscatter modulation.
-		On the other hand, \gls{ris} in Fig.~\subref*{fg:ris} is a smart planar signal reflector that consists of numerous compact passive elements with adjustable amplitude and phase responses, whose reflection pattern over time is deterministic and adaptively optimized based on \gls{csi}.
-		\gls{ris} smartly reflects the surrounding \gls{rf} waves to customize the wireless propagation environment for signal enhancement, interference suppression, scattering enrichment and non-line-of-sight bypassing \cite{Wu2021b}.
-		In summary, \gls{mbc}/\gls{bbc} (resp. \gls{ris}) involves a \emph{single} passive backscatter (resp. active primary) link where the passive device modulates information (resp. enhances propagation) and the active device generates carrier wave (resp. modulated signal).
-		On the other hand, \gls{ambc} (resp. \gls{sr}) involves \emph{coexisting} active primary and passive backscatter links in a competitive (resp. collaborative) relationship.
-		In \gls{ambc}, the backscatter link only needs to know the basic information (e.g., operating frequency) of the primary link, while the primary link may be completely unaware of the backscatter link.
-		In \gls{sr}, relevant \gls{csi} is exploited at the co-located receiver for cooperative decoding, and may also be exploited at the primary transmitter for cooperative active beamforming.
-		A comparison of scattering applications is summarized in Table~\ref{tb:scattering_applications}.
+	% \begin{subsection}{Fundamentals}
+	\IEEEPARstart{F}{uture} wireless network is envisioned to provide high throughput, uniform coverage, pervasive connectivity, heterogeneous control, and cognitive intelligence for trillions of low-power devices.
+	% As a mature low-power communication technique,
+	\gls{bc} separates a transmitter into a \gls{rf} carrier emitter with power-hungry elements (e.g., synthesizer and amplifier) and an information-bearing node with power-efficient components (e.g., harvester and modulator) \cite{Boyer2014}.
+	% In particular, the node harvests energy from impinging wave and embeds information over scattered signal, and
+	The receiver (reader) can be either co-located or separated with the carrier emitter, known as \gls{mbc} and \gls{bbc} in Fig.~\subref*{fg:mbc} and \subref*{fg:bbc}, respectively.
+	Relevant applications such as \gls{rfid} \cite{Dobkin2012,Landt2005} and passive sensor network \cite{Vannucci2008,Assimonis2016} have been extensively researched, standardized, and commercialized to embrace \gls{ioe}.
+	However, conventional backscatter nodes only respond when externally inquired by a nearby reader.
+	% To tackle this, \cite{Liu2013b} proposed \gls{ambc} where battery-free nodes recycle ambient signals (e.g., radio, television and Wi-Fi) to harvest energy and establish connection in between.
+	\gls{ambc} in Fig.~\subref*{fg:ambc} was proposed a decade ago where battery-free nodes recycle ambient signals (e.g., radio, television and Wi-Fi) to harvest energy and establish connections \cite{Liu2013b}.
+	It does not require dedicated power source, carrier emitter, or frequency spectrum, but the backscatter decoding is subject to the strong interference from the primary (legacy) link.
+	% Cooperative \gls{ambc} that employs a co-located receiver to decode both coexisting links was considered in \cite{Yang2018}, and the rate and error performance are evaluated for various detection schemes.
+	To tackle this, cooperative \gls{ambc} \cite{Yang2018} employs a co-located receiver to decode both coexisting links and the concept was further refined as \gls{sr} in Fig.~\subref*{fg:sr} \cite{Liang2020}.
+	% Specifically, the active transmitter generates \gls{rf} wave carrying primary information, the passive node ride extra information over the scattered signal, and the cooperative receiver jointly, individually, or sequentially decodes both links.
+	Specifically, the active transmitter generates \gls{rf} wave carrying primary information, the passive node creates a rich-scattering environment and rides its own information, and the co-located receiver cooperatively decodes both links.
+	In those \gls{bc} applications, the scatter node is considered as an \emph{information source} and the reflection pattern depends exclusively on the information symbol.
+	% Those \gls{bc} applications employ scatter nodes as pure information sources, and the active primary transmission (if it exists) can be influenced by the randomness of backscatter modulation.
+	On the other hand, \gls{ris} in Fig.~\subref*{fg:ris} is a smart signal reflector with numerous passive elements of adjustable phase shifts.
+	It customizes the wireless environment for signal enhancement, interference suppression, scattering enrichment, and/or non-line-of-sight bypassing \cite{Wu2021b}.
+	Each \gls{ris} element is considered as a \emph{channel adaptor} and the reflection pattern depends exclusively on the \gls{csi}.
+	% In summary, \gls{mbc}/\gls{bbc} (resp. \gls{ris}) involves a \emph{single} passive backscatter (resp. active primary) link where the passive device modulates information (resp. enhances propagation) and the active device generates carrier wave (resp. modulated signal).
+	% On the other hand, \gls{ambc} (resp. \gls{sr}) involves \emph{coexisting} active primary and passive backscatter links in a competitive (resp. collaborative) relationship.
+	% In \gls{ambc}, the backscatter link only needs to know the basic information (e.g., operating frequency) of the primary link, while the primary link may be completely unaware of the backscatter link.
+	% In \gls{sr}, relevant \gls{csi} is exploited at the co-located receiver for cooperative decoding, and may also be exploited at the primary transmitter for cooperative active beamforming.
 
-		\begin{figure}[!t]
-			\centering
-			\subfloat[\gls{mbc}]{
-				\resizebox{0.48\linewidth}{!}{
-					\input{assets/illustration/mbc.tex}
-				}
-				\label{fg:mbc}
+	\begin{figure}[!t]
+		\centering
+		\subfloat[\gls{mbc}]{
+			\resizebox{0.48\linewidth}{!}{
+				\input{assets/illustration/mbc.tex}
 			}
-			\subfloat[\gls{bbc}]{
-				\resizebox{0.48\linewidth}{!}{
-					\input{assets/illustration/bbc.tex}
-				}
-				\label{fg:bbc}
+			\label{fg:mbc}
+		}
+		\subfloat[\gls{bbc}]{
+			\resizebox{0.48\linewidth}{!}{
+				\input{assets/illustration/bbc.tex}
 			}
-			\\
-			\subfloat[\gls{ambc}]{
-				\resizebox{0.48\linewidth}{!}{
-					\input{assets/illustration/ambc.tex}
-				}
-				\label{fg:ambc}
+			\label{fg:bbc}
+		}
+		\\
+		\subfloat[\gls{ambc}]{
+			\resizebox{0.48\linewidth}{!}{
+				\input{assets/illustration/ambc.tex}
 			}
-			\subfloat[\gls{sr}]{
-				\resizebox{0.48\linewidth}{!}{
-					\input{assets/illustration/sr.tex}
-				}
-				\label{fg:sr}
+			\label{fg:ambc}
+		}
+		\subfloat[\gls{sr}]{
+			\resizebox{0.48\linewidth}{!}{
+				\input{assets/illustration/sr.tex}
 			}
-			\\
-			\subfloat[\gls{ris}]{
-				\resizebox{0.48\linewidth}{!}{
-					\input{assets/illustration/ris.tex}
-				}
-				\label{fg:ris}
+			\label{fg:sr}
+		}
+		\\
+		\subfloat[\gls{ris}]{
+			\resizebox{0.48\linewidth}{!}{
+				\input{assets/illustration/ris.tex}
 			}
-			\subfloat[RIScatter]{
-				\resizebox{0.48\linewidth}{!}{
-					\input{assets/illustration/riscatter.tex}
-				}
-				\label{fg:riscatter}
+			\label{fg:ris}
+		}
+		\subfloat[RIScatter]{
+			\resizebox{0.48\linewidth}{!}{
+				\input{assets/illustration/riscatter.tex}
 			}
-			\caption{
-				Illustration of scattering applications.
-				For each, the blue flow(s) constitute the active primary link while the magenta/green flow denotes the passive backscatter link.
-			}
-			\label{fg:scatter_illustration}
-		\end{figure}
-	\end{subsection}
+			\label{fg:riscatter}
+		}
+		\caption{
+			Illustration of scattering applications.
+			The blue flow(s) constitutes the primary link while the magenta/green flow denotes the backscatter link.
+		}
+		\label{fg:scatter_illustration}
+	\end{figure}
+	% \end{subsection}
 
 	\begin{table*}[!t]
 		\caption{Comparison of Scattering Applications}
@@ -280,103 +288,120 @@
 		\begin{tabularx}{\textwidth}{CCCCCC}
 			\toprule
 			\hiderowcolors
-			                                                        & \gls{mbc}/\gls{bbc} & \gls{ambc}                              & \gls{sr}                                              & \gls{ris}           & RIScatter                                                               \\ \midrule
+			                                       & \gls{mbc}/\gls{bbc} & \gls{ambc}                  & \gls{sr} (large spreading factor)               & \gls{ris}           & RIScatter                                                   \\ \midrule
 			\showrowcolors
-			% Coexisting link(s)                                              & 1                   & 2 (competitive)             & 2 (collaborative)                                     & 1                   & 2 (collaborative)                                                       \\
-			Information link(s)                                     & Passive backscatter & Active-passive coexisting (competitive) & Active-passive coexisting (collaborative)             & Active primary      & Active-passive coexisting (collaborative)                               \\
-			% Primary/Backscatter modulation                                  & No/Yes              & Yes/Yes                     & Yes/Yes                                               & Yes/No              & Yes/Yes                                                                 \\
-			Primary impact on backscatter detection                 & Carrier             & Multiplicative interference             & Spreading code or multiplicative interference         & ---                 & Energy uncertainty                                                      \\
-			Backscatter impact on primary detection                 & ---                 & Multiplicative interference             & \gls{csi} uncertainty or multiplicative interference  & Passive beamforming & Dynamic passive beamforming                                             \\
-			Collaborative devices based on \gls{csi}                & ---                 & ---                                     & Co-located receiver (potentially primary transmitter) & ---                 & Primary transmitter, scatter nodes, and co-located receiver             \\
-			Cooperative decoding strategy                           & ---                 & No                                      & Usually \gls{sic} from primary to backscatter         & ---                 & No \gls{sic}, backscatter detection as part of primary channel training \\
-			Primary detection                                       & ---                 & Semi-coherent                           & Semi-coherent                                         & Coherent            & Coherent                                                                \\
-			Backscatter detection                                   & Coherent            & Semi-coherent                           & Coherent                                              & ---                 & Semi-coherent                                                           \\
-			Reflection pattern over time depends on                 & Information source  & Information source                      & Information source                                    & \gls{csi}           & Information source, \gls{csi}, and \gls{qos}                            \\
-			Reflection state (i.e., backscatter input) distribution & Equiprobable        & Equiprobable                            & Equiprobable or Gaussian                              & Degenerate          & Flexible                                                                \\
-			Load-switching speed                                    & Fast                & Fast or slow                            & Very slow                                             & Quasi-static        & Arbitrary                                                               \\ \bottomrule
+			Information link(s)                    & Backscatter         & Coexisting                  & Coexisting                                      & Primary             & Coexisting                                                  \\
+			Primary signal on backscatter decoding & Carrier             & Multiplicative interference & Spreading code                                  & ---                 & Energy uncertainty                                          \\
+			Backscatter signal on primary decoding & ---                 & Multiplicative interference & \gls{csi} uncertainty                           & Passive beamforming & Dynamic passive beamforming                                 \\
+			Cooperative devices                    & ---                 & No                          & Primary transmitter and co-located receiver     & ---                 & Primary transmitter, scatter nodes, and co-located receiver \\
+			Sequential decoding                    & ---                 & No                          & Primary-to-backscatter, \gls{sic} and \gls{mrc} & ---                 & Backscatter-to-primary, no \gls{sic}/\gls{mrc}              \\
+			% Primary decoding                        & ---                 & Semi-coherent               & Semi-coherent                                   & Coherent            & Coherent                                                    \\
+			% Backscatter decoding                    & Coherent            & Semi-coherent               & Coherent                                        & ---                 & Semi-coherent                                               \\
+			Reflection pattern depends on          & Information source  & Information source          & Information source                              & \gls{csi}           & Information source, \gls{csi}, and \gls{qos}                \\
+			Reflection state distribution          & Equiprobable        & Equiprobable                & Equiprobable or Gaussian                        & Degenerate          & Flexible                                                    \\
+			Load-switching speed                   & Fast                & Slow                        & Slow                                            & Quasi-static        & Arbitrary                                                   \\ \bottomrule
 		\end{tabularx}
 	\end{table*}
 
-	\begin{subsection}{Related Works}
-		Similar to \gls{cr}, active-passive coexisting networks can be classified into commensal, parasitic, and competitive relationships, whose instantaneous rates, power schemes, and outage probabilities were acquired in \cite{Guo2019b,Ding2020}.
-		% To evaluate the performance of cooperative receivers, \cite{Yang2018} derived the bit error rates of \gls{ml}, linear and \gls{sic} detectors for flat fading channels, and proposed a low-complexity detector for frequency-selective fading channels.
-		% However, it only considered the case where the primary and backscatter symbols of the same period are perfectly aligned in time.
-		Joint \gls{ml} decoding provides the best error performance but requires prohibitive computational complexity especially for high-order modulations \cite{Yang2018}.
-		Indeed, active-passive coexisting networks have three special and important properties:
-		1) primary and backscatter symbols are superimposed by \emph{double modulation} (i.e., multiplication coding);
-		2) backscatter signal strength is much weaker than primary due to the \emph{double fading} effect;
-		3) backscatter \emph{symbol period} is longer than primary due to the load switching constraint.
-		% ! double modulation, double fading, symbol period difference
-		The second property motivated \cite{Long2020a,Liang2020,Guo2019b,Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022} to view \gls{sr} as a multiplicative \gls{noma} and perform \gls{sic} from primary to backscatter link.
-		During primary decoding, the randomness of backscatter modulation can be modelled as either channel uncertainty or multiplicative interference, when the spreading factor (i.e., backscatter-over-primary symbol period ratio) $N$ is large or small, respectively\footnote{For state-of-the-art low-power \gls{rfid} tags, the load-switching speed usually varies between \num{100}s of \unit{\kHz} to \num{10}s of \unit{\MHz} \cite{Torres2021}, corresponding to a typical spreading factor between \num{10} and \num{1000}.}.
-		Such a \gls{sic} receiver is operation-intensive and \gls{csi}-sensitive because it involves $N$ re-encoding, precoding, subtraction together with a time-domain \gls{mrc} to decode each backscatter symbol.
-		When the spreading factor is sufficiently large (i.e., commensal \gls{sr}), the average primary achievable rate under semi-coherent detection\footnote{In this paper, semi-coherent detection refers to the primary/backscatter decoding based on known \gls{csi} and unknown backscatter/primary symbols.} asymptotically approaches its coherent counterpart, and both links may be decoded in an interference-free manner \cite{Long2020a}.
-		On the other hand, efficient backscatter multiple access design remains an open issue for \gls{bc}.
-		\cite{Xu2021a} proposed a \gls{noma}-based \gls{sr} where the \gls{sic} order depends on the backscatter channel strength, but the performance deteriorates fast as the number of nodes increases.
-		\gls{tdma}-based \gls{sr} was also considered in \cite{Yang2021a} where each node transmits information during its dedicated slot and harvests energy otherwise.
-		It enables adaptive transmission time and reflection ratio design but introduces extra coordination cost.
-		\cite{Vougioukas2019} modifies the load-switching speed to shift the scattered signal to the desired frequency band.
-		This enables backscatter \gls{fdma} at the cost of larger bandwidth and higher power consumption at the scatter nodes.
-		To reduce the coordination cost, \cite{Han2021} proposed a random code-assisted multiple access for \gls{sr} and evaluated the asymptotic \gls{sinr} using random matrix theory.
-		This code-domain solution suffers from the near-far problem and imperfect synchronization, both being severe in \gls{bc}.
+	% \begin{subsection}{Related Works}
+	As a special case of \gls{cr}, active and passive transmissions coexist and interplay in \gls{ambc} and \gls{sr}.
+	Such a coexistence is classified into commensal (overlay), parasitic (underlay), and competitive paradigms, and their achievable rate and outage performance were investigated in \cite{Guo2019b,Ding2020}.
+	For the co-located cooperative receiver, the \gls{ber} performance of \gls{ml}, linear, and \gls{sic} detectors are derived over flat fading channels \cite{Yang2018}.
+	However, the work assumed equal symbol period and perfect synchronization for primary and backscatter links.
+	Importantly, active-passive coexisting networks have three special and important properties:
+	\begin{enumerate}
+		\item Primary and backscatter symbols are superimposed by \emph{double modulation} (i.e., multiplication coding);
+		\item Backscatter signal strength is much weaker than primary due to the \emph{double fading} effect;
+		\item The spreading factor (i.e., backscatter symbol period over primary) is usually large\footnote{The load-switching interval of low-power backscatter modulators is usually \num{0.1} to \qty{10}{\us} \cite{Torres2021}, accounting for a typical spreading factor between \num{10} and \num{e3}.}.
+	\end{enumerate}
+	The second property motivated \cite{Long2020a,Liang2020,Guo2019b,Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022} to view \gls{sr} as a multiplicative \gls{noma} and perform \gls{sic} from primary to backscatter link.
+	During primary decoding, the backscatter signal can be modelled as channel uncertainty or multiplicative interference when the spreading factor is large or small, respectively.
+	Decoding each backscatter symbol also requires multiple \gls{sic} followed by a \gls{mrc} and is operation-intensive and \gls{csi}-sensitive.
+	% Such a \gls{sic} receiver is operation-intensive and \gls{csi}-sensitive because it involves $N$ re-encoding, precoding, subtraction together with a time-domain \gls{mrc} to decode each backscatter symbol.
+	When the spreading factor is sufficiently large, the primary achievable rate under semi-coherent detection\footnote{In this paper, semi-coherent detection refers to the primary/backscatter decoding with known \gls{csi} and unknown backscatter/primary symbols.} asymptotically approaches its coherent counterpart and both links are decoded interference-free \cite{Long2020a}.
+	% However, it significantly increases \gls{sic} operations per backscatter symbol and severely limits the backscatter \emph{throughput}.
+	However, it severely limits the backscatter throughput and requires more \gls{sic} per backscatter symbol.
 
-		Conventional \gls{ris} design with fixed reflection coefficients during each channel block has been extensively studied in communication, sensing, and power literatures \cite{Wu2018,Zhang2019a,Lin2022,Liu2022,Feng2022,Zhao2022}.
-		On the other hand, dynamic \gls{ris} with independent reflection patterns in different time slots has gained recent attentions in multi-user and multi-purpose wireless networks.
-		The concept was first proposed in \cite{Yang2020} to fine-tune the \gls{ofdm} resource blocks, then extended to the downlink power and uplink information phases of \gls{wpcn} \cite{Wu2021,Wu2021d,Hua2022a}.
-		It introduces artificial channel diversity and enables flexible resource allocation, but misses the opportunity to encode its own message.
-		\gls{ris} can also be used as a transmitter when placed in the near field of a carrier emitter, and prototypes have been implemented for \gls{psk} \cite{Tang2019a} and \gls{qam} \cite{Dai2020a}.
-		From an information-theoretic perspective, \cite{Karasik2020} reported that using \gls{ris} as a naive passive beamformer to maximize the receive \gls{snr} is generally rate-suboptimal for finite-input constellations.
-		Instead, the capacity of \gls{ris}-aided channel is achieved by joint transmitter-\gls{ris} encoding, and even layered encoding with pilots can outperform passive beamforming at high \gls{snr}.
-		It inspired \gls{ris}-empowered \gls{bc} \cite{Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hu2021b,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} to combine passive beamforming and backscatter modulation in the overall reflection pattern.
-		In particular, \emph{symbol level precoding} maps the information symbols to the optimized \gls{ris} coefficient sets \cite{Liu2019d,Bereyhi2020}, \emph{overlay modulation} superposes the information symbols over a common auxiliary matrix \cite{Xu2020b,Zhang2021d,Hu2021b,Hua2022}, \emph{spatial modulation} switches between the reflection coefficient sets that maximize \gls{snr} at different receive antennas \cite{Basar2020,Ma2020a,Yuan2021}, and \emph{index modulation} employs dedicated reflection elements (resp. information elements) for passive beamforming (resp. backscatter modulation) \cite{Hu2021a}.
-		However, those joint designs incur advanced hardware architecture and high optimization complexity.
-		Relevant literatures also consider either \emph{Gaussian} codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} that is impractical for low-power nodes, or finite \emph{equiprobable} inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} that does not fully exploit the \gls{csi} and signal properties of active-passive coexisting networks.
-	\end{subsection}
+	% On the other hand, efficient backscatter multiple access design remains an open issue for \gls{bc}.
+	% \cite{Xu2021a} proposed a \gls{noma}-based \gls{sr} where the \gls{sic} order depends on the backscatter channel strength, but the performance deteriorates fast as the number of nodes increases.
+	% \gls{tdma}-based \gls{sr} was also considered in \cite{Yang2021a} where each node transmits information during its dedicated slot and harvests energy otherwise.
+	% It enables adaptive transmission time and reflection ratio design but introduces extra coordination cost.
+	% \cite{Vougioukas2019} modifies the load-switching speed to shift the scattered signal to the desired frequency band.
+	% This enables backscatter \gls{fdma} at the cost of larger bandwidth and higher power consumption at the scatter nodes.
+	% To reduce the coordination cost, \cite{Han2021} proposed a random code-assisted multiple access for \gls{sr} and evaluated the asymptotic \gls{sinr} using random matrix theory.
+	% This code-domain solution suffers from the near-far problem and imperfect synchronization, both being severe in \gls{bc}.
 
-	\begin{subsection}{Contributions}
-		\emph{First,} we propose RIScatter as a novel scatter protocol that unifies \gls{bc} and \gls{ris} by adaptive reflection state (i.e., backscatter input) distribution design.
-		As shown in Fig.~\subref*{fg:riscatter}, one or more passive RIScatter nodes ride over an active transmission and smartly scatters the incident wave to simultaneously engineer the primary channel and modulate its own information, while a co-located receiver cooperatively decodes both coexisting links.
-		The reflection pattern over time is neither fully random like \gls{bc} nor fully deterministic like \gls{ris}, but semi-randomly chosen with the guidance of reflection state distribution, whose design accommodates the impact of information source, \gls{csi}, and \gls{qos} of both links.
-		Such an adaptive backscatter channel coding boils down to the degenerate distribution of \gls{ris} when the primary link is prioritized, and outperforms the uniform distribution of line-coded \gls{bc} (by accounting the \gls{csi}) when the backscatter link is prioritized.
-		Besides, when multiple RIScatter nodes are co-located, joint encoding can further increase the total backscatter rate.
-		RIScatter exploits the transmitter-scatter-receiver path for simultaneous backscatter modulation and dynamic passive beamforming, and can smoothly transition in between under different \gls{qos}.
-		However, such a novel scatter protocol encounters two major challenges, namely the cooperative receiver design and the adaptive backscatter input distribution design.
-		This is the first paper to unify \gls{bc} and \gls{ris} from the perspective of reflection state distribution.
+	% A comparison of scattering applications is summarized in Table~\ref{tb:scattering_applications}.
 
-		\emph{Second,} we address the first challenge by proposing a practical receiver that accommodates the double fading, double modulation, and symbol period difference of active-passive coexisting networks.
-		Since joint decoding involves high complexity while individual decoding can be inefficient (neither cooperative nor exploiting signal properties), most relevant literatures consider a sequential primary-backscatter decoding based on \gls{sic}.
-		Specifically, the decoding of each backscatter symbol requires $N$ re-encoding, precoding, subtraction together with a time-domain \gls{mrc}, which can be operation-intensive and \gls{csi}-sensitive.
-		In contrast, the proposed RIScatter receiver semi-coherently decodes the backscatter symbol from the accumulated receive energy, re-encodes to recover the exact reflection pattern, and combine it with relevant \gls{csi} to determine the transmitter-scatter-receiver path response.
-		Thanks to the double modulation and symbol period difference, the backscatter symbol can be modelled within primary channel (similar to \gls{ris}) rather than being re-precoded and cancelled, and the semi-coherent energy-based backscatter detection indeed becomes part of primary channel training.
-		The strategy is suitable for arbitrary primary sampling rate and backscatter load-switching speed (i.e., arbitrary spreading factor).
-		This is the first paper to consider such a sequential backscatter-primary decoding and treat semi-coherent backscatter detection as part of primary channel training.
+	On the other hand, static \gls{ris} design with fixed reflection pattern per channel block has been extensively studied in wireless communication, sensing, and power literature \cite{Wu2018,Zhang2019a,Lin2022,Liu2022,Feng2022,Zhao2022}.
+	Dynamic \gls{ris} performs time sharing between different phase shifts and introduces artificial channel diversity within each channel block.
+	It was first proposed to fine-tune the \gls{ofdm} resource blocks \cite{Yang2020} then extended to the downlink power and uplink information phases of \gls{wpcn} \cite{Wu2021,Wu2021d,Hua2022a}.
+	However, dynamic \gls{ris} carries no information since the reflection state at each time slot is known to the receiver.
+	\gls{ris} can also be used as an index-modulated information source and prototypes are already available for \gls{psk} \cite{Tang2019a} and \gls{qam} \cite{Dai2020a}.
+	From an information-theoretic perspective, the authors of \cite{Karasik2020} reported that joint transmitter-\gls{ris} encoding achieves the capacity of \gls{ris}-aided finite-input channel and using \gls{ris} as a naive passive beamformer to maximize the receive \gls{snr} is generally suboptimal.
+	This inspired \gls{ris}-empowered \gls{bc} \cite{Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hu2021b,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} to combine passive beamforming and backscatter modulation in the overall reflection pattern.
+	In particular, \emph{symbol level precoding} maps the information symbols to the optimized \gls{ris} coefficient sets \cite{Liu2019d,Bereyhi2020}, \emph{overlay modulation} superposes the information symbols over a common auxiliary matrix \cite{Xu2020b,Zhang2021d,Hu2021b,Hua2022}, \emph{spatial modulation} switches between the reflection coefficient sets that maximize \gls{snr} at different receive antennas \cite{Basar2020,Ma2020a,Yuan2021}, and \emph{index modulation} employs dedicated reflection elements (resp. information elements) for passive beamforming (resp. backscatter modulation) \cite{Hu2021a}.
+	However, those joint designs incur advanced hardware architecture and high optimization complexity.
+	Relevant literature also considers either Gaussian codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} that is impractical for low-power nodes or finite equiprobable inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} that does not fully exploit the \gls{csi} and properties of active-passive coexisting networks.
+	% \end{subsection}
+	Those problems are addressed in this paper and the contributions are summarized below.
 
-		\emph{Third,} we address the second challenge by considering a specific scenario where multiple co-located/dispersed RIScatter nodes ride over an active point-to-point \gls{miso} transmission to perform backscatter modulation and dynamic passive beamforming towards a nearby user.
-		For a given \gls{qos}, we first express the primary and total backscatter rates as functions of \emph{input distribution} at RIScatter nodes, \emph{active beamforming} at the \gls{ap}, and \emph{backscatter decision regions} at the user.
-		Then, we characterize the achievable rate region by optimizing those variables under different \gls{qos}.
-		Since the original problem is highly non-convex, we propose a suboptimal \gls{bcd} algorithm where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is iteratively updated by \gls{pgd} accelerated by \gls{bls}, and the decision regions are refined by existing sequential quantization methods for \gls{dmtc}.
-		Uniquely, we account for \gls{csi}, \gls{qos}, and backscatter constellation in those optimizations, and the proposed backscatter input distribution design is applicable to more general scenarios.
-		This is also the first paper to reveal the importance of backscatter input distribution and decision region designs in active-passive coexisting networks.
+	% \begin{subsection}{Contributions}
+	% \emph{First,} we propose RIScatter as a novel scatter protocol that unifies \gls{bc} and \gls{ris} by adaptive reflection state (backscatter input) distribution design.
+	% \emph{First,} we propose RIScatter as a novel scatter protocol that simultaneously modulates the nodes information and engineers the wireless channel via adaptive reflection state (backscatter input) distribution design.
+	\emph{First,} we propose RIScatter as a novel scatter protocol that simultaneously modulates the node information and engineers the wireless channel via adaptive reflection state (backscatter input) distribution design.
+	The concept is shown in Fig.~\subref*{fg:riscatter} where the message of one or more RIScatter nodes and a primary transmitter are sequentially decoded by a co-located receiver.
+	% The reflection pattern is random with the guidance of input distribution as a joint function of the information source, \gls{csi}, and \gls{qos}
+	% The reflection pattern is a discrete random variable with probability mass function
+	% (co-located or dispersed)
+	Each reflection state simultaneously acts as information codeword and passive beamforming codeword.
+	The reflection pattern of each node is randomly chosen with the guidance of reflection state distribution, which is designed as a joint function of the information source, \gls{csi}, and \gls{qos}.
+	% That is, each reflection state simultaneously acts as information codeword and passive beamforming codeword (symbol-level passive precoding).
+	% Since each reflection state simultaneously acts as information codeword and passive beamforming codeword (symbol-level passive precoding).
+	Such an adaptive channel coding boils down to the degenerate distribution of \gls{ris} when the primary link is prioritized, and outperforms the uniform distribution of line-coded \gls{bc} (by accounting the \gls{csi}) when the backscatter link is prioritized.
+	% Joint and independent encoding are available when multiple RIScatter nodes are
+	Multiple RIScatter nodes can be co-located with joint encoding or dispersed with independent encoding.
+	% The reflection state is neither fully random (cf. \gls{bc}) nor fully deterministic (cf. \gls{ris}), but semi-random in reflection state distribution.
+	% RIScatter exploits the transmitter-scatter-receiver path for simultaneous backscatter modulation and dynamic passive beamforming, and can smoothly transition in between under different \gls{qos}.
+	% A comparison of RIScatter to \gls{bc} and \gls{ris} is summarized in Table~\ref{tb:scattering_applications}.
+	Table~\ref{tb:scattering_applications} compares RIScatter to \gls{bc} and \gls{ris}.
+	However, two major challenges for RIScatter are the cooperative receiver design and the backscatter input distribution design.
+	% such a novel scatter protocol encounters two major challenges, namely the cooperative receiver design and the adaptive backscatter input distribution design.
+	This is the first paper to unify \gls{bc} and \gls{ris} from the perspective of input distribution.
 
-		\emph{Fourth,} we provide numerical results to demonstrate the benefits of RIScatter and proposed algorithms.
-		The observations include:
-		1) adaptive reflection state distribution design can flexibly transition between backscatter modulation and passive beamforming;
-		2) when the primary link is prioritized, input distribution becomes degenerate and RIScatter nodes coincide with discrete \gls{ris};
-		3) when the backscatter link is prioritized, adaptive RIScatter encoding achieves higher backscatter rate than conventional line-coded \gls{bc} with equiprobable inputs;
-		4) co-located RIScatter nodes can further leverage total backscatter rate by joint encoding;
-		5) the proposed receiver maintains the passive beamforming benefit and provides comparable backscatter rate to \gls{sic}-based \gls{sr}, with re-encoding costs reduced to $1/N$ and no re-precoding/cancellation;
-		6) it also supports scatter nodes with faster load-switching speed for potentially higher throughput;
-		7) \gls{pgd} active beamformer effectively increases the primary (resp. backscatter) rate by boosting the receive \gls{snr} (resp. widening the energy gap under different reflection states), and can smoothly transition in between under different \gls{qos};
-		8) distribution-aware backscatter detectors provide higher backscatter rate than the conventional \gls{ml} detector.
-	\end{subsection}
+	\emph{Second,} we address the first challenge and propose a practical receiver that accommodates the properties of active-passive coexisting networks.
+	It semi-coherently decodes the backscatter information by energy detection, recovers the exact reflection pattern, and coherently decodes the primary link.
+	% Double modulation enables symbol-level passive precoding such that the
+	Once successfully decoded, the multiplicative backscatter interference can be modelled as dynamic passive beamforming (rather than being re-precoded and cancelled), and thus the energy detection becomes part of channel training.
+	The proposed receiver significantly improves backscatter throughput since it is suitable for arbitrary input distribution and spreading factor.
+	This is the first paper to consider practical backscatter-primary decoding and treat semi-coherent backscatter detection as part of primary channel training.
+
+	\emph{Third,} we address the second challenge by considering a specific scenario where multiple co-located/dispersed RIScatter nodes ride over an active point-to-point \gls{miso} transmission to perform backscatter modulation and dynamic passive beamforming towards a nearby user.
+	For a given \gls{qos}, we first express the primary and total backscatter rates as functions of \emph{input distribution} at RIScatter nodes, \emph{active beamforming} at the \gls{ap}, and \emph{backscatter decision regions} at the user.
+	Then, we characterize the achievable rate region by optimizing those variables under different \gls{qos}.
+	Since the original problem is highly non-convex, we propose a suboptimal \gls{bcd} algorithm where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is iteratively updated by \gls{pgd} accelerated by \gls{bls}, and the decision regions are refined by existing sequential quantization methods for \gls{dmtc}.
+	Uniquely, we account for \gls{csi}, \gls{qos}, and backscatter constellation in those optimizations, and the proposed backscatter input distribution design is applicable to more general scenarios.
+	This is also the first paper to reveal the importance of backscatter input distribution and decision region designs in active-passive coexisting networks.
+
+	% \emph{Fourth,} we provide numerical results to demonstrate the benefits of RIScatter and proposed algorithms.
+	% The observations include:
+	% 1) adaptive reflection state distribution design can flexibly shift between backscatter modulation and passive beamforming;
+	% 2) when the primary link is prioritized, input distribution becomes degenerate and RIScatter nodes coincide with discrete \gls{ris};
+	% 3) when the backscatter link is prioritized, adaptive RIScatter encoding achieves higher backscatter rate than conventional line-coded \gls{bc} with equiprobable inputs;
+	% 4) co-located RIScatter nodes can further leverage total backscatter rate by joint encoding;
+	% 5) the proposed receiver maintains the passive beamforming benefit and provides comparable backscatter rate to \gls{sic}-based \gls{sr}, with re-encoding costs reduced to $1/N$ and no re-precoding/cancellation;
+	% 6) it also supports scatter nodes with faster load-switching speed for potentially higher throughput;
+	% 7) \gls{pgd} active beamformer effectively increases the primary (resp. backscatter) rate by boosting the receive \gls{snr} (resp. widening the energy gap under different reflection states), and can smoothly transition in between under different \gls{qos};
+	% 8) distribution-aware backscatter detectors provide higher backscatter rate than the conventional \gls{ml} detector.
+	% \end{subsection}
 
 	\emph{Notations:}
 	Italic, bold lower-case, and bold upper-case letters denote scalars, vectors and matrices, respectively.
-	$\boldsymbol{0}$ and $\boldsymbol{1}$ denote zero and one array of appropriate size, respectively. $\mathbb{I}^{x \times y}$, $\mathbb{R}_+^{x \times y}$, and $\mathbb{C}^{x \times y}$ denote the real unit, real nonnegative, and complex spaces of dimension $x \times y$, respectively.
+	$\boldsymbol{0}$ and $\boldsymbol{1}$ denote zero and one array of appropriate size, respectively. $\mathbb{I}^{x \times y}$, $\mathbb{R}_+^{x \times y}$, and $\mathbb{C}^{x \times y}$ denote the unit, real nonnegative, and complex spaces of dimension $x \times y$, respectively.
 	$j$ denotes the imaginary unit.
 	$\mathrm{diag}(\cdot)$ returns a square matrix with the input vector on its main diagonal and zeros elsewhere.
 	$\mathrm{card}(\cdot)$ returns the cardinality of a set.
-	$(\cdot)^*$, $(\cdot)^\mathsf{T}$, $(\cdot)^\mathsf{H}$, $\lvert{\cdot}\rvert$, and $\lVert{\cdot}\rVert$ denote the conjugate, transpose, conjugate transpose, absolute value, and Euclidean norm operators, respectively.
+	$(\cdot)^*$, $(\cdot)^\mathsf{T}$, $(\cdot)^\mathsf{H}$, $\lvert{\cdot}\rvert$, and $\lVert{\cdot}\rVert$ denote the conjugate, transpose, conjugate transpose (Hermitian), absolute value, and Euclidean norm operators, respectively.
 	$(\cdot)^{(r)}$ and $(\cdot)^{\star}$ denote the $r$-th iterated and optimal results, respectively.
 	The distribution of a \gls{cscg} random variable with zero mean and variance $\sigma^2$ is denoted by $\mathcal{CN}(0,\sigma^2)$, and $\sim$ means ``distributed as''.
 \end{section}
@@ -408,13 +433,13 @@
 		\Gamma_m = \beta_m \exp(j \theta_m),
 		\label{eq:passive_beamforming}
 	\end{equation}
-	where $\beta_m \in \mathbb{I}$ is the overall amplitude scattering ratio at state $m$.\footnote{Most existing \gls{ris} literatures assume lossless reflection $\beta_m=1$, $\forall m$.}
+	where $\beta_m \in \mathbb{I}$ is the overall amplitude scattering ratio at state $m$.\footnote{Most existing \gls{ris} literature assumes lossless reflection $\beta_m=1$, $\forall m$.}
 \end{section}
 
 \begin{section}{RIScatter}
 	\begin{subsection}{Concepts}
 		We propose RIScatter in Fig.~\subref*{fg:riscatter} as a generalization of \gls{bc} and \gls{ris}, which involves coexisting active primary and passive backscatter links in a flexible and mutualistic manner.
-		RIScatter nodes leverage \gls{csi}- and \gls{qos}-based reflection state distribution design to smoothly transition between backscatter modulation and passive beamforming.
+		RIScatter nodes leverage \gls{csi}- and \gls{qos}-based reflection state distribution design to smoothly shift between backscatter modulation and passive beamforming.
 		Fig.~\ref{fg:riscatter_node} illustrates the block diagram, equivalent circuit, and scatter model of a RIScatter node.
 		It can be implemented by adding an integrated receiver \cite{Kim2021a} and adaptive encoder \cite{He2020e} to off-the-shelf passive \gls{rfid} tags.
 		\begin{figure*}[!t]
@@ -525,7 +550,7 @@
 		We also omit the signal reflected by two or more times and ignore the multipath propagation time difference.
 		Denote the \gls{ap}-user direct channel as $\boldsymbol{h}_{\text{D}}^\mathsf{H} \in \mathbb{C}^{1 \times Q}$, the \gls{ap}-node $k \in \mathcal{K} \triangleq \{1,\ldots,K\}$ forward channel as $\boldsymbol{h}_{\text{F},k}^\mathsf{H} \in \mathbb{C}^{1 \times Q}$, the node $k$-user backward channel as $h_{\text{B},k}$, and the cascaded \gls{ap}-node $k$-user channel as $\boldsymbol{h}_{\text{C},k}^\mathsf{H} \triangleq h_{\text{B},k} \boldsymbol{h}_{\text{F},k}^\mathsf{H} \in \mathbb{C}^{1 \times Q}$.
 		Let $x_k \in \mathcal{X} \triangleq \{c_1,\ldots,c_M\}$ be the coded backscatter symbol of node $k$ and $x_{\mathcal{K}} \triangleq (x_1,\ldots,x_K)$ be the backscatter symbol tuple of all nodes.
-		Due to double modulation, the primary equivalent channel is a function of backscatter symbol tuple\footnote{\eqref{eq:equivalent_channel_bc} and \eqref{eq:equivalent_channel_ris} are often used in \gls{bc} and \gls{ris} literatures, respectively.}
+		Due to double modulation, the primary equivalent channel is a function of backscatter symbol tuple\footnote{\eqref{eq:equivalent_channel_bc} and \eqref{eq:equivalent_channel_ris} are often used in \gls{bc} and \gls{ris} literature, respectively.}
 		\begin{subequations}
 			\label{eq:equivalent_channel}
 			\begin{align}
@@ -868,7 +893,7 @@
 	where $d$ is the transmission distance, $L_0=-\qty{30}{\dB}$ is the reference path loss at $d_0=\qty{1}{\meter}$, $\kappa$ is the Rician $K$-factor, $\bar{\boldsymbol{H}}$ is the deterministic line-of-sight component with unit-magnitude entries, and $\tilde{\boldsymbol{H}}$ is the Rayleigh fading component with standard \gls{iid} \gls{cscg} entries.
 	We choose $\gamma_{\text{D}}=2.6$, $\gamma_{\text{F}}=2.4$, $\gamma_{\text{B}}=2$, and $\kappa_{\text{D}}=\kappa_{\text{F}}=\kappa_{\text{B}}=5$ for direct, forward and backward links.
 	The finite decision threshold domain $\mathcal{T}$ is obtained by $b$-bit uniform discretization over the critical interval defined by the confidence bounds of edge hypotheses (i.e., lower bound of $\mathcal{H}_1$ and upper bound of $\mathcal{H}_L$) with confidence $1-\epsilon$, and we choose $b=9$ and $\epsilon=\num{e-3}$.
-	All achievable rate points/regions are averaged over \num{1000} channel realizations.
+	All achievable rate points/regions are averaged over \num{e3} channel realizations.
 
 	\begin{subsection}{Evaluation of Proposed Algorithms}
 		\begin{subsubsection}{Initialization}
@@ -947,7 +972,7 @@
 			\resizebox{0.65\columnwidth}{!}{
 				\input{assets/simulation/region_comparison.tex}
 			}
-			\caption{Typical achievable rate region/points of scattering applications for $Q=1$, $K=1$, $M=4$, $N=1000$, $\sigma_v^2=\qty{-40}{\dBm}$ and $r=\qty{2}{\meter}$.}
+			\caption{Typical achievable rate region/points of scattering applications for $Q=1$, $K=1$, $M=4$, $N=e3$, $\sigma_v^2=\qty{-40}{\dBm}$ and $r=\qty{2}{\meter}$.}
 			\label{fg:region_comparison}
 		\end{figure}
 
@@ -1048,7 +1073,7 @@
 			This is because backscatter detection relies on the \emph{relative difference} of accumulated receive energy under different symbol tuples.
 			Such an energy diversity is enhanced by \emph{\gls{pgd}} that effectively exploits backscatter constellation and input distribution knowledge, rather than simply maximizing the direct/ergodic equivalent \gls{snr}.
 			As $\rho$ increases, the primary equivalent \gls{snr} outweighs the backscatter energy difference in \eqref{eq:weighted_sum_mutual_information_explicit}, and \emph{\gls{pgd}} beamformer becomes closer to both \gls{mrt} schemes.
-			At $\rho=1$, \emph{\gls{pgd}} and \emph{E-\gls{mrt}} boil down to \gls{mrt} towards the deterministic primary equivalent channel as in \gls{ris} literatures \cite{Wu2019}.
+			At $\rho=1$, \emph{\gls{pgd}} and \emph{E-\gls{mrt}} boil down to \gls{mrt} towards the deterministic primary equivalent channel as in \gls{ris} literature \cite{Wu2019}.
 			Besides, the difference between \emph{E-\gls{mrt}} and \emph{D-\gls{mrt}} can be insignificant for dispersed RIScatter nodes.
 			Those observations prove the proposed \emph{\gls{pgd}} active beamforming design can exploit the \gls{csi}, \gls{qos}, and backscatter constellation to balance the primary equivalent \gls{snr} and backscatter energy difference and enlarge the achievable rate region for RIScatter.
 		\end{subsubsection}

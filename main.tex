@@ -195,7 +195,7 @@
 	The key principle is to render the probability distribution of reflection states as a joint function of the information source, \gls{csi}, and \gls{qos} of coexisting active primary and passive backscatter links.
 	This enables RIScatter to softly bridge \gls{bc} and \gls{ris}; boil down to either under specific input distribution; or evolve in a mixed form for heterogeneous traffic control and universal hardware design.
 	% To accommodate the characteristics of active-passive coexisting networks, we propose a practical \gls{sic}-free receiver
-	To reap the benefits of RIScatter, we also propose a co-located \gls{sic}-free receiver that semi-coherently decodes the backscatter information, recovers the reflection pattern, and coherently decodes the primary link.
+	To reap the benefits of RIScatter, we also propose a co-located \gls{sic}-free receiver that semi-coherently decodes the backscatter information, recovers the reflection pattern (and composite channel), and coherently decodes the primary link.
 	For a single-user multi-node RIScatter network, we characterize the achievable primary-(total-)backscatter rate region by designing the input distribution at scatter nodes, the active beamforming at the \gls{ap}, and the energy detection regions at the user.
 	Simulation results demonstrate RIScatter nodes can exploit the scattered paths to smoothly shift between backscatter modulation and passive beamforming.
 \end{abstract}
@@ -354,8 +354,8 @@
 	% The reflection pattern is random with the guidance of input distribution as a joint function of the information source, \gls{csi}, and \gls{qos}
 	% The reflection pattern is a discrete random variable with probability mass function
 	% (co-located or dispersed)
-	Each reflection state simultaneously acts as information codeword and passive beamforming codeword.
-	The reflection pattern of each node is randomly chosen with the guidance of reflection state distribution, which is designed as a joint function of the information source, \gls{csi}, and \gls{qos}.
+	Each reflection state simultaneously acts as an information codeword and a passive beamforming codeword.
+	The reflection pattern of each node is randomly chosen with the guidance of input distribution that is designed as a joint function of the information source, \gls{csi}, and \gls{qos}.
 	% That is, each reflection state simultaneously acts as information codeword and passive beamforming codeword (symbol-level passive precoding).
 	% Since each reflection state simultaneously acts as information codeword and passive beamforming codeword (symbol-level passive precoding).
 	Such an adaptive channel coding boils down to the degenerate distribution of \gls{ris} when the primary link is prioritized, and outperforms the uniform distribution of line-coded \gls{bc} (by accounting the \gls{csi}) when the backscatter link is prioritized.
@@ -369,14 +369,41 @@
 	% such a novel scatter protocol encounters two major challenges, namely the cooperative receiver design and the adaptive backscatter input distribution design.
 	This is the first paper to unify \gls{bc} and \gls{ris} from the perspective of input distribution.
 
-	\emph{Second,} we address the first challenge and propose a practical receiver that accommodates the properties of active-passive coexisting networks.
-	It semi-coherently decodes the backscatter information by energy detection, recovers the exact reflection pattern, and coherently decodes the primary link.
-	% Double modulation enables symbol-level passive precoding such that the
-	Once successfully decoded, the multiplicative backscatter interference can be modelled as dynamic passive beamforming (rather than being re-precoded and cancelled), and thus the energy detection becomes part of channel training.
-	The proposed receiver significantly improves backscatter throughput since it is suitable for arbitrary input distribution and spreading factor.
-	This is the first paper to consider practical backscatter-primary decoding and treat semi-coherent backscatter detection as part of primary channel training.
+	\emph{Second,} we address the first challenge and propose a practical receiver that semi-coherently decodes the backscatter information, recovers the exact reflection pattern (and composite channel), and coherently decodes the primary link.
+	% Energy detection is used to decode the multiplicative backscatter information under primary uncertainty, and disjoint decision regions are formulated
+	% Energy detection is used to decode the multiplicative backscatter information under primary uncertainty, and it divides the accumulated energy domain into disjoint decision regions to construct \gls{dmc}
+	% Energy detection is used for backscatter decoding that
+	We consider backscatter energy detection with disjoint decision regions and formulates a \gls{dmtmac}.
+	% Specifically, energy detection
+	to decode the multiplicative backscatter information under primary uncertainty, and it divides the accumulated energy domain into disjoint decision regions to construct \gls{dmc}
+	% , and we design disjoint detection regions to transform the \gls{dcmc} channel to \gls{dmtc}
 
-	\emph{Third,} we address the second challenge by considering a specific scenario where multiple co-located/dispersed RIScatter nodes ride over an active point-to-point \gls{miso} transmission to perform backscatter modulation and dynamic passive beamforming towards a nearby user.
+
+	Hence, the receiver can semi-coherently (under primary uncertainty) decode RIScatter nodes from the accumulated receive energy, re-encode to recover the exact reflection patterns, and combine those with cascaded \gls{csi} to determine the multipath response and model within the primary channel.
+	Such a backscatter-primary decoding enables simultaneous backscatter modulation and dynamic passive beamforming by only one energy comparison and re-encoding during each backscatter (instead of primary) block.
+
+	exploits the properties of active-passive coexisting networks and
+	% \emph{Second,} we address the first challenge and propose a practical receiver that exploits the three properties
+
+	It semi-coherently decodes the backscatter information, recovers the exact reflection pattern, and coherently decodes the primary link.
+	Thanks to the double modulation effect, once the multiplicative backscatter information is successfully decoded, the contribution is modelled within channel as dynamic passive beamforming rather than re-precoded and cancelled.
+
+	% The semi-coherent backscatter decoding is based on
+	% For the semi-coherent backscatter decoding, we
+	% Specifically, the backscatter decoding relys on energy
+	% we transform the discrete-input continuous-output backscatter channel
+	We use energy detection to decode the multiplicative backscatter information under primary uncertainty, and transform the
+
+	we transform the discrete-input continuous-output backscatter channel
+	the energy space is divided into disjoint decision regions associated with different hypothese
+	% Double modulation enables symbol-level passive precoding such that the
+	The multiplicative backscatter information, once successfully decoded, can be modelled as dynamic passive beamforming (rather than being re-precoded and cancelled) and thus the energy detection becomes part of channel training.
+	The proposed receiver significantly improves backscatter throughput since it is suitable for arbitrary input distribution and spreading factor.
+	This is the first paper to consider practical backscatter-primary decoding scheme at the co-located receiver.
+
+	\emph{Third,} we address the second challenge and
+
+	by considering a specific scenario where multiple co-located/dispersed RIScatter nodes ride over an active point-to-point \gls{miso} transmission to perform backscatter modulation and dynamic passive beamforming towards a nearby user.
 	For a given \gls{qos}, we first express the primary and total backscatter rates as functions of \emph{input distribution} at RIScatter nodes, \emph{active beamforming} at the \gls{ap}, and \emph{backscatter decision regions} at the user.
 	Then, we characterize the achievable rate region by optimizing those variables under different \gls{qos}.
 	Since the original problem is highly non-convex, we propose a suboptimal \gls{bcd} algorithm where the \gls{kkt} input distribution is numerically evaluated by limit of sequences, the active beamforming is iteratively updated by \gls{pgd} accelerated by \gls{bls}, and the decision regions are refined by existing sequential quantization methods for \gls{dmtc}.

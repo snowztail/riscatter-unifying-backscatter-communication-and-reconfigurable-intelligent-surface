@@ -1,5 +1,5 @@
-% \documentclass[journal]{IEEEtran}
-\documentclass[journal,12pt,onecolumn,draftclsnofoot]{IEEEtran}
+\documentclass[journal]{IEEEtran}
+% \documentclass[journal,12pt,onecolumn,draftclsnofoot]{IEEEtran}
 
 \usepackage[table]{xcolor}
 \usepackage{adjustbox}
@@ -18,29 +18,16 @@
 \usepackage{hyperref}
 \usepackage{import}
 \usepackage{mathtools}
-% \usepackage{microtype}
+\usepackage{microtype}
 \usepackage[short]{optidef}
 \usepackage{pgfplots}
 \usepackage{ragged2e}
 \usepackage[subtle]{savetrees}
-\usepackage{setspace}
 \usepackage{siunitx}
 \usepackage{stfloats}
 \usepackage[caption=false,font=footnotesize,subrefformat=parens,labelformat=parens]{subfig}
 \usepackage{tabularx}
 \usepackage{tikz}
-
-% page limit hacks
-% ! \usepackage[top=1cm, bottom=1cm, left=1cm, right=1cm]{geometry}
-% \abovedisplayskip=1mm
-% \belowdisplayskip=1mm
-% \abovedisplayshortskip=1mm
-% \belowdisplayshortskip=1mm
-\setlength{\jot}{0.1mm}
-\setlength{\floatsep}{1mm}
-\setlength{\textfloatsep}{1mm}
-\setlength{\intextsep}{1mm}
-\setlength{\skip\footins}{2mm}
 % dark mode
 % \usepackage{xcolor} \pagecolor[rgb]{0,0,0} \color[rgb]{1,1,1}
 
@@ -68,11 +55,6 @@
 % algpseudocode
 \makeatletter
 \renewcommand{\fnum@algorithm}{\fname@algorithm{} \thealgorithm:}
-\newcommand\setalgorithmcaptionfont[1]{%
-	\let\my@floatc@ruled\floatc@ruled          % save \floatc@ruled
-	\def\floatc@ruled{%
-		\global\let\floatc@ruled\my@floatc@ruled % restore \floatc@ruled
-		#1\floatc@ruled}}
 \makeatother
 
 \algrenewcommand{\algorithmicrequire}{\textbf{Input:}}
@@ -165,6 +147,8 @@
 	\thanks{
 		The authors are with the Department of Electrical and Electronic Engineering, Imperial College London, London SW7 2AZ, U.K. (e-mail: \{yang.zhao18, b.clerckx\}@imperial.ac.uk).
 		B. Clerckx is also with Silicon Austria Labs (SAL), Graz A-8010, Austria.
+
+		% This article has been submitted for potential publications.
 	}
 }
 \maketitle
@@ -253,38 +237,39 @@
 	\begin{figure}[!t]
 		\centering
 		\subfloat[\gls{mbc}]{
-			\resizebox{0.25\linewidth}{!}{
+			\resizebox{0.48\linewidth}{!}{
 				\input{assets/illustration/mbc.tex}
 			}
 			\label{fg:mbc}
 		}
 		\subfloat[\gls{bbc}]{
-			\resizebox{0.25\linewidth}{!}{
+			\resizebox{0.48\linewidth}{!}{
 				\input{assets/illustration/bbc.tex}
 			}
 			\label{fg:bbc}
 		}
+		\\
 		\subfloat[\gls{ambc}]{
-			\resizebox{0.25\linewidth}{!}{
+			\resizebox{0.48\linewidth}{!}{
 				\input{assets/illustration/ambc.tex}
 			}
 			\label{fg:ambc}
 		}
-		\\
 		\subfloat[\gls{sr}]{
-			\resizebox{0.25\linewidth}{!}{
+			\resizebox{0.48\linewidth}{!}{
 				\input{assets/illustration/sr.tex}
 			}
 			\label{fg:sr}
 		}
+		\\
 		\subfloat[\gls{ris}]{
-			\resizebox{0.25\linewidth}{!}{
+			\resizebox{0.48\linewidth}{!}{
 				\input{assets/illustration/ris.tex}
 			}
 			\label{fg:ris}
 		}
 		\subfloat[RIScatter]{
-			\resizebox{0.25\linewidth}{!}{
+			\resizebox{0.48\linewidth}{!}{
 				\input{assets/illustration/riscatter.tex}
 			}
 			\label{fg:riscatter}
@@ -301,7 +286,7 @@
 		\caption{Comparison of Scattering Applications}
 		\label{tb:scattering_applications}
 		\rowcolors{2}{gray!25}{white}
-		\scriptsize
+		\renewcommand{\arraystretch}{1.4}
 		\begin{tabularx}{\textwidth}{CCCCCC}
 			\toprule
 			\hiderowcolors
@@ -329,7 +314,7 @@
 	\begin{enumerate}
 		\item Primary and backscatter symbols are superimposed by \emph{double modulation} (i.e., multiplication coding);
 		\item Backscatter signal strength is much weaker than primary due to the \emph{double fading} effect;
-		\item The spreading factor (i.e., backscatter symbol duration over primary) is usually large\footnote{The load-switching interval of low-power backscatter modulators is usually \num{0.1} to \SI{10}{\us} \cite{Torres2021}, accounting for a typical spreading factor between \num{10} and \num{e3}.}.
+		\item The spreading factor (i.e., backscatter symbol duration over primary) is usually large\footnote{The load-switching interval of low-power backscatter modulators is usually {0.1} to \SI{10}{\us} \cite{Torres2021}, accounting for a typical spreading factor between $10$ and $10^3$.}.
 	\end{enumerate}
 	The second property motivated \cite{Long2020a,Liang2020,Guo2019b,Ding2020,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Yang2018,Han2021,Zhang2022} to view \gls{sr} as a multiplicative \gls{noma} and perform \gls{sic} from primary to backscatter link.
 	During primary decoding, the backscatter signal can be modelled as channel uncertainty or multiplicative interference when the spreading factor is large or small, respectively.
@@ -457,13 +442,14 @@
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Input Distribution]{
-				\resizebox{0.44\columnwidth}{!}{
+				\resizebox{0.8\columnwidth}{!}{
 					\input{assets/illustration/input_distribution.tex}
 				}
 				\label{fg:input_distribution}
 			}
+			\\
 			\subfloat[Reflection Pattern]{
-				\resizebox{0.48\columnwidth}{!}{
+				\resizebox{0.8\columnwidth}{!}{
 					\input{assets/illustration/time_structure.tex}
 				}
 				\label{fg:time_structure}
@@ -472,9 +458,9 @@
 				Input distribution and reflection pattern of scattering applications.
 				``PB'', ``BB'', and ``CB'' refer to primary symbol block, backscatter symbol block, and channel block, respectively.
 				Shadowing means presence of primary link.
-				In this example, the optimal passive beamformer is state \num{2} and its input probability for RIScatter is \num{0.75}.
-				% RIScatter node transmit symbol \num{1}
-				The spreading factor is \num{4} for RIScatter and \num{8} for \gls{ambc}/\gls{sr}.
+				In this example, the optimal passive beamformer is state {2} and its input probability for RIScatter is {0.75}.
+				% RIScatter node transmit symbol {1}
+				The spreading factor is {4} for RIScatter and {8} for \gls{ambc}/\gls{sr}.
 			}
 			\label{fg:scatter_comparison}
 		\end{figure}
@@ -551,7 +537,7 @@
 		\label{se:system_model}
 		\begin{figure}[!t]
 			\centering
-			\def\svgwidth{0.4\columnwidth}
+			\def\svgwidth{0.7\columnwidth}
 			\footnotesize{
 				\import{assets/illustration/}{riscatter_network.pdf_tex}
 			}
@@ -620,9 +606,10 @@
 		% Conditioned on different reflection state hypotheses, the accumulated energy per backscatter block follows Gamma distribution with different scale parameters.
 		\begin{figure}[!t]
 			\centering
-			\resizebox{0.4\columnwidth}{!}{
-				\input{assets/illustration/energy_distribution.tex}
-			}
+			% \resizebox{0.8\columnwidth}{!}{
+			% 	\input{assets/illustration/energy_distribution.tex}
+			% }
+			\includegraphics[width=0.8\columnwidth]{assets/illustration/energy_distribution.jpg}
 			\caption{
 				\gls{pdf} of accumulated energy per backscatter block conditioned on different reflection state hypotheses.
 			}
@@ -763,7 +750,6 @@
 		For \eqref{eq:input_kkt_solution} at iteration $r+1$, the input distribution of node $k$ is updated over $\bigl\{\{\boldsymbol{p}_q^{(r+1)}\}_{q=1}^{k-1},\{\boldsymbol{p}_q^{(r)}\}_{q=k}^{K}\bigr\}$.
 		The \gls{kkt} input distribution design is summarized in Algorithm \ref{al:input_distribution}.
 
-		\setalgorithmcaptionfont{\small}
 		\begin{algorithm}[!t]
 			\caption{Numerical \gls{kkt} Input Distribution Evaluation by Limits of Sequence}
 			\label{al:input_distribution}
@@ -798,11 +784,10 @@
 		which is still non-convex due to the integration and entropy terms.
 		To tackle this, we rewrite the \gls{dmmac} transition probability \eqref{eq:dmmac} as a regularized incomplete Gamma function in the series representation \cite[Theorem 3]{Jameson2016}
 		\begin{equation}
-			% \begin{gathered}
-			% 	Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) = \frac{\int_{{t_{l-1}}/{\sigma_{m_{\mathcal{K}}}^2}}^{{t_l}/{\sigma_{m_{\mathcal{K}}}^2}} z^{N-1} \exp(-z) \, d z}{(N-1)!}\\
-			% 	= \exp \Bigl(-\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\bigl(\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^n}{n!} - \exp \Bigl(-\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\bigl(\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^n}{n!}.
-			% \end{gathered}
-			Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) = \frac{\int_{{t_{l-1}}/{\sigma_{m_{\mathcal{K}}}^2}}^{{t_l}/{\sigma_{m_{\mathcal{K}}}^2}} z^{N-1} \exp(-z) \, d z}{(N-1)!} = \exp \Bigl(-\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\bigl(\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^n}{n!} - \exp \Bigl(-\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\bigl(\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^n}{n!}.
+			\begin{gathered}
+				Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) = \frac{\int_{{t_{l-1}}/{\sigma_{m_{\mathcal{K}}}^2}}^{{t_l}/{\sigma_{m_{\mathcal{K}}}^2}} z^{N-1} \exp(-z) \, d z}{(N-1)!}\\
+				= \exp \Bigl(-\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\bigl(\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^n}{n!} - \exp \Bigl(-\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\bigl(\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^n}{n!}.
+			\end{gathered}
 			\label{eq:regularized_incomplete_gamma}
 		\end{equation}
 		Its gradient with respect to $\boldsymbol{w}^*$ can be derived as
@@ -815,26 +800,26 @@
 			g_{m_{\mathcal{K}}}(t_l) = t_l\exp\Bigl(-\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)\Bigl(-1+\sum_{n=1}^{N-1} \frac{\bigl(n - \frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr) \bigl(\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^{n-1}}{n!}\Bigr).
 			\label{eq:regularized_incomplete_gamma_gradient_component}
 		\end{equation}
-		On top of \eqref{eq:regularized_incomplete_gamma} and \eqref{eq:regularized_incomplete_gamma_gradient}, we explicitly express the objective function \eqref{ob:active_beamforming} and its gradient as
-		\begin{align}
-			I(x_{\mathcal{K}})
-			 & =\sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\log\Bigl(1+\frac{\lvert\boldsymbol{h}^\mathsf{H}(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2}{\sigma_v^2}\Bigr) \nonumber                                                                                                                                                                                                                 \\
-			 & \qquad + (1-\rho)\sum_l Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \log \frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'} P_{\mathcal{K}}(x_{m_{\mathcal{K}}'}) Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}\Biggr),
-			\label{eq:weighted_sum_mutual_information_explicit}
-		\end{align}
-		\begin{align}
-			\nabla_{\boldsymbol{w}^*} I(x_{\mathcal{K}})
-			 & = \sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\frac{\boldsymbol{h}(x_{m_{\mathcal{K}}})\boldsymbol{h}^\mathsf{H}(x_{m_{\mathcal{K}}})\boldsymbol{w}}{\sigma_{m_{\mathcal{K}}}^2}+(1-\rho)\sum_l\biggl(\log\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}+1\biggr)\nonumber                                                                                    \\
-			 & \qquad \times \nabla_{\boldsymbol{w}^*} Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)-\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})\nabla_{\boldsymbol{w}^*}Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}\Biggr).
-			\label{eq:weighted_sum_mutual_information_gradient}
-		\end{align}
+		On top of \eqref{eq:regularized_incomplete_gamma} and \eqref{eq:regularized_incomplete_gamma_gradient}, we explicitly express the objective function \eqref{ob:active_beamforming} and its gradient as \eqref{eq:weighted_sum_mutual_information_explicit} and \eqref{eq:weighted_sum_mutual_information_gradient} at the end of page \pageref{eq:weighted_sum_mutual_information_explicit}, respectively.
+		\begin{figure*}[!b]
+			\hrule
+			\begin{equation}
+				I(x_{\mathcal{K}})=\sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\log\Bigl(1+\frac{\lvert\boldsymbol{h}^\mathsf{H}(x_{m_{\mathcal{K}}})\boldsymbol{w}\rvert^2}{\sigma_v^2}\Bigr)+(1-\rho)\sum_l Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \log \frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'} P_{\mathcal{K}}(x_{m_{\mathcal{K}}'}) Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}\Biggr)
+				\label{eq:weighted_sum_mutual_information_explicit}
+			\end{equation}
+			\begin{align}
+				\nabla_{\boldsymbol{w}^*} I(x_{\mathcal{K}})
+				 & = \sum_{m_{\mathcal{K}}}P_{\mathcal{K}}(x_{m_{\mathcal{K}}})\Biggl(\rho\frac{\boldsymbol{h}(x_{m_{\mathcal{K}}})\boldsymbol{h}^\mathsf{H}(x_{m_{\mathcal{K}}})\boldsymbol{w}}{\sigma_{m_{\mathcal{K}}}^2}+(1-\rho)\sum_l\biggl(\log\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}+1\biggr)\nonumber                                                                                   \\
+				 & \qquad \times \nabla_{\boldsymbol{w}^*} Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)-\frac{Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})\nabla_{\boldsymbol{w}^*}Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}{\sum_{m_{\mathcal{K}}'}P_{\mathcal{K}}(x_{m_{\mathcal{K}}'})Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}'}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}'}^2}\Bigr)}\Biggr)
+				\label{eq:weighted_sum_mutual_information_gradient}
+			\end{align}
+		\end{figure*}
 		They allows problem \eqref{op:active_beamforming} to be solved by the \gls{pgd} method, where any unregulated beamformer $\bar{\boldsymbol{w}}$ can be projected onto the feasible domain of average transmit power constraint \eqref{co:transmit_power} by
 		\begin{equation}
 			\boldsymbol{w} = \sqrt{P} \frac{\bar{\boldsymbol{w}}}{\max\bigl(\sqrt{P},\lVert\bar{\boldsymbol{w}}\rVert\bigr)}.
 			\label{eq:beamforming_projection}
 		\end{equation}
 		The \gls{pgd} active beamforming optimization with step size $\gamma$ refined by \gls{bls} \cite[Section 9.2]{Boyd2004} is summarized in Algorithm \ref{al:active_beamforming}.
-		\setalgorithmcaptionfont{\small}
 		\begin{algorithm}[!t]
 			\caption{Iterative Active Beamforming Optimization by \gls{pgd} with \gls{bls}}
 			\label{al:active_beamforming}
@@ -890,7 +875,7 @@
 		Next, we constrain the feasible domain of problem \eqref{op:decision_threshold} from continuous space $\mathbb{R}_+^{L+1}$ to finite candidate set (i.e., fine-grained discrete energy levels) $\mathcal{T}^{L+1}$.
 		\begin{figure}[!t]
 			\centering
-			\resizebox{0.5\columnwidth}{!}{
+			\resizebox{0.9\columnwidth}{!}{
 				\input{assets/illustration/discrete_outputs.tex}
 			}
 			\caption{The decision thresholds are selected from fine-grained discrete energy levels instead of continuous space. Each decision region consists of at least one neighbor energy bins.}
@@ -929,8 +914,8 @@
 	where $d$ is the transmission distance, $L_0=-\SI{30}{\dB}$ is the reference path loss at $d_0=\SI{1}{\meter}$, $\kappa$ is the Rician K-factor, $\bar{\boldsymbol{H}}$ is the deterministic line-of-sight component with unit-magnitude entries, and $\tilde{\boldsymbol{H}}$ is the Rayleigh fading component with standard \gls{iid} \gls{cscg} entries.
 	We choose $\gamma_{\text{D}}=2.6$, $\gamma_{\text{F}}=2.4$, $\gamma_{\text{B}}=2$, and $\kappa_{\text{D}}=\kappa_{\text{F}}=\kappa_{\text{B}}=5$ for direct, forward and backward links.
 	The finite decision threshold domain $\mathcal{T}$ is obtained by $b$-bit uniform discretization over the critical interval defined by the confidence bounds of edge hypotheses (i.e., lower bound of $\mathcal{H}_1$ and upper bound of $\mathcal{H}_L$) with confidence $1-\varepsilon$.
-	We set $b=9$ and $\varepsilon=\num{e-3}$.
-	All achievable rate points/regions are averaged over \num{e3} channel realizations.
+	We set $b=9$ and $\varepsilon={e-3}$.
+	All achievable rate points/regions are averaged over $10^3$ channel realizations.
 
 	\begin{subsection}{Evaluation of Proposed Algorithms}
 		\begin{subsubsection}{Initialization}
@@ -942,7 +927,7 @@
 		\begin{subsubsection}{Convergence}
 			\begin{figure}[!t]
 				\centering
-				\resizebox{0.4\columnwidth}{!}{
+				\resizebox{0.75\columnwidth}{!}{
 					\input{assets/simulation/wsr_convergence.tex}
 				}
 				\caption{Typical convergence curves at $\rho=0$ for $Q=4$, $K=8$, $M=2$, $N=20$, $\sigma_v^2=\SI{-40}{\dBm}$ and $r=\SI{2}{\meter}$.}
@@ -950,9 +935,9 @@
 			\end{figure}
 
 			In Fig.~\ref{fg:wsr_convergence}, we plot the weighted sum of primary and total backscatter rates at $\rho=0$ for \gls{kkt}, \gls{pgd} and \gls{bcd} algorithms on the first call.
-			For $K=8$ and $M=2$, Algorithm \ref{al:input_distribution} typically takes around \num{100} fast iterations to converge to the \gls{kkt} input distribution.
-			For $Q=4$, around \num{10} iterations are required for Algorithm \ref{al:active_beamforming} to converge.
-			Overall, the initial \gls{bcd} algorithm requires at most \num{5} iterations to converge.
+			For $K=8$ and $M=2$, Algorithm \ref{al:input_distribution} typically takes around {100} fast iterations to converge to the \gls{kkt} input distribution.
+			For $Q=4$, around {10} iterations are required for Algorithm \ref{al:active_beamforming} to converge.
+			Overall, the initial \gls{bcd} algorithm requires at most {5} iterations to converge.
 			At the following points (not presented here), the convergence of all three algorithms are much faster thanks to the progressive initialization.
 			We conclude the proposed algorithms have good convergence performances.
 		\end{subsubsection}
@@ -1009,10 +994,10 @@
 		\end{itemize}
 		\begin{figure}[!t]
 			\centering
-			\resizebox{0.4\columnwidth}{!}{
+			\resizebox{0.65\columnwidth}{!}{
 				\input{assets/simulation/region_comparison.tex}
 			}
-			\caption{Typical achievable rate region/points of scattering applications for $Q=1$, $K=1$, $M=4$, $N=\num{e3}$, $\sigma_v^2=\SI{-40}{\dBm}$ and $r=\SI{2}{\meter}$.}
+			\caption{Typical achievable rate region/points of scattering applications for $Q=1$, $K=1$, $M=4$, $N=10^3$, $\sigma_v^2=\SI{-40}{\dBm}$ and $r=\SI{2}{\meter}$.}
 			\label{fg:region_comparison}
 		\end{figure}
 
@@ -1040,7 +1025,7 @@
 	\begin{subsection}{Input Distribution under Different \gls{qos}}
 		\begin{figure}[!t]
 			\centering
-			\resizebox{0.4\columnwidth}{!}{
+			\resizebox{0.65\columnwidth}{!}{
 				\input{assets/simulation/distribution_weights.tex}
 			}
 			\caption{Typical RIScatter reflection state distribution at different $\rho$ for $Q=1$, $K=1$, $M=4$, $N=20$, $\sigma_v^2=\SI{-40}{\dBm}$ and $r=\SI{2}{\meter}$.}
@@ -1048,30 +1033,31 @@
 		\end{figure}
 		The objective is to demonstrate RIScatter nodes can leverage \gls{csi}- and \gls{qos}-adaptive input distribution design to balance backscatter modulation and passive beamforming.
 		For one RIScatter node with $M=4$, we evaluate the \gls{kkt} input distribution\footnote{Problem \eqref{op:input_distribution} is convex when $K=1$ and the \gls{kkt} solution is global optimal.} at different \gls{qos} and present the result in Fig.~\ref{fg:distribution_weights}.
-		At $\rho=0$ where the backscatter performance is prioritized, the optimal input distribution is \num{0} on two states and nearly uniform on the other two.
+		At $\rho=0$ where the backscatter performance is prioritized, the optimal input distribution is {0} on two states and nearly uniform on the other two.
 		This is inline with Shannon's observation that binary antipodal inputs can be good enough for channel capacity at the low \gls{snr} \cite{Shannon1948}.
 		Due to the weak scattered signal, the conditional energy \gls{pdf} under different hypotheses can be closely spaced as in Fig.~\ref{fg:energy_distribution}.
 		The extreme states producing the lowest/highest energy are always assigned with non-zero probability and the middle ones may not provide enough energy difference and thus end up unused.
-		At $\rho=1$ where the primary performance is prioritized, the optimal input distribution is \num{1} at the state that maximizes the primary \gls{snr} and \num{0} at the others.
+		At $\rho=1$ where the primary performance is prioritized, the optimal input distribution is {1} at the state that maximizes the primary \gls{snr} and {0} at the others.
 		That is, the reflection pattern becomes deterministic and the RIScatter node boils down to a discrete \gls{ris} element.
-		Increasing $\rho$ from \num{0} to \num{1} provides a smooth transition from backscatter modulation to passive beamforming and proves RIScatter unifies \gls{bc} and \gls{ris} from a probabilistic perspective.
+		Increasing $\rho$ from {0} to {1} provides a smooth transition from backscatter modulation to passive beamforming and proves RIScatter unifies \gls{bc} and \gls{ris} from a probabilistic perspective.
 	\end{subsection}
 
 	\begin{subsection}{Rate Region by Different Schemes}
 		\begin{figure}[!t]
 			\centering
 			\subfloat[Input Distribution, $Q=1$\label{fg:region_distribution}]{
-				\resizebox{0.27\columnwidth}{!}{
+				\resizebox{0.6\columnwidth}{!}{
 					\input{assets/simulation/region_distribution.tex}
 				}
 			}
+			\\
 			\subfloat[Active Beamforming, $Q=4$\label{fg:region_beamforming}]{
-				\resizebox{0.27\columnwidth}{!}{
+				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_beamforming.tex}
 				}
 			}
 			\subfloat[Decision Threshold, $Q=4$\label{fg:region_threshold}]{
-				\resizebox{0.27\columnwidth}{!}{
+				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_threshold.tex}
 				}
 			}
@@ -1083,14 +1069,14 @@
 			We compare these input distribution designs for problem \eqref{op:input_distribution}:
 			\begin{itemize}
 				\item \emph{Cooperation:} Joint nodes encoding using a $K$-dimensional probability array $P_{\mathcal{K}}(x_{m_{\mathcal{K}}})$ by Algorithm \ref{al:input_distribution};
-				\item \emph{Exhaustion:} Exhaustive search over the $M$-dimensional probability simplex with resolution $\Delta p = \num{e-2}$;
+				\item \emph{Exhaustion:} Exhaustive search over the $M$-dimensional probability simplex with resolution $\Delta p = {e-2}$;
 				\item \emph{\gls{kkt}:} Numerical \gls{kkt} evaluation by Algorithm \ref{al:input_distribution};
 				\item \emph{Equiprobable:} Uniform input distribution for all nodes.
 			\end{itemize}
 			For dispersed nodes, joint encoding is inapplicable and we consider these independent input distribution recovery methods (from the joint probability array):
 			\begin{itemize}
 				\item \emph{Marginalization:} Marginal probability distributions;
-				\item \emph{Decomposition:} Normalized rank-\num{1} \gls{cp} decomposition tensors by \texttt{Tensor Toolbox} \cite{Bader2022};
+				\item \emph{Decomposition:} Normalized rank-{1} \gls{cp} decomposition tensors by \texttt{Tensor Toolbox} \cite{Bader2022};
 				\item \emph{Randomization:} Gaussian randomization with the guidance of correlation matrix \cite{Calvo2010}.
 				% guided by correlation matrix \cite{Calvo2010}.
 			\end{itemize}
@@ -1145,33 +1131,34 @@
 		\begin{figure}[!t]
 			\centering
 			\subfloat[RIScatter Nodes\label{fg:region_tags}]{
-				\resizebox{0.27\columnwidth}{!}{
+				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_tags.tex}
 				}
 			}
 			\subfloat[Input States\label{fg:region_states}]{
-				\resizebox{0.27\columnwidth}{!}{
+				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_states.tex}
 				}
 			}
+			\\
 			\subfloat[Transmit Antennas\label{fg:region_txs}]{
-				\resizebox{0.27\columnwidth}{!}{
+				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_txs.tex}
 				}
 			}
-			\\
 			\subfloat[Spreading Factor\label{fg:region_duration}]{
-				\resizebox{0.27\columnwidth}{!}{
+				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_duration.tex}
 				}
 			}
+			\\
 			\subfloat[Average Noise Power\label{fg:region_noise}]{
-				\resizebox{0.27\columnwidth}{!}{
+				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_noise.tex}
 				}
 			}
 			\subfloat[Disk Radius\label{fg:region_coverage}]{
-				\resizebox{0.27\columnwidth}{!}{
+				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_coverage.tex}
 				}
 			}
@@ -1194,8 +1181,8 @@
 			Fig.~\subref*{fg:region_states} shows the relationship between available reflection states (i.e., \gls{qam} order) $M$ and achievable rate regions.
 			We notice increasing the reflection states has a marginal effect on both primary and total backscatter rates.
 			This is because once the scope of reflection coefficient is determined, using denser constellation points only creates marginal phase resolution and energy diversity for primary and backscatter links.
-			Due to the maximum amplitude normalization in \eqref{eq:backscatter_modulation}, the average rate region of \num{8}-\gls{qam} (points on rectangle border) is smaller than that of \num{4}-\gls{qam} (points on square vertices), and the \num{4} points on the rectangle edges are less frequently used.
-			On the other hand, \num{16}-\gls{qam} provides significant higher backscatter rate benefit than primary.
+			Due to the maximum amplitude normalization in \eqref{eq:backscatter_modulation}, the average rate region of {8}-\gls{qam} (points on rectangle border) is smaller than that of {4}-\gls{qam} (points on square vertices), and the {4} points on the rectangle edges are less frequently used.
+			On the other hand, {16}-\gls{qam} provides significant higher backscatter rate benefit than primary.
 			It motivates one to use high-resolution metamaterial units as RIScatter nodes.
 			% The results in this and previous paragraphs motivate one to replace the high-resolution metamaterial units by multiple low-order scatter nodes.
 		\end{subsubsection}
@@ -1210,7 +1197,7 @@
 			Fig.~\subref*{fg:region_duration} presents how the spreading factor $N$ affects the achievable rate region.
 			Please notice here the unit of total backscatter rate is bits per primary block to indicate throughput.
 			Apparently, using a very large $N$ can severely constrain the backscatter throughput, since the gain in energy certainty (by law of large numbers) cannot withstand the loss in gross rate.
-			As $N \to \infty$, RIScatter nodes boil down to \gls{ris} elements with fixed reflection pattern during whole channel block and the total backscatter rate approaches \num{0}.
+			As $N \to \infty$, RIScatter nodes boil down to \gls{ris} elements with fixed reflection pattern during whole channel block and the total backscatter rate approaches {0}.
 			On the other hand, when $N$ is too small, the equivalent \gls{dmmac} \eqref{eq:dmmac} has very high error probabilities and the energy detection is thus unreliable.
 			It explains the observation that $N=10$ provides lower backscatter throughput than $N=20$.
 			Therefore, we conclude the design of spreading factor $N$ in RIScatter systems should accommodate multiple factors (e.g., data rate requirements, load switching constraints at the nodes, and signal processing capability at the user).
@@ -1295,14 +1282,15 @@
 
 	\begin{subsection}{Proof of Proposition \ref{pr:input_kkt_solution}}
 		We first prove sequence \eqref{eq:input_kkt_solution} is non-decreasing in weighted sum mutual information.
-		Let $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(x_{m_q})$ and $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) = P_k'(x_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(x_{m_q})$ be two probability distributions with potentially different marginal for tag $k$ at state $m_k$, and define an intermediate function
-		\begin{align}
-			J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr)
-			 & \triangleq \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}})
-			\Biggl( \rho \log \Bigl(1 + \frac{\lvert \boldsymbol{h}_{\text{E}}^\mathsf{H}(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\Bigr) \nonumber                                                                                                                                          \\
-			 & \qquad + (1 - \rho) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P_{\mathcal{K}}'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})} \Biggr).
-			\label{eq:intermediate_information_function}
-		\end{align}
+		Let $P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) = \prod_{q \in \mathcal{K}} P_q(x_{m_q})$ and $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) = P_k'(x_{m_k}) \prod_{q \in \mathcal{K} \setminus \{k\}} P_q(x_{m_q})$ be two probability distributions with potentially different marginal for tag $k$ at state $m_k$, and define an intermediate function $J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr)$ as \eqref{eq:intermediate_information_function} at the end of page \pageref{eq:intermediate_information_function}.
+		\begin{figure*}[!b]
+			\hrule
+			\begin{equation}
+				J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr) \triangleq \sum_{m_{\mathcal{K}}} P_{\mathcal{K}}(x_{m_{\mathcal{K}}})
+				\Biggl( \rho \log \Bigl(1 + \frac{\lvert \boldsymbol{h}^\mathsf{H}(x_{m_{\mathcal{K}}}) \boldsymbol{w} \rvert^2}{\sigma_v^2}\Bigr) + (1 - \rho) \sum_{m_{\mathcal{K}}'} P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) \log \frac{P(\hat{x}_{m_{\mathcal{K}}'}|x_{m_{\mathcal{K}}}) P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})}{P_{\mathcal{K}}'(\hat{x}_{m_{\mathcal{K}}'}) P_{\mathcal{K}}(x_{m_{\mathcal{K}}})} \Biggr).
+				\label{eq:intermediate_information_function}
+			\end{equation}
+		\end{figure*}
 		It is straightforward to verify $J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}(x_{m_{\mathcal{K}}}) \bigr) = I(x_{\mathcal{K}})$ and $J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr)$ is a concave function for a fixed $P_{\mathcal{K}}'(x_{m_{\mathcal{K}}})$.
 		Setting $\nabla_{P_k^\star(x_{m_k})} J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr) = 0$, we have
 		\begin{equation}
@@ -1331,9 +1319,12 @@
 			\label{eq:information_difference_upper}
 			\begin{align}
 				\Delta
-				 & \triangleq I(x_{\mathcal{K}}) - J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr)                                                                                                                                                                                                                                                  \\
-				 & = (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k}) \log \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k'})}                       \\
-				 & \ge (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k}) \Biggl( 1 - \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k'})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k})} \Biggr) = 0,
+				 & \triangleq I(x_{\mathcal{K}}) - J \bigl( P_{\mathcal{K}}(x_{m_{\mathcal{K}}}),P_{\mathcal{K}}'(x_{m_{\mathcal{K}}}) \bigr)                                                                                  \\
+				 & = (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k})\nonumber                              \\
+				 & \quad \times \log \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k'})}                \\
+				 & \ge (1 - \rho) \sum_{m_k} \frac{P_k'(x_{m_k}) f_k'(x_{m_k})}{\sum_{m_k'} P_k'(x_{m_k'}) f_k'(x_{m_k'})} \sum_{m_{\mathcal{K}}''} P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k})\nonumber                            \\
+				 & \quad \times \Biggl( 1 - \frac{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k'})}{\sum_{m_k'} P_k'(x_{m_k'}) P(\hat{x}_{m_{\mathcal{K}}''}|x_{m_k'}) f_k'(x_{m_k})} \Biggr) \\
+				 & = 0,
 			\end{align}
 		\end{subequations}
 		where $f_k'(x_{m_k}) \triangleq \exp \bigl( \frac{\rho}{1 - \rho} I_k'(x_{m_k}) \bigr)$ and the equality holds if and only if \eqref{eq:optimal_relative_distribution} converges.
@@ -1367,7 +1358,7 @@
 	\end{subsection}
 
 	% \begin{subsection}{Proof of Proposition \ref{pr:threshold}}
-	% 	Since $L$ input letters are with non-zero probability and $x \to z \to \hat{x}$ formulates a Markov chain, we need $L$ non-empty decision regions and at least $L+1$ distinct thresholds (including \num{0} and $\infty$) to minimize the distortion between source and decision.
+	% 	Since $L$ input letters are with non-zero probability and $x \to z \to \hat{x}$ formulates a Markov chain, we need $L$ non-empty decision regions and at least $L+1$ distinct thresholds (including {0} and $\infty$) to minimize the distortion between source and decision.
 	% 	On the other hand, the optimal decision regions are apparently empty for those unused letters.
 
 	% 	Suppose the optimal number of thresholds is $S+1$ where $S \ge L$.

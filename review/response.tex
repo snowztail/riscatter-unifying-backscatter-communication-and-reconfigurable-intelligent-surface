@@ -1,0 +1,215 @@
+\documentclass[10pt]{scrartcl}
+
+\usepackage{scrletter}
+\usepackage{parskip}
+
+\usepackage[table]{xcolor}
+\usepackage{adjustbox}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bookmark}
+\usepackage{booktabs}
+\usepackage[american]{circuitikz}
+\usepackage{cite}
+\usepackage{fixmath}
+\usepackage[acronym]{glossaries-extra}
+\usepackage{hyperref}
+\usepackage{import}
+\usepackage{mathtools}
+% \usepackage{microtype}
+\usepackage[short]{optidef}
+\usepackage{pgfplots}
+\usepackage{ragged2e}
+\usepackage[subtle]{savetrees}
+\usepackage{setspace}
+\usepackage{siunitx}
+\usepackage{stfloats}
+\usepackage[caption=false,font=footnotesize,subrefformat=parens,labelformat=parens]{subfig}
+\usepackage{tabularx}
+\usepackage{tikz}
+
+% letter signature
+\renewcommand*{\raggedsignature}{\raggedright}
+
+% line referencing
+\newcommand{\R}[1]{\label{#1}\linelabel{#1}} % use this to set the placement of the line reference tags
+\newcommand{\lr}[1]{page~\pageref{#1}, line~\lineref{#1}} % use this to reference the tags (print line numbers)
+
+% quoting
+\newcommand\declquotedtext[2]{\expandafter\def\csname quotedtext@#1 \endcsname{#2}} % use around text you may want to quote later, but don't want printed in the main text
+\newcommand\defquotedtext[2]{\declquotedtext{#1}{#2}#2} % use around text you want to appear in the main text and that you want to quote later
+\newcommand\usequotedtext[1]{\csname quotedtext@#1 \endcsname} % use to print the quoted text
+\newcommand{\q}[1]{“#1”} % easier way to get double quotes
+
+\usepackage{geometry}
+\usepackage[most]{tcolorbox}
+
+% Colors
+\definecolor{lightgray}{rgb}{0.9, 0.9, 0.9}
+\definecolor{lightyellow}{rgb}{0.98,0.91,0.71}
+\definecolor{lightred}{rgb}{0.8,0.4,0.4}
+
+% Boxes
+\newtcolorbox{replybox}{colback=lightgray, grow to right by=-2.5mm, grow to
+	left by=-2.5mm, boxrule=0pt, boxsep=0pt, breakable, before skip=10pt}
+\newtcolorbox{partialbox}{colback=lightyellow, grow to right by=-2.5mm, grow to
+	left by=-2.5mm, boxrule=0pt, boxsep=0pt, breakable, before skip=10pt}
+\newtcolorbox{todobox}{colback=lightred, grow to right by=-2.5mm, grow to left
+	by=-2.5mm, boxrule=0pt, boxsep=0pt, breakable, before skip=10pt}
+
+% Counters
+\newcounter{epntcnt}
+\newcounter{rpntcnt}
+\newcounter{revcnt}
+
+% Environments
+\newenvironment{reviewer}{%
+	\refstepcounter{revcnt}%
+	\setcounter{rpntcnt}{0}%
+	\section*{Reviewer \therevcnt}%
+}{}
+% Editor environment takes an optional argument
+\newenvironment{editor}[1][Editorial Decision]{%
+	\setcounter{epntcnt}{0}%
+	\section*{#1}%
+}{}
+
+% Reply Commands
+\newcommand{\reply}[1]{%
+	\begin{replybox}%
+		#1
+	\end{replybox}%
+}
+\newcommand{\partialreply}[1]{%
+	\begin{partialbox}%
+		Partial reply: \emph{#1}
+	\end{partialbox}%
+}
+\newcommand{\todoreply}[1]{%
+	\begin{todobox}%
+		Todo reply: \emph{#1}
+	\end{todobox}%
+}
+\newcommand{\needsreply}{%
+	\todoreply{This comment needs a reply.}%
+}
+
+% Point command differs depending on the environment
+\makeatletter
+\newcommand{\point}{%
+	\medskip\noindent%
+	\def\@tmp{editor}%
+	\ifx\@tmp\@currenvir \refstepcounter{epntcnt}\theepntcnt\textbf{.}
+	\else%
+	\def\@tmp{reviewer}%
+	\ifx\@tmp\@currenvir \refstepcounter{rpntcnt}\therpntcnt\textbf{.}
+	\else\fi\fi%
+}
+\makeatother
+
+% Renew the commands for the point counters to get the formatting we want in
+% both the references and the item labels.
+\renewcommand{\therpntcnt}{\textbf{\textup{\therevcnt.\arabic{rpntcnt}}}}
+\renewcommand{\theepntcnt}{\textbf{\textup{E.\arabic{epntcnt}}}}
+
+\setlength\parindent{0pt}
+\newcommand{\bft}[1]{\mathbf{#1}}
+
+
+\begin{document}
+
+\setkomavar{date}{\today}
+\setkomavar{signature}{Yang Zhao and Bruno Clerckx}
+\setkomavar{subject}{Re: Major revision of manuscript JSAC-SI-ESIT-1570874111}
+
+\begin{letter}{%
+		Guest Editors\\
+		IEEE Journal on Selected Areas in Communications
+	}
+	\opening{Dear Editors and Reviewers,}
+	Thank you for giving us the opportunity to submit a revised version of ``RIScatter: Unifying Backscatter Communication and Reconfigurable Intelligent Surface''.
+	We would like to express our sincere gratitude to you for the valuable comments and suggestions, which helped us improve the quality of the manuscript significantly.
+	Below, we prepare a point-to-point response and describe all the changes made to the manuscript.
+	We hope that the revisions and clarifications make the manuscript meet the standards of JSAC publications.
+	\closing{Yours sincerely,}
+\end{letter}
+
+\begin{reviewer}
+	This paper introduces the concept of RIScatter, a unified architecture that combines Backscatter Communication (BackCom) and Reconfigurable Intelligent Surface (RIS) technologies, where the scatter nodes can modulate their own information and in the same time manipulate the wireless channel based on the information source, channel state information (CSI), and quality of service (QoS). The achievable primary-total-backscatter rate region in a single-user multi-node RIScatter system is investigated by designing the input distribution at scatter nodes, the active beamforming at the Access Point (AP), and the energy decision regions at the user. Numerical results show that RIScatter nodes can effectively utilize the scattered paths, enabling seamless transitions between backscatter modulation and passive beamforming techniques.
+
+	Although the paper presents a novel idea and tackles an interesting problem, it requires great effort to improve the presentation, the language, and the mathematical derivations. Detailed comments are given as follows:
+
+	\point The abstract and the number of keywords exceed the specified authorized limit. Please check IEEE JSAC guidelines.
+
+	\point The manuscript contains multiple grammatical errors and unclear sentences that require correction. Please revise the manuscript for improved clarity. For instance, in the first paragraph of Section II, Subsection B, the sentence "It is assumed that the signal reflected by two or more times is negligible" is not clear.
+
+	\point Please consider defining all acronyms (e.g., MRC) and all the notations in Section I (e.g., the mutual information, probabilities, etc.,).
+
+	\point Please ensure that all variables and symbols are properly defined and explained before their usage (e.g., $P$, $\sigma_1^2, \ldots, \sigma_L^2$, etc.). Also, $\mathbf{h}_E^H$ in eq. (46) is used without prior definition.
+
+	\point Please ensure consistency with the notation introduced in Section I throughout the manuscript. For instance, in Section II, Subsection B, after eq. (4b), the dimensions for $\mathbb{I}$ are not defined.
+
+	\point To ensure consistency and clarity, please maintain uniformity in the usage of mathematical symbols and technical terms throughout the paper. For example, in eq. (3), the amplitude scattering ratio of the node is defined as $\beta_m$, while in eq. (4a), it is referred to as $\alpha_k$. Additionally, there is a discrepancy in the usage of the term 'node' throughout the manuscript and 'tag' in the appendix. Please use a consistent term to refer to the same entity throughout the entire paper to avoid confusion and improve clarity.
+
+	\point The expression in eq. (1) represents the conjugate of the reflection coefficient, not the reflection coefficient itself.
+
+	\point It is unclear what is meant by relative QoS. Additionally, there is a lack of clarity regarding the derivation of eqs. (17-19) and how the relative QoS of the primary link is incorporated in those equations. The defined expressions should be clearly explained and justified. Please provide additional details and reasoning.
+
+	\point The link between eq. (9) and eq. (25) lacks clarity and misses intermediate steps. Also, the expression of the function Q provided in eq. (25) appears to be independent of the active beamforming `w'.  It is unclear how the derivation of Q with respect to 'w' is performed in this case. Please clarify the relationship between Q and 'w' and provide a clear derivation for better understanding. The same remark about clarity applies to eq. (28) and eq. (33).
+
+	\point Is the BCD algorithm convergent for the optimization problem (20)?
+
+	\point Please write the mathematical expression of eq. (40) properly. Moreover, there appears to be a mistake in the sign of the Lagrangian function of the optimization problem stated in Equation (21). If the optimization problem is intended to be a minimization problem, it should be explicitly mentioned to avoid any ambiguity or confusion.
+
+	\point The expression of the primary achievable rate in eq. (37) seems to be wrong since the primary message is also included in the cascaded channel and cannot be ignored.
+
+	\point In Figure 7, it is unclear why the KKT, PGD, and BCD algorithms are plotted separately since the BCD algorithm encompasses both the KKT and PGD algorithms. If there is a specific reason for displaying them separately, please provide a justification to enhance the understanding of the reader. Additionally, please provide the unit for the weighted sum rate axis.
+
+	\point Is the decoding of the backscatter information based on an energy detector reliable in this case, especially with high-order modulation or large number of scatter nodes? In other words, can the user in practice decode the backscatter information especially in the presence of the noise and signal variations due to the fading or the interference, etc.?
+
+	\point In Section III, the aim is to characterize the primary-total-backscatter rate region where the user retrieves both the backscatter information and the primary message. Why is the weighted sum mutual information maximized with respect to only the input distribution of the backscatter information and not jointly with respect to the input distribution of the primary message `s' as well? In other words, is the choice of $s \sim \mathcal{CN} (0,1)$ optimal?
+
+	\point In Section IV, Subsection B, it is stated that the RIS always ensures constructive superposition of direct and scattered components which is not true. The RIS can also add those components destructively which could be used for example to enhance the physical layer security of a system in the presence of an eavesdropper.
+\end{reviewer}
+
+\begin{reviewer}
+	The paper studies the achievable rates for both primary transmission and backscatter information, assuming a Gaussian distribution for primary transmission and K tags (with M loads each) and a single source-destination primary link; the authors assume full CSI knowledge and formulate a mutual information maximization problem, with probability distribution of loads per tag as a function to be optimized (in conjunction with beamforming weights for the multi-antenna transmitter and energy thresholds for the energy-based detector for the backscatter information). The problem is non-convex and challenging, and the authors revert to a series of approximations to relax it and offer a solution. The methodology is interesting in two ways: a) the authors do not employ SIC, but instead focus first on the tags' (weak) information signal, since its knowledge renders the detection of the primary information as a simple coherent detection problem, and b) borrow techniques from the discrete memoryless MAC/discrete memoryless thresholding channel literature, in order to calculate the average rate of the backscattered information.
+
+	The authors balance rate of primary transmission with rate of backscattered tags in a unified, user-controlled way and offer comparison results with prior art in the field (e.g., bistatic backscatter, where no primary link information is present, ambient backscatter, symbiotic (cooperative) ambient backscatter and RIS). Of particular importance is the fact that the authors have modeled both small-scale (through Rice) and large-scale (through distance) fading link parameters, typically omitted in many comm theory papers, even though backscattered links are operating in the presence of the much stronger primary link.
+
+	Overall, the methodology and overall presentation is rigorous and deserves further attention. Having said that, the following remarks are offered:
+
+	\point CSI estimation impact: the notion of full and perfect CSI knowledge is a very strong assumption; the authors do point at footnote 4, page 8 (single column version) to CSI estimation literature. However, CSI estimation for ambient backscatter employs several assumptions and simplifications and it is not perfect or ideal. The authors should perhaps study in terms of simulations the impact of imperfect CSI and necessary degrees of freedom (for channel estimation) on the achieved rates, carefully taking into account the tag(s) small SNR as well as the primary link much stronger SNR.
+
+	\point Modeling assumptions: the overall model is based on Gaussian codebooks for the primary link and lack of structural mode for backscattering; the latter is assumed absorbed by the channel parameters (Section II.A), while the tags are assumed with a demodulator/receiver of the primary information; it is also assumed that both full CSI and reflection efficiency parameters $\{\alpha_k\}, k \in \{1, 2, \ldots, K\}$ are known for all tags, while each tag is equipped with a receiver/demodulator (for the primary information). The reviewer believes that the structural mode cannot be absorbed by the channel parameters, since it offers a DC term, while there is no practical way to estimate separately the cascaded channel from the reflection efficiency; moreover, receivers in tags either increase the complexity or reduce the tag's sensitivity, especially when envelope detectors are used (as in Fig. 3). Moreover, the assumption for perfect symbol-level synchronization between tags and source, or the integer ratio between tags and source symbol duration is also very strong. Some discussion on the above is necessary, while some thoughts on non-Gaussian codebooks and how the methodology could be extended is perhaps important.
+
+	\point Independent distributions across tags: (10) assumes independence among distributions of tag loads across tags; IV.D.1 talks about joint nodes encoding; pls clarify. In addition, some more discussion is needed at IV.C and Fig. 9; for $\rho=1$, i.e., primary transmission maximum prioritization, Fig. 9 shows that only one load (out of 4) should be used. The reviewer was puzzled by this. Perhaps, values of the loads used in the simulations and respective reflection coefficients should be explicitly offered, in conjunction with more discussion regarding the wireless channel impact. When the channel changes, one would expect the distribution of the tags' loads to be sensitive on channel statistics.
+
+	\point All simulation results and respective optimization solutions are offered with relatively small number of K and M; some discussion on ways to extend the methodology for larger networks and loads should be helpful.
+
+	\point Finally, the list of references is perhaps incomplete; many references do not include publication venues, while prior art backscatter radio, including coherent as well as non-coherent detection, structural mode, receiverless tags etc., both in terms of theory as well as experimentation, are not given. For example see work that bridges backscatter radio and RIS, including theory and experimental results for any number of tags and loads in the following: "Intelligently Wireless Batteryless RF-Powered Reconfigurable Surface: Theory, Implementation \& Limitations", IEEE Transactions on Wireless Communications (TWC), available as early access in ieeexplore, Nov. 2022, conference version available at IEEE Globecom 2021.
+\end{reviewer}
+
+\begin{reviewer}
+	This paper introduces the concept of RIScatter, a unified architecture that combines Backscatter Communication (BackCom) and Reconfigurable Intelligent Surface (RIS) technologies, where the scatter nodes can modulate their own information and in the same time manipulate the wireless channel based on the information source, channel state information (CSI), and quality of service (QoS). The achievable primary-total-backscatter rate region in a single-user multi-node RIScatter system is investigated by designing the input distribution at scatter nodes, the active beamforming at the Access Point (AP), and the energy decision regions at the user. Numerical results show that RIScatter nodes can effectively utilize the scattered paths, enabling seamless transitions between backscatter modulation and passive beamforming techniques.
+
+	The manuscript presents a novel concept, i.e., RIScatter, and studies an interesting problem. However, there are several problems with the manuscript, namely:
+
+	\point Literature review: the literature review on rate characterization for backscatter communications is deficient. Some recent and closely related works are missing:
+	\begin{itemize}
+		\item J. Qian, Y. Zhu, C. He, F. Gao and S. Jin, "Achievable Rate and Capacity Analysis for Ambient Backscatter Communications," in IEEE Transactions on Communications, vol. 67, no. 9, pp. 6299-6310, Sept. 2019.
+		\item Z. Dai, R. Li, J. Xu, Y. Zeng and S. Jin, "Rate-Region Characterization and Channel Estimation for Cell-Free Symbiotic Radio Communications," in IEEE Transactions on Communications, vol. 71, no. 2, pp. 674-687, Feb. 2023.
+		\item H. E. Hassani, A. Savard, E. V. Belmega and R. C. de Lamare, "Multi-user downlink NOMA systems aided by ambient backscattering: achievable rate regions and energy-efficiency maximization," in IEEE Transactions on Green Communications and Networking, 2023.
+	\end{itemize}
+
+	\point Technical aspects: RIScatter is able to balance rate of primary transmission with rate of backscattered tags in a unified, user-controlled way, which brings technical advantages over existing approaches. This reviewer wonders why the authors only considered perfect CSI and did not assessed the impact of imperfect CSI on information rates (not the region!) given the limitations of tags and devices. Moreover, this reviewer is also sceptical about the assumption of perfect synchronization between the tags and the source. Can you explain why this is reasonable?
+
+	\point Simulation results: the authors opted for showing the results in terms of rate regions for several existing schemes and the proposed RISscatter. This is not properly motivated. Could explain why not include results such as information rates versus SNR or BER versus SNR?
+
+	\point Overall, the technical approach of the paper is credible, there is a clear technical contribution although there are aspects related to the use of English and presentation that must be revised.
+\end{reviewer}
+\end{document}

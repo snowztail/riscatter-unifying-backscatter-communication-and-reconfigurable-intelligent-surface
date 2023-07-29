@@ -150,21 +150,34 @@
 	\reply {We have thoroughly revised the manuscript to address the grammatical errors and improve sentence clarity. The example sentence has been revised to ``It is assumed that the signal going through two or more RIScatter nodes is too weak to be received by the user.''}
 
 	\point Please consider defining all acronyms (e.g., MRC) and all the notations in Section I (e.g., the mutual information, probabilities, etc.,).
-	\reply {Thank you for the suggestion and we understand it can be very difficult for readers to keep track of all acronyms and notations throughout the paper. We tried to add a list of acronyms and notations, but it would violate the 30-page limit and we cannot squeeze enough space from other places. Therefore, we decided not to include the list. We have ensured that all acronyms are defined before their first usage.}
+	\reply {Thank you for the suggestion and we understand it can be very difficult for readers to keep track of all acronyms and notations throughout the paper. Due to the space limitation, we have made the decision not to include the list, but have taken the necessary steps to ensure that all acronyms and notations are clearly defined before their first usage. We appreciate your understanding in this matter.}
 
 	\point Please ensure that all variables and symbols are properly defined and explained before their usage (e.g., $P$, $\sigma_1^2, \ldots, \sigma_L^2$, etc.). Also, $\mathbf{h}_E^H$ in eq. (46) is used without prior definition.
+	\reply {The issue has been addressed in the revised manuscript.}
 
 	\point Please ensure consistency with the notation introduced in Section I throughout the manuscript. For instance, in Section II, Subsection B, after eq. (4b), the dimensions for $\mathbb{I}$ are not defined.
+	\reply {We have revised the manuscript to ensure consistency with the notation introduced in Section I. In the provided example, $\alpha_k \in \mathbb{I}$ refers to $\alpha_k \in \mathbb{I}^1$ and the $1$ was omitted for brevity.}
 
 	\point To ensure consistency and clarity, please maintain uniformity in the usage of mathematical symbols and technical terms throughout the paper. For example, in eq. (3), the amplitude scattering ratio of the node is defined as $\beta_m$, while in eq. (4a), it is referred to as $\alpha_k$. Additionally, there is a discrepancy in the usage of the term 'node' throughout the manuscript and 'tag' in the appendix. Please use a consistent term to refer to the same entity throughout the entire paper to avoid confusion and improve clarity.
+	\reply {Thank you for bringing this to our attention. We were trying to be rigorous and consistent with the notation used in the literature, but didn't realize the confusion it may cause to the readers. In BackCom literatures, $\alpha_k$ is a constant that measures the \emph{average} reflection efficiency (irrelevant to the state) for node $k$. In RIS literatures, $\beta_m$ measures the scattering ratio of one element at state $m$. We have unified the notation and terminology in the revised manuscript.}
 
 	\point The expression in eq. (1) represents the conjugate of the reflection coefficient, not the reflection coefficient itself.
+	\reply {After a careful investigation, we found there are different definitions for the reflection coefficient in the literature:
+		\begin{enumerate}
+			\item $\Gamma_m = \frac{Z_m - Z^*}{Z_m + Z}$ in overview papers \cite{VanHuynh2017,Liang2022};
+			\item $\Gamma_m = \frac{Z_m - Z^*}{Z_m + Z^*}$ in BackCom paper \cite{Boyer2014};
+			\item $\Gamma_m^* = \frac{Z^* - Z_m}{Z + Z_m}$ in RF paper \cite{Hansen1989},
+		\end{enumerate}
+		where $Z_m$ is the load impedance at state $m$ and $Z$ is the antenna impedance. It is guessed that they choose different reference (antenna and space). However, we are not microwave engineering experts and would be grateful to hear your valuable opinion on this issue. The current version sticks to the seeming most popular definition 1.}
 
 	\point It is unclear what is meant by relative QoS. Additionally, there is a lack of clarity regarding the derivation of eqs. (17-19) and how the relative QoS of the primary link is incorporated in those equations. The defined expressions should be clearly explained and justified. Please provide additional details and reasoning.
+	\reply {We apologize for the confusion caused by poor wording. QoS refers to the relative priority of the primary link, and it should be either ``QoS'' or ``relative priority''. We have added a footnote on this. Besides, the information theory part (including the derivation of eqs. (17-19)) has been incorporated into Section II.B with proper explanation. We also modified Remark 1 and added Remark 2 to clarify the derivation of achievable rates.}
 
-	\point The link between eq. (9) and eq. (25) lacks clarity and misses intermediate steps. Also, the expression of the function Q provided in eq. (25) appears to be independent of the active beamforming `w'.  It is unclear how the derivation of Q with respect to 'w' is performed in this case. Please clarify the relationship between Q and 'w' and provide a clear derivation for better understanding. The same remark about clarity applies to eq. (28) and eq. (33).
+	\point The link between eq. (9) and eq. (25) lacks clarity and misses intermediate steps. Also, the expression of the function $Q$ provided in eq. (25) appears to be independent of the active beamforming $\boldsymbol{w}$.  It is unclear how the derivation of $Q$ with respect to $\boldsymbol{w}$ is performed in this case. Please clarify the relationship between $Q$ and $\boldsymbol{w}$ and provide a clear derivation for better understanding. The same remark about clarity applies to eq. (28) and eq. (33).
+	\reply {$Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)$ is the regularized incomplete Gamma function that depends on the variance of accumulated receive energy $\sigma_{m_{\mathcal{K}}}^2$, which is a function of $\boldsymbol{w}$. We have added a reminder on this, and have added the intermediate steps from (9) to (25) with proper details. The corresponding part has been completely rewritten to improve logic and clarity.}
 
 	\point Is the BCD algorithm convergent for the optimization problem (20)?
+	\reply {The BCD algorithm is convergent for the optimization problem (20), since the input distribution and active beamforming subproblems converge and the thresholding subproblem attains global optimality. This argument has been added prior to the convergence results in Fig. 7.}
 
 	\point Please write the mathematical expression of eq. (40) properly. Moreover, there appears to be a mistake in the sign of the Lagrangian function of the optimization problem stated in Equation (21). If the optimization problem is intended to be a minimization problem, it should be explicitly mentioned to avoid any ambiguity or confusion.
 
@@ -215,4 +228,7 @@
 
 	\point Overall, the technical approach of the paper is credible, there is a clear technical contribution although there are aspects related to the use of English and presentation that must be revised.
 \end{reviewer}
+
+\bibliographystyle{IEEEtran}
+\bibliography{../library.bib}
 \end{document}

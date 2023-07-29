@@ -332,7 +332,7 @@
 		In the scattered signal, the structural mode component depends on the scatterer geometry and material.
 		It is usually modelled as a DC offset \cite{Boyer2014} or part of environment multipath \cite{Thomas2012}.
 		On the other hand, the antenna mode component depends on the impedance mismatch and is widely exploited in scattering applications.
-		For an antenna (resp. metamaterial) scatterer with $M$ reflection states, the reflection coefficient at state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$ is
+		For an antenna (resp. metamaterial) scatterer with $M$ reflection states, the reflection coefficient at state $m \in \mathcal{M} \triangleq \{1,\ldots,M\}$ is \cite{VanHuynh2017,Liang2022}
 		\begin{equation}
 			\Gamma_m = \frac{Z_m - Z^*}{Z_m + Z},
 			\label{eq:reflection_coefficient}
@@ -658,11 +658,12 @@
 			\addConstraint{\eqref{co:transmit_power},}
 		\end{maxi!}
 		which is still non-convex due to the integration and entropy terms.
-		Plugging \eqref{eq:energy_distribution} into \eqref{eq:dmmac}, we notice the \gls{dmmac} $q(x_l|x_{m_{\mathcal{K}}})$ can be rewritten as
+		Note the \gls{dmmac} $q(x_l|x_{m_{\mathcal{K}}})$ depends on the variance of accumulated receive energy $\sigma_{m_{\mathcal{K}}}^2$, which is a function of $\boldsymbol{w}$.
+		Plugging \eqref{eq:energy_distribution} into \eqref{eq:dmmac}, we have
 		\begin{align}
 			q(x_l|x_{m_{\mathcal{K}}})
 			 & = \frac{\int_{{t_{l-1}}/{\sigma_{m_{\mathcal{K}}}^2}}^{{t_l}/{\sigma_{m_{\mathcal{K}}}^2}} z^{N-1} \exp(-z) \, d z}{(N-1)!} \\
-			 & = Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)
+			 & = Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr),
 		\end{align}
 		where $Q(N, b_1, b_2) \triangleq \int_{b_1}^{b_2} z^{N-1} \exp(-z) / (N - 1)! \, d z$ is the regularized incomplete Gamma function.
 		Its series expansion is given by \cite[Theorem 3]{Jameson2016}
@@ -824,7 +825,7 @@
 				\caption{Typical convergence curves at $\rho=0$ for $Q=4$, $K=8$, $M=2$, $N=20$, $\sigma_v^2=\SI{-40}{\dBm}$ and $r=\SI{2}{\meter}$.}
 				\label{fg:wsr_convergence}
 			\end{figure}
-
+			The \gls{bcd} algorithm is convergent for the optimization problem \eqref{op:weighted_sum_rate}, since the input distribution and active beamforming subproblems converge and the thresholding subproblem attains global optimality.
 			In Fig.~\ref{fg:wsr_convergence}, we plot the weighted sum of primary and total backscatter rates at $\rho=0$ for \gls{kkt}, \gls{pga} and \gls{bcd} algorithms on the first call.
 			For $K=8$ and $M=2$, Algorithm \ref{al:input_distribution} typically takes around \num{100} fast iterations to converge to the \gls{kkt} input distribution.
 			For $Q=4$, around \num{10} iterations are required for Algorithm \ref{al:active_beamforming} to converge.

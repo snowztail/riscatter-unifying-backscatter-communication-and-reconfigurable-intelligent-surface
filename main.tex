@@ -483,11 +483,11 @@
 		\end{equation}
 
 		\begin{remark}
-			We have assumed Gaussian codebook for the primary source and finite support for the backscatter nodes.
+			We have assumed Gaussian codebook for the primary source and finite support for the backscatter nodes, since they are relatively practical and widely adopted in relevant literatures.
 			The proposed framework is extendable to non-Gaussian primary source, and the conditional \gls{pdf} \eqref{eq:energy_distribution} can be approximated using \gls{clt} for large $N$.
 		\end{remark}
 
-		The user first jointly decodes the backscatter message of all nodes using a low-complexity energy detector.
+		The user first jointly decodes the backscatter message of all nodes using a low-complexity energy detector.\footnote{The reliability of the energy detector is improved by the adaptive input distribution and thresholding design. With high-order modulation or large number of scatter nodes, the reliability can be further enhanced by increasing the spreading factor or using error correction codes with lower code-rate. In practice, users can decode backscatter nodes ranging from a few to hundreds of meters in the presence of noise and interference, and the backscatter throughput can reach few Kbps to tens of Mbps \cite{Wu2022e}.}
 		The energy detector formulates a \gls{dmtc} of size $M^K \times M^K$.
 
 		\begin{remark}
@@ -511,7 +511,7 @@
 				\input{assets/illustration/energy_distribution.tex}
 			}
 			\caption{
-				\gls{pdf} of receive energy per backscatter block conditioned on different reflection state.
+				\gls{pdf} of the receive energy per backscatter block conditioned on different reflection state.
 			}
 			\label{fg:energy_distribution}
 		\end{figure}
@@ -791,9 +791,8 @@
 \end{section}
 
 \begin{section}{Simulation Results}
-	In this section, we provide numerical results to evaluate the proposed input distribution, active beamforming, and backscatter decision designs for the considered RIScatter network.
+	In this section, we provide numerical results to evaluate the proposed input distribution, active beamforming, and backscatter decision algorithms.
 	We assume the AP-user distance is \SI{10}{\meter} and at least one RIScatter nodes are randomly dropped in a disk centered at the user with radius $r$.
-	% The \gls{ap} is with an average transmit power budget $P=\SI{36}{\dBm}$, all nodes employs $M$-\gls{qam} with amplitude scattering ratio $\alpha=0.5$, and the user is with average noise power $\sigma_v^2=\SI{-40}{\dBm}$.
 	The \gls{ap} is with an average transmit power budget $P=\SI{36}{\dBm}$ and all nodes employs $M$-\gls{qam} with $\alpha=0.5$.
 	For all channels involved, we consider a distance-dependent path loss model
 	\begin{equation}
@@ -807,13 +806,13 @@
 	We choose $\gamma_{\text{D}}=2.6$, $\gamma_{\text{F}}=2.4$, $\gamma_{\text{B}}=2$, and $\kappa_{\text{D}}=\kappa_{\text{F}}=\kappa_{\text{B}}=5$ for direct, forward and backward links.
 	The finite decision threshold domain $\mathcal{T}$ is obtained by $b$-bit uniform discretization over the critical interval defined by the confidence bounds of edge hypotheses (i.e., lower bound of $x_1$ and upper bound of $x_L$) with confidence $1-\varepsilon$.
 	We set $b=9$ and $\varepsilon=\num{e-3}$.
-	All achievable rate points/regions are averaged over \num{e3} channel realizations.
+	All achievable rate regions are averaged over \num{e3} channel realizations.
 
 	\begin{subsection}{Evaluation of Proposed Algorithms}
 		\begin{subsubsection}{Initialization}
-			To characterize each achievable rate region, we progressively obtain all boundary points by successively increasing the primary \gls{qos} $\rho$ and solving problem \eqref{op:weighted_sum_rate}.
+			To characterize the achievable rate region, we progressively obtain all boundary points by successively increasing $\rho$ and solving problem \eqref{op:weighted_sum_rate}.
 			For $\rho=0$ where the backscatter link is prioritized, we initialize Algorithm \ref{al:input_distribution} and \ref{al:active_beamforming} by uniform input distribution and \gls{mrt} towards the sum cascaded channel $\sum_{k} \boldsymbol{h}_{\text{C},k}^\mathsf{H}$, respectively.
-			At the following points, both algorithms are initialized by the final solutions at the previous point.
+			At the following points, both algorithms are initialized by the solutions at the previous point.
 		\end{subsubsection}
 
 		\begin{subsubsection}{Convergence}
@@ -825,13 +824,11 @@
 				\caption{Typical convergence curves at $\rho=0$ for $Q=4$, $K=8$, $M=2$, $N=20$, $\sigma_v^2=\SI{-40}{\dBm}$ and $r=\SI{2}{\meter}$.}
 				\label{fg:wsr_convergence}
 			\end{figure}
-			The \gls{bcd} algorithm is convergent for the optimization problem \eqref{op:weighted_sum_rate}, since the input distribution and active beamforming subproblems converge and the thresholding subproblem attains global optimality.
-			In Fig.~\ref{fg:wsr_convergence}, we plot the weighted sum of primary and total backscatter rates at $\rho=0$ for \gls{kkt}, \gls{pga} and \gls{bcd} algorithms on the first call.
-			For $K=8$ and $M=2$, Algorithm \ref{al:input_distribution} typically takes around \num{100} fast iterations to converge to the \gls{kkt} input distribution.
-			For $Q=4$, around \num{10} iterations are required for Algorithm \ref{al:active_beamforming} to converge.
-			Overall, the initial \gls{bcd} algorithm requires at most \num{5} iterations to converge.
-			At the following points (not presented here), the convergence of all three algorithms are much faster thanks to the progressive initialization.
-			We conclude the proposed algorithms have good convergence performances.
+			The \gls{bcd} algorithm is convergent for problem \eqref{op:weighted_sum_rate} since the input distribution and active beamforming subproblems converge and the thresholding subproblem attains global optimality.
+			In company with \gls{bcd}, we also plotted the convergence results of \gls{kkt} and \gls{pga} algorithms in Fig.~\ref{fg:wsr_convergence} to show how much performance is gained by solving each subproblem.
+			It is observed that Algorithm \ref{al:input_distribution} and \ref{al:active_beamforming} take around \num{100} and \num{10} iterations to converge, respectively.
+			Overall, the \gls{bcd} algorithm requires at most \num{5} iterations to converge.
+			As $\rho$ increases (not presented here), the convergence of all three algorithms are much faster thanks to the progressive initialization.
 		\end{subsubsection}
 	\end{subsection}
 
@@ -844,20 +841,8 @@
 				y^{\text{\gls{bbc}}}[n] = \Bigl(\boldsymbol{h}_{\text{D}}^\mathsf{H} + \sum_{k} \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} x_k\Bigr) \boldsymbol{w} + v[n].
 			\end{equation}
 			The total backscatter rate of coherent decoding approaches $K \log M$ when $N$ is sufficiently large.
-			% which follows non-zero mean complex Gaussian distribution $\mathcal{CN}\bigl((\boldsymbol{h}_{\text{D}}^\mathsf{H} + \sum_{k} \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} x_{m_k}) \boldsymbol{w},\sigma_v^2\bigr)$ under hypothesis $x_{m_{\mathcal{K}}}$.
-			% The corresponding \gls{pdf} of receive energy over $N$ primary blocks is
-			% \begin{equation}
-			% 	f^{\text{\gls{bbc}}}(z|x_{m_{\mathcal{K}}}) = \frac{(z-\mu_{m_{\mathcal{K}}}^{\text{\gls{bbc}}})^{N-1} \exp \bigl(-(z-\mu_{m_{\mathcal{K}}}^{\text{\gls{bbc}}})/\sigma_v^2 \bigr)}{\sigma_v^{2N} (N-1)!},
-			% 	\label{eq:energy_distribution_bbc}
-			% \end{equation}
-			% where $\mu_{m_{\mathcal{K}}}^{\text{\gls{bbc}}} \triangleq N \bigl\lvert \bigl(\boldsymbol{h}_{\text{D}}^\mathsf{H} + \sum_{k} \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} x_{m_k}\bigr) \boldsymbol{w} \bigr\rvert^2$.
-			% The \gls{ml} decision threshold is derived as, $\forall l \in \mathcal{L} \setminus \{L\}$,
-			% \begin{equation}
-			% 	t_l^{\text{\gls{bbc}}} = \frac{\mu_{l-1}^{\text{\gls{bbc}}} \exp \bigl((\mu_{l-1}^{\text{\gls{bbc}}}-\mu_{l}^{\text{\gls{bbc}}})/\sigma_v^2 (N-1)\bigr) - \mu_{l}^{\text{\gls{bbc}}}}{\exp \bigl((\mu_{l-1}^{\text{\gls{bbc}}}-\mu_{l}^{\text{\gls{bbc}}})/\sigma_v^2 (N-1)\bigr) - 1}.
-			% 	\label{eq:detection_threshold_ml_bbc}
-			% \end{equation}
 			\item \emph{\gls{ambc}:} The user decodes both links independently and semi-coherently by treating the other as interference.
-			The primary achievable rate is approximately\footnote{To provide a preliminary benchmark, we regard the scattered component $\sum_{k} \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} x_k \boldsymbol{w}s[n]$ as \gls{awgn} during primary decoding \cite{Long2020a}.}
+			The primary achievable rate is approximately\footnote{The scattered component is treated as interference with average power $\mathbb{E}\bigl\{\sum_{k} \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} x_k \boldsymbol{w}s[n]\bigr\} = \sum_{k} \lvert \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} \boldsymbol{w} \rvert^2$ \cite{Long2020a}.}
 			\begin{equation}
 				I_{\text{P}}^{\text{\gls{ambc}}}(s;y) \approx \log \Bigl(1 + \frac{\lvert\boldsymbol{h}_{\text{D}}^\mathsf{H}\boldsymbol{w}\rvert^2}{\sum_{k}\lvert \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} \boldsymbol{w}\rvert^2+\sigma_v^2}\Bigr),
 			\end{equation}
@@ -869,14 +854,6 @@
 				\label{eq:intermediate_signal}
 			\end{equation}
 			The total backscatter rate of coherent decoding approaches $K \log M$ when $N$ is sufficiently large.
-			% which only involves noise uncertainty under hypothesis $x_{m_{\mathcal{K}}}$.
-			% During backscatter detection, the primary symbols $s[1],\ldots,s[N]$ function as a spreading code and the receiver performs \gls{mrc} on $\hat{y}^{\text{\gls{sr}}}[n]$ over $N$ primary blocks.
-			% This essentially formulates a \gls{dcmc} and the total backscatter achievable rate is maximized with equiprobable inputs as \cite{Ng2006}
-			% \begin{equation}
-			% 	I_{\text{B}}(x_{\mathcal{K}};\hat{y}^{\text{\gls{sr}}}) = K \log M - \frac{\iota}{M^K},
-			% \end{equation}
-			% where $\iota \triangleq \sum_{m_{\mathcal{K}}} \mathbb{E}_{\hat{v}} \log \sum_{m_{\mathcal{K}}'} \exp ( - {\lvert x_{m_{\mathcal{K}}} - x_{m_{\mathcal{K}}'} + \hat{v} \rvert^2}/{2 \sigma^2} )$ and $\hat{v} \sim \mathcal{CN}(0,\sigma_v^2/N)$.
-			% For a sufficiently large $N$, $\iota$ is negligible and the total backscatter rate approaches $K \log M$.
 			\item \emph{\gls{ris}:} The reflection pattern is deterministic and the total backscatter rate is zero.
 			The primary achievable rate is a special case of \eqref{eq:primary_mutual_information}
 			\begin{equation}
@@ -893,25 +870,18 @@
 			\label{fg:region_comparison}
 		\end{figure}
 
-		Fig.~\ref{fg:region_comparison} compares the typical achievable rate region/points of RIScatter and the strategies above.
-		% \emph{First,} we observe both \gls{bbc} and \gls{sr} achieves when the spreading factor $N$ is sufficiently large.
+		Fig.~\ref{fg:region_comparison} compares the typical achievable rate region/points of RIScatter and those strategies.
 		\emph{First,} we observe \gls{bbc} and \gls{sr} achieve the best backscatter performance thanks to coherent decoding.
-		% However, \gls{sr} requires $N$ \gls{sic} followed by a \gls
-		% However, \gls{sr} requires $N$ re-encoding, precoding, subtraction together with a time-domain \gls{mrc} to decode each backscatter symbol and the cost can be prohibitive.
 		For \gls{sr}, this comes with the cost of $N$ re-encoding, precoding, subtraction together with a time-domain \gls{mrc} per backscatter symbol.
-		% However, the primary rate benefit
-		% For \gls{bbc} with coherent energy detection, the conditional \gls{pdf} of receive energy \eqref{eq:energy_distribution_bbc} is more skewed at a large $N$, such that the equivalent \gls{dmmac} \eqref{eq:dmmac} has lower error probabilities.
-		% For \gls{sic}-based \gls{sr}, the effective backscatter \gls{snr} is increased by $N$ times and the penalty term $\iota$ becomes insignificant.
-		% However, the primary rate is only maintained at a very large spreading factor, which significantly constrains the backscatter \emph{throughput}.
 		\emph{Second,} the average primary rate slightly decreases/increases in the presence of a \gls{ambc}/\gls{ris} node and the benefit of \gls{sr} is not obvious.
 		This is because the cascaded channel is usually orders of magnitude weaker than the direct channel.
-		\gls{ris} always ensures constructive superposition of direct and scattered components while \gls{sr} only creates a quasi-static rich-scattering environment that marginally enhances the average primary rate.
+		Here, \gls{ris} ensures constructive superposition of direct and scattered components while \gls{sr} only creates a quasi-static rich-scattering environment that marginally enhances the average primary rate.
 		When $N$ is moderate, the randomly scattered signals should be modelled as interference rather than multipath components and the \gls{sr} point should move towards the \gls{ambc} point.
 		\emph{Third,} RIScatter enables a flexible primary-backscatter tradeoff with adaptive input distribution design.
 		In terms of maximum primary achievable rate, RIScatter coincides with \gls{ris} and outperforms the others using deterministic reflection pattern.
 		On the other hand, for a large $N$, the maximum backscatter achievable rate of RIScatter is lower than \gls{bbc} and \gls{sr} but higher than \gls{ambc}.
-		This is because both RIScatter and \gls{ambc} employ semi-coherent energy detection, and the adaptive channel coding of RIScatter provides better performance than equiprobable inputs of \gls{ambc} especially at the low \gls{snr} of double fading.
-		When multiple antenna is available at the \gls{ap}, active beamforming can be optimized for RIScatter nodes and the backscatter rate gain over \gls{ambc} can be even larger.
+		This is because both RIScatter and \gls{ambc} employ semi-coherent energy detection, and the adaptive channel coding of RIScatter outperforms the equiprobable inputs of \gls{ambc}, especially at the low backscatter \gls{snr} in the double fading scenario.
+		When multiple antenna is available at the \gls{ap}, active beamforming can be optimized for RIScatter nodes and the backscatter rate gain over \gls{ambc} is more prominent.
 	\end{subsection}
 
 	\begin{subsection}{Input Distribution under Different \gls{qos}}
@@ -924,14 +894,14 @@
 			\label{fg:distribution_weights}
 		\end{figure}
 		The objective is to demonstrate RIScatter nodes can leverage \gls{csi}- and \gls{qos}-adaptive input distribution design to balance backscatter modulation and passive beamforming.
-		For one RIScatter node with $M=4$, we evaluate the \gls{kkt} input distribution\footnote{Problem \eqref{op:input_distribution} is convex when $K=1$ and the \gls{kkt} solution is global optimal.} at different \gls{qos} and present the result in Fig.~\ref{fg:distribution_weights}.
+		For one RIScatter node with $M=4$, we evaluate the \gls{kkt} input distribution at different \gls{qos} and present the result in Fig.~\ref{fg:distribution_weights}.
 		At $\rho=0$ where the backscatter performance is prioritized, the optimal input distribution is \num{0} on two states and nearly uniform on the other two.
-		This is inline with Shannon's observation that binary antipodal inputs can be good enough for channel capacity at the low \gls{snr} \cite{Shannon1948}.
+		This is inline with Shannon's observation that binary antipodal inputs is good enough for channel capacity at the low \gls{snr} \cite{Shannon1948}.
 		Due to the weak scattered signal, the conditional energy \gls{pdf} under different hypotheses can be closely spaced as in Fig.~\ref{fg:energy_distribution}.
-		The extreme states producing the lowest/highest energy are always assigned with non-zero probability and the middle ones may not provide enough energy difference and thus end up unused.
+		The extreme states producing the lowest/highest energy are always assigned with non-zero probability, while the middles cannot provide enough energy difference and thus end up unused.
 		At $\rho=1$ where the primary performance is prioritized, the optimal input distribution is \num{1} at the state that maximizes the primary \gls{snr} and \num{0} at the others.
 		That is, the reflection pattern becomes deterministic and the RIScatter node boils down to a discrete \gls{ris} element.
-		Increasing $\rho$ from \num{0} to \num{1} provides a smooth transition from backscatter modulation to passive beamforming and proves RIScatter unifies \gls{bc} and \gls{ris} from a probabilistic perspective.
+		Increasing $\rho$ from \num{0} to \num{1} provides a smooth transition from backscatter modulation to passive beamforming, suggesting RIScatter unifies \gls{bc} and \gls{ris} from a probabilistic perspective.
 	\end{subsection}
 
 	\begin{subsection}{Rate Region by Different Schemes}
@@ -960,26 +930,26 @@
 		\begin{subsubsection}{Input Distribution}
 			We compare these input distribution designs for problem \eqref{op:input_distribution}:
 			\begin{itemize}
-				\item \emph{Cooperation:} Joint nodes encoding using a $K$-dimensional probability array $p(x_{m_{\mathcal{K}}})$ by Algorithm \ref{al:input_distribution};
+				\item \emph{Cooperation:} Joint encoding using a joint probability array $p(x_{m_{\mathcal{K}}})$ with $M^K$ entries by Algorithm \ref{al:input_distribution};
 				\item \emph{Exhaustion:} Exhaustive search over the $M$-dimensional probability simplex with resolution $\Delta p = \num{e-2}$;
-				\item \emph{\gls{kkt}:} Numerical \gls{kkt} evaluation by Algorithm \ref{al:input_distribution};
-				\item \emph{Equiprobable:} Uniform input distribution for all nodes.
+				\item \emph{\gls{kkt}:} The \gls{kkt} solution by Algorithm \ref{al:input_distribution};
+				\item \emph{Equiprobable:} Uniform input distribution.
 			\end{itemize}
-			For dispersed nodes, joint encoding is inapplicable and we consider these independent input distribution recovery methods (from the joint probability array):
+			We also consider these independent distribution recovery methods from the joint probability array:
 			\begin{itemize}
 				\item \emph{Marginalization:} Marginal probability distributions;
-				\item \emph{Decomposition:} Normalized rank-\num{1} \gls{cp} decomposition tensors by \texttt{Tensor Toolbox} \cite{Bader2022};
+				\item \emph{Decomposition:} Normalized rank-\num{1} \gls{cp} decomposed tensors by \texttt{Tensor Toolbox} \cite{Bader2022};
 				\item \emph{Randomization:} Gaussian randomization with the guidance of correlation matrix \cite{Calvo2010}.
-				% guided by correlation matrix \cite{Calvo2010}.
 			\end{itemize}
 
-			Fig.~\subref*{fg:region_distribution} shows the average achievable rate regions for those designs.
-			We observe Cooperation provides the outer bound and joint encoding can be beneficial.
-			The average rate performance of Exhaustion and \gls{kkt} completely coincide with each other, demonstrating \gls{kkt} input distribution is favorable for a moderate $K$ as mentioned in Remark \ref{re:input_kkt_distribution}.
+			Fig.~\subref*{fg:region_distribution} shows their average achievable rate regions.
+			It is observed that Cooperation achieves the outer bound of all schemes, but its backscatter rate gain comes at the cost of implementation and computation complexity.
+			Besides, the average rate performance of Exhaustion and \gls{kkt} completely coincide with each other when $K=2$.
+			This confirms Remark \ref{re:input_kkt_distribution} that the \gls{kkt} input distribution can be good enough when $K$ is not very large.
 			Equiprobable experiences minor backscatter and major primary rate losses without exploiting \gls{csi} and \gls{qos}.
-			Both rate gaps should be larger when $M$ and/or $K$ increase.
-			For the recovery methods, the simple Marginalization provides a close performance to \gls{kkt}, but Randomization and Decomposition fail our expectations for most channel realizations.
-			Those observations emphasize the importance of (joint) adaptive RIScatter encoding and demonstrate the advantage of the proposed \gls{kkt} input distribution design.
+			Those gaps should be larger when $M$ and/or $K$ increase.
+			For the recovery methods, Marginalization provides a close performance to \gls{kkt}, but Randomization and Decomposition fail our expectations for most channel realizations.
+			Those observations emphasize the importance of adaptive RIScatter encoding and demonstrate the advantage of the proposed \gls{kkt} input distribution design.
 		\end{subsubsection}
 
 		\begin{subsubsection}{Active Beamforming}
@@ -992,12 +962,12 @@
 
 			Fig.~\subref*{fg:region_beamforming} presents the average achievable rate regions for those schemes.
 			In the low-$\rho$ regime, the proposed \gls{pga} beamformer significantly outperforms both \gls{mrt} schemes in terms of total backscatter rate.
-			This is because the semi-coherent backscatter decoding relies on the \emph{relative difference} of receive energy under different symbol tuples.
-			Such an energy diversity is enhanced by \gls{pga} that effectively exploits backscatter constellation and input distribution knowledge rather than simply maximizing the direct/ergodic \gls{snr}.
-			As $\rho$ increases, the primary equivalent \gls{snr} outweighs the backscatter energy difference in \eqref{eq:weighted_sum_mutual_information_explicit} and \gls{pga} beamformer becomes closer to both \gls{mrt} schemes.
+			This is because the semi-coherent backscatter decoding relies on the \emph{relative difference} of receive energy under different backscatter symbol tuples.
+			Such an energy diversity is enhanced by \gls{pga}, which effectively exploits backscatter constellation and input distribution knowledge rather than simply maximizing the direct/ergodic channel strength.
+			As $\rho$ increases, the primary \gls{snr} outweighs the backscatter energy difference in \eqref{eq:weighted_sum_mutual_information_explicit}, and \gls{pga} beamformer approaches both \gls{mrt} schemes.
 			At $\rho=1$, both \gls{pga} and E-\gls{mrt} boil down to \gls{mrt} towards the composite channel.
 			The difference between E-\gls{mrt} and D-\gls{mrt} is insignificant when RIScatter nodes are dispersed.
-			Those observations prove the proposed \gls{pga} active beamforming design can exploit the \gls{csi}, \gls{qos}, and backscatter constellation to balance the primary equivalent \gls{snr} and backscatter energy difference and enlarge the achievable rate region.
+			Those observations prove the proposed \gls{pga} active beamforming design can exploit the \gls{csi}, \gls{qos}, and backscatter constellation to enlarge the achievable rate region.
 		\end{subsubsection}
 
 		\begin{subsubsection}{Decision Threshold}
@@ -1012,7 +982,7 @@
 			Fig.~\subref*{fg:region_threshold} reveals the average achievable rate region for those strategies.
 			The distribution-aware schemes \gls{dp}, \gls{smawk} and Bisection ensure higher total backscatter rate than \gls{ml}.
 			This is because the total backscatter rate \eqref{eq:backscatter_mutual_information} is a function of both input distribution and decision regions, and the rate-optimal threshold design heavily depends on input distribution.
-			For example, the backscatter symbol tuples with zero input probability should be assigned with empty decision regions in order to increase the success detection rates of other hypotheses.
+			For example, the backscatter symbol tuples with zero input probability should be assigned with empty decision regions, in order to increase the success detection rates of other hypotheses.
 			It highlights the importance of joint input distribution and decision threshold design in rate maximization problems.
 		\end{subsubsection}
 
@@ -1063,36 +1033,32 @@
 		\begin{subsubsection}{Number of Nodes}
 			Fig.~\subref*{fg:region_tags} reveals how the number RIScatter nodes $K$ influence the primary-backscatter tradeoff.
 			Interestingly, we observe that increasing $K$ has a larger benefit on the total backscatter rate than primary.
-			This is because each RIScatter node not only affects the primary equivalent \gls{snr} but also influences the relative energy difference that other nodes can create.
+			This is because each RIScatter node not only affects the primary \gls{snr} but also influences the relative energy difference that other nodes can make.
 			To maximize the total backscatter rate, some nodes closer to the user may need to sacrifice their own rate and use the state that \emph{minimizes} the composite channel strength, in order to increase the backscatter rate of other nodes.
 			This accounts for the significant primary rate decrease in the low-$\rho$ regime.
-			On the other hand, when the primary link is prioritized, the RIScatter nodes boil down to \gls{ris} elements and enjoy a conventional passive array gain $N^2$.
+			On the other hand, when the primary link is prioritized, the RIScatter nodes boil down to \gls{ris} elements and enjoy a conventional passive array gain $K^2$.
 		\end{subsubsection}
 
 		\begin{subsubsection}{Number of States}
-			Fig.~\subref*{fg:region_states} shows the relationship between available reflection states (i.e., \gls{qam} order) $M$ and achievable rate regions.
-			We notice increasing the reflection states has a marginal effect on both primary and total backscatter rates.
-			This is because once the scope of reflection coefficient is determined, using denser constellation points only creates marginal phase resolution and energy diversity for primary and backscatter links.
-			Due to the maximum amplitude normalization in \eqref{eq:backscatter_modulation}, the average rate region of \num{8}-\gls{qam} (points on rectangle border) is smaller than that of \num{4}-\gls{qam} (points on square vertices), and the \num{4} points on the rectangle edges are less frequently used.
-			On the other hand, \num{16}-\gls{qam} provides significant higher backscatter rate benefit than primary.
-			It motivates one to use high-resolution metamaterial units as RIScatter nodes.
-			% The results in this and previous paragraphs motivate one to replace the high-resolution metamaterial units by multiple low-order scatter nodes.
+			Fig.~\subref*{fg:region_states} shows the relationship between available reflection states (i.e., \gls{qam} order) $M$ and achievable rate regions when $K=1$.
+			We notice that increasing the reflection states has a marginal effect on the primary rate but significantly improves the backscatter rate.
+			This is because the maximum amplitude normalized-\gls{qam} \eqref{eq:backscatter_modulation} involves more weak reflection points as $M$ increases.
+			It greatly enhances the receive energy difference but cannot provide enough phase shift resolution with strong reflection.
 		\end{subsubsection}
 
 		\begin{subsubsection}{Number of Transmit Antennas}
 			Fig.~\subref*{fg:region_txs} illustrates the impact of transmit antennas $Q$ on the average performance.
-			As $Q$ increases, more scattered paths are available to \gls{pga} and the channel diversity can be further exploited to enhance the primary equivalent \gls{snr} and backscatter energy difference, which enlarges the achievable rate region.
+			As $Q$ increases, more scattered paths are available to \gls{pga} and the channel diversity can be further exploited to enhance the primary \gls{snr} and backscatter energy difference.
 			It emphasizes the importance of multi-antenna RIScatter systems and demonstrate the effectiveness of the proposed \gls{pga} design.
 		\end{subsubsection}
 
 		\begin{subsubsection}{Spreading factor}
-			Fig.~\subref*{fg:region_duration} presents how the spreading factor $N$ affects the achievable rate region.
-			Please notice here the unit of total backscatter rate is bits per primary block to indicate throughput.
-			Apparently, using a very large $N$ can severely constrain the backscatter throughput, since the gain in energy certainty (by law of large numbers) cannot withstand the loss in gross rate.
-			As $N \to \infty$, RIScatter nodes boil down to \gls{ris} elements with fixed reflection pattern during whole channel block and the total backscatter rate approaches \num{0}.
-			On the other hand, when $N$ is too small, the equivalent \gls{dmmac} \eqref{eq:dmmac} has very high error probabilities and the energy detection is thus unreliable.
+			Fig.~\subref*{fg:region_duration} shows how the spreading factor $N$ affects the achievable rate region.\footnote{Please notice in Fig.~\subref*{fg:region_duration} the unit of total backscatter rate is bits per primary block to indicate throughput.}
+			Using a very large $N$ can severely constrain the backscatter throughput, since the gain in energy certainty (by law of large numbers) cannot withstand the loss in gross rate.
+			As $N \to \infty$, RIScatter nodes boil down to static \gls{ris} elements and the total backscatter rate approaches \num{0}.
+			On the other hand, when $N$ is too small, energy detection is error-prone as the \gls{dmmac} \eqref{eq:dmmac} is unreliable.
 			It explains the observation that $N=10$ provides lower backscatter throughput than $N=20$.
-			Therefore, we conclude the design of spreading factor $N$ in RIScatter systems should accommodate multiple factors (e.g., data rate requirements, load switching constraints at the nodes, and signal processing capability at the user).
+			Therefore, we conclude the spreading factor $N$ should be carefully designed over multiple factors (e.g., data rate requirements, load switching speed at the nodes, and signal processing capability at the user).
 		\end{subsubsection}
 
 		\begin{subsubsection}{Average Noise Power}
@@ -1112,16 +1078,14 @@
 \end{section}
 
 \begin{section}{Conclusion}
-	This paper introduced RIScatter as a low-power scatter protocol that simultaneously provides backscatter modulation and passive beamforming by smart input distribution design.
-	Starting from scattering principles, we showed how RIScatter nodes generalize information nodes of \gls{bc} and reflect elements of \gls{ris} as special cases, how they can be built over existing passive scatter devices, and how they simultaneously encode self information and assist legacy transmission.
-	We also propose a practical \gls{sic}-free receiver that exploits the properties of active-passive coexisting networks to maintain primary benefit and improve backscatter throughput.
-	The achievable primary-total-backscatter rate region is then studied for a single-user multi-node RIScatter network, where the input distribution, active beamforming, and decision thresholds are iteratively updated.
-	Numerical results not only validated the proposed algorithms but also emphasized the importance of adaptive input distribution and cooperative decoding for both primary and backscatter links.
+	This paper introduced RIScatter as a novel scatter protocol that bridges backscatter modulation and passive beamforming.
+	Starting from scattering principles, we showed how RIScatter nodes generalize information nodes of \gls{bc} and reflect elements of \gls{ris}, how they can be built over existing passive scatter devices, and how they simultaneously encode self information and assist legacy transmission.
+	We also proposed a practical \gls{sic}-free receiver that exploits the properties of active-passive coexisting networks to benefit both subsystems.
+	The achievable primary-total-backscatter rate region was then studied for a single-user multi-node RIScatter network, where the input distribution, active beamforming, and decision thresholds are iteratively updated.
+	Numerical results validated the proposed algorithms and emphasized the importance of adaptive input distribution and cooperative receiver design.
 
 	One possible future direction is to consider backscatter detection over the received signal domain rather than energy domain, where multi-antenna \cite{Liu2022c} and learning-based approaches can be promising.
 	Another interesting question is how to design RIScatter node and receiver in a multi-user system to fully exploit the dynamic passive beamforming that naturally origins from backscatter modulation.
-	% If one node can be decoded by multiple users, its input distribution may be further adjusted to mimic the multi-beam gain of dynamic passive beamforming \cite{Qiu2022}.
-	% This will be answered in our future work.
 \end{section}
 
 \begin{appendix}

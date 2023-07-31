@@ -27,7 +27,7 @@ function [distribution, equivalentDistribution, convergence] = distribution_kkt(
 		weight;
 		snr;
 		dmac;
-		tolerance = 1e-9;
+		tolerance = 1e-8;
 	end
 
 	% * Get data

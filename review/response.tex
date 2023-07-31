@@ -180,16 +180,36 @@
 	\reply {The BCD algorithm is convergent for the optimization problem (20), since the input distribution and active beamforming subproblems converge and the thresholding subproblem attains global optimality. This argument has been added prior to the convergence results in Fig. 7.}
 
 	\point Please write the mathematical expression of eq. (40) properly. Moreover, there appears to be a mistake in the sign of the Lagrangian function of the optimization problem stated in Equation (21). If the optimization problem is intended to be a minimization problem, it should be explicitly mentioned to avoid any ambiguity or confusion.
+	\reply {In the revised manuscript, we have simplified many notations and rewritten (40) properly. Problem (21) is a maximization problem and the sign of the Lagrangian function has been corrected.}
 
 	\point The expression of the primary achievable rate in eq. (37) seems to be wrong since the primary message is also included in the cascaded channel and cannot be ignored.
+	\reply {We appreciate your careful reading. The primary message is indeed included in the scattered component. However, since the user decodes both links independently, the backscatter uncertainty cannot be eliminated when decoding the primary link. That is to say, the scattered component should be treated as interference with average power $\mathbb{E}\bigl\{\sum_{k} \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} x_k \boldsymbol{w}s[n]\bigr\} = \sum_{k} \lvert \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} \boldsymbol{w} \rvert^2$. The same reasoning was considered in \cite{Long2020a}. We have revised the corresponding footnote to justify this.}
 
 	\point In Figure 7, it is unclear why the KKT, PGD, and BCD algorithms are plotted separately since the BCD algorithm encompasses both the KKT and PGD algorithms. If there is a specific reason for displaying them separately, please provide a justification to enhance the understanding of the reader. Additionally, please provide the unit for the weighted sum rate axis.
+	\reply {In company with BCD, we also plotted the convergence results of KKT and PGD algorithms to show how much performance gain is provided by solving each subproblem (over the initialization method specified in the previous paragraph). The unit of the y axis is bit/s/Hz and we have added this in the revised manuscript.}
 
 	\point Is the decoding of the backscatter information based on an energy detector reliable in this case, especially with high-order modulation or large number of scatter nodes? In other words, can the user in practice decode the backscatter information especially in the presence of the noise and signal variations due to the fading or the interference, etc.?
+	\reply {The energy detector is a simple and practical method for backscatter information decoding, and its reliability is improved by the adaptive input distribution and thresholding design. With high-order modulation or large number of scatter nodes, its performance can be further enhanced by increasing the spreading factor $N$ or using stronger error correction codes with lower code-rate. In practice, the user can decode backscatter nodes ranging from few to hundreds of meters in the presence of noise and interference, and the backscatter throughput can reach few Kbps to tens of Mbps. We have added a footnote on this, and the reviewer is referred to Table 2 in \cite{Wu2022e} for more details.}
 
 	\point In Section III, the aim is to characterize the primary-total-backscatter rate region where the user retrieves both the backscatter information and the primary message. Why is the weighted sum mutual information maximized with respect to only the input distribution of the backscatter information and not jointly with respect to the input distribution of the primary message `s' as well? In other words, is the choice of $s \sim \mathcal{CN} (0,1)$ optimal?
+	\reply {This is indeed a very good question. The choice of $s \sim \mathcal{CN} (0,1)$ is generally not optimal for weighted sum mutual information. To the best of our knowledge, the optimal primary distribution in this case remains an open issue, but some insights were given in those papers:
+		\begin{itemize}
+			\item If there is no direct link and the node is with \emph{average} power constraint, then the optimal distribution for \emph{weighted sum mutual information} requires a time-sharing between those modes \cite{Pillai2011}:
+			\begin{itemize}
+				\item $s$ follows zero-mean Gaussian distribution and $x$ is a constant;
+				\item $x$ follows zero-mean Gaussian distribution and $s$ is a constant;
+				\item $s$ and $x$ equal 0.
+			\end{itemize}
+			\item If there is no direct link and the node is with \emph{peak} power constraint, then the optimal distribution for \emph{sum mutual information} is not unique, for example \cite{Zhang2023} (came out after our submission):
+			\begin{itemize}
+				\item $s$ follows zero-mean Gaussian distribution and $x$ is a constant;
+				\item $s$ follows Rayleigh distribution and $x$ follows uniform distribution on $[0, 2 \pi]$;
+			\end{itemize}
+		\end{itemize}
+		Despite not optimal, the assumption of Gaussian primary source and finite-support backscatter source are relatively practical and widely adopted in relevant literatures. We have added Remark 3 on this, but intentionally avoided the discussion of optimal distribution, since it is beyond the scope of this paper and may confuse the readers. We appreciate your understanding in this matter.}
 
 	\point In Section IV, Subsection B, it is stated that the RIS always ensures constructive superposition of direct and scattered components which is not true. The RIS can also add those components destructively which could be used for example to enhance the physical layer security of a system in the presence of an eavesdropper.
+	\reply {We apologize for the oversight. It has been modified to ``Here, RIS ensures constructive superposition of direct and scattered components.''}
 \end{reviewer}
 
 \begin{reviewer}

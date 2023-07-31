@@ -14,7 +14,7 @@ hold off; legend('Location', 'se'); grid on; box on;
 nexttile;
 plotHandle(2) = plot(0 : length(convergence.pgd) - 1, convergence.pgd, 'DisplayName', 'PGD');
 hold off; legend('Location', 'se'); grid on; box on;
-ylabel('Weighed Sum-Rate');
+ylabel('Weighed Sum-Rate [bits/s/Hz]');
 
 % * BCD
 nexttile;

@@ -17,12 +17,12 @@ end
 save(strcat('../data/region_', erase(mfilename, 'plot_')));
 
 %% * Draw primary-(sum-)backscatter rate regions
-figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Average Noise Power', 'Position', [0, 0, 500, 400]);
+figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Backscatter SNR', 'Position', [0, 0, 500, 400]);
 plotHandle = gobjects(nVariables, 1);
 hold all;
 for iVariable = 1 : nVariables
-	noisePower = Variable(iVariable).noisePower;
-	plotHandle(iVariable) = plot(region{iVariable}(1, :) / log(2), region{iVariable}(2, :) / log(2), 'DisplayName', strcat('$\sigma_n^2 = ', num2str(pow2db(noisePower) + 30), '$ dBm'));
+	cascadedSnr = Variable(iVariable).cascadedSnr;
+	plotHandle(iVariable) = plot(region{iVariable}(1, :) / log(2), region{iVariable}(2, :) / log(2), 'DisplayName', strcat('$\gamma_B = ', num2str(pow2db(cascadedSnr)), '$ dB'));
 end
 hold off; legend('Location', 'se'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');

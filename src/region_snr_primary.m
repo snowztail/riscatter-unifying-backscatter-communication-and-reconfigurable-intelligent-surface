@@ -4,18 +4,18 @@ clear; setup; cvx_begin; cvx_end; clc; run(strcat('config_', erase(mfilename, 'r
 Result(nVariables, nWeights) = struct('weight', [], 'rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
 % * Generate channels
-directChannel = sqrt(path_loss(directDistance, directExponent)) * fading_ricean(nTxs, nRxs, directFactor);
-cascadedFading = zeros(nTxs, nTags);
+directFading = fading_ricean(nTxs, nRxs, directFactor);
+cascadedChannel = zeros(nTxs, nTags);
 for iTag = 1 : nTags
-	cascadedFading(:, iTag) = fading_ricean(nTxs, nSxs, forwardFactor) * fading_ricean(nSxs, nRxs, backwardFactor);
+	cascadedChannel(:, iTag) = sqrt(cascadedPathLoss) * fading_ricean(nTxs, nSxs, forwardFactor) * fading_ricean(nSxs, nRxs, backwardFactor);
 end
 
 % * Evaluate rate region vs backscatter/primary symbol duration ratio
 for iVariable = 1 : nVariables
-	% * Set cascaded path loss
-	cascadedPathLoss = Variable(iVariable).cascadedPathLoss;
-
-	cascadedChannel = sqrt(cascadedPathLoss) * cascadedFading;
+	% * Set direct snr
+	directSnr = Variable(iVariable).directSnr;
+    directPathLoss = directSnr * noisePower / transmitPower;
+	directChannel = sqrt(directPathLoss) * directFading;
 	equivalentChannel = directChannel + scatterRatio * cascadedChannel * transpose(constellation(tuple_tag(repmat(transpose(1 : nStates), [1, nTags]))));
 
 	% * Clear persistent variables

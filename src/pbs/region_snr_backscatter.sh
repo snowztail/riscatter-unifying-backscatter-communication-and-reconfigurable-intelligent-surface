@@ -5,6 +5,6 @@ module load matlab/R2021a
 
 cd $PBS_O_WORKDIR/../../
 # matlab -batch $(basename $BASH_SOURCE .sh)
-matlab -singleCompThread -batch "region_snr"
+matlab -singleCompThread -batch "region_snr_backscatter"
 
 exit

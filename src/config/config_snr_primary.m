@@ -19,14 +19,9 @@ symbolRatio = 20;
 transmitPower = db2pow(6);
 % average noise power
 noisePower = db2pow(-70);
-% layout and distance
-directDistance = 10;
-coverage = 2;
-[forwardDistance, backwardDistance] = layout(directDistance, nTags, coverage);
-% path loss exponents
-directExponent = 2.6;
-forwardExponent = 2.4;
-backwardExponent = 2;
+% snr
+cascadedSnr = db2pow(0);
+cascadedPathLoss = cascadedSnr * noisePower / transmitPower;
 % Ricean factors
 directFactor = 5;
 forwardFactor = 5;
@@ -41,7 +36,7 @@ nWeights = length(weightSet);
 nBins = 2 ^ 9;
 
 %% * Variable
-Variable = struct('cascadedPathLoss', num2cell(db2pow(-86 : -10 : -106)));
+Variable = struct('directSnr', num2cell(db2pow(0 : 10 : 30)));
 nVariables = length(Variable);
 
 %% * PBS

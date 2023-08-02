@@ -27,6 +27,7 @@ for iVariable = 1 : nVariables
 		weight = weightSet(iWeight);
 		[~, distribution, threshold, beamforming] = block_coordinate_descent(nTags, symbolRatio, transmitPower, noisePower, nBins, weight, equivalentChannelEstimation, cascadedChannelEstimation, 'Distribution', 'kkt', 'Beamforming', 'pgd', 'Threshold', 'smawk');
 
+	    equivalentDistribution = prod(tuple_tag(distribution), 2);
 		signalPower = abs(equivalentChannel' * beamforming) .^ 2;
 		receivePower = signalPower + noisePower;
 		snr = signalPower / noisePower;

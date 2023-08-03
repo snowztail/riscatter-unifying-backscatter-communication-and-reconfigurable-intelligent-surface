@@ -183,9 +183,12 @@
 
 	As a special case of \gls{cr}, active and passive transmissions coexist and interplay in \gls{ambc} and \gls{sr}.
 	Such a coexistence is classified into commensal (overlay), parasitic (underlay), and competitive (interfering) paradigms, and their achievable rate and outage performance were investigated in \cite{Guo2019b,Ding2020}.
+	The achievable rate and optimal input distribution for binary-input \gls{ambc} are investigated in \cite{Qian2019b}, but its impact on the primary link is not considered.
+	% For binary-input \gls{ambc},  are investigated in \cite{Qian2019b}, but the authors did not consider its impact on the primary link.
 	% The \gls{ber} performance of \gls{ml}, linear, and \gls{sic} receivers are derived over flat fading channels \cite{Yang2018}.
-	The authors of \cite{Hassani2023} analyzed the energy efficiency and achievable rate region for an \gls{ambc}-aided multi-user downlink \gls{noma} system.
-	However, it assumed equal symbol duration and perfect synchronization for the coexisting links.
+	% The authors of \cite{Hassani2023} analyzed the energy efficiency and achievable rate region for an \gls{ambc}-aided multi-user downlink \gls{noma} system.
+	In \cite{Hassani2023}, the authors analyzed the energy efficiency and achievable rate region for an \gls{ambc}-aided multi-user downlink \gls{noma} system.
+	However, they assumed equal symbol duration and perfect synchronization for the coexisting links.
 	Importantly, active-passive coexisting networks have three special and important properties:
 	\begin{enumerate}
 		\item Primary and backscatter symbols are superimposed by \emph{double modulation} (i.e., multiplication coding);
@@ -279,7 +282,6 @@
 	In contrast, \cite{Vardakis2023} exploits commodity \gls{rfid} tags, powered and controlled by a software-defined radio reader, to perform passive beamforming (but no backscatter modulation) towards a legacy user at a different frequency.
 	% The authors demonstrated the feasibility of using batteryless devices to adaptively enhance the \gls{snr} of a primary link, but did not consider backscatter modulation at.
 	Most relevant literature considers either Gaussian codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} that is impractical for low-power nodes, or finite equiprobable inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} that does not fully exploit the \gls{csi} and properties of active-passive coexisting networks.
-	For binary-input \gls{ambc}, the achievable rate and optimal input distribution are investigated in \cite{Qian2019b}, but the authors did not consider its impact on the primary link.
 	Those problems are addressed in this paper and the contributions are summarized below.
 
 	\emph{First,} we propose RIScatter as a novel protocol that unifies \gls{bc} and \gls{ris} by adaptive reflection state (backscatter input) distribution design.

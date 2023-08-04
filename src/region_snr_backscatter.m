@@ -4,7 +4,7 @@ clear; setup; cvx_begin; cvx_end; clc; run(strcat('config_', erase(mfilename, 'r
 Result(nVariables, nWeights) = struct('weight', [], 'rate', [], 'distribution', [], 'threshold', [], 'beamforming', []);
 
 % * Generate channels
-directChannel = sqrt(directSnr) * fading_ricean(nTxs, nRxs, directFactor);
+directChannel = sqrt(directPathLoss) * fading_ricean(nTxs, nRxs, directFactor);
 cascadedFading = zeros(nTxs, nTags);
 for iTag = 1 : nTags
 	cascadedFading(:, iTag) = fading_ricean(nTxs, nSxs, forwardFactor) * fading_ricean(nSxs, nRxs, backwardFactor);

@@ -32,6 +32,24 @@
 \usepackage{tabularx}
 \usepackage{tikz}
 
+% \usepackage{xr-hyper}
+% \usepackage{hyperref}
+% \makeatletter
+% \long\def\myempty{}
+% \def\XR@addURL#1{\XR@@dURL#1\myempty{}{}{}{}{}\\}
+% \def\XR@@dURL#1#2#3#4#5#6#7\\{%
+%   {#1}{#2}%
+%   \ifx\myempty#6\@empty
+% 	{#3}{#4}{\XR@URL}%
+%   \else
+%   \fi
+% }
+% \makeatother
+
+\usepackage[pagewise]{lineno}
+\usepackage{xr}
+\externaldocument[m-]{../main}
+
 % letter signature
 \renewcommand*{\raggedsignature}{\raggedright}
 
@@ -144,52 +162,70 @@
 	Although the paper presents a novel idea and tackles an interesting problem, it requires great effort to improve the presentation, the language, and the mathematical derivations. Detailed comments are given as follows:
 
 	\point The abstract and the number of keywords exceed the specified authorized limit. Please check IEEE JSAC guidelines.
-	\reply {We apologize for the mistake. The abstract and the number of keywords have been revised to meet the specifications.}
+	\reply {We apologize for the mistake. The abstract and keywords have been revised to meet the specifications.}
 
 	\point The manuscript contains multiple grammatical errors and unclear sentences that require correction. Please revise the manuscript for improved clarity. For instance, in the first paragraph of Section II, Subsection B, the sentence "It is assumed that the signal reflected by two or more times is negligible" is not clear.
 	\reply {We have thoroughly revised the manuscript to address the grammatical errors and improve sentence clarity. The example sentence has been revised to ``It is assumed that the signal going through two or more RIScatter nodes is too weak to be received by the user.''}
 
 	\point Please consider defining all acronyms (e.g., MRC) and all the notations in Section I (e.g., the mutual information, probabilities, etc.,).
-	\reply {Thank you for the suggestion and we understand it can be very difficult for readers to keep track of all acronyms and notations throughout the paper. Due to the space limitation, we have made the decision not to include the list, but have taken the necessary steps to ensure that all acronyms and notations are clearly defined before their first usage. We appreciate your understanding in this matter.}
+	\reply {Thank you for the suggestion and we understand it can be very difficult for readers to keep track of all acronyms and notations throughout the paper. Due to the space limitation, the list is not included but have carefully defined all acronyms and notations before their first usage. We appreciate your understanding in this matter.}
 
 	\point Please ensure that all variables and symbols are properly defined and explained before their usage (e.g., $P$, $\sigma_1^2, \ldots, \sigma_L^2$, etc.). Also, $\mathbf{h}_E^H$ in eq. (46) is used without prior definition.
-	\reply {The issue has been addressed in the revised manuscript.}
+	\reply {The issue has been addressed in the revised manuscript. $\mathbf{h}_E^H$ in eq. (46) should be $\mathbf{h}^H$.}
 
 	\point Please ensure consistency with the notation introduced in Section I throughout the manuscript. For instance, in Section II, Subsection B, after eq. (4b), the dimensions for $\mathbb{I}$ are not defined.
-	\reply {We have revised the manuscript to ensure consistency with the notation introduced in Section I. In the provided example, $\alpha_k \in \mathbb{I}$ refers to $\alpha_k \in \mathbb{I}^1$ and the $1$ was omitted for brevity.}
+	\reply {We have revised the manuscript to ensure consistency with the notation introduced in Section~\ref{m-sc:introduction}. In the provided example, $\alpha_k \in \mathbb{I}$ refers to $\alpha_k \in \mathbb{I}^1$ and the $1$ was omitted for brevity.}
 
 	\point To ensure consistency and clarity, please maintain uniformity in the usage of mathematical symbols and technical terms throughout the paper. For example, in eq. (3), the amplitude scattering ratio of the node is defined as $\beta_m$, while in eq. (4a), it is referred to as $\alpha_k$. Additionally, there is a discrepancy in the usage of the term 'node' throughout the manuscript and 'tag' in the appendix. Please use a consistent term to refer to the same entity throughout the entire paper to avoid confusion and improve clarity.
-	\reply {Thank you for bringing this to our attention. We were trying to be rigorous and consistent with the notation used in the literature, but didn't realize the confusion it may cause to the readers. In BackCom literatures, $\alpha_k$ is a constant that measures the \emph{average} reflection efficiency (irrelevant to the state) for node $k$. In RIS literatures, $\beta_m$ measures the scattering ratio of one element at state $m$. We have unified the notation and terminology in the revised manuscript.}
+	\reply {Thank you for bringing this to our attention. We were trying to be rigorous and consistent with the notation used in the literature, but didn't realize the confusion it may cause to the readers. In BackCom literatures, $\alpha_k$ is a constant that measures the \emph{average} reflection efficiency (irrelevant to the state) for node $k$. In RIS literatures, $\beta_m$ measures the scattering ratio of one element at state $m$. In the revised manuscript, we have unified those notation in page~\pageref{m-eq:backscatter_modulation} and revised the term ``tag'' to ``node'' in the appendix.}
 
 	\point The expression in eq. (1) represents the conjugate of the reflection coefficient, not the reflection coefficient itself.
-	\reply {After a careful investigation, we found there are different definitions for the reflection coefficient in the literature:
+	\reply {After a careful investigation, we found there are three different definitions for the reflection coefficient in the literature:
 		\begin{enumerate}
 			\item $\Gamma_m = \frac{Z_m - Z^*}{Z_m + Z}$ in overview papers \cite{VanHuynh2017,Liang2022};
 			\item $\Gamma_m = \frac{Z_m - Z^*}{Z_m + Z^*}$ in BackCom paper \cite{Boyer2014};
 			\item $\Gamma_m^* = \frac{Z^* - Z_m}{Z + Z_m}$ in RF paper \cite{Hansen1989},
 		\end{enumerate}
-		where $Z_m$ is the load impedance at state $m$ and $Z$ is the antenna impedance. It is guessed that they choose different reference (antenna and space). However, we are not microwave engineering experts and would be grateful to hear your valuable opinion on this issue. The current version sticks to the seeming most popular definition 1.}
+		where $Z_m$ is the load impedance at state $m$ and $Z$ is the antenna impedance.
+		Unfortunately, we are not microwave engineering experts and have to guess that they may choose different parties (antenna and space) as reference. In the current version, we have not made any change to eq. (1) but would be grateful to hear your opinion on this issue.}
 
 	\point It is unclear what is meant by relative QoS. Additionally, there is a lack of clarity regarding the derivation of eqs. (17-19) and how the relative QoS of the primary link is incorporated in those equations. The defined expressions should be clearly explained and justified. Please provide additional details and reasoning.
-	\reply {We apologize for the confusion caused by poor wording. QoS refers to the relative priority of the primary link, and it should be either ``QoS'' or ``relative priority''. We have added a footnote on this. Besides, the information theory part (including the derivation of eqs. (17-19)) has been incorporated into Section II.B with proper explanation. We also modified Remark 1 and added Remark 2 to clarify the derivation of achievable rates.}
+	\reply {We apologize for the confusion caused by poor wording. QoS refers to the relative priority of the primary link, and it should be either ``QoS'' or ``relative priority''. We have added a footnote on this. Besides, the information theory subsection (including the derivation of eqs. (17-19)) has been rewritten and incorporated into Section II.B with proper explanation. We also modified Remark \ref{m-re:dynamic_passive_beamforming} and added Remark \ref{m-re:independent_encoding} to clarify the derivation of achievable rates. Please see page~\pageref{m-re:dynamic_passive_beamforming}--\pageref{m-eq:weighted_sum_mutual_information} for details.}
 
 	\point The link between eq. (9) and eq. (25) lacks clarity and misses intermediate steps. Also, the expression of the function $Q$ provided in eq. (25) appears to be independent of the active beamforming $\boldsymbol{w}$.  It is unclear how the derivation of $Q$ with respect to $\boldsymbol{w}$ is performed in this case. Please clarify the relationship between $Q$ and $\boldsymbol{w}$ and provide a clear derivation for better understanding. The same remark about clarity applies to eq. (28) and eq. (33).
-	\reply {$Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)$ is the regularized incomplete Gamma function that depends on the variance of accumulated receive energy $\sigma_{m_{\mathcal{K}}}^2$, which is a function of $\boldsymbol{w}$. We have added a reminder on this, and have added the intermediate steps from (9) to (25) with proper details. The corresponding part has been completely rewritten to improve logic and clarity.}
+	\reply {
+		Plugging the conditional energy PDF into the DMMAC expression, we have
+		\begin{equation}
+			q(x_l|x_{m_{\mathcal{K}}}) = \frac{\int_{{t_{l-1}}/{\sigma_{m_{\mathcal{K}}}^2}}^{{t_l}/{\sigma_{m_{\mathcal{K}}}^2}} z^{N-1} \exp(-z) \, d z}{(N-1)!} = Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr),
+			\label{eq:dmmac_gamma}
+		\end{equation}
+		where $Q(N, b_1, b_2) \triangleq \int_{b_1}^{b_2} z^{N-1} \exp(-z) / (N - 1)! \, d z$ is the regularized incomplete Gamma function.
+		$Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr)$ depends on the variance of accumulated receive energy $\sigma_{m_{\mathcal{K}}}^2$, which is a function of $\boldsymbol{w}$.
+		Its series expansion is given by \cite[Theorem 3]{Jameson2016}
+		\begin{equation}
+			Q\Bigl(N,\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2},\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) = \exp \Bigl(-\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\bigl(\frac{t_{l-1}}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^n}{n!} - \exp \Bigl(-\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\Bigr) \sum_{n=0}^{N-1} \frac{\bigl(\frac{t_l}{\sigma_{m_{\mathcal{K}}}^2}\bigr)^n}{n!}.
+			\label{eq:regularized_incomplete_gamma}
+		\end{equation}
+		In the revised manuscript, we have added the intermediate steps from (9) to (25) in page~\pageref{m-eq:dmmac_gamma} with proper details. The corresponding part has been completely rewritten to improve logic and clarity.}
 
 	\point Is the BCD algorithm convergent for the optimization problem (20)?
 	\reply {The BCD algorithm is convergent for the optimization problem (20), since the input distribution and active beamforming subproblems converge and the thresholding subproblem attains global optimality. This argument has been added prior to the convergence results in Fig. 7.}
 
 	\point Please write the mathematical expression of eq. (40) properly. Moreover, there appears to be a mistake in the sign of the Lagrangian function of the optimization problem stated in Equation (21). If the optimization problem is intended to be a minimization problem, it should be explicitly mentioned to avoid any ambiguity or confusion.
-	\reply {In the revised manuscript, we have simplified many notations and rewritten (40) properly. Problem (21) is a maximization problem and the sign of the Lagrangian function has been corrected.}
+	\reply {Problem (21) is a maximization problem and the Lagrangian function (40) has been rewritten as
+		\begin{equation}
+			I(x_{\mathcal{K}}) + \sum_k \nu_k \biggl( \sum_{m_k} p(x_{m_k}) - 1 \biggr) + \sum_k \sum_{m_k} \lambda_{m_k} p(x_{m_k}).
+		\end{equation}
+	}
 
 	\point The expression of the primary achievable rate in eq. (37) seems to be wrong since the primary message is also included in the cascaded channel and cannot be ignored.
-	\reply {We appreciate your careful reading. The primary message is indeed included in the scattered component. However, since the user decodes both links independently, the backscatter uncertainty cannot be eliminated when decoding the primary link. That is to say, the scattered component should be treated as interference with average power $\mathbb{E}\bigl\{\sum_{k} \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} x_k \boldsymbol{w}s[n]\bigr\} = \sum_{k} \lvert \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} \boldsymbol{w} \rvert^2$. The same reasoning was considered in \cite{Long2020a}. We have revised the corresponding footnote to justify this.}
+	\reply {We appreciate your careful reading. The primary message is indeed included in the scattered component. However, since the user decodes both links independently, the backscatter uncertainty cannot be eliminated when decoding the primary link. That is to say, the scattered component should be treated as interference with average power $\mathbb{E}\bigl\{\sum_{k} \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} x_k \boldsymbol{w}s[n]\bigr\} = \sum_{k} \lvert \alpha_k \boldsymbol{h}_{\text{C},k}^\mathsf{H} \boldsymbol{w} \rvert^2$. The same reasoning was considered in \cite{Long2020a}. We have revised the corresponding footnote \ref{m-fn:ambc} to justify this.}
 
 	\point In Figure 7, it is unclear why the KKT, PGD, and BCD algorithms are plotted separately since the BCD algorithm encompasses both the KKT and PGD algorithms. If there is a specific reason for displaying them separately, please provide a justification to enhance the understanding of the reader. Additionally, please provide the unit for the weighted sum rate axis.
-	\reply {In company with BCD, we also plotted the convergence results of KKT and PGD algorithms to show how much performance gain is provided by solving each subproblem (over the initialization method specified in the previous paragraph). The unit of the y axis is bit/s/Hz and we have added this in the revised manuscript.}
+	\reply {In company with BCD, we also plotted the convergence results of KKT and PGD algorithms to show how much performance gain is provided by solving each subproblem (over the initialization method specified in the previous paragraph). We have justified this in Section~\ref{m-sc:convergence}. The unit of the y axis of Fig.~\ref{m-fg:distribution_weights} has been specified as bit/s/Hz.}
 
 	\point Is the decoding of the backscatter information based on an energy detector reliable in this case, especially with high-order modulation or large number of scatter nodes? In other words, can the user in practice decode the backscatter information especially in the presence of the noise and signal variations due to the fading or the interference, etc.?
-	\reply {The energy detector is a simple and practical method for backscatter information decoding, and its reliability is improved by the adaptive input distribution and thresholding design. With high-order modulation or large number of scatter nodes, its performance can be further enhanced by increasing the spreading factor $N$ or using stronger error correction codes with lower code-rate. In practice, the user can decode backscatter nodes ranging from few to hundreds of meters in the presence of noise and interference, and the backscatter throughput can reach few Kbps to tens of Mbps. We have added a footnote on this, and the reviewer is referred to Table 2 in \cite{Wu2022e} for more details.}
+	\reply {The energy detector is a simple and practical method for backscatter information decoding, and its reliability is improved by the adaptive input distribution and thresholding design. With high-order modulation or large number of scatter nodes, its performance can be further enhanced by increasing the spreading factor $N$ or using stronger error correction codes with lower code-rate. In practice, the user can decode backscatter nodes ranging from few to hundreds of meters in the presence of noise and interference, and the backscatter throughput can reach few Kbps to tens of Mbps. We have added footnote \ref{m-fn:energy_detector} on this issue, and the reviewer is referred to Table II in \cite{Wu2022e} for more details.}
 
 	\point In Section III, the aim is to characterize the primary-total-backscatter rate region where the user retrieves both the backscatter information and the primary message. Why is the weighted sum mutual information maximized with respect to only the input distribution of the backscatter information and not jointly with respect to the input distribution of the primary message `s' as well? In other words, is the choice of $s \sim \mathcal{CN} (0,1)$ optimal?
 	\reply {This is indeed a very good question. The choice of $s \sim \mathcal{CN} (0,1)$ is generally not optimal for weighted sum mutual information. To the best of our knowledge, the optimal primary distribution in this case remains an open issue, but some insights were given in those papers:
@@ -203,13 +239,13 @@
 			\item If there is no direct link and the node is with \emph{peak} power constraint, then the optimal distribution for \emph{sum mutual information} is not unique, for example \cite{Zhang2023} (came out after our submission):
 			\begin{itemize}
 				\item $s$ follows zero-mean Gaussian distribution and $x$ is a constant;
-				\item $s$ follows Rayleigh distribution and $x$ follows uniform distribution on $[0, 2 \pi]$;
+				\item $s$ follows Rayleigh distribution and $x$ follows uniform distribution on $[0, 2 \pi)$;
 			\end{itemize}
 		\end{itemize}
-		Despite not optimal, the assumption of Gaussian primary source and finite-support backscatter source are relatively practical and widely adopted in relevant literatures. We have added Remark 3 on this, but intentionally avoided the discussion of optimal distribution, since it is beyond the scope of this paper and may confuse the readers. We appreciate your understanding in this matter.}
+		Despite not optimal, the assumption of Gaussian primary source and finite-support backscatter source are relatively practical and widely adopted in relevant literatures. We have added Remark~\ref{m-re:non_gaussian} on this, but intentionally avoided the discussion of optimal distribution, since it is beyond the scope of this paper and may confuse the readers. We appreciate your understanding in this matter.}
 
 	\point In Section IV, Subsection B, it is stated that the RIS always ensures constructive superposition of direct and scattered components which is not true. The RIS can also add those components destructively which could be used for example to enhance the physical layer security of a system in the presence of an eavesdropper.
-	\reply {We apologize for the oversight. It has been modified to ``Here, RIS ensures constructive superposition of direct and scattered components.''}
+	\reply {We apologize for the oversight. The argument has been modified to ``Here, RIS ensures constructive superposition of direct and scattered components.''}
 \end{reviewer}
 
 \begin{reviewer}
@@ -254,11 +290,13 @@
 		\item Z. Dai, R. Li, J. Xu, Y. Zeng and S. Jin, "Rate-Region Characterization and Channel Estimation for Cell-Free Symbiotic Radio Communications," in IEEE Transactions on Communications, vol. 71, no. 2, pp. 674-687, Feb. 2023.
 		\item H. E. Hassani, A. Savard, E. V. Belmega and R. C. de Lamare, "Multi-user downlink NOMA systems aided by ambient backscattering: achievable rate regions and energy-efficiency maximization," in IEEE Transactions on Green Communications and Networking, 2023.
 	\end{itemize}
-	\reply {We appreciate your expert and insightful comments on the reference list. We have incorporated the above references in the revised manuscript.}
+	\reply {We appreciate your expert and insightful comments on the reference list. Those papers have been incorporated into the revised manuscript.}
 
 	\point Technical aspects: RIScatter is able to balance rate of primary transmission with rate of backscattered tags in a unified, user-controlled way, which brings technical advantages over existing approaches. This reviewer wonders why the authors only considered perfect CSI and did not assessed the impact of imperfect CSI on information rates (not the region!) given the limitations of tags and devices. Moreover, this reviewer is also sceptical about the assumption of perfect synchronization between the tags and the source. Can you explain why this is reasonable?
+	\reply {Please kindly refer to response 2.1 for the discussion on imperfect CSI and response 2.2 for the discussion on perfect synchronization.}
 
 	\point Simulation results: the authors opted for showing the results in terms of rate regions for several existing schemes and the proposed RISscatter. This is not properly motivated. Could explain why not include results such as information rates versus SNR or BER versus SNR?
+	\reply {Thank you for the suggestion. In the previous version of the manuscript, we showed the impact of average noise power and disk radius on the achievable rate region. The former influences both primary and backscatter SNR, while the latter implicitly influences the backscatter SNR. In the revised manuscript, we have added explicit results on the achievable region vs primary SNR and backscatter SNR. However, we do not include BER vs SNR because (1) we have reached the page limit and (2) the BER performance is not the focus of this paper. We appreciate your understanding in this matter.}
 
 \end{reviewer}
 

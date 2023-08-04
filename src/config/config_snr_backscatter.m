@@ -1,6 +1,6 @@
 %% * System
 % number of transmit antennas
-nTxs = 4;
+nTxs = 1;
 % number of scatter antennas
 nSxs = 1;
 % number of receive antennas

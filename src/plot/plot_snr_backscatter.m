@@ -14,7 +14,7 @@ for iVariable = 1 : nVariables
 	[rate(1, nWeights + 1), rate(2, nWeights + 2)] = deal(max(rate(1, :)), max(rate(2, :)));
 	region{iVariable} = rate(:, convhull(transpose(rate)));
 end
-save(strcat('../data/region_', erase(mfilename, 'plot_')));
+% save(strcat('../data/region_', erase(mfilename, 'plot_')));
 
 %% * Draw primary-(sum-)backscatter rate regions
 figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Backscatter SNR', 'Position', [0, 0, 500, 400]);

@@ -24,7 +24,7 @@ for iVariable = 1 : nVariables
 	channelVariance = Variable(iVariable).channelVariance;
 	plotHandle(iVariable) = plot(region{iVariable}(1, :) / log(2), region{iVariable}(2, :) / log(2), 'DisplayName', strcat('$\iota = ', num2str(channelVariance), '$'));
 end
-hold off; legend('Location', 'se'); grid on; box on; axis tight;
+hold off; legend('Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatter Rate [bits/BB]');
 style_plot(plotHandle);

@@ -24,7 +24,7 @@ for iVariable = 1 : nVariables
 	directSnr = Variable(iVariable).directSnr;
 	plotHandle(iVariable) = plot(region{iVariable}(1, :) / log(2), region{iVariable}(2, :) / log(2), 'DisplayName', strcat('$\gamma_P = ', num2str(pow2db(directSnr)), '$ dB'));
 end
-hold off; legend('Location', 'se'); grid on; box on; axis tight;
+hold off; legend('Location', 'sw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatter Rate [bits/BB]');
 style_plot(plotHandle);

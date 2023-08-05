@@ -24,7 +24,7 @@ for iVariable = 1 : nVariables
 	nTxs = Variable(iVariable).nTxs;
 	plotHandle(iVariable) = plot(region{iVariable}(1, :) / log(2), region{iVariable}(2, :) / log(2), 'DisplayName', strcat('$Q = ', num2str(nTxs), '$'));
 end
-hold off; legend('Location', 'sw'); grid on; box on; axis tight;
+hold off; legend('Location', 'ne'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatter Rate [bits/BB]');
 style_plot(plotHandle);

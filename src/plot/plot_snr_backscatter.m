@@ -14,7 +14,7 @@ for iVariable = 1 : nVariables
 	[rate(1, nWeights + 1), rate(2, nWeights + 2)] = deal(max(rate(1, :)), max(rate(2, :)));
 	region{iVariable} = rate(:, convhull(transpose(rate)));
 end
-% save(strcat('../data/region_', erase(mfilename, 'plot_')));
+save(strcat('../data/region_', erase(mfilename, 'plot_')));
 
 %% * Draw primary-(sum-)backscatter rate regions
 figure('Name', 'Average Primary-(Sum-)Backscatter Rate Region vs Backscatter SNR', 'Position', [0, 0, 500, 400]);
@@ -24,7 +24,7 @@ for iVariable = 1 : nVariables
 	cascadedSnr = Variable(iVariable).cascadedSnr;
 	plotHandle(iVariable) = plot(region{iVariable}(1, :) / log(2), region{iVariable}(2, :) / log(2), 'DisplayName', strcat('$\gamma_B = ', num2str(pow2db(cascadedSnr)), '$ dB'));
 end
-hold off; legend('Location', 'se'); grid on; box on; axis tight;
+hold off; legend('Location', 'ne'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatter Rate [bits/BB]');
 style_plot(plotHandle);

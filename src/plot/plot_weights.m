@@ -9,7 +9,7 @@ for iWeight = 1 : nWeights
 	weight = weightSet(iWeight);
 	plotHandle(iWeight) = plot(distribution(:, iWeight), 'DisplayName', strcat('$\rho = ', num2str(weight), '$'));
 end
-hold off; legend('Location', 'ne'); grid on; box on;
+hold off; legend('Location', 'nw'); grid on; box on;
 xlabel('Reflection State');
 ylabel('Probability\\Distribution');
 xticks(1 : nStates);

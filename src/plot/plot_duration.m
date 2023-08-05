@@ -24,7 +24,7 @@ for iVariable = 1 : nVariables
 	symbolRatio = Variable(iVariable).symbolRatio;
 	plotHandle(iVariable) = plot(region{iVariable}(1, :) / log(2), region{iVariable}(2, :) / log(2) / symbolRatio, 'DisplayName', strcat('$N = ', num2str(symbolRatio), '$'));
 end
-hold off; legend('Location', 'sw'); grid on; box on; axis tight;
+hold off; legend('Location', 'ne'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Total Backscatter Rate [bits/PB]');
 style_plot(plotHandle);

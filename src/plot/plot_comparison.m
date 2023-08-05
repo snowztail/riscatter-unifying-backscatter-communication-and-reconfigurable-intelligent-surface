@@ -18,7 +18,7 @@ plotHandle(4) = scatter(rateSr(1, :) / log(2), rateSr(2, :) / log(2), 200, [0.49
 plotHandle(3) = scatter(rateAmbc(1, :) / log(2), rateAmbc(2, :) / log(2), 200, [0.9290 0.6940 0.1250], 'Marker', 'x', 'DisplayName', 'AmBC');
 plotHandle(2) = scatter(rateBbc(1, :) / log(2), rateBbc(2, :) / log(2), 200, [0.8500 0.3250 0.0980], 'Marker', 's', 'DisplayName', 'BBC');
 plotHandle(1) = scatter(rateLegacy(1, :) / log(2), rateLegacy(2, :) / log(2), 120, [0 0.4470 0.7410], 'Marker', 'o', 'DisplayName', 'Legacy');
-hold off; legend(plotHandle, 'Location', 'sw'); grid on; box on; axis tight;
+hold off; legend(plotHandle, 'Location', 'nw'); grid on; box on; axis tight;
 xlabel('Primary Rate [bits/s/Hz]');
 ylabel('Backscatter\\Rate [bits/BB]');
 

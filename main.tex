@@ -276,7 +276,7 @@
 	This inspired \cite{Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hu2021b,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} to combine passive beamforming and backscatter modulation in the overall \gls{ris} design.
 	In particular, \emph{symbol level precoding} maps the information symbols to the optimized \gls{ris} coefficient sets \cite{Liu2019d,Bereyhi2020}, \emph{overlay modulation} superposes the information symbols over a common auxiliary matrix \cite{Xu2020b,Zhang2021d,Hu2021b,Hua2022}, \emph{spatial modulation} switches between the reflection coefficient sets that maximize \gls{snr} at different receive antennas \cite{Basar2020,Ma2020a,Yuan2021}, and \emph{index modulation} employs dedicated reflection elements (resp. information elements) for passive beamforming (resp. backscatter modulation) \cite{Hu2021a}.
 	Those \gls{ris}-based backscatter modulation schemes incur advanced hardware architecture and high optimization complexity.
-	In contrast, \cite{Vardakis2023} exploits commodity \gls{rfid} tags, powered and controlled by a software-defined radio reader, to perform passive beamforming (but no backscatter modulation) towards a legacy user at a different frequency.
+	In contrast, \cite{Vardakis2023} exploits commodity \gls{rfid} tags, powered and controlled by a software-defined radio reader, to perform passive beamforming (but no backscatter modulation) towards a legacy user at a different frequency. \label{cm:2.5}
 	% The authors demonstrated the feasibility of using batteryless devices to adaptively enhance the \gls{snr} of a primary link, but did not consider backscatter modulation at.
 	Most relevant literature considers either Gaussian codebook \cite{Guo2019b,Ding2020,Long2020a,Zhou2019a,Wu2021a,Xu2021a,Yang2021a,Hu2021b} that is impractical for low-power nodes, or finite equiprobable inputs \cite{Yang2018,Liang2020,Han2021,Zhang2022,Liu2019d,Bereyhi2020,Xu2020b,Zhang2021d,Hua2022,Basar2020,Ma2020a,Yuan2021,Hu2021a} that does not fully exploit the \gls{csi} and properties of active-passive coexisting networks.
 	Those problems are addressed in this paper and the contributions are summarized below.
@@ -286,7 +286,7 @@
 	A co-located receiver cooperatively decodes both coexisting links.
 	Each reflection state is simultaneously an information codeword and a passive beamforming codeword.
 	The reflection pattern over time is semi-random and guided by the input probability assigned to each state.
-	This probability distribution is carefully designed to incorporate the backscatter information, \gls{csi}, and \gls{qos}\footnote{\gls{qos} refers to the relative priority of the primary link.}.
+	This probability distribution is carefully designed to incorporate the backscatter information, \gls{csi}, and \gls{qos}\footnote{\gls{qos} refers to the relative priority of the primary link.\label{fn:qos}}.
 	Such an adaptive channel coding boils down to the degenerate distribution of \gls{ris} when the primary link is prioritized, and outperforms the uniform distribution of \gls{bc} (by accounting the \gls{csi}) when the backscatter link is prioritized.
 	Table~\ref{tb:scattering_applications} compares RIScatter to \gls{bc} and \gls{ris}.
 	However, two major challenges for RIScatter are the practical receiver and input distribution design.
@@ -397,7 +397,7 @@
 			\label{re:dynamic_passive_beamforming}
 		\end{remark}
 
-		RIScatter nodes can be implemented, for example, by adding an integrated receiver\footnote{The aim is to coordinate the node with the active source and to acquire the optimized input distribution, instead of decoding the primary information dedicated for the user. The node receiver can be implemented using very simple circuits or even integrated with the rectifier \cite{Kim2021a} to reduce cost and complexity.} \cite{Kim2021a} and adaptive encoder \cite{He2020e} to off-the-shelf passive \gls{rfid} tags.
+		RIScatter nodes can be implemented, for example, by adding an integrated receiver\footnote{The aim is to coordinate the node with the active source and to acquire the optimized input distribution, instead of decoding the primary information dedicated for the user. The node receiver can be implemented using very simple circuits or even integrated with the rectifier \cite{Kim2021a} to reduce cost and complexity.\label{fn:integrated_receiver}} \cite{Kim2021a} and adaptive encoder \cite{He2020e} to off-the-shelf passive \gls{rfid} tags.
 		The block diagram, equivalent circuit, and scatter model are illustrated in Fig.~\ref{fg:riscatter_node}.
 		\begin{figure*}[!t]
 			\centering
@@ -431,7 +431,7 @@
 	\end{subsection}
 
 	\begin{subsection}{System Model}
-		\label{se:system_model}
+		\label{sc:system_model}
 		\begin{figure}[!t]
 			\centering
 			\def\svgwidth{0.7\columnwidth}
@@ -567,7 +567,7 @@
 		 & \triangleq \rho I_{\text{P}}(s;y|x_{m_{\mathcal{K}}}) + (1 - \rho) I_{\text{B}}(x_{m_{\mathcal{K}}};\hat{x}_{\mathcal{K}}),\label{eq:weighted_sum_information_function}
 	\end{align}
 	where $\rho \in \mathbb{I}$ is the \gls{qos}.
-	To obtain the achievable primary-(total-)backscatter rate region, we consider the weighted sum mutual information maximization problem with independent encoding at all nodes\footnote{Joint encoding over multiple nodes can be viewed as its special case with an augmented source.}
+	To obtain the achievable primary-(total-)backscatter rate region, we consider the weighted sum mutual information maximization problem with independent encoding at all nodes\footnote{Joint encoding over multiple nodes can be viewed as its special case with an augmented source.\label{fn:joint_encoding}}.
 	\begin{maxi!}
 		{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}},\boldsymbol{w},\boldsymbol{t}}}{I(x_{\mathcal{K}})}{\label{op:weighted_sum_rate}}{\label{ob:weighted_sum_rate}}
 		\addConstraint{\boldsymbol{1}^\mathsf{T} \boldsymbol{p}_k}{=1,}{\quad \forall k}{\label{co:sum_probability}}
@@ -582,6 +582,7 @@
 	The original problem is highly non-convex and we propose a \gls{bcd} algorithm that iteratively updates $\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}$, $\boldsymbol{w}$ and $\boldsymbol{t}$.
 
 	\begin{subsection}{Input Distribution}
+		\label{sc:input_distribution}
 		For any given $\boldsymbol{w}$ and $\boldsymbol{t}$, we can formulate a \gls{dmmac} by \eqref{eq:dmmac} and simplify \eqref{op:weighted_sum_rate} to
 		\begin{maxi!}
 			{\scriptstyle{\{\boldsymbol{p}_k\}_{k \in \mathcal{K}}}}{I(x_{\mathcal{K}})}{\label{op:input_distribution}}{}
@@ -1010,7 +1011,7 @@
 					\input{assets/simulation/region_tags.tex}
 				}
 			}
-			\subfloat[Input States\label{fg:region_states}]{
+			\subfloat[Reflection States\label{fg:region_states}]{
 				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_states.tex}
 				}
@@ -1035,6 +1036,17 @@
 			\subfloat[Imperfect \gls{csi}\label{fg:region_csi}]{
 				\resizebox{0.48\columnwidth}{!}{
 					\input{assets/simulation/region_csi.tex}
+				}
+			}
+			\\
+			\subfloat[Primary \gls{snr}\label{fg:region_snr_primary}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_snr_primary.tex}
+				}
+			}
+			\subfloat[Backscatter \gls{snr}\label{fg:region_snr_backscatter}]{
+				\resizebox{0.48\columnwidth}{!}{
+					\input{assets/simulation/region_snr_backscatter.tex}
 				}
 			}
 			\caption{
@@ -1076,8 +1088,9 @@
 
 		\begin{subsubsection}{Average Noise Power}
 			Fig.~\subref*{fg:region_noise} depicts the impact of average noise power $\sigma_v^2$ on average rate regions.
-			It shows the proposed practical semi-coherent backscatter energy detection is suitable for a wide range of noise levels.
-			When $\sigma_v^2$ relatively high, one can choose a larger $N$ to maintain the backscatter \gls{snr} for better energy detection performance.
+			Note that the noise influences both primary and backscatter \gls{snr}.
+			% It shows the proposed adaptive energy detector is suitable for a wide range of noise levels.
+			When $\sigma_v^2$ relatively high, one can choose a larger $N$ to improve the energy detection \gls{snr}.
 		\end{subsubsection}
 
 		% \begin{subsubsection}{Coverage Disk Radius}
@@ -1097,12 +1110,29 @@
 			In Fig.~\subref*{fg:region_csi}, it is observed that the channel estimation error mainly affects the backscatter rate.
 			When $\iota$ increases from \num{0} to \num{0.2}, the maximum total backscatter rate decreases by \qty{20}{\percent}.
 			This is because the energy detector is sensitive to the \gls{dmmac} \eqref{eq:dmmac} and thus $\hat{\boldsymbol{h}}_{\text{C},k}$.
-			On the other hand, a small estimation error may be insufficient to change the optimal passive beamforming state (especially for a small $M$) and the primary rate is almost unchanged here.
+			On the other hand, a small estimation error may be insufficient to change the optimal passive beamforming state (especially for a small $M$) and the primary rate is almost unchanged in this case.
+		\end{subsubsection}
+
+		\begin{subsubsection}{Primary \gls{snr}}
+			\label{sc:primary_snr}
+			The backscatter \gls{snr} is fixed to \qty{0}{dB} in this study.
+			Interestingly, Fig.~\subref*{fg:region_snr_primary} shows that increasing the primary \gls{snr} can improve the primary rate but degrade the backscatter rate.
+			The reason is that the relative strength of the scattered signal compared to the direct signal is weakened, such that the nodes cannot make enough difference to the energy detector.
+			% This, together with Fig.~\subref*{fg:region_beamforming} and \subref*{fg:region_tags}, emphasizes the importance of balancing the primary and backscatter \gls{snr} in active-passive coexisting networks.
+			This, together with Fig.~\subref*{fg:region_beamforming} and \subref*{fg:region_tags}, emphasizes the importance of accounting the primary-backscatter tradeoff in active-passive coexisting networks.
+		\end{subsubsection}
+
+		\begin{subsubsection}{Backscatter \gls{snr}}
+			The primary \gls{snr} is fixed to \qty{20}{dB} in this study.
+			Fig.~\subref*{fg:region_snr_backscatter} shows that the primary and backscatter rates are both improved when the backscatter \gls{snr} increases.
+			This motivates one to use high-efficiency or semi-passive RIScatter nodes to improve the overall performance.
+			In a multi-user RIScatter network, each node may be assigned to the nearest user to guarantee uniformly good performance for both links.
 		\end{subsubsection}
 	\end{subsection}
 \end{section}
 
 \begin{section}{Conclusion}
+	\label{sc:conclusion}
 	This paper introduced RIScatter as a novel scatter protocol that bridges backscatter modulation and passive beamforming.
 	Starting from scattering principles, we showed how RIScatter nodes generalize information nodes of \gls{bc} and reflect elements of \gls{ris}, how they can be built over existing passive scatter devices, and how they simultaneously encode self information and assist legacy transmission.
 	We also proposed a practical \gls{sic}-free receiver that exploits the properties of active-passive coexisting networks to benefit both subsystems.

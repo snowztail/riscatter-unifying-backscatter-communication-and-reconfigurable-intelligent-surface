@@ -163,10 +163,10 @@
 	\reply {We have revised the manuscript to ensure consistency with the notation introduced in Section~\ref{m-sc:introduction}. In this example, $\alpha_k \in \mathbb{I}$ refers to $\alpha_k \in \mathbb{I}^1$ and the $1$ was omitted for brevity.}
 
 	\point To ensure consistency and clarity, please maintain uniformity in the usage of mathematical symbols and technical terms throughout the paper. For example, in eq. (3), the amplitude scattering ratio of the node is defined as $\beta_m$, while in eq. (4a), it is referred to as $\alpha_k$. Additionally, there is a discrepancy in the usage of the term 'node' throughout the manuscript and 'tag' in the appendix. Please use a consistent term to refer to the same entity throughout the entire paper to avoid confusion and improve clarity.
-	\reply {Thank you for bringing this to our attention. We were trying to be rigorous and consistent with the notation used in the literature, but didn't realize the confusion it may cause to the readers. In BackCom literatures, $\alpha_k$ is a constant that measures the \emph{average} reflection efficiency (irrelevant to the state) for node $k$. In RIS literatures, $\beta_m$ measures the scattering ratio of one element at state $m$. In the revised manuscript, we have unified those notation in page~\pageref{m-eq:backscatter_modulation} and revised the term ``tag'' to ``node'' in the appendix.}
+	\reply {Thank you for bringing this to our attention. We were trying to be rigorous and consistent with the notation used in the literature, but didn't realize the confusion it may cause to the readers. In BackCom literatures, $\alpha_k$ is a constant that measures the \emph{average} reflection efficiency (irrelevant to the state) for node $k$. In RIS literatures, $\beta_m$ measures the scattering ratio of one element at state $m$. In the revised manuscript, we have unified those notation in page~\pageref{m-eq:backscatter_modulation}, modified footnote~\ref{m-fn:scattering_ratio}, and revised the term ``tag'' to ``node'' in the appendix.}
 
 	\point The expression in eq. (1) represents the conjugate of the reflection coefficient, not the reflection coefficient itself.
-	\reply {After a careful investigation, we found there are three different definitions for the reflection coefficient in the literature:
+	\reply {After a careful investigation, we found there are at least three different definitions for the reflection coefficient in the literature:
 		\begin{enumerate}
 			\item $\Gamma_m = \frac{Z_m - Z^*}{Z_m + Z}$ in overview papers \cite{VanHuynh2017,Liang2022};
 			\item $\Gamma_m = \frac{Z_m - Z^*}{Z_m + Z^*}$ in BackCom paper \cite{Boyer2014};
@@ -195,7 +195,7 @@
 		In the revised manuscript, we have added the intermediate steps from (9) to (25) in page~\pageref{m-eq:dmmac_gamma} with proper details. The corresponding part has been completely rewritten to improve logic and clarity.}
 
 	\point Is the BCD algorithm convergent for the optimization problem (20)?
-	\reply {The BCD algorithm is convergent for the optimization problem (20), since the input distribution and active beamforming subproblems converge and the thresholding subproblem attains global optimality. This argument has been added prior to the convergence results in Fig.~\subref*{m-fg:wsr_convergence}.}
+	\reply {The BCD algorithm is convergent for the optimization problem (20), since the input distribution and active beamforming subproblems converge and the thresholding subproblem attains global optimality. This argument has been added in the discussion of Fig.~\ref{m-fg:wsr_convergence}.}
 
 	\point Please write the mathematical expression of eq. (40) properly. Moreover, there appears to be a mistake in the sign of the Lagrangian function of the optimization problem stated in Equation (21). If the optimization problem is intended to be a minimization problem, it should be explicitly mentioned to avoid any ambiguity or confusion.
 	\reply {Problem (21) is a maximization problem and the Lagrangian function (40) has been rewritten as

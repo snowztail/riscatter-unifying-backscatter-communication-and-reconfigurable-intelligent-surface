@@ -34,7 +34,7 @@
 
 \usepackage[pagewise]{lineno}
 \usepackage{xr}
-\externaldocument[m-]{../main}
+\externaldocument[m-]{../jsac}
 
 % letter signature
 \renewcommand*{\raggedsignature}{\raggedright}
@@ -137,7 +137,7 @@
 	\opening{Dear Editors and Reviewers,}
 	Thank you for giving us the opportunity to submit a revised version of ``RIScatter: Unifying Backscatter Communication and Reconfigurable Intelligent Surface''.
 	We would like to express our sincere gratitude to you for the valuable comments and suggestions, which helped us improve the quality of the manuscript significantly.
-	Below, we prepare a point-to-point response and describe all the changes made to the manuscript.
+	Below, we prepare a point-to-point response and highlight all the changes made to the manuscript.
 	We hope that the revisions and clarifications make the manuscript meet the standards of JSAC publications.
 	\closing{Yours sincerely,}
 \end{letter}
@@ -200,7 +200,7 @@
 	\point Please write the mathematical expression of eq. (40) properly. Moreover, there appears to be a mistake in the sign of the Lagrangian function of the optimization problem stated in Equation (21). If the optimization problem is intended to be a minimization problem, it should be explicitly mentioned to avoid any ambiguity or confusion.
 	\reply {Problem (21) is a maximization problem and the Lagrangian function (40) has been rewritten as
 		\begin{equation}
-			I(x_{\mathcal{K}}) + \sum_k \nu_k \biggl( \sum_{m_k} p(x_{m_k}) - 1 \biggr) + \sum_k \sum_{m_k} \lambda_{m_k} p(x_{m_k}).
+			L(p, \nu, \lambda) = I(x_{\mathcal{K}}) + \sum_k \nu_k \Bigl( \sum_{m_k} p(x_{m_k}) - 1 \Bigr) + \sum_{k,m_k} \lambda_{m_k} p(x_{m_k}),
 		\end{equation}
 	}
 

@@ -1,0 +1,628 @@
+\documentclass[final,xcolor={table}]{beamer}
+%% Possible paper sizes: a0, a0b, a1, a2, a3, a4.
+%% Possible orientations: portrait, landscape
+%% Font sizes can be changed using the scale option.
+\usepackage[size=a0,orientation=landscape]{beamerposter}
+
+\usetheme{gemini}
+\usecolortheme{seagull}
+\useinnertheme{rectangles}
+\usefonttheme[onlymath]{serif}
+
+
+\setlength\lineskip{20pt}
+% \let\OLDitemize\itemize
+% \renewcommand\itemize{\OLDitemize\addtolength{\itemsep}{20pt}}
+\renewcommand\baselinestretch{1.25}
+
+% ====================
+% Packages
+% ====================
+
+% \usepackage[utf8]{inputenc}
+% \usepackage[table]{xcolor}
+\usepackage{adjustbox}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage[T1]{fontenc}
+\usepackage[sfdefault]{FiraSans}
+\usepackage[acronym]{glossaries-extra}
+\usepackage{siunitx}
+\usepackage[caption=false,font=footnotesize,subrefformat=parens,labelformat=parens]{subfig}
+\usepackage{tabularx}
+\usepackage[american]{circuitikz}
+\usepackage[short]{optidef}
+
+\usetikzlibrary{arrows,calc,matrix,patterns,plotmarks,positioning,shapes}
+\usetikzlibrary{decorations.pathmorphing,decorations.pathreplacing,decorations.shapes,shapes.geometric}
+\usepgfplotslibrary{groupplots,patchplots}
+\pgfplotsset{compat=newest}
+
+
+
+\glsdisablehyper
+\setabbreviationstyle[acronym]{long-short}
+\newacronym{af}{AF}{Amplify-and-Forward}
+\newacronym{ambc}{AmBC}{Ambient Backscatter Communication}
+\newacronym{ap}{AP}{Access Point}
+\newacronym{awgn}{AWGN}{Additive White Gaussian Noise}
+\newacronym{bcd}{BCD}{Block Coordinate Descent}
+\newacronym{bc}{BackCom}{Backscatter Communication}
+\newacronym{bibo}{BIBO}{Binary-Input Binary-Output}
+\newacronym{bpcu}{\si{bpcu}}{bits per channel use}
+\newacronym{bpsphz}{\si{bps/Hz}}{bits per second per Hertz}
+\newacronym{clt}{CLT}{Central Limit Theorem}
+\newacronym{cw}{CW}{Continuous Waveform}
+\newacronym{cp}{CP}{Canonical Polyadic}
+\newacronym{cr}{CR}{Cognitive Radio}
+\newacronym{cscg}{CSCG}{Circularly Symmetric Complex Gaussian}
+\newacronym{csi}{CSI}{Channel State Information}
+\newacronym{dc}{DC}{Direct Current}
+\newacronym{df}{DF}{Decode-and-Forward}
+\newacronym{dmc}{DMC}{Discrete Memoryless Channel}
+\newacronym{dmtc}{DMTC}{Discrete Memoryless Thresholding Channel}
+\newacronym{dmmac}{DMMAC}{Discrete Memoryless Multiple Access Channel}
+\newacronym{dcmc}{DCMC}{Discrete-input Continuous-output Memoryless Channel}
+\newacronym{dp}{DP}{Dynamic Programming}
+\newacronym{fdma}{FDMA}{Frequency-Division Multiple Access}
+\newacronym{iid}{i.i.d.}{independent and identically distributed}
+\newacronym{ioe}{IoE}{Internet of Everything}
+\newacronym{iot}{IoT}{Internet of Things}
+\newacronym{kkt}{KKT}{Karush-Kuhn-Tucker}
+\newacronym{m2m}{M2M}{Machine to Machine}
+\newacronym{mac}{MAC}{Multiple Access Channel}
+\newacronym{mc}{MC}{Multiplication Coding}
+\newacronym{miso}{MISO}{Multiple-Input Single-Output}
+\newacronym{mimo}{MIMO}{Multiple-Input Multiple-Output}
+\newacronym{ml}{ML}{Maximum-Likelihood}
+\newacronym{mrt}{MRT}{Maximum Ratio Transmission}
+\newacronym{noma}{NOMA}{Non-Orthogonal Multiple Access}
+\newacronym{ofdm}{OFDM}{Orthogonal Frequency-Division Multiplexing}
+\newacronym{pdf}{PDF}{Probability Density Function}
+\newacronym{pga}{PGA}{Projected Gradient Ascent}
+\newacronym{psk}{PSK}{Phase Shift Keying}
+\newacronym{qam}{QAM}{Quadrature Amplitude Modulation}
+\newacronym{qos}{QoS}{Quality of Service}
+\newacronym{rf}{RF}{Radio-Frequency}
+\newacronym{rfid}{RFID}{Radio-Frequency Identification}
+\newacronym{ris}{RIS}{Reconfigurable Intelligent Surface}
+\newacronym{sc}{SC}{Superposition Coding}
+\newacronym{sic}{SIC}{Successive Interference Cancellation}
+\newacronym{simo}{SIMO}{Single-Input Multiple-Output}
+\newacronym{sinr}{SINR}{Signal-to-Interference-plus-Noise Ratio}
+\newacronym{smawk}{SMAWK}{Shor-Moran-Aggarwal-Wilber-Klawe}
+\newacronym{snr}{SNR}{Signal-to-Noise Ratio}
+\newacronym{sr}{SR}{Symbiotic Radio}
+\newacronym{swipt}{SWIPT}{Simultaneous Wireless Information and Power Transfer}
+\newacronym{tdma}{TDMA}{Time-Division Multiple Access}
+\newacronym{ue}{UE}{user}
+\newacronym{wit}{WIT}{Wireless Information Transfer}
+\newacronym{wpcn}{WPCN}{Wireless Powered Communication Network}
+\newacronym{wpt}{WPT}{Wireless Power Transfer}
+\newacronym{mbc}{MBC}{Monostatic \glsentryshort{bc}}
+\newacronym{bbc}{BBC}{Bistatic \glsentryshort{bc}}
+\newacronym{bls}{BLS}{Backtracking Line Search}
+\newacronym{mrc}{MRC}{Maximal Ratio Combining}
+\newacronym{sdma}{SDMA}{Space-Division Multiple Access}
+\newacronym{nlos}{NLoS}{Non-Line-of-Sight}
+\newacronym{zf}{ZF}{Zero-Forcing}
+\newacronym{mmse}{MMSE}{Minimum Mean-Square-Error}
+\newacronym{fpga}{FPGA}{Field-Programmable Gate Array}
+\newacronym{ber}{BER}{Bit Error Rate}
+
+
+
+% ====================
+% Lengths
+% ====================
+
+% If you have N columns, choose \sepwidth and \colwidth such that
+% (N+1)*\sepwidth + N*\colwidth = \paperwidth
+\newlength{\sepwidth}
+\newlength{\colwidth}
+\setlength{\sepwidth}{0.025\paperwidth}
+\setlength{\colwidth}{0.3\paperwidth}
+% \setlength{\sepwidth}{0.03\paperwidth}
+% \setlength{\colwidth}{0.45\paperwidth}
+
+\newcommand{\separatorcolumn}{\begin{column}{\sepwidth}\end{column}}
+
+% ====================
+% Logo (optional)
+% ====================
+
+% LaTeX logo taken from https://commons.wikimedia.org/wiki/File:LaTeX_logo.svg
+% use this to include logos on the left and/or right side of the header:
+\logoleft{\includegraphics[height=4cm]{../assets/poster/icl.eps}}
+\logoright{\includegraphics[height=4cm]{../assets/poster/qr.pdf}}
+
+% ====================
+% Footer (optional)
+% ====================
+
+\footercontent{
+	SAL 6G Symposium, Linz, Austria \hfill
+	November 22 \& 23, 2023 \hfill
+	\href{mailto:yang.zhao18@imperial.ac.uk}{\texttt{yang.zhao18@imperial.ac.uk}}
+}
+% (can be left out to remove footer)
+
+% ====================
+% My own customization
+% - BibLaTeX
+% - Boxes with tcolorbox
+% - User-defined commands
+% ====================
+\input{custom-defs.tex}
+
+%% Reference Sources
+% \addbibresource{library.bib}
+\renewcommand{\pgfuseimage}[1]{\includegraphics[scale=2.0]{#1}}
+
+\title{RIScatter: Unifying Backscatter Communication and Reconfigurable Intelligent Surface}
+
+\author{Yang Zhao \and Bruno Clerckx}
+
+\date{January 01, 2025}
+
+\begin{document}
+
+\begin{frame}[t]
+	\begin{columns}[t]
+		\separatorcolumn
+
+		\begin{column}{\colwidth}
+			\begin{block}{Overview}
+				\begin{itemize}\setlength\itemsep{20pt}
+					\item \textbf{What does this paper propose?}
+
+					RIScatter -- a batteryless cognitive radio that recycles ambient signal in an adaptive and customizable manner.
+					\item \textbf{How does it differ from previous work?}
+
+					Backscatter modulation and passive beamforming are seamlessly integrated from the perspective of probability distribution.
+					\item \textbf{What are the benefits?}
+
+					It supports cooperative and distributed deployment, avoids complex architecture and signal processing, and can be built over legacy systems.
+				\end{itemize}
+			\end{block}
+
+			\begin{block}{RIScatter system}
+				\begin{figure}[!t]
+					\centering
+					\resizebox{0.5\linewidth}{!}{
+						\input{../assets/poster/riscatter.tex}
+					}
+					\label{fg:riscatter}
+				\end{figure}
+				\begin{itemize}\setlength\itemsep{20pt}
+					\item {\color{blue}Primary link:} active ambient transmission from an RF source
+					\item {\color{red}Backscatter link:} passive free-ride transmission from IoT nodes
+				\end{itemize}
+			\end{block}
+
+			\begin{block}{Node architecture}
+				\begin{figure}[!t]
+					\captionsetup[subfloat]{captionskip=20pt}
+					\centering
+					\subfloat[Block Diagram]{
+						\resizebox{0.53\linewidth}{!}{
+							\input{../assets/poster/block_diagram.tex}
+						}
+						\label{fg:block_diagram}
+					}
+					\subfloat[Scatter Model]{
+						\resizebox{0.42\linewidth}{!}{
+							\input{../assets/poster/scatter_model.tex}
+						}
+						\label{fg:scatter_model}
+					}
+					\label{fg:riscatter_node}
+				\end{figure}
+				\vspace{0.62cm}
+				\begin{itemize}\setlength\itemsep{20pt}
+					\item Wave scattering or reflection are manipulated by antenna or metamaterial
+					\item Incoming signals are used for powering, modulation, and beamforming
+					\item The node changes reflection state by switching load impedance
+					% \item A reflection state corresponds to a load impedance
+				\end{itemize}
+			\end{block}
+
+			\begin{alertblock}{Properties}
+				\begin{enumerate}\setlength\itemsep{20pt}
+					\item Primary and backscatter symbols are superimposed by \emph{double modulation}
+					\item Backscatter signal is much weaker due to \emph{double fading}
+					\item The spreading factor (symbol period ratio) is usually large
+					\item Each \emph{state} is simultaneously part of information and beamforming \emph{codeword}
+					\item Reflection pattern over time is semi-random and guided by input probability assigned to each state
+				\end{enumerate}
+			\end{alertblock}
+		\end{column}
+
+		\separatorcolumn
+
+		\begin{column}{2\colwidth+\sepwidth}
+			\begin{block}{Applications comparison}
+				\begin{table}[!t]
+					\rowcolors{2}{gray!25}{white}
+					\renewcommand{\arraystretch}{1.25}
+					\begin{tabular}{c c c c c c}
+						\toprule
+						\hiderowcolors
+						                       & Backscatter        & Ambient backscatter         & Symbiotic radio          & Reconfigurable intelligent surface & RIScatter                                          \\ \midrule
+						\showrowcolors
+						Information link(s)    & Backscatter        & Coexisting                  & Coexisting               & Primary                            & Coexisting                                         \\
+						Primary on backscatter & Carrier            & Multiplicative interference & Spreading code           & ---                                & Energy uncertainty                                 \\
+						Backscatter on primary & ---                & Multiplicative interference & Channel uncertainty      & Passive beamforming                & Dynamic passive beamforming                        \\
+						Cooperative devices    & ---                & No                          & Transmitter and receiver & ---                                & Transmitter, nodes, and receiver                   \\
+						Sequential decoding    & ---                & No                          & Primary-to-backscatter   & ---                                & Backscatter-to-primary                             \\
+						Reflection pattern by  & Information source & Information source          & Information source       & Channel                            & Information source, channel, and relative priority \\
+						Input distribution     & Equiprobable       & Equiprobable                & Equiprobable or Gaussian & Degenerate                         & Flexible                                           \\
+						Load-switching speed   & Fast               & Slow                        & Slow                     & Quasi-static                       & Arbitrary                                          \\ \bottomrule
+					\end{tabular}
+				\end{table}
+			\end{block}
+
+			\vspace{-1.3cm}
+			\begin{columns}[t,totalwidth=\textwidth]
+				\begin{column}{\colwidth}
+					\begin{block}{Low-complexity receiver}
+						\begin{figure}[!t]
+							\centering
+							\subfloat{
+								\resizebox{0.42\linewidth}{!}{
+									\input{../assets/poster/receiver.tex}
+								}
+							}
+							\hspace{-1.5cm}
+							\subfloat{
+								\resizebox{0.58\linewidth}{!}{
+									\input{../assets/poster/energy_distribution.tex}
+								}
+							}
+							\label{fg:receiver}
+						\end{figure}
+						\vspace{0.5cm}
+						\begin{itemize}\setlength\itemsep{20pt}
+							\item Accumulated receive energy follows conditional Gamma distribution
+							\item Node detection under primary uncertainty becomes part of channel training
+							\item Requires one additional energy comparison and re-encoding per backscatter symbol
+							% \item Backscatter achievable rate depends on decision region design
+						\end{itemize}
+					\end{block}
+
+					\begin{block}{Problem formulation}
+						\vspace{-0.5cm}
+						\begin{columns}[c,totalwidth=\textwidth]
+							\begin{column}{0.48\colwidth}
+								\begin{maxi*}
+									{\scriptstyle{\{\boldsymbol{p}_k\},\boldsymbol{w},\boldsymbol{t}}}{\rho R_\text{P} + (1-\rho) \sum_k R_{\text{B},k}}{}{}
+									\addConstraint{\boldsymbol{1}^\mathsf{T} \boldsymbol{p}_k=1,}{\quad \boldsymbol{p}_k \ge \boldsymbol{0},}{\quad \forall k}
+									\addConstraint{t_{l-1} \le t_l,}{\quad t_l \ge 0,}{\quad \forall l}
+									\addConstraint{\lVert \boldsymbol{w} \rVert^2 \le P}{}{}
+								\end{maxi*}
+							\end{column}
+							\begin{column}{0.48\colwidth}
+								\begin{itemize}\setlength\itemsep{20pt}
+									% \item $\rho$ is the priority of the primary link
+									\item $\boldsymbol{p}_k$ is the input distribution of node $k$
+									\item $\boldsymbol{w}$ is the active beamforming vector
+									\item $\boldsymbol{t}$ is the decision threshold vector
+								\end{itemize}
+							\end{column}
+						\end{columns}
+					\end{block}
+
+					\begin{thm}{Input distribution}{}
+						\begin{equation*}
+							p^{(r+1)}(x_{m_k}) \gets \frac{p^{(r)}(x_{m_k}) \exp \Bigl( \frac{\rho}{1 - \rho} I_k^{(r)}(x_{m_k}) \Bigr)}{\sum_{m_k'} p^{(r)}(x_{m_k'}) \exp \Bigl( \frac{\rho}{1 - \rho} I_k^{(r)}(x_{m_k'}) \Bigr)}
+							\label{eq:input_kkt_solution}
+						\end{equation*}
+					\end{thm}
+
+					\begin{thm}{Decision threshold}{}
+						\begin{figure}[!t]
+							\centering
+							\resizebox{0.65\linewidth}{!}{
+								\input{../assets/poster/discrete_outputs.tex}
+							}
+						\end{figure}
+						\begin{itemize}\setlength\itemsep{15pt}
+							% \item Constrain the domain to fine-grained energy levels
+							\item Obtain the rate-optimal quantization by dynamic programming or bisection
+						\end{itemize}
+					\end{thm}
+
+					\begin{thm}{Active beamformer}{}
+						\begin{equation*}
+							\boldsymbol{w}^{(r+1)} \gets \mathrm{proj}_{\lVert \boldsymbol{w} \rVert^2 \le P}\Bigl(\boldsymbol{w}^{(r)}+\gamma\nabla_{\boldsymbol{w}^*} R^{(r)}\Bigr),
+							\label{eq:beamforming_gradient_ascent}
+						\end{equation*}
+					\end{thm}
+				\end{column}
+
+				\separatorcolumn
+				\begin{column}{\colwidth}
+					\begin{exampleblock}{Input distribution}
+						\begin{figure}[!t]
+							\centering
+							\subfloat{
+								\resizebox{0.48\linewidth}{!}{
+									\input{../assets/poster/input_distribution.tex}
+								}
+							}
+							\subfloat{
+								\resizebox{0.48\linewidth}{!}{
+									\input{../assets/poster/distribution_weights.tex}
+								}
+							}
+						\end{figure}
+						Backscatter communication and reconfigurable intelligent surface are special cases of RIScatter with uniform and degenerate input distribution.
+						Increasing $\rho$ from 0 to 1 creates a smooth transition from backscatter modulation to passive beamforming.
+					\end{exampleblock}
+					\begin{exampleblock}{Rate region}
+						\begin{figure}[!t]
+							\centering
+							\subfloat{
+								\resizebox{0.48\linewidth}{!}{
+									\input{../assets/poster/region_comparison.tex}
+								}
+							}
+							\subfloat{
+								\resizebox{0.48\linewidth}{!}{
+									\input{../assets/poster/region_duration.tex}
+								}
+							}
+						\end{figure}
+						RIScatter backscatter rate is lower than symbiotic radio (due to energy detection) but higher than ambient backscatter (due to adaptive encoding).
+						% Throughput depends on the spreading factor $N$.
+						For backscatter link, a large spreading factor improves the bit error rate but reduces the gross data rate.
+					\end{exampleblock}
+
+					\begin{block}{Conclusion}
+						\begin{itemize}\setlength\itemsep{20pt}
+							\item Cognitive active and passive transmission can benefit each other
+							\item RIScatter nodes recycle ambient signal for modulation and beamforming
+							\item No interference cancellation is required at the co-located receiver
+							\item The key is to render the input distribution as a joint function of the information source, channel state information, and priority of coexisting links
+						\end{itemize}
+					\end{block}
+				\end{column}
+			\end{columns}
+		\end{column}
+
+		\separatorcolumn
+	\end{columns}
+
+	% \begin{columns}[t]
+
+	% 	\begin{column}{2\colwidth+\sepwidth}
+	% 		\begin{block}{Overview \& Motivation}
+	% 			\begin{itemize}
+	% 				\item What is backscatter communication?
+	% 				\item What is reconfigurable intelligent surface?
+	% 			\end{itemize}
+	% 		\end{block}
+	% 	\end{column}
+
+	% \end{columns}
+
+	% \begin{columns}[t]
+	% 	\separatorcolumn
+
+	% 	\begin{column}{\colwidth}
+
+	% 		\begin{thm}{A \texttt{tcolorbox} theorem block containing a list}{}
+
+	% 			Nam vulputate nunc felis, non condimentum lacus porta ultrices. Nullam sed
+	% 			sagittis metus. Etiam consectetur gravida urna quis suscipit.
+
+	% 			\begin{itemize}
+	% 				\item \textbf{Mauris tempor} risus nulla, sed ornare
+	% 				\item \textbf{Libero tincidunt} a duis congue vitae
+	% 				\item \textbf{Dui ac pretium} morbi justo neque, ullamcorper
+	% 			\end{itemize}
+
+	% 			Eget augue porta, bibendum venenatis tortor.
+
+	% 		\end{thm}
+
+	% 		\begin{alertblock}{A highlighted block}
+
+	% 			This block catches your eye, so \textbf{important stuff} should probably go
+	% 			here.
+
+	% 			Curabitur eu libero vehicula, cursus est fringilla, luctus est. Morbi
+	% 			consectetur mauris quam, at finibus elit auctor ac. Aliquam erat volutpat.
+	% 			Aenean at nisl ut ex ullamcorper eleifend et eu augue. Aenean quis velit
+	% 			tristique odio convallis ultrices a ac odio.
+
+	% 			\begin{itemize}
+	% 				\item \textbf{Fusce dapibus tellus} vel tellus semper finibus. In
+	% 				consequat, nibh sed mattis luctus, augue diam fermentum lectus.
+	% 				\item \textbf{In euismod erat metus} non ex. Vestibulum luctus augue in
+	% 				mi condimentum, at sollicitudin lorem viverra.
+	% 			\end{itemize}
+
+	% 			\begin{enumerate}
+	% 				\item \textbf{Morbi mauris purus}, egestas at vehicula et, convallis
+	% 				accumsan orci. Orci varius natoque penatibus et magnis dis parturient
+	% 				montes, nascetur ridiculus mus.
+	% 				\item \textbf{Cras vehicula blandit urna ut maximus}. Aliquam blandit nec
+	% 				massa ac sollicitudin. Curabitur cursus, metus nec imperdiet bibendum,
+	% 				velit lectus faucibus dolor, quis gravida metus mauris gravida turpis.
+	% 			\end{enumerate}
+
+	% 			Aenean tincidunt risus eros, at gravida lorem sagittis vel. Vestibulum ante
+	% 			ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.
+
+	% 		\end{alertblock}
+
+	% 		\begin{defbox}{A block containing an enumerated list}{}
+
+	% 			Vivamus congue volutpat elit non semper. Praesent molestie nec erat ac
+	% 			interdum. In quis suscipit erat. \textbf{Phasellus mauris felis, molestie
+	% 				ac pharetra quis}, tempus nec ante. Donec finibus ante vel purus mollis
+	% 			fermentum. Sed felis mi, pharetra eget nibh a, feugiat eleifend dolor. Nam
+	% 			mollis condimentum purus quis sodales. Nullam eu felis eu nulla eleifend
+	% 			bibendum nec eu lorem. Vivamus felis velit, volutpat ut facilisis ac,
+	% 			commodo in metus.
+
+	% 			\begin{enumerate}
+	% 				\item \textbf{Morbi mauris purus}, egestas at vehicula et, convallis
+	% 				accumsan orci. Orci varius natoque penatibus et magnis dis parturient
+	% 				montes, nascetur ridiculus mus.
+	% 				\item \textbf{Cras vehicula blandit urna ut maximus}. Aliquam blandit nec
+	% 				massa ac sollicitudin. Curabitur cursus, metus nec imperdiet bibendum,
+	% 				velit lectus faucibus dolor, quis gravida metus mauris gravida turpis.
+	% 				\item \textbf{Vestibulum et massa diam}. Phasellus fermentum augue non
+	% 				nulla accumsan, non rhoncus lectus condimentum.
+	% 			\end{enumerate}
+
+	% 		\end{defbox}
+
+	% 		\begin{block}{Fusce aliquam magna velit}
+
+	% 			Et rutrum ex euismod vel. Pellentesque ultricies, velit in fermentum
+	% 			vestibulum, lectus nisi pretium nibh, sit amet aliquam lectus augue vel
+	% 			velit.
+
+	% 			\begin{enumerate}
+	% 				\item \textbf{Morbi mauris purus}, egestas at vehicula et, convallis
+	% 				accumsan orci. Orci varius natoque penatibus et magnis dis parturient
+	% 				montes, nascetur ridiculus mus.
+	% 				\item \textbf{Cras vehicula blandit urna ut maximus}. Aliquam blandit nec
+	% 				massa ac sollicitudin. Curabitur cursus, metus nec imperdiet bibendum,
+	% 				velit lectus faucibus dolor, quis gravida metus mauris gravida turpis.
+	% 			\end{enumerate}
+
+	% 			\begin{figure}
+	% 				\centering
+	% 				\begin{tikzpicture}
+	% 					\begin{axis}[
+	% 							scale only axis,
+	% 							no markers,
+	% 							domain=0:2*pi,
+	% 							samples=100,
+	% 							axis lines=center,
+	% 							axis line style={-},
+	% 							ticks=none]
+	% 						\addplot[red] {sin(deg(x))};
+	% 						\addplot[blue] {cos(deg(x))};
+	% 					\end{axis}
+	% 				\end{tikzpicture}
+	% 				\caption{Another figure caption.}
+	% 			\end{figure}
+
+	% 		\end{block}
+
+	% 	\end{column}
+
+	% 	\separatorcolumn
+
+	% 	\begin{column}{\colwidth}
+
+	% 		\begin{block}{Nam cursus consequat egestas}
+
+	% 			\begin{itemize}
+	% 				\item \textbf{Sed consequat} id ante vel efficitur. Praesent congue massa
+	% 				sed est scelerisque, elementum mollis augue iaculis.
+	% 				\begin{itemize}
+	% 					\item In sed est finibus, vulputate
+	% 					nunc gravida, pulvinar lorem. In maximus nunc dolor, sed auctor eros
+	% 					porttitor quis.
+	% 					\item Fusce ornare dignissim nisi. Nam sit amet risus vel lacus
+	% 					tempor tincidunt eu a arcu.
+	% 					\item Donec rhoncus vestibulum erat, quis aliquam leo
+	% 					gravida egestas.
+	% 				\end{itemize}
+	% 				\item \textbf{Sed luctus, elit sit amet} dictum maximus, diam dolor
+	% 				faucibus purus, sed lobortis justo erat id turpis.
+	% 				\item \textbf{Pellentesque facilisis dolor in leo} bibendum congue.
+	% 				Maecenas congue finibus justo, vitae eleifend urna facilisis at.
+	% 			\end{itemize}
+
+	% 		\end{block}
+
+	% 		\begin{exampleblock}{An example block containing some math}{}
+
+	% 			Nullam non est elit. In eu ornare justo. Maecenas porttitor sodales lacus,
+	% 			ut cursus augue sodales ac.
+
+	% 			$$
+	% 				\int_{-\infty}^{\infty} e^{-x^2}\,dx = \sqrt{\pi}
+	% 			$$
+
+	% 			\begin{enumerate}
+	% 				\item \textbf{Morbi mauris purus}, egestas at vehicula et, convallis
+	% 				accumsan orci. Orci varius natoque penatibus et magnis dis parturient
+	% 				montes, nascetur ridiculus mus.
+	% 				\item \textbf{Cras vehicula blandit urna ut maximus}. Aliquam blandit nec
+	% 				massa ac sollicitudin. Curabitur cursus, metus nec imperdiet bibendum,
+	% 				velit lectus faucibus dolor, quis gravida metus mauris gravida turpis.
+	% 			\end{enumerate}
+
+	% 			\heading{A heading inside a block}
+
+	% 			Praesent consectetur mi $x^2 + y^2$ metus, nec vestibulum justo viverra
+	% 			nec. Proin eget nulla pretium, egestas magna aliquam, mollis neque. Vivamus
+	% 			dictum $\mathbf{u}^\intercal\mathbf{v}$ sagittis odio, vel porta erat
+	% 			congue sed. Maecenas ut dolor quis arcu auctor porttitor.
+
+	% 			\heading{Another heading inside a block}
+
+	% 			Sed augue erat, scelerisque a purus ultricies, placerat porttitor neque.
+	% 			Donec $P(y \mid x)$ fermentum consectetur $\nabla_x P(y \mid x)$ sapien
+	% 			sagittis egestas. Duis eget leo euismod nunc viverra imperdiet nec id
+	% 			justo.
+
+	% 		\end{exampleblock}
+
+	% 		\begin{block}{Nullam vel erat at velit convallis laoreet}
+
+	% 			Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+	% 			inceptos himenaeos. Phasellus libero enim, gravida sed erat sit amet,
+	% 			scelerisque congue diam. Fusce dapibus dui ut augue pulvinar iaculis.
+
+	% 			\begin{table}
+	% 				\centering
+	% 				\begin{tabular}{l r r c}
+	% 					\toprule
+	% 					\textbf{First column} & \textbf{Second column} & \textbf{Third column} & \textbf{Fourth} \\
+	% 					\midrule
+	% 					Foo                   & 13.37                  & 384,394               & $\alpha$        \\
+	% 					Bar                   & 2.17                   & 1,392                 & $\beta$         \\
+	% 					Baz                   & 3.14                   & 83,742                & $\delta$        \\
+	% 					Qux                   & 7.59                   & 974                   & $\gamma$        \\
+	% 					\bottomrule
+	% 				\end{tabular}
+	% 				\caption{A table caption.}
+	% 			\end{table}
+
+	% 			Donec quis posuere ligula. Nunc feugiat elit a mi malesuada consequat. Sed
+	% 			imperdiet augue ac nibh aliquet tristique. Aenean eu tortor vulputate,
+	% 			eleifend lorem in, dictum urna. Proin auctor ante in augue tincidunt
+	% 			tempor. Proin pellentesque vulputate odio, ac gravida nulla posuere
+	% 			efficitur. Aenean at velit vel dolor blandit molestie. Mauris laoreet
+	% 			commodo quam, non luctus nibh ullamcorper in. Class aptent taciti sociosqu
+	% 			ad litora torquent per conubia nostra, per inceptos himenaeos.
+
+	% 			Nulla varius finibus volutpat. Mauris molestie lorem tincidunt, iaculis
+	% 			libero at, gravida ante. Phasellus at felis eu neque suscipit suscipit.
+	% 			Integer ullamcorper, dui nec pretium ornare, urna dolor consequat libero,
+	% 			in feugiat elit lorem euismod lacus. Pellentesque sit amet dolor mollis,
+	% 			auctor urna non, tempus sem.
+
+	% 		\end{block}
+
+
+	% 		\begin{block}{References}
+	% 			% \printbibliography[heading=none]
+	% 		\end{block}
+	% 	\end{column}
+
+	% 	\separatorcolumn
+	% \end{columns}
+\end{frame}
+\end{document}

@@ -1,0 +1,68 @@
+\definecolor{color1}{HTML}{0072BD}
+\definecolor{color2}{HTML}{D95319}
+\definecolor{color3}{HTML}{EDB120}
+\definecolor{color4}{HTML}{7E2F8E}
+
+\begin{tikzpicture}
+	\begin{axis}[
+			clip mode=individual,
+			height=5cm,
+			width=10cm,
+			inner sep=1pt,
+			outer sep=1pt,
+			xlabel = $z$,
+			ylabel = {PDF},
+			font=\tiny,
+			no markers,
+			xmin=0,
+			ymin=0,
+			xmax=70,
+			xtick={0,12.78,20.28,29.62,70},
+			xticklabels={$t_0$,$t_1$,$t_2$,$t_3$,$t_4$},
+			yticklabels=\empty,
+			% enlargelimits=false,
+			legend style={fill=none},
+			samples = 200
+		]
+
+		\addplot+[very thick,solid,color1] gnuplot[raw gnuplot,smooth] {%
+				isint(x) = (int(x)==x);
+				gmm(x,rho,lambda)=rho<=0||lambda<=0?1/0:  x<0?0.0:x==0?(rho>1?0.0:rho==1?real(lambda):1/0):  exp(rho*log(lambda)+(rho-1.0)*log(x)-lgamma(rho)-lambda*x);
+				set xrange [0:80];
+				set yrange [0:1];
+				samples=200;
+				plot gmm(x,10,1)};
+		\addlegendentryexpanded{$f(z \mid x_1)$}
+
+		\addplot+[very thick,dashed,color2] gnuplot[raw gnuplot,smooth] {%
+				isint(x) = (int(x)==x);
+				gmm(x,rho,lambda)=rho<=0||lambda<=0?1/0:  x<0?0.0:x==0?(rho>1?0.0:rho==1?real(lambda):1/0):  exp(rho*log(lambda)+(rho-1.0)*log(x)-lgamma(rho)-lambda*x);
+				set xrange [0:80];
+				set yrange [0:1];
+				samples=200;
+				plot gmm(x,10,0.6)};
+		\addlegendentryexpanded{$f(z \mid x_2)$}
+
+		\addplot+[very thick,dotted,color3] gnuplot[raw gnuplot,smooth] {%
+				isint(x) = (int(x)==x);
+				gmm(x,rho,lambda)=rho<=0||lambda<=0?1/0:  x<0?0.0:x==0?(rho>1?0.0:rho==1?real(lambda):1/0):  exp(rho*log(lambda)+(rho-1.0)*log(x)-lgamma(rho)-lambda*x);
+				set xrange [0:80];
+				set yrange [0:1];
+				samples=200;
+				plot gmm(x,10,0.4)};
+		\addlegendentryexpanded{$f(z \mid x_3)$}
+
+		\addplot+[very thick,dashdotted,color4] gnuplot[raw gnuplot,smooth] {%
+				isint(x) = (int(x)==x);
+				gmm(x,rho,lambda)=rho<=0||lambda<=0?1/0:  x<0?0.0:x==0?(rho>1?0.0:rho==1?real(lambda):1/0):  exp(rho*log(lambda)+(rho-1.0)*log(x)-lgamma(rho)-lambda*x);
+				set xrange [0:80];
+				set yrange [0:1];
+				samples=200;
+				plot gmm(x,10,0.28)};
+		\addlegendentryexpanded{$f(z \mid x_4)$}
+		\draw[latex-latex] (0,0) -- (12.78,0) node[above,midway,yshift=-2]{$\mathcal{R}_1$};
+		\draw[latex-latex] (12.78,0) -- (20.28,0) node[above,midway,yshift=-2]{$\mathcal{R}_2$};
+		\draw[latex-latex] (20.28,0) -- (29.62,0) node[above,midway,yshift=-2]{$\mathcal{R}_3$};
+		\draw[latex-latex] (29.62,0) -- (70,0) node[above,midway,yshift=-2]{$\mathcal{R}_4$};
+	\end{axis}
+\end{tikzpicture}

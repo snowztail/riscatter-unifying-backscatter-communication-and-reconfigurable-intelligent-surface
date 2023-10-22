@@ -1,0 +1,49 @@
+\begin{tikzpicture}[font=\tiny]
+	\begin{groupplot}
+		[group style={
+					rows=3,
+					group name=plots,
+					x descriptions at=edge bottom,
+					y descriptions at=edge left,
+					vertical sep=10
+				},
+			ybar,
+			xmin=0,
+			xmax=4,
+			xtick={1,2,3,4},
+			ymin=0,
+			ymax=1,
+			xlabel={Reflection State},
+			enlarge x limits={value=0.25,upper},
+			enlarge y limits={value=0.1,upper},
+			width=11.6cm,
+			height=3cm,
+			x tick style={draw=none},
+			x label style={inner sep=5.5pt},
+			% font=\tiny,
+			legend style={fill=none},
+			every axis plot/.append style={bar shift=0}
+		]
+		\nextgroupplot
+		\addplot[blue,fill=blue!30!white] coordinates {(-1,-1)};
+		\addplot[blue,fill=blue!30!white,postaction={pattern=north west lines},pattern color=.] coordinates {(1,0.25)};
+		\addplot[blue,fill=blue!30!white,postaction={pattern=north east lines},pattern color=.] coordinates {(2,0.25)};
+		\addplot[blue,fill=blue!30!white,postaction={pattern=vertical lines},pattern color=.] coordinates {(3,0.25)};
+		\addplot[blue,fill=blue!30!white,postaction={pattern=horizontal lines},pattern color=.] coordinates {(4,0.25)};
+		\legend{BackCom}
+		\nextgroupplot[ylabel={Probability Distribution}]
+		\addplot[red,fill=red!30!white] coordinates {(-1,-1)};
+		\addplot[red,fill=red!30!white,postaction={pattern=north west lines},pattern color=.] coordinates {(1,0)};
+		\addplot[red,fill=red!30!white,postaction={pattern=north east lines},pattern color=.] coordinates {(2,1)};
+		\addplot[red,fill=red!30!white,postaction={pattern=vertical lines},pattern color=.] coordinates {(3,0)};
+		\addplot[red,fill=red!30!white,postaction={pattern=horizontal lines},pattern color=.] coordinates {(4,0)};
+		\legend{RIS}
+		\nextgroupplot
+		\addplot[brown,fill=brown!30!white] coordinates {(-1,-1)};
+		\addplot[brown,fill=brown!30!white,postaction={pattern=north west lines},pattern color=.] coordinates {(1,0.25)};
+		\addplot[brown,fill=brown!30!white,postaction={pattern=north east lines},pattern color=.] coordinates {(2,0.75)};
+		\addplot[brown,fill=brown!30!white,postaction={pattern=vertical lines},pattern color=.] coordinates {(3,0)};
+		\addplot[brown,fill=brown!30!white,postaction={pattern=horizontal lines},pattern color=.] coordinates {(4,0)};
+		\legend{RIScatter}
+	\end{groupplot}
+\end{tikzpicture}

@@ -1,0 +1,77 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.00000,0.44706,0.74118}%
+\definecolor{mycolor2}{rgb}{0.85098,0.32549,0.09804}%
+\definecolor{mycolor3}{rgb}{0.92941,0.69412,0.12549}%
+\definecolor{mycolor4}{rgb}{0.49412,0.18431,0.55686}%
+%
+\begin{tikzpicture}
+
+	\begin{axis}[%
+			width=10cm,
+			height=5cm,
+			at={(0.684in,0.361in)},
+			scale only axis,
+			xmin=1,
+			xmax=4,
+			xtick={1, 2, 3, 4},
+			xlabel style={font=\color{white!15!black}},
+			xlabel={Reflection State},
+			ymin=0,
+			ymax=1,
+			ytick={  0, 0.2, 0.4, 0.6, 0.8,   1},
+			ylabel style={font=\color{white!15!black}},
+			ylabel={Probability Distribution},
+			% axis background/.style={fill=white},
+			xmajorgrids,
+			ymajorgrids,
+			legend style={at={(0.03,0.97)}, anchor=north west, legend cell align=left, align=left, draw=white!15!black, fill=none},
+			align=center,
+			font=\tiny,
+			title style={font=\tiny},
+			label style={font=\tiny},
+			ticklabel style={font=\tiny},
+			legend style={font=\tiny},
+		]
+		\addplot [color=mycolor1, line width=2.0pt, mark=o, mark options={solid, mycolor1}]
+		table[row sep=crcr]{%
+				1	6.48337921881147e-07\\
+				2	0.504332536970115\\
+				3	0.495666065268481\\
+				4	7.49423481629768e-07\\
+			};
+		\addlegendentry{$\rho =0$}
+
+		\addplot [color=mycolor2, dashed, line width=2.0pt, mark=+, mark options={solid, mycolor2}]
+		table[row sep=crcr]{%
+				1	9.07520883479571e-08\\
+				2	0.401497967775065\\
+				3	0.598501822229458\\
+				4	1.1924338950349e-07\\
+			};
+		\addlegendentry{$\rho =0.1$}
+
+		\addplot [color=mycolor3, dotted, line width=2.0pt, mark=square, mark options={solid, mycolor3}]
+		table[row sep=crcr]{%
+				1	5.20790909800095e-09\\
+				2	0.192484685585801\\
+				3	0.807515300031504\\
+				4	9.17478600370393e-09\\
+			};
+		\addlegendentry{$\rho =0.25$}
+
+		\addplot [color=mycolor4, dashdotted, line width=2.0pt, mark=x, mark options={solid, mycolor4}]
+		table[row sep=crcr]{%
+				1	1.08446044988811e-11\\
+				2	8.27854203489531e-06\\
+				3	0.999991721175464\\
+				4	2.71656646770891e-10\\
+			};
+		\addlegendentry{$\rho =1$}
+
+	\end{axis}
+\end{tikzpicture}%

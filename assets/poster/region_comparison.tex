@@ -1,0 +1,98 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.30100,0.74500,0.93300}%
+\definecolor{mycolor2}{rgb}{0.46600,0.67400,0.18800}%
+\definecolor{mycolor3}{rgb}{0.49400,0.18400,0.55600}%
+\definecolor{mycolor4}{rgb}{0.92900,0.69400,0.12500}%
+\definecolor{mycolor5}{rgb}{0.85000,0.32500,0.09800}%
+\definecolor{mycolor6}{rgb}{0.00000,0.44700,0.74100}%
+%
+\begin{tikzpicture}
+
+	\begin{axis}[%
+			width=10cm,
+			height=5.55cm,
+			at={(0.673in,0.356in)},
+			scale only axis,
+			xmin=0,
+			xmax=6.5227548374066,
+			xlabel style={font=\color{white!15!black}},
+			xlabel={Primary Rate [bits/s/Hz]},
+			ymin=0,
+			ymax=2,
+			ylabel style={font=\color{white!15!black}},
+			ylabel={Backscatter Rate [bits/cu]},
+			% axis background/.style={fill=white},
+			xmajorgrids,
+			ymajorgrids,
+			legend style={at={(0.03,0.97)}, anchor=north west, legend cell align=left, align=left, draw=white!15!black, fill=none},
+			align=center,
+			font=\tiny,
+			title style={font=\tiny},
+			label style={font=\tiny},
+			ticklabel style={font=\tiny},
+			legend style={font=\tiny},
+			reverse legend,
+			every axis plot/.append style={line width=2pt}
+		]
+		\addplot [color=mycolor1, line width=2.0pt, mark=triangle, mark options={solid, rotate=180, mycolor1}]
+		table[row sep=crcr]{%
+				6.33724402501803	1.39764296268229\\
+				0	1.39764296268229\\
+				0	0\\
+				6.52275483678685	0\\
+				6.52275483678685	2.37312052924553e-08\\
+				6.38739454470992	1.3235811846854\\
+				6.35422040211439	1.38916612409166\\
+				6.34857862205488	1.39386686170527\\
+				6.3445353675389	1.39608085009443\\
+				6.34291602910554	1.3966977322109\\
+				6.34149846039129	1.39711118534274\\
+				6.34024731759122	1.39737797077851\\
+				6.3391350240222	1.3975379071887\\
+				6.33862394227692	1.39758701988787\\
+				6.33813974610465	1.39761939115801\\
+				6.33795313341839	1.39762818964178\\
+				6.33777036860279	1.39763482338317\\
+				6.3375913342378	1.3976394187338\\
+				6.33741590881855	1.39764209463684\\
+				6.33724402501803	1.39764296268229\\
+			};
+		\addlegendentry{RIScatter}
+
+		\addplot[only marks, mark=triangle, mark options={}, mark size=2.3570pt, draw=mycolor2] table[row sep=crcr]{%
+				x	y\\
+				6.5227548374066	0\\
+			};
+		\addlegendentry{RIS}
+
+		\addplot[only marks, mark=+, mark options={}, mark size=3.5355pt, draw=mycolor3] table[row sep=crcr]{%
+				x	y\\
+				6.34321982467796	2\\
+			};
+		\addlegendentry{SR}
+
+		\addplot[only marks, mark=x, mark options={}, mark size=3.5355pt, draw=mycolor4] table[row sep=crcr]{%
+				x	y\\
+				5.90778796357092	1.34857377961699\\
+			};
+		\addlegendentry{AmBC}
+
+		\addplot[only marks, mark=square, mark options={}, mark size=2.5000pt, draw=mycolor5] table[row sep=crcr]{%
+				x	y\\
+				0	1.99999999999997\\
+			};
+		\addlegendentry{Backscatter-only}
+
+		\addplot[only marks, mark=o, mark options={}, mark size=2.7386pt, draw=mycolor6] table[row sep=crcr]{%
+				x	y\\
+				6.34314881160129	0\\
+			};
+		\addlegendentry{Primary-only}
+
+	\end{axis}
+\end{tikzpicture}%

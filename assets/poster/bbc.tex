@@ -1,0 +1,18 @@
+\begin{tikzpicture}[font=\tiny,every node/.style={draw,ultra thick},every path/.style={ultra thick},every text node part/.style={align=center}]
+	\node at (0,0) [isosceles triangle,isosceles triangle stretches,shape border rotate=+90,minimum size=1cm,minimum height=1cm,anchor=north] {};
+	\node at (5,2) [rectangle,minimum size=1cm] {};
+	\node at (8,0) [isosceles triangle,isosceles triangle stretches,shape border rotate=+270,minimum size=1cm,minimum height=1cm,anchor=north] {};
+
+	\node[draw=none] at (0,-1.95) {Carrier\\Emitter};
+	\node[draw=none] at (5,3.35) {Scatter\\Node};
+	\node[draw=none] at (8,-1.95) {Backscatter\\Reader};
+
+	\draw[lightgray,decorate,decoration={snake,post length=2.5mm},-latex] (1,-1) -- (7.5,-1);
+	\draw[lightgray,decorate,decoration={snake,post length=2.5mm},-latex] (0.5,0) -- (4,2);
+	\draw[magenta,decorate,decoration={snake,pre length=7.5mm,post length=7.5mm},-latex] (6,2) -- (8,0.35);
+
+	\node[draw=none] at (1.5,1.75) {Carrier};
+	\node[draw=none] at (7.2,1.7) {1};
+	\node[draw=none] at (6.6,2.25) {0};
+	\node[draw=none] at (7.8,1.15) {0};
+\end{tikzpicture}

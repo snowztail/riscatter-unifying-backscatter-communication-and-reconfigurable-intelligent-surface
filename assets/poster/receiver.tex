@@ -1,0 +1,9 @@
+\begin{tikzpicture}[
+		% every axis plot/.append style={thick},
+		every node/.append style={draw,minimum width=16cm},
+		align=center
+	]
+	\draw[-{Latex[length=4mm]}] (0,0) node[anchor=south](0){Semi-coherently decode node message} to ++(0,-1) node[anchor=north](1){Re-encode for reflection pattern};
+	\draw[-{Latex[length=4mm]}] (1.south) to ++(0,-1) node[anchor=north](2){Model within equivalent channel};
+	\draw[-{Latex[length=4mm]}] (2.south) to ++(0,-1) node[anchor=north](3){Coherently decode primary message};
+\end{tikzpicture}

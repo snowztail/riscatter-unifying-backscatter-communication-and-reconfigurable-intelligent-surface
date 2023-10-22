@@ -1,0 +1,48 @@
+\makeatletter
+\tikzset{
+	block/.style={draw,rectangle,align=center,minimum width=4cm,minimum height=1cm},
+	from/.style args={#1 to #2}{
+			above right={0cm of #1},
+			/utils/exec=\pgfpointdiff
+			{\tikz@scan@one@point\pgfutil@firstofone(#1)\relax}
+			{\tikz@scan@one@point\pgfutil@firstofone(#2)\relax},
+			% minimum width/.expanded=\the\pgf@x,
+			% minimum height/.expanded=\the\pgf@y
+		}
+}
+\makeatother
+
+\begin{circuitikz}[transform shape]
+	\tikzstyle{every node}=[font=\tiny]
+	\coordinate (O) at (0,0);
+	% \node[block,from={O to $(O) + (7,4)$}](T){};
+	\draw (0,1.5)
+	to[short] ++(-1,0)
+	to[short] ++(0,1) node[bareantenna](A){Sx};
+	\draw (0,1.5)
+	to[short,-*] ++(0.25,0) coordinate(J);
+	\draw (J)
+	to[short] ++(0,1.5)
+	to[short] ++(0.5,0) coordinate(J1);
+	\node[block,from={$(J1) + (0,-0.5)$ to $(J1) + (2.5,0.5)$}](R){Rectifier};
+	\draw (J)
+	to[short] ++(0.5,0) coordinate(J2);
+	\node[block,from={$(J2) + (0,-0.5)$ to $(J2) + (2.5,0.5)$}](D){Demodulator};
+	\draw (J)
+	to[short] ++(0,-1.5)
+	to[short] ++(0.5,0) coordinate(J3);
+	\node[block,from={$(J3) + (0,-0.5)$ to $(J3) + (2.5,0.5)$}](M){Modulator};
+	\draw[dashed,-{Latex[length=2mm]}] (R.east) -- ++(0.75,0);
+	\draw[-{Latex[length=2mm]}] (D.east) -- ++(0.75,0);
+	\draw[{Latex[length=2mm]}-] (M.east) -- ++(0.75,0);
+	\node[block,from={$(R.east) + (0.75,-0.5)$ to $(R.east) + (2.875,0.5)$}](P){Power Buffer};
+	\node[block,minimum height=2.5cm,from={$(M.east) + (0.75,-0.5)$ to $(D.east) + (2.875,0.5)$}](S){Digital Section};
+	\draw[dashed,-{Latex[length=2mm]}] (P.south) to (S.north);
+	\coordinate (F1) at ($(P.south)!0.5!(S.north)$);
+	\coordinate (F2) at ($(D.east)!0.5!(S.west)$);
+	\coordinate (F3) at ($(D.south)!0.5!(M.north)$);
+	\draw[dashed] (F1) to (F1-|D.north);
+	\draw[dashed,-{Latex[length=2mm]}] (F1-|D.north) to (D.north);
+	\draw[dashed] (F1-|F2) to (F2|-F3) to (M|-F3);
+	\draw[dashed,-{Latex[length=2mm]}] (M|-F3) to (M.north);
+\end{circuitikz}

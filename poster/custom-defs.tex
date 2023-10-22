@@ -1,0 +1,198 @@
+% ====================
+% BibLaTeX
+% ====================
+
+% \usepackage[backend=biber,
+% 	bibstyle=authoryear,
+% 	citestyle=authoryear,
+% 	style=authoryear,
+% 	maxcitenames=2,
+% 	maxbibnames=20, % limit the length of list of names (authors/editors/etc.)
+% 	sorting=ydnt, % sort references by year (descending), name, title
+% 	dashed=false, % show authors instead of dash in publications having the same authors
+% 	giveninits=true % render authors' given name initials and not the full given names
+% ]{biblatex}
+% %% Biblatex with Beamer bibliography icons
+% \setbeamertemplate{bibliography item}{%
+% 	\ifboolexpr{ test {\ifentrytype{book}} or test {\ifentrytype{mvbook}}
+% 		or test {\ifentrytype{collection}} or test {\ifentrytype{mvcollection}}
+% 		or test {\ifentrytype{reference}} or test {\ifentrytype{mvreference}} }
+% 	{\setbeamertemplate{bibliography item}[book]}
+% 	{\ifentrytype{online}
+% 		{\setbeamertemplate{bibliography item}[online]}
+% 		{\setbeamertemplate{bibliography item}[article]}}%
+% 	\usebeamertemplate{bibliography item}}
+% \defbibenvironment{bibliography}
+% {\list{}
+% 	{\settowidth{\labelwidth}{\usebeamertemplate{bibliography item}}%
+% 		\setlength{\leftmargin}{\labelwidth}%
+% 		\setlength{\labelsep}{\biblabelsep}%
+% 		\addtolength{\leftmargin}{\labelsep}%
+% 		\setlength{\itemsep}{\bibitemsep}%
+% 		\setlength{\parsep}{\bibparsep}}}
+% {\endlist}
+% {\item}
+% %% Redefine \refname
+% \renewcommand{\bibname}{References}
+% %% Redefine \parencite to use square brackets instead of braces
+% \DeclareCiteCommand{\parencite}
+% {\usebibmacro{prenote}}
+% {\usebibmacro{citeindex}%
+% 	\printtext[bibhyperref]{[\usebibmacro{cite}]}}
+% {\multicitedelim}
+% {\usebibmacro{postnote}}
+% %% Highlight author names using Beamer data annotation
+% %% Usage: add a new line `author+an = {<author-order>=highlight}` to an entry
+% %% For example: author+an = {3=highlight} => highlight the 3rd author name
+% \AtBeginBibliography{
+% 	\renewcommand*{\mkbibnamegiven}[1]{%
+% 		\ifitemannotation{highlight}
+% 		{\textbf{#1}}
+% 		{#1}%
+% 	}
+
+% 	\renewcommand*{\mkbibnamefamily}[1]{%
+% 		\ifitemannotation{highlight}
+% 		{\textbf{#1}}
+% 		{#1}%
+% 	}
+% }
+
+% ====================
+% Boxes with tcolorbox
+% ====================
+\usepackage[most]{tcolorbox}
+
+%%% Beamer colors in boxes
+
+\newcommand{\beamercolorsinboxes}[1]{
+	\setbeamercolor{itemize item}{fg=#1!75!black}
+	\setbeamercolor{itemize/enumerate body}{fg=#1!65!white}
+	\setbeamercolor{itemize/enumerate subbody}{fg=#1!65!white}
+	\setbeamercolor{item projected}{fg=white, bg=#1!75!black}
+}
+
+%%% Highlight Oval Box
+\newtcbox{\xmybox}[1][red]{on line,
+	arc=7pt,colback=#1!10!white,colframe=#1!50!black,
+	before upper={\rule[-3pt]{0pt}{10pt}},boxrule=1pt,
+	boxsep=0pt,left=6pt,right=6pt,top=2pt,bottom=2pt}
+%%% Box for stating problems
+%%%%%%%%
+%Usage: (similar for infobox)
+%	\begin{defbox}{title}
+%		contents
+%	\end{defbox}
+%%%%%%%%
+\newtcolorbox{defbox}[1]{%
+	enhanced,
+	attach boxed title to top 	left={xshift=5mm,yshift=-5mm,yshifttext=-5mm},
+	colback=cyan!5!white,
+	colframe=cyan!75!black,
+	coltitle=cyan!80!black,
+	%	left=0mm,right=0mm,top=2mm,bottom=0mm,
+	title={#1},
+	fonttitle=\bfseries\large, fontupper=\color{cyan!65!white},
+	boxed title style={colback=cyan!5!white,colframe=cyan!75!black},
+	before upper={
+			\beamercolorsinboxes{cyan}
+		}
+}%
+%%% Box for announcement
+\newtcolorbox{infobox}[1]{%
+	enhanced,
+	attach boxed title to top 	left={xshift=5mm,yshift=-5mm,yshifttext=-5mm},
+	colback=yellow,
+	colframe=red!75!black,
+	coltitle=red!75!black,
+	%	left=0mm,right=0mm,top=2mm,bottom=0mm,
+	title={#1},
+	fonttitle=\bfseries\large, fontupper=\color{red!65!white},
+	boxed title style={colback=yellow,colframe=red!75!black},
+	before upper={
+			\beamercolorsinboxes{red}
+		}
+}%
+%%% Box for example
+\newtcolorbox{exabox}[1]{%
+	enhanced,
+	attach boxed title to top 	left={xshift=5mm,yshift=-5mm,yshifttext=-5mm},
+	colframe=brown!75!black,colback=brown!5!white,coltitle=brown!50!brown!75!black,
+	%	left=0mm,right=0mm,top=2mm,bottom=0mm,
+	title={#1},
+	fonttitle=\bfseries\large, fontupper=\color{brown!65!white},
+	boxed title style={colback=brown!5!white,coltitle=brown!50!brown!75!black},
+	before upper={
+			\beamercolorsinboxes{brown}
+		}
+}%
+%%% Theorem Box
+%%%%%%%%
+%Usage: (similar for conjecture, lemma, etc.)
+%	\begin{thm}{title}{nameref}
+%		contents
+%	\end{thm}
+% Use \ref{thm:nameref} to refer to the theorem
+%%%%%%%%
+%%%% Use \newtcbtheorem[number within=section]{thm} to number within each section
+\newtcbtheorem[]{thm}%
+% {Theorem}{attach boxed title to top 	left={xshift=5mm,yshift=-5mm,yshifttext=-5mm},
+{Block}{attach boxed title to top 	left={xshift=5mm,yshift=-5mm,yshifttext=-5mm},
+	enhanced jigsaw,
+	top=2mm,bottom=6mm,left=0mm,right=0mm,
+	% fonttitle=\bfseries\large,fontupper=\itshape\color{blue!65!white},
+	fonttitle=\bfseries\large,fontupper=\color{blue!65!white},
+	colframe=blue!75!black,colback=blue!5!white,coltitle=blue!50!blue!75!black,
+	boxed title style={colback=blue!5!white,coltitle=blue!50!blue!75!black},
+	before upper={
+			\beamercolorsinboxes{blue}
+		}
+}{thm}%
+%%% Proposition Box
+\newtcbtheorem[use counter from=thm]{prop}%
+{Proposition}{attach boxed title to top 	left={xshift=5mm,yshift=-5mm,yshifttext=-5mm},
+	enhanced jigsaw,
+	%	top=2mm,bottom=0mm,left=0mm,right=0mm,
+	fonttitle=\bfseries\large,fontupper=\itshape,
+	colframe=gray!75!black,colback=gray!5!white,coltitle=gray!50!gray!75!black,
+	boxed title style={colback=gray!5!white,coltitle=gray!50!gray!75!black},
+	before upper={
+			\beamercolorsinboxes{gray}
+		}
+}{prop}%
+%%% Conjecture Box
+\newtcbtheorem[use counter from=thm]{conj}%
+{Conjecture}{attach boxed title to top 	left={xshift=5mm,yshift=-5mm,yshifttext=-5mm},
+	enhanced jigsaw,
+	%	top=2mm,bottom=0mm,left=0mm,right=0mm,
+	fonttitle=\bfseries\large,fontupper=\slshape,
+	colframe=orange!75!black,colback=orange!5!white,coltitle=orange!50!orange!75!black,
+	boxed title style={colback=orange!5!white,coltitle=orange!50!orange!75!black},
+	before upper={
+			\beamercolorsinboxes{orange}
+		}
+}{conj}%
+%%% Lemma Box
+\newtcbtheorem[use counter from=thm]{lem}%
+{Lemma}{attach boxed title to top 	left={xshift=5mm,yshift=-5mm,yshifttext=-5mm},
+	enhanced jigsaw,
+	%	top=2mm,bottom=0mm,left=0mm,right=0mm,
+	fonttitle=\bfseries\large,fontupper=\itshape,
+	colframe=green!75!black,colback=green!5!white,coltitle=green!50!green!75!black,
+	boxed title style={colback=green!5!white,coltitle=green!50!green!75!black},
+	before upper={
+			\beamercolorsinboxes{green}
+		}
+}{lem}%
+%%% Claim Box
+\newtcbtheorem[use counter from=thm]{clm}%
+{Claim}{attach boxed title to top 	left={xshift=5mm,yshift=-5mm,yshifttext=-5mm},
+	enhanced jigsaw,
+	%	top=2mm,bottom=0mm,left=0mm,right=0mm,
+	fonttitle=\bfseries\large,fontupper=\itshape,
+	colframe=pink!75!black,colback=pink!5!white,coltitle=pink!50!pink!75!black,
+	boxed title style={colback=pink!5!white,coltitle=pink!50!pink!75!black},
+	before upper={
+			\beamercolorsinboxes{pink}
+		}
+}{clm}%

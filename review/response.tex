@@ -323,6 +323,46 @@
 	\end{figure}
 \end{reviewer}
 
+\begin{reviewer}
+	\point RIS has been hailed as one of "the" 6G technologies by the academia, but much less so by the industry. How to do you see the potential of your scheme to change this, since it also speaks along the line of Ambient IoT?
+	\reply{
+		Many researchers and companies expect RIS to be a massive surface mounted to walls and windows, functioning as an all-purpose programmable RF lens to focus ambient waves on the target.
+		This, on paper, could mitigate two major challenges in 5G: reduce energy consumption of massive MIMO and improve channel condition for mmWave radios.
+		However, outdoor deployment of such large surfaces shall comply with local regulations and requires a cooperation between building constructors, network operators, and equipment vendors, which could be a long-term project.
+		Our RIScatter scheme, on the other hand, aims to unify RIS (wireless channel shaper) and backscatter device (information source) into one batteryless cognitive radio featuring heterogeneous traffic control and universal hardware design.
+		This is especially suitable for indoor environments where the scattering nodes can be geometrically distributed in the proximity of transceivers.
+		Imagine a wireless future where the boundary between the network and environment is blurred --- everything can be “smartened” by coating with a metamaterial layer and attaching a microcontroller. Only a few radiating sources (like the sun) are active, while most objects (like the universe) can exploit ambient waves to energize themselves, sense the environment, communicate with devices, and assist legacy transmissions when idle.
+		% Indoor deployment of RIS seems more feasible,
+		% For the indoor scenario, the cost-effectiveness of RIS over conventional relays remains an open question.
+		% This vision calls for a rethinking of waveform design, receiver architecture, and multiple access schemes to accommodate the new paradigm of ambient IoT.
+	}
+
+
+	\point We can think of a future in which a number of ambient IoT devices do not have a transmitter and instead they communicate based on backscattering. Where do you see the main challenges towards wide adoption of those devices?
+	\reply{
+		We would like to highlight three main challenges for batteryless ambient IoT devices: energy harvesting, spectrum sharing, and security issue.
+		Far-field wireless power transfer has been recognized as a promising solution to energize ultra-low power devices, but the operation range is quite short (within few meters) and the end-to-end power efficiency is usually low (less than few percents).
+		In such case, idle RIScatter nodes can operate in full RIS mode and redirect local RF waves to those in transmitting mode for higher energy efficiency and backscatter SNR.
+		Spectrum sharing with legacy wireless systems is another challenge, as backscatter devices manipulate existing radio signals to transmit data.
+		This raises concerns about potential interference with other wireless applications operating in the same spectrum, and calls for a rethinking of waveform design, receiver architecture, modulation and coding scheme, and multiple access strategy to ensure a symbiotic coexistence.
+		Finally, security issue is a major concern for batteryless devices since they are vulnerable to eavesdropping, jamming, and spoofing attacks.
+	}
+
+	\point What was the main criticism you have received during the review process and how did you address it?
+	\reply{
+		The main technical criticism we received during the review process was the uncompleteness of simulation results.
+		Reviewers were interested in the impact of imperfect CSI and primary/backscatter SNR on the achievable rate region.
+		Those results evaluate the practicality of RIScatter systems and have been added to the revised manuscript.
+		One reviewer also suggested including analytical and numerical results on BER vs SNR.
+		While we fully acknowledge its importance, the BER analysis is non-trivial due to the coexistence of both links, and we would like to reserve this for a future work.
+		Another interesting question was the optimal primary input distribution that maximizes the weighted sum mutual information.
+		It deserves further research but we decided to stay with CSCG primary source for a tractable rate expression.
+		Two reviewers also pointed out that perfect symbol-level synchronization of both links is a strong assumption, especially for large-scale RIScatter system with small spreading ratio.
+		If necessary, some penalty factor can be introduced to the rate expression to compensate for the synchronization error.
+	}
+
+\end{reviewer}
+
 \bibliographystyle{IEEEtran}
 \bibliography{../library.bib}
 \end{document}
